@@ -1,0 +1,60 @@
+body {
+	font: 13px/20px "Lucida Grande", Arial, Sans-serif;
+}
+
+body .user {
+	font-weight: bold;
+	display: inline;
+	text-decoration:none
+}
+
+.up {
+	color: #02cd02;
+	margin-right: 2px;
+}
+
+.down {
+	color: red;
+	margin-right: 2px;
+}
+
+.layout {
+	vertical-align: top;
+}
+
+#container {
+	margin: 0 auto;
+	width: 800px;
+	margin-top: 20px;
+}
+#follower-status{
+	float: left;
+}
+#user-follower-status{
+	float: right;
+}
+
+#user-graph{
+	float: left;
+	margin-top: 20px;
+	width: 100%;
+}
+
+#header {
+	background: #5599BB;
+	clear: both;
+	width: 100%;
+	color: #DDEEFF;
+	height: 70px;
+}
+
+#inner-header {
+	margin: 0 auto;
+	width: 800px;
+}
+
+#footer {
+	background: url("images/bg-ftr-top.gif") repeat-x scroll 0 0 #EEEEEE;
+	clear: both;
+	width: 100%;
+}
