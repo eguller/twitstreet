@@ -1,32 +1,7 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>twitstree.com</title>
-<link href="css/twitstreet.css" rel="stylesheet" type="text/css"></link>
-
-</head>
-<body>
-	<div id="header">
-		<div id="inner-header">
-			<img src="images/twitstreet.png"></img>
-		</div>
-	</div>
-	<div id="container">
-		<table width="100%">
-			<tr>
-				<td>Cash: 34000$ - Follower: 47000$ - Total: 81000$ - Rank: 241.</td>
-				<td>
-					<span id="tcp"></span>
-					<script src="http://platform.twitter.com/anywhere.js?id=DfIgLzNr6zl8gcE4sVFFgQ&v=1" type="text/javascript"></script>
-					<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-				</td>
-			</tr>
-			<tr>
-				<td class="layout">
-					<div id="user-area">
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 						<table width="100%">
+						    <tr><td colspan="2">Cash: 34000$ - Follower: 47000$ - Total: 81000$ - Rank: 241.</td></tr>
 							<tr>
 								<td colspan="2">
 									<div>
@@ -84,25 +59,3 @@
 									</div></td>
 							</tr>
 						</table>
-					</div></td>
-				<td class="layout">
-					<div id="portfolio">
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="layout">
-					<div id="common-area">
-						<div id="current-transactions">
-						</div>
-					</div></td>
-				<td class="layout"><div id="top-fifty">
-
-					</div></td>
-			</tr>
-		</table>
-
-	</div>
-	<div id="footer">footer</div>
-</body>
-</html>
