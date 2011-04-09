@@ -5,35 +5,24 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	<div id="container">
-		<table width="100%" class="layout">
-			<tr>
-				<td class="layout">
-					<div id="topleft">
-						<jsp:include page="dashboard.jsp"></jsp:include>
-					</div>
-				</td>
-				<td class="layout">
-					<div id="topright">
-						<jsp:include page="portfolio.jsp"></jsp:include>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="layout">
-					<div id="downleft">
-						<jsp:include page="latest-transactions.jsp"></jsp:include>
-					</div>
-				</td>
-				<td  class="layout"><div id="downright">
-						<jsp:include page="topusers.jsp"></jsp:include>
-					</div>
-				</td>
-			</tr>
-		</table>
+	<jsp:include page="navigation.jsp"></jsp:include>
+	<div id="content-container">
+		<div id="content-container2">
+			<div id="content-container3">
+				<div id="content">
+					<jsp:include page="dashboard.jsp"></jsp:include>
+					<jsp:include page="portfolio.jsp"></jsp:include>
+				</div>
+				<div id="aside">
+					<jsp:include page="topusers.jsp"></jsp:include>
+					<jsp:include page="latest-transactions.jsp"></jsp:include>
+				</div>
+			</div>
+		</div>
 	</div>
-	<jsp:include page="footer.jsp"></jsp:include>
-	<span id="tcp"></span>
+	<div id="footer-container">
+		<jsp:include page="footer.jsp"></jsp:include>
+	</div>
 
 	<script type="text/javascript"
 		src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
