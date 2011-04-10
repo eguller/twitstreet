@@ -23,11 +23,5 @@
 	<div id="footer-container">
 		<jsp:include page="footer.jsp"></jsp:include>
 	</div>
-
-	<script type="text/javascript"
-		src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-	<script
-		src="http://platform.twitter.com/anywhere.js?id=DfIgLzNr6zl8gcE4sVFFgQ&v=1"
-		type="text/javascript"></script>
 </body>
 </html>

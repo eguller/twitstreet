@@ -8,9 +8,12 @@ $(document).ready(
 					screenName = currentUser.data('screen_name');
 					profileImage = currentUser.data('profile_image_url');
 					profileImageTag = '<img src="' + profileImage + '"/>';
-					$('#tcp').append(
-							'Logged in as ' + profileImageTag + ' '
-									+ screenName);
+					$('#tcp').append(profileImageTag + ' <a href="#" id=\"signout-link\">' + screenName + ', Sign out &gt;&gt;</a>');
+					$("#signout-link").bind("click", function () {
+				          twttr.anywhere.signOut();
+				          window.location = '/logout'
+				        });
+
 				} else {
 					T('#tcp').connectButton();
 				}

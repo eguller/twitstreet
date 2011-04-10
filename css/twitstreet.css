@@ -30,6 +30,7 @@ body {
 {
 	margin: 0 auto;
 	width: 900px;
+	background: #216c9c;
 }
 
 #navigation ul
@@ -42,6 +43,11 @@ body {
 {
 	list-style-type: none;
 	display: inline;
+}
+
+#signout-link{
+	color: white;
+	text-decoration: none;
 }
 
 #navigation li a
@@ -128,6 +134,15 @@ body {
 	height: 1%;
 	
 	background: url("images/bg-ftr-top.gif") repeat-x scroll 0 0 #EEEEEE;
+}
+
+#tcp {
+	color: #fff;
+}
+
+#tcp img {
+	width: 20px;
+	height: 20px;
 }
 
 body .user {
