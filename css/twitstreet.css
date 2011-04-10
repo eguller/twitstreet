@@ -27,6 +27,7 @@ body .user {
 	width: 800px;
 	margin-top: 20px;
 }
+
 #follower-status{
 	float: left;
 }
@@ -34,11 +35,6 @@ body .user {
 	float: right;
 }
 
-#user-graph{
-	float: left;
-	margin-top: 20px;
-	width: 100%;
-}
 
 #header {
 	background: #5599BB;
