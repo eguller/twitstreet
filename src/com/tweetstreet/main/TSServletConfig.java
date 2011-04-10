@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.tweetstreet.servlet.HomePageServlet;
+import com.tweetstreet.servlet.LogoutServlet;
 
 public class TSServletConfig extends GuiceServletContextListener {
 
@@ -14,6 +15,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 			@Override
 			protected void configureServlets() {
 				serve("/").with(HomePageServlet.class);
+				serve("/logout").with(LogoutServlet.class);
 			}
 		});
 	}
