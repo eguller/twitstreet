@@ -16,6 +16,6 @@
 	</filter-mapping>
 
 	<listener>
-		<listener-class>com.tweetstreet.main.TSServletConfig</listener-class>
+		<listener-class>com.twitstreet.main.TSServletConfig</listener-class>
 	</listener>
 </web-app>

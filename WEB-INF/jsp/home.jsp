@@ -1,5 +1,5 @@
 <%@page contentType="text/html; charset=ISO-8859-1" isELIgnored="true"%>
-<%@page import="com.tweetstreet.data.HomeData"%>
+<%@page import="com.twitstreet.data.HomeData"%>
 <%@taglib tagdir="/WEB-INF/tags" prefix="tag"%>
 <%
 	HomeData data = (HomeData)request.getAttribute("data");
