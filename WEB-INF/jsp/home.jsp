@@ -13,7 +13,6 @@
 		<div id="content-container2">
 			<div id="content-container3">
 				<div id="content">
-					<jsp:include page="dashboard.jsp"></jsp:include>
 					<tag:dashboard data="<%=data.dashboard %>"></tag:dashboard>
 					<jsp:include page="portfolio.jsp"></jsp:include>
 				</div>

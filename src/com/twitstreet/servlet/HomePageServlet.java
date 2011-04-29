@@ -19,22 +19,27 @@ import com.twitstreet.data.HomeData;
 @SuppressWarnings("serial")
 @Singleton
 public class HomePageServlet extends HttpServlet {
-	
+
 	@Inject
 	@Named("com.twitstreet.meta.ConsumerKey")
 	private final String consumerKey = null;
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		//TODO !!! don't validate cookie until absolutely necessary: e.g. BUY
+		
+		// * Determine userid
 		String userid = null;
-
+		// don't create session until absolutely necessary: e.g. BUY
 		HttpSession session = req.getSession(false);
 		if (session != null) {
 			userid = (String) session.getAttribute("user");
 		}
-
 		if (userid == null) {
+			if(session==null) {
+				session = req.getSession(true);
+			}
 			// read cookie "twitter_anywhere_identity"
 			Cookie taCookie = getCookie(req.getCookies(),
 					"twitter_anywhere_identity");
@@ -45,8 +50,8 @@ public class HomePageServlet extends HttpServlet {
 				if (idx > 0) {
 					String cUserid = taid.substring(0, idx);
 					String signature = taid.substring(idx + 1, taid.length());
-					// SHA1.hexdigest(user_id + consumer_secret)
 					try {
+						// SHA1.hexdigest(user_id + consumer_secret)
 						MessageDigest md = MessageDigest.getInstance("SHA-1");
 						md.update(cUserid.getBytes());
 						md.update(consumerKey.getBytes());
@@ -64,6 +69,11 @@ public class HomePageServlet extends HttpServlet {
 						// create a session if authenticated
 						if (signature.equals(hexdigest.toString())) {
 							userid = cUserid;
+							session.setAttribute("user", userid);
+						}
+						else {
+							taCookie.setMaxAge(0);
+							resp.addCookie(taCookie);
 						}
 
 					} catch (Exception e1) {
@@ -73,7 +83,7 @@ public class HomePageServlet extends HttpServlet {
 			}
 		}
 
-		// populate request beans
+		// * Populate request beans
 		DashboardData dashboardData = new DashboardData();
 		dashboardData.isVisible = false;
 		dashboardData.userid = userid;
@@ -82,7 +92,7 @@ public class HomePageServlet extends HttpServlet {
 		data.dashboard = dashboardData;
 		req.setAttribute("data", data);
 
-		// Let the view render
+		// * Let the view render
 		getServletContext().getRequestDispatcher("/WEB-INF/jsp/home.jsp")
 				.forward(req, resp);
 	}

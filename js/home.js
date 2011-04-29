@@ -1,5 +1,17 @@
+//Move to dashboard.js if we need to reuse.
+function _dashboard(dashdiv) {
+	return {
+		reload: function(user) {
+			//TODO ajax
+			var userid = user.data('screen_name');
+			dashdiv.children('.sectionHeader').text('Dashboard ('+userid+')');
+		}
+	};
+}
+
 $(document).ready(
 		function() {
+			var dashboard = _dashboard($("#dashboard"));
 			function ta(T) {
 				var currentUser, screenName, profileImage, profileImageTag;
 
@@ -15,9 +27,14 @@ $(document).ready(
 						window.location = '/logout'
 					});
 				} else {
-					T('#tcp').connectButton();
+					T('#tcp').connectButton({
+						authComplete: function(user) {
+							dashboard.reload(user);
+						},
+						signOut: function() {
+						}
+					});
 				}
 			}
-
 			twttr.anywhere(ta);
 		});
