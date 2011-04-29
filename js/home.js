@@ -2,9 +2,9 @@
 function _dashboard(dashdiv) {
 	return {
 		reload: function(user) {
-			//TODO ajax
-			var userid = user.data('screen_name');
-			dashdiv.children('.sectionHeader').text('Dashboard ('+userid+')');
+			//TODO ajax: get DashboardData for user in json
+			var userid = user.data('id');
+			$('.sectionHeader',dashdiv).text('Dashboard ('+userid+')');
 		}
 	};
 }
