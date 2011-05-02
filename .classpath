@@ -16,5 +16,8 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.0.17-ga-bin.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/guice-3.0.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/guice-servlet-3.0.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/aopalliance.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/hibernate-jpa-2.0-api-1.0.0.Final.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/javax.inject.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
