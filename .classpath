@@ -21,3 +21,4 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/javax.inject.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
+

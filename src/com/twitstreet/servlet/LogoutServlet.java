@@ -1,4 +1,4 @@
-package com.tweetstreet.servlet;
+package com.twitstreet.servlet;
 
 import java.io.IOException;
 
@@ -15,7 +15,9 @@ public class LogoutServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		request.getSession().removeAttribute("user");
+		request.getSession().removeAttribute("user"); 
+		//TODO delete above line
+		request.getSession().invalidate();
 		response.sendRedirect(request.getHeader("Referer"));
 	}
 	@Override

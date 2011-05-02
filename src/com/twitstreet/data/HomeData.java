@@ -1,4 +1,4 @@
-package com.tweetstreet.data;
+package com.twitstreet.data;
 
 public class HomeData {
 	public HomeQ1Nouser q1Nouser;
