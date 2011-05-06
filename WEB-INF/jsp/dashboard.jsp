@@ -4,14 +4,14 @@
 	<div class="sectionHeader">Dashboard</div>
 	<table width="100%">
 		<tr>
-			<td colspan="2">Cash: 34000$ - Follower: 47000$ - Total: 81000$
+			<td colspan="2">Cash: 34001$ - Follower: 47000$ - Total: 81000$
 				- Rank: 241.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
 				<div>
 					<input type="text" title="Type a twitter's user name"
-						value="twit_street" /> <input type="button" value="Get User!" />
+						value="twit_street" id="twituser"/> <input type="button" value="Get User!" onclick="gettwituser();" />
 				</div>
 			</td>
 		</tr>

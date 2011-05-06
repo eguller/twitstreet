@@ -1,3 +1,23 @@
+$('body').bind('ajaxSuccess',function(event,request,settings){
+    if (request.getResponseHeader('REQUIRES_AUTH') === '1'){
+       window.location = '/';
+    };
+});
+
+function post(action, _data, f){
+	$.post(action, {data: JSON.stringify(_data)}, f, "json");
+}
+
+function gettwituser(){
+	//see dashboard.jsp
+	var twituser = $("#twituser").val();
+	post("/p/gettwituser", {twituser : twituser}, 
+	function(data){
+		aler(data);
+	}		
+	);
+}
+
 //Move to dashboard.js if we need to reuse.
 function _dashboard(dashdiv) {
 	return {
