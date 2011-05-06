@@ -11,7 +11,7 @@
 			<td colspan="2">
 				<div>
 					<input type="text" title="Type a twitter's user name"
-						value="twit_street" /> <input type="button" value="Get User!" />
+						value="twit_street" /> <input type="button" value="Get User!" onclick="gettwituser();"/>
 				</div>
 			</td>
 		</tr>
