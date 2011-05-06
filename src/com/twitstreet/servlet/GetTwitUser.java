@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Singleton;
 
+@SuppressWarnings("serial")
 @Singleton
 public class GetTwitUser extends HttpServlet {
 	@Override
