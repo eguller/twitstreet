@@ -18,8 +18,8 @@ public class TSServletConfig extends GuiceServletContextListener {
 			protected void configureServlets() {
 				serve("/").with(HomePageServlet.class);
 				serve("/logout").with(LogoutServlet.class);
-				serve("/p/gettwituser").with(GetTwitUser.class);
-				filter("/p/*").through(AuthenticationFilter.class);
+				serve("/a/gettwituser").with(GetTwitUser.class);
+				filter("/a/*").through(AuthenticationFilter.class);
 			}
 		});
 	}

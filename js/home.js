@@ -11,9 +11,9 @@ function post(action, _data, f){
 function gettwituser(){
 	//see dashboard.jsp
 	var twituser = $("#twituser").val();
-	post("/p/gettwituser", {twituser : twituser}, 
+	post("/a/gettwituser", {twituser : twituser}, 
 	function(data){
-		aler(data);
+		alert(data);
 	}		
 	);
 }
