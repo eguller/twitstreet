@@ -21,8 +21,8 @@ import com.twitstreet.data.HomeData;
 public class HomePageServlet extends HttpServlet {
 
 	@Inject
-	@Named("com.twitstreet.meta.ConsumerKey")
-	private final String consumerKey = null;
+	@Named("com.twitstreet.meta.ConsumerSecret")
+	private final String consumerSecret = null;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -54,7 +54,7 @@ public class HomePageServlet extends HttpServlet {
 						// SHA1.hexdigest(user_id + consumer_secret)
 						MessageDigest md = MessageDigest.getInstance("SHA-1");
 						md.update(cUserid.getBytes());
-						md.update(consumerKey.getBytes());
+						md.update(consumerSecret.getBytes());
 						byte[] digest = md.digest();
 
 						StringBuilder hexdigest = new StringBuilder();
