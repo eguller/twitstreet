@@ -3,9 +3,9 @@ package com.twitstreet.market.api;
 import com.twitstreet.base.Result;
 
 /**
- * Maintains a cache of stock portfolio.
+ * Maintains a cache of stock portfolio and money of Users.
  * Handles buy&sell operations from user perspective, and updates DB;
- * e.g. Checks that buyer has enough enough money.
+ * e.g. Checks that buyer has enough money to buy the stock.
  * @author ooktay
  *
  */

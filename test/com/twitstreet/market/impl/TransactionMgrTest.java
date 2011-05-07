@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.twitstreet.base.Result;
 import com.twitstreet.market.api.StockMgr;
 import com.twitstreet.market.api.PortfolioMgr;
+import com.twitstreet.market.api.StockPriceMgr;
 
 import atunit.AtUnit;
 import atunit.Container;
@@ -26,6 +27,9 @@ public class TransactionMgrTest {
 	@Inject
 	@Unit
 	private TransactionMgrImpl transactionMgr;
+
+	@Mock
+	private StockPriceMgr stockPriceMgr;
 
 	@Mock
 	private StockMgr stockMgr;
@@ -44,9 +48,9 @@ public class TransactionMgrTest {
 	public void testBuy() {
 		String buyer = "buyer1";
 		String stock = "stock1";
-		Object[] mocks = new Object[] { stockMgr, portfolioMgr };
+		Object[] mocks = new Object[] { stockPriceMgr, stockMgr, portfolioMgr };
 
-		expect(stockMgr.updateFollowerCount(stock, buyer)).andReturn(success(1000));
+		expect(stockPriceMgr.updateFollowerCount(stock, buyer)).andReturn(success(1000));
 		expect(stockMgr.getPercentSold(stock)).andReturn(success(0.0));
 		expect(portfolioMgr.buy(buyer, 100, stock, 10.0)).andReturn(success(null));
 

@@ -8,6 +8,7 @@ import com.twitstreet.base.KeyLock;
 import com.twitstreet.base.Result;
 import com.twitstreet.market.api.PortfolioMgr;
 import com.twitstreet.market.api.StockMgr;
+import com.twitstreet.market.api.StockPriceMgr;
 import com.twitstreet.market.api.TransactionMgr;
 
 @Singleton
@@ -15,6 +16,9 @@ public class TransactionMgrImpl implements TransactionMgr {
 	enum Error {
 		ConcurrentUserTransaction;
 	}
+
+	@Inject
+	private StockPriceMgr stockPriceMgr;
 
 	@Inject
 	private StockMgr stockMgr;
@@ -36,7 +40,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 
 		stockLock.waitAndlock(stock);
 		try {
-			Result<Integer> follower = stockMgr.updateFollowerCount(stock, buyer);
+			Result<Integer> follower = stockPriceMgr.updateFollowerCount(stock, buyer);
 			if (follower.isFailed()) {
 				return fail(follower);
 			}
