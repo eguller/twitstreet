@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import com.google.inject.Singleton;
+
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
@@ -14,6 +16,7 @@ import twitter4j.conf.ConfigurationBuilder;
  * @author eguller
  *
  */
+@Singleton
 public class TwitterConnectionImpl implements TwitterConnection {
 	ArrayList<Twitter> twitterFeedList = new ArrayList<Twitter>();
 

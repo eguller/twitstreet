@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.twitstreet.twitter.TwitterConnection;
 import com.twitstreet.twitter.TwitterConnectionImpl;
@@ -15,7 +14,7 @@ public class TSModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bindPropertiesFile(System.getProperty("user.home")+"/.twitstreet/app.properties");
-		bind(TwitterConnection.class).to(TwitterConnectionImpl.class).in(Singleton.class);
+		bind(TwitterConnection.class).to(TwitterConnectionImpl.class);
 	}
 
 	private void bindPropertiesFile(String propFileName) {
