@@ -48,7 +48,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 
 			double percent = 100.0 * amount / follower.getPayload();
 			
-			//TODO verify percent < 100 - sold
+			//TODO verify percent <= 100 - sold
 			
 			Result<Object> result = portfolioMgr.buy(buyer, amount, stock, percent);
 
