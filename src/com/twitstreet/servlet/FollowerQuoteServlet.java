@@ -6,11 +6,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import com.google.inject.Singleton;
 
 @SuppressWarnings("serial")
 @Singleton
 public class FollowerQuoteServlet extends HttpServlet {
+	private static final Gson gson = new Gson();
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
@@ -18,8 +20,8 @@ public class FollowerQuoteServlet extends HttpServlet {
 	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		response.setContentType("application/xml;charset=utf-8");
-		response.getWriter().write("Hello world");
+		String twitterUser = (String)request.getAttribute("twitteruser");
+		
 	}
 	
 }
