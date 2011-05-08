@@ -10,7 +10,7 @@ import com.google.inject.Singleton;
 
 @SuppressWarnings("serial")
 @Singleton
-public class GetTwitUser extends HttpServlet {
+public class FollowerQuoteServlet extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
