@@ -7,8 +7,8 @@ import java.util.Properties;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
-import com.twitstreet.twitter.TwitterConnection;
-import com.twitstreet.twitter.TwitterConnectionImpl;
+import com.twitstreet.twitter.api.TwitterConnection;
+import com.twitstreet.twitter.impl.TwitterConnectionImpl;
 
 public class TSModule extends AbstractModule {
 

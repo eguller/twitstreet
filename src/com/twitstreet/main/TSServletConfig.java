@@ -11,7 +11,7 @@ import com.twitstreet.filter.AuthenticationFilter;
 import com.twitstreet.servlet.GetTwitUser;
 import com.twitstreet.servlet.HomePageServlet;
 import com.twitstreet.servlet.LogoutServlet;
-import com.twitstreet.twitter.TwitterConnection;
+import com.twitstreet.twitter.api.TwitterConnection;
 
 public class TSServletConfig extends GuiceServletContextListener {
 

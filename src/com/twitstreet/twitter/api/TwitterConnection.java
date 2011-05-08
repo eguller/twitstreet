@@ -1,4 +1,4 @@
-package com.twitstreet.twitter;
+package com.twitstreet.twitter.api;
 
 import twitter4j.Twitter;
 

@@ -1,10 +1,12 @@
-package com.twitstreet.twitter;
+package com.twitstreet.twitter.impl;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
+
+import com.twitstreet.twitter.api.TwitterConnection;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
