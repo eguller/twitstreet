@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 public class TSModule extends AbstractModule {
