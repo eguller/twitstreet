@@ -1,7 +1,6 @@
-package com.twitstreet.market.impl;
+package com.twitstreet.market;
 
 import com.twitstreet.base.Result;
-import com.twitstreet.market.api.PortfolioMgr;
 
 public class PortfolioMgrImpl implements PortfolioMgr {
 	@Override

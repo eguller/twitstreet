@@ -1,4 +1,4 @@
-package com.twitstreet.market.api;
+package com.twitstreet.market;
 
 import com.twitstreet.base.Result;
 
