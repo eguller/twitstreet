@@ -49,14 +49,24 @@ public class TwitterProxyTest extends AbstractModule {
         
         System.out.println("Trying to access an authorized method...");
         String response = twitterProxy.doGet(accessTokenPair, "/1/account/verify_credentials.xml");
-        System.out.println("Got:" + response);
+        System.out.println("Got:\n" + response);
 	}
 	
-	@Test
+	//@Test
 	public void reCall() {
 		String[] accessTokenPair = new String[] { "14546643-tnvmhTtsvU0Q6fUCyomNtEFl86cKtQx9GQLhqwL6I", "7IX2WDTuP8HCAHs9vjitAF1ttveUkLlrTRKfGeZI" };
         String response = twitterProxy.doGet(accessTokenPair, "/1/account/verify_credentials.xml");
-        System.out.println("Got:" + response);
+        System.out.println("Got:\n" + response);
+	}
+	
+	@Test
+	public void bridge() {
+		String bridgeCode = "7h2U9yCbd7WT9Rby1C47wFC1ZFe0zW4XctRx7qaI";
+		String[] accessTokenPair = twitterProxy.getAccessTokenWithBridge(bridgeCode);
+		System.out.println("Got: " + accessTokenPair[0]);
+		System.out.println(accessTokenPair[1]);
+        //String response = twitterProxy.doGet(accessTokenPair, "/1/account/verify_credentials.xml");
+        //System.out.println("Got:\n" + response);		
 	}
 
 	@Override

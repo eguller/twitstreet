@@ -53,6 +53,15 @@ public class TwitterProxyImpl implements TwitterProxy {
 	public int getFollowerCount(String userId) {
 		return 0;
 	}
+	
+	public String[] getAccessTokenWithBridge(String oauth_bridge_code) {
+		Token token = new Token("0/bdAAAAAAC/bchNAAAAAPilDAAAAAAAnHSUTrCTvXA/umTqGHQhya9yzS4=tnvmhTtsvU0Q6fUCyomNtEFl86cKtQx9GQLhqwL6I","");//service.getRequestToken();
+		OAuthRequest request = new OAuthRequest(Verb.POST, "https://api.twitter.com/oauth/access_token");
+		request.addBodyParameter("oauth_bridge_code", oauth_bridge_code);
+		service.signRequest(token, request);
+		Response response = request.send();
+		return new String[]{ String.valueOf(response.getCode()), response.getBody() };
+	}
 
 	@Override
 	public String doGet(String[] accessTokenPair, String url) {

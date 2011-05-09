@@ -63,6 +63,7 @@ $(document).ready(
 					});
 				}
 			}
+			twttr.anywhere.config({ callbackURL: "http://twitstreet.com/callback" });
 			twttr.anywhere(ta);
 		});
 
