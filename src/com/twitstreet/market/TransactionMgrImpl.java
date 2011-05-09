@@ -1,4 +1,4 @@
-package com.twitstreet.market.impl;
+package com.twitstreet.market;
 
 import static com.twitstreet.base.Result.*;
 
@@ -6,10 +6,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.base.KeyLock;
 import com.twitstreet.base.Result;
-import com.twitstreet.market.api.PortfolioMgr;
-import com.twitstreet.market.api.StockMgr;
-import com.twitstreet.market.api.StockPriceMgr;
-import com.twitstreet.market.api.TransactionMgr;
 
 @Singleton
 public class TransactionMgrImpl implements TransactionMgr {

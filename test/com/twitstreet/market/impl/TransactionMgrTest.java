@@ -9,9 +9,10 @@ import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
 import com.twitstreet.base.Result;
-import com.twitstreet.market.api.StockMgr;
-import com.twitstreet.market.api.PortfolioMgr;
-import com.twitstreet.market.api.StockPriceMgr;
+import com.twitstreet.market.PortfolioMgr;
+import com.twitstreet.market.StockMgr;
+import com.twitstreet.market.StockPriceMgr;
+import com.twitstreet.market.TransactionMgrImpl;
 
 import atunit.AtUnit;
 import atunit.Container;

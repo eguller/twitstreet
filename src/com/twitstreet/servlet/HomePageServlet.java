@@ -68,6 +68,8 @@ public class HomePageServlet extends HttpServlet {
 
 						// create a session if authenticated
 						if (signature.equals(hexdigest.toString())) {
+							Cookie bridgeCodeCookie = getCookie(req.getCookies(),
+							"ts_bridge_code");
 							userid = cUserid;
 							session.setAttribute("user", userid);
 						}
