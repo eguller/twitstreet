@@ -1,31 +1,24 @@
 package com.twitstreet.twitter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.Map.Entry;
 
-import org.apache.http.client.methods.HttpGet;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.scribe.builder.ServiceBuilder;
-import org.scribe.builder.api.TwitterApi;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.Verb;
-import org.scribe.oauth.OAuthService;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import com.google.inject.name.Names;
 
 import atunit.AtUnit;
 import atunit.Container;
 import atunit.MockFramework;
 import atunit.Unit;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import com.google.inject.name.Names;
 
 @RunWith(AtUnit.class)
 @MockFramework(MockFramework.Option.EASYMOCK)
@@ -34,52 +27,54 @@ public class TwitterProxyTest extends AbstractModule {
 
 	@Inject
 	@Unit
-	TwitterProxyImpl twitterProxy;
+	private TwitterProxyImpl twitterProxy;
 
-	OAuthService service;
-	
-	@Inject
-	@Named("com.twitstreet.meta.ConsumerSecret")
-	private final String consumerSecret = null;
-	
-	@Before
-	public void setUp() throws Exception {
-		service = new ServiceBuilder()
-        .provider(TwitterApi.class)
-        .apiKey("DfIgLzNr6zl8gcE4sVFFgQ")
-        .apiSecret(consumerSecret)
-        .build();
-	}
-	
-	@Test
+	// @Test
 	public void testGetFollowerCount() {
 		fail("Not yet implemented");
 	}
 
+	//@Test
+	public void authorize() throws Exception {
+		String[] requestTokenPair = twitterProxy.getNewRequestTokenPair();
+		String authorizationUrl = twitterProxy.getAuthorizationUrl(requestTokenPair);
+		System.out.println("go to: " + authorizationUrl + " and Approve twitstreet App.");
+		
+		System.out.println("What is the oauth_verifier in url?");
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String oauth_verifier = br.readLine();
+
+        String[] accessTokenPair = twitterProxy.getAccessTokenPair(requestTokenPair, oauth_verifier);
+        System.out.println("Access token/secret: " + accessTokenPair[0] + " / " + accessTokenPair[1]);
+        
+        System.out.println("Trying to access an authorized method...");
+        String response = twitterProxy.doGet(accessTokenPair, "/1/account/verify_credentials.xml");
+        System.out.println("Got:" + response);
+	}
+	
 	@Test
-	public void testGetAccessTokenPair() {
-		OAuthRequest request = new OAuthRequest(Verb.POST, "https://api.twitter.com/oauth/access_token");
-		request.addOAuthParameter("oauth_bridge_code", "afbry8OZ8xNA8yPPPGU92qdr3lAKFM5q3VtcVGAYo");
-		service.signRequest(null, request); // the access token from step 4
-		Response response = request.send();
-		System.out.println(response.getBody());
+	public void reCall() {
+		String[] accessTokenPair = new String[] { "14546643-tnvmhTtsvU0Q6fUCyomNtEFl86cKtQx9GQLhqwL6I", "7IX2WDTuP8HCAHs9vjitAF1ttveUkLlrTRKfGeZI" };
+        String response = twitterProxy.doGet(accessTokenPair, "/1/account/verify_credentials.xml");
+        System.out.println("Got:" + response);
 	}
 
 	@Override
 	protected void configure() {
-		bindPropertiesFile(System.getProperty("user.home")+"/.twitstreet/app.properties");
+		bindPropertiesFile(System.getProperty("user.home")
+				+ "/.twitstreet/app.properties");
 	}
-	
+
 	private void bindPropertiesFile(String propFileName) {
 		try {
 			Properties props = new Properties();
 			props.load(new FileReader(propFileName));
-			for(Entry<Object, Object> entry:props.entrySet()) {
+			for (Entry<Object, Object> entry : props.entrySet()) {
 				String name = (String) entry.getKey();
 				String value = (String) entry.getValue();
 				bindConstant().annotatedWith(Names.named(name)).to(value);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

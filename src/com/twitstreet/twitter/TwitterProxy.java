@@ -1,6 +1,10 @@
 package com.twitstreet.twitter;
 
 public interface TwitterProxy {
-	public int getFollowerCount(String userId);
-	public String[] getAccessTokenPair(String bridgeCode);
+	String[] getNewRequestTokenPair();
+	String getAuthorizationUrl(String[] requestTokenPair);
+	String[] getAccessTokenPair(String[] requestTokenPair, String oauthVerifier);
+	String doGet(String[] accessTokenPair, String url);
+	
+	int getFollowerCount(String userId);
 }
