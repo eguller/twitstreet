@@ -1,4 +1,4 @@
-package com.twitstreet.market.impl;
+package com.twitstreet.market;
 
 import static com.twitstreet.base.Result.*;
 import static org.easymock.EasyMock.*;
