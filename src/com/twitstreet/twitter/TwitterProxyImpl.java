@@ -4,7 +4,6 @@ public class TwitterProxyImpl implements TwitterProxy {
 
 	@Override
 	public int getFollowerCount(String userId) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
