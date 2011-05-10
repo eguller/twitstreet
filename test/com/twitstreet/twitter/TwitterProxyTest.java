@@ -11,6 +11,13 @@ import java.util.Map.Entry;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.User;
+import twitter4j.auth.AccessToken;
+import twitter4j.conf.ConfigurationBuilder;
+
 import atunit.AtUnit;
 import atunit.Container;
 import atunit.MockFramework;
@@ -50,6 +57,8 @@ public class TwitterProxyTest extends AbstractModule {
         System.out.println("Trying to access an authorized method...");
         String response = twitterProxy.doGet(accessTokenPair, "/1/account/verify_credentials.xml");
         System.out.println("Got:\n" + response);
+        
+        //
 	}
 	
 	//@Test
@@ -61,7 +70,7 @@ public class TwitterProxyTest extends AbstractModule {
 	
 	@Test
 	public void bridge() {
-		String bridgeCode = "7h2U9yCbd7WT9Rby1C47wFC1ZFe0zW4XctRx7qaI";
+		String bridgeCode = "mEoGgQTyEIoEQS6hd7kuCr4lMPulobBnaB76mLF3fQ";
 		String[] accessTokenPair = twitterProxy.getAccessTokenWithBridge(bridgeCode);
 		System.out.println("Got: " + accessTokenPair[0]);
 		System.out.println(accessTokenPair[1]);
