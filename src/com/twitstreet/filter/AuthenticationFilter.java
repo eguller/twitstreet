@@ -28,7 +28,7 @@ public class AuthenticationFilter implements Filter {
 
 	@Inject
 	private final TwitterAnywhere twitterAnywhere = null;
-	
+
 	@Inject
 	private final SessionMgr sessionMgr = null;
 
@@ -38,37 +38,35 @@ public class AuthenticationFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+			ServletException {
+
 		HttpServletRequest req = ((HttpServletRequest) request);
 		HttpServletResponse resp = ((HttpServletResponse) response);
+
 		HttpSession session = req.getSession(false);
-		
-		boolean isRequired = request.getAttribute("AUTHENTICATION_REQUIRED") != null;
-		
-		if(session != null) {
-			if(session.getAttribute("sessionData")!=null) {
-				chain.doFilter(request, response);
-				return;
-			}
-			else {
+
+		String sessionKey = sessionMgr.getKey().toString();
+
+		if (session != null) {
+			if (session.getAttribute(sessionKey) == null) {
 				session.invalidate();
 				logger.warn("Invalidating empty session: {}", session.getId());
 			}
-		}
-		else {
+
+		} else {
 			Cookie taCookie = getCookie(req.getCookies(), "twitter_anywhere_identity");
-			
+
 			if (taCookie != null) {
 				Result<String> useridResult = twitterAnywhere.getUserIdFromTACookie(taCookie.getValue());
+
 				if (useridResult.isSuccessful()) {
-					Result<?> sessionResult = sessionMgr.start( useridResult.getPayload() );
-					if(sessionResult.isSuccessful()) {
-						req.getSession(true).setAttribute("sessionData", sessionResult.getPayload());
-						chain.doFilter(request, response);
-						return;
-					}
-					else {
+					Result<?> sessionResult = sessionMgr.start(useridResult.getPayload());
+
+					if (sessionResult.isSuccessful()) {
+						req.getSession(true).setAttribute(sessionKey, sessionResult.getPayload());
+
+					} else {
 						logger.warn("Failed to create session for userid: {}", useridResult.getPayload());
 						taCookie.setMaxAge(0);
 						resp.addCookie(taCookie);
@@ -82,14 +80,11 @@ public class AuthenticationFilter implements Filter {
 			}
 		}
 
-		if(isRequired) {
-			((HttpServletResponse)response).addHeader("REQUIRES_AUTH", "1");
-		}
+		chain.doFilter(request, response);
 	}
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-
 	}
 
 	private Cookie getCookie(Cookie[] cookies, String name) {

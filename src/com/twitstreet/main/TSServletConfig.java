@@ -19,11 +19,12 @@ public class TSServletConfig extends GuiceServletContextListener {
 		return Guice.createInjector(new TSModule(), new ServletModule() {
 			@Override
 			protected void configureServlets() {
-				filter("/a/*").through(RequireAuthenticationFilter.class);
 				filter("/*").through(AuthenticationFilter.class);
+				filter("/a/*").through(RequireAuthenticationFilter.class);
 
 				serve("/").with(HomePageServlet.class);
 				serve("/logout").with(LogoutServlet.class);
+
 				serve("/a/gettwituser").with(FollowerQuoteServlet.class);
 			}
 		});

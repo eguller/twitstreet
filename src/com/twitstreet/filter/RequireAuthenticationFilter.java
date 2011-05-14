@@ -8,8 +8,19 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.twitstreet.session.SessionMgr;
+
+@Singleton
 public class RequireAuthenticationFilter implements Filter {
+
+	@Inject
+	private final SessionMgr sessionMgr = null;
 
 	@Override
 	public void destroy() {
@@ -19,7 +30,16 @@ public class RequireAuthenticationFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
 			ServletException {
 		
-		request.setAttribute("AUTHENTICATION_REQUIRED", true);
+		HttpServletRequest req = ((HttpServletRequest) request);
+
+		HttpSession session = req.getSession(false);
+		
+		String sessionKey = sessionMgr.getKey().toString();
+
+		if(session==null || session.getAttribute(sessionKey)==null) {
+			((HttpServletResponse)response).addHeader("REQUIRES_AUTH", "1");
+		}
+
 	}
 
 	@Override
