@@ -13,6 +13,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class FollowerQuoteServlet extends HttpServlet {
 	private static final Gson gson = new Gson();
+	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		

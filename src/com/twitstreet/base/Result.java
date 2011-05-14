@@ -1,5 +1,8 @@
 package com.twitstreet.base;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A wrapper for return types similar to Option in scala.<br>
  * Prefer returning Result&lt;Object&gt; instead of void functions.<br>
@@ -10,9 +13,16 @@ package com.twitstreet.base;
  * @param <T> The type of payload.
  */
 public final class Result<T> {
+	private static Logger logger = LoggerFactory.getLogger(Result.class);
+	
 	private final T payload;
 	private final boolean isSuccessful;
 	private final Enum<?> errorCode;
+	
+	enum Error {
+		NULL,
+		EXCEPTION
+	}
 
 	public final boolean isSuccessful() {
 		return isSuccessful;
@@ -53,7 +63,13 @@ public final class Result<T> {
 	 * @return
 	 */
 	public static <T> Result<T> fail(Enum<?> errorCode) {
-		return new Result<T>(false, null, errorCode);
+		if(errorCode!=null) {
+			return new Result<T>(false, null, errorCode);
+		}
+		else {
+			logger.warn("Failed with null error code.");
+			return Result.fail(Error.NULL);
+		}
 	}
 	
 	/**
@@ -70,7 +86,17 @@ public final class Result<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Result<T> fail(Result<?> result) {
-		assert(!result.isSuccessful);
-		return (Result<T>)result;
+		if(!result.isSuccessful) {
+			return (Result<T>)result;
+		}
+		else {
+			logger.warn("Failed with null error code while trying to convert success result into failed.");
+			return Result.fail(Error.NULL);
+		}		
+	}
+
+	public static Result<String> fail(Exception e) {
+		logger.debug("Failed with exception.",e);
+		return fail(Error.EXCEPTION);
 	}
 }

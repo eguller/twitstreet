@@ -2,25 +2,18 @@ package com.twitstreet.data;
 
 public class SessionData {
 	final String twitterUserId;
-	final String accessToken;
-	final String accessTokenSecret;
+	final String[] accessTokenPair;
 	
-	public SessionData(String twitterUserId, String accessToken,
-			String accessTokenSecret) {
+	public SessionData(String twitterUserId, String[] accessTokenPair) {
 		this.twitterUserId = twitterUserId;
-		this.accessToken = accessToken;
-		this.accessTokenSecret = accessTokenSecret;
+		this.accessTokenPair = accessTokenPair;
 	}
 	
 	public String getTwitterUserId() {
 		return twitterUserId;
 	}
 
-	public String getAccessToken() {
-		return accessToken;
-	}
-
-	public String getAccessTokenSecret() {
-		return accessTokenSecret;
+	public String[] getAccessTokenPair() {
+		return accessTokenPair;
 	}
 }

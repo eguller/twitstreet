@@ -16,7 +16,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 
 	private final OAuthService service;
 
-	private static String baseUrl = "http://api.twitter.com";
+	private static final String baseUrl = "http://api.twitter.com";
 
 	@Inject
 	public TwitterProxyImpl(

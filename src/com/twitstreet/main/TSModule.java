@@ -6,12 +6,18 @@ import java.util.Properties;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
+import com.twitstreet.twitter.TwitterAnywhere;
+import com.twitstreet.twitter.TwitterAnywhereImpl;
+import com.twitstreet.twitter.TwitterProxy;
+import com.twitstreet.twitter.TwitterProxyImpl;
 
 public class TSModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
 		bindPropertiesFile(System.getProperty("user.home")+"/.twitstreet/app.properties");
+		bind(TwitterProxy.class).to(TwitterProxyImpl.class);
+		bind(TwitterAnywhere.class).to(TwitterAnywhereImpl.class);
 	}
 
 	private void bindPropertiesFile(String propFileName) {
