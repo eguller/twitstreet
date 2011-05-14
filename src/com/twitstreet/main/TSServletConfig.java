@@ -8,6 +8,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.twitstreet.filter.AuthenticationFilter;
 import com.twitstreet.filter.RequireAuthenticationFilter;
+import com.twitstreet.servlet.CallbackServlet;
 import com.twitstreet.servlet.FollowerQuoteServlet;
 import com.twitstreet.servlet.HomePageServlet;
 import com.twitstreet.servlet.LogoutServlet;
@@ -19,11 +20,12 @@ public class TSServletConfig extends GuiceServletContextListener {
 		return Guice.createInjector(new TSModule(), new ServletModule() {
 			@Override
 			protected void configureServlets() {
-				filter("/*").through(AuthenticationFilter.class);
+				filter("/a/*","/").through(AuthenticationFilter.class);
 				filter("/a/*").through(RequireAuthenticationFilter.class);
 
 				serve("/").with(HomePageServlet.class);
 				serve("/logout").with(LogoutServlet.class);
+				serve("/callback").with(CallbackServlet.class);
 
 				serve("/a/gettwituser").with(FollowerQuoteServlet.class);
 			}

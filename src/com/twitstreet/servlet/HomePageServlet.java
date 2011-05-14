@@ -18,15 +18,21 @@ import com.twitstreet.data.SessionData;
 @Singleton
 public class HomePageServlet extends HttpServlet {
 	
-	//@Inject	private final Provider<SessionData> sessionDataProvider = null;
+	@Inject
+	private final Provider<SessionData> sessionDataProvider = null;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		//sessionDataProvider.get();
-		
-		// * Populate request beans
 		DashboardData dashboardData = new DashboardData();
-		dashboardData.isVisible = false;
+
+		if( req.getSession(false) != null ) {
+			SessionData sessionData = sessionDataProvider.get();
+			dashboardData.userid = sessionData.getTwitterUserId();
+			dashboardData.isVisible = true;
+		}
+		else {
+			dashboardData.isVisible = false;			
+		}
 
 		HomeData data = new HomeData();
 		data.dashboard = dashboardData;

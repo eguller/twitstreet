@@ -8,8 +8,7 @@ public class SessionMgrImpl implements SessionMgr {
 
 	@Override
 	public Result<SessionData> start(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return Result.success(new SessionData(userId, new String[]{}));
 	}
 
 	@Override

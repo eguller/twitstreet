@@ -19,6 +19,7 @@ import atunit.Unit;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.name.Names;
+import com.twitstreet.base.Result;
 
 @RunWith(AtUnit.class)
 @MockFramework(MockFramework.Option.EASYMOCK)
@@ -61,8 +62,10 @@ public class TwitterProxyTest extends AbstractModule {
 	
 	@Test
 	public void bridge() {
-		String bridgeCode = "mEoGgQTyEIoEQS6hd7kuCr4lMPulobBnaB76mLF3fQ";
-		String[] accessTokenPair = twitterProxy.getAccessTokenWithBridge(bridgeCode);
+		String requestToken = "0/bdAAAAAAC/bchNAAAAAPilDAAAAAAAnHSUTrCTvXA/umTqGHQhya9yzS4=tnvmhTtsvU0Q6fUCyomNtEFl86cKtQx9GQLhqwL6I";
+		String bridgeCode = "EsYLB6Bisd1wqPR0LosYvgY88pxA239NhVhgkk8Zok";
+		Result<String[]> result = twitterProxy.getAccessTokenWithBridge(requestToken, bridgeCode);
+		String[] accessTokenPair = result.getPayload();
 		System.out.println("Got: " + accessTokenPair[0]);
 		System.out.println(accessTokenPair[1]);
         //String response = twitterProxy.doGet(accessTokenPair, "/1/account/verify_credentials.xml");

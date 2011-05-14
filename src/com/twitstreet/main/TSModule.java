@@ -7,6 +7,7 @@ import java.util.Properties;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
+import com.google.inject.servlet.SessionScoped;
 import com.twitstreet.data.SessionData;
 import com.twitstreet.session.SessionMgr;
 import com.twitstreet.session.SessionMgrImpl;
@@ -38,10 +39,5 @@ public class TSModule extends AbstractModule {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Provides
-	SessionData getSessionData() {
-		return null;
 	}
 }

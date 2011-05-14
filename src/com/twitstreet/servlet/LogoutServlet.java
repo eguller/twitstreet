@@ -15,8 +15,6 @@ public class LogoutServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		request.getSession().removeAttribute("user"); 
-		//TODO delete above line
 		request.getSession().invalidate();
 		response.sendRedirect(request.getHeader("Referer"));
 	}

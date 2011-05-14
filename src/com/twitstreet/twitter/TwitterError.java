@@ -1,5 +1,6 @@
 package com.twitstreet.twitter;
 
 public enum TwitterError {
-	CookieCheckFailed
+	CookieCheckFailed,
+	BridgeAuthFailed
 }

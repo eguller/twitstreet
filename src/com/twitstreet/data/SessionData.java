@@ -1,8 +1,17 @@
 package com.twitstreet.data;
 
+import com.google.inject.Inject;
+import com.google.inject.servlet.SessionScoped;
+
+@SessionScoped
 public class SessionData {
-	final String twitterUserId;
-	final String[] accessTokenPair;
+	private final String twitterUserId;
+	private final String[] accessTokenPair;
+	
+	@Inject
+	public SessionData() {
+		throw new RuntimeException("Not authenticated.");
+	}
 	
 	public SessionData(String twitterUserId, String[] accessTokenPair) {
 		this.twitterUserId = twitterUserId;
