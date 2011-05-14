@@ -54,8 +54,7 @@ $(document).ready(
 					});
 				} else {
 					T('#tcp').connectButton({
-						authComplete : function(user, bridge_code) {
-							setCookie("ts_bridge_code", bridge_code, null);
+						authComplete : function(user) {
 							dashboard.reload(user);
 						},
 						signOut : function() {
@@ -63,7 +62,7 @@ $(document).ready(
 					});
 				}
 			}
-			twttr.anywhere.config({ callbackURL: "http://twitstreet.com/callback" });
+			// twttr.anywhere.config({ callbackURL: "http://twitstreet.com/callback" });
 			twttr.anywhere(ta);
 		});
 
