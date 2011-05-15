@@ -2,18 +2,26 @@ package com.twitstreet.session;
 
 import com.google.inject.Key;
 import com.twitstreet.base.Result;
-import com.twitstreet.data.SessionData;
+import com.twitstreet.twitter.TwitterAccessData;
 
 public class SessionMgrImpl implements SessionMgr {
 
 	@Override
-	public Result<SessionData> start(String userId) {
-		return Result.success(new SessionData(userId, new String[]{}));
+	public Key<SessionData> getKey() {
+		return Key.get(SessionData.class);
 	}
 
 	@Override
-	public Key<SessionData> getKey() {
-		return Key.get(SessionData.class);
+	public Result<SessionData> login(String userId) {
+		//TODO read from DB
+		TwitterAccessData accessData = new TwitterAccessData("oauthToken", "oauthTokenSecret", userId, "screenName");
+		return Result.success(new SessionData(accessData));
+	}
+
+	@Override
+	public Result<SessionData> register(TwitterAccessData accessData) {
+		// TODO Save to DB (insert or update, screenName may change)
+		return Result.success(new SessionData(accessData));
 	}
 
 }

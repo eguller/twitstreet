@@ -8,8 +8,12 @@ public class TSHttpUtils {
 		String[] params = query.split("&");  
 	    Map<String, String> map = new HashMap<String, String>();  
 	    for (String param : params) {
-	    	String[] pair = param.split("=");
-	    	map.put(pair[0],pair[1]);
+	    	int index = param.indexOf('=');
+	    	if(index>0) {
+	    		String key = param.substring(0, index);
+	    		String value = param.substring(index+1);
+		    	map.put(key,value);
+	    	}
 	    }
 	    return map;
 	}

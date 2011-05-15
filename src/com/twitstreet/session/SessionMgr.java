@@ -2,16 +2,23 @@ package com.twitstreet.session;
 
 import com.google.inject.Key;
 import com.twitstreet.base.Result;
-import com.twitstreet.data.SessionData;
+import com.twitstreet.twitter.TwitterAccessData;
 
 public interface SessionMgr {
 	/**
-	 * Start a session for user. Read TokerPair from DB.
+	 * Start a session for registered user. Read from DB.
 	 * @param userId
-	 * @return Result with SessionData
+	 * @return 
 	 */
-	public Result<SessionData> start(String userId);
-
+	public Result<SessionData> login(String userId);
+	
+	/**
+	 * Start a session for new user. Save to DB.
+	 * @param accessData
+	 * @return 
+	 */
+	public Result<SessionData> register(TwitterAccessData accessData);
+	
 	/**
 	 * Gets the guice binding key for Session Data.
 	 * @return

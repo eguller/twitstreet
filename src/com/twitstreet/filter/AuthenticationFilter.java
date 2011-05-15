@@ -20,14 +20,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.base.Result;
 import com.twitstreet.session.SessionMgr;
-import com.twitstreet.twitter.TwitterAnywhere;
+import com.twitstreet.twitter.TwitterAuth;
 
 @Singleton
 public class AuthenticationFilter implements Filter {
 	private static Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
 	@Inject
-	private final TwitterAnywhere twitterAnywhere = null;
+	private final TwitterAuth twitterAnywhere = null;
 
 	@Inject
 	private final SessionMgr sessionMgr = null;
@@ -61,10 +61,10 @@ public class AuthenticationFilter implements Filter {
 				Result<String> useridResult = twitterAnywhere.getUserIdFromTACookie(taCookie.getValue());
 
 				if (useridResult.isSuccessful()) {
-					Result<?> sessionResult = sessionMgr.start(useridResult.getPayload());
+					Result<?> loginResult = sessionMgr.login(useridResult.getPayload());
 
-					if (sessionResult.isSuccessful()) {
-						req.getSession(true).setAttribute(sessionKey, sessionResult.getPayload());
+					if (loginResult.isSuccessful()) {
+						req.getSession(true).setAttribute(sessionKey, loginResult.getPayload());
 
 					} else {
 						logger.warn("Failed to create session for userid: {}", useridResult.getPayload());
