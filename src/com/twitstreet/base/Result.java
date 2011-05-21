@@ -95,8 +95,9 @@ public final class Result<T> {
 		}		
 	}
 
-	public static Result<String> fail(Exception e) {
+	@SuppressWarnings("unchecked")
+	public static <T> Result<T> fail(Exception e) {
 		logger.debug("Failed with exception.",e);
-		return fail(Error.EXCEPTION);
+		return (Result<T>)fail(Error.EXCEPTION);
 	}
 }

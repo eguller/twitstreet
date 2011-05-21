@@ -79,29 +79,34 @@ public class TwitterAuthImpl implements TwitterAuth {
 
 	@Override
 	public Result<TwitterAccessData> getAccessDataWithBridge(String accessToken, String oauth_bridge_code) {
-		Token token = new Token(accessToken, "");
-		OAuthRequest request = new OAuthRequest(Verb.POST, "https://api.twitter.com/oauth/access_token");
-		request.addBodyParameter("oauth_bridge_code", oauth_bridge_code);
-		service.signRequest(token, request);
-		Response response = request.send();
-		logger.info("access token response({}) : {}", response.getCode(), response.getBody());
-
-		if (response.getCode() == 200) {
-			Map<String, String> parmMap = TSHttpUtils.parseQueryParms(response.getBody());
-			String oauth_token = parmMap.get("oauth_token");
-			String oauth_token_secret = parmMap.get("oauth_token_secret");
-			String userId = parmMap.get("user_id");
-			String screenName = parmMap.get("screen_name");
-			
-			if(oauth_token!=null && oauth_token_secret!=null && userId!=null && screenName!=null) {
-				return Result.success( new TwitterAccessData(oauth_token, oauth_token_secret, userId, screenName) );
+		try {
+			Token token = new Token(accessToken, "");
+			OAuthRequest request = new OAuthRequest(Verb.POST, "https://api.twitter.com/oauth/access_token");
+			request.addBodyParameter("oauth_bridge_code", oauth_bridge_code);
+			service.signRequest(token, request);
+			Response response = request.send();
+			logger.info("access token response({}) : {}", response.getCode(), response.getBody());
+	
+			if (response.getCode() == 200) {
+				Map<String, String> parmMap = TSHttpUtils.parseQueryParms(response.getBody());
+				String oauth_token = parmMap.get("oauth_token");
+				String oauth_token_secret = parmMap.get("oauth_token_secret");
+				String userId = parmMap.get("user_id");
+				String screenName = parmMap.get("screen_name");
+				
+				if(oauth_token!=null && oauth_token_secret!=null && userId!=null && screenName!=null) {
+					return Result.success( new TwitterAccessData(oauth_token, oauth_token_secret, userId, screenName) );
+				}
+				// else: fall through to fail result.
+	
 			}
 			// else: fall through to fail result.
+			
+			return Result.fail(TwitterError.BridgeAuthFailed);
 
+		} catch (Exception e) {
+			return Result.fail(e);
 		}
-		// else: fall through to fail result.
-		
-		return Result.fail(TwitterError.BridgeAuthFailed);
 	}
 
 	/*
