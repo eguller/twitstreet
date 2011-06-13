@@ -100,4 +100,14 @@ public final class Result<T> {
 		logger.debug("Failed with exception.",e);
 		return (Result<T>)fail(Error.EXCEPTION);
 	}
+	
+	@Override
+	public String toString() {
+		if(isSuccessful) {
+			return "Successful: " + payload;
+		}
+		else {
+			return "Failed: " + errorCode;
+		}
+	}
 }

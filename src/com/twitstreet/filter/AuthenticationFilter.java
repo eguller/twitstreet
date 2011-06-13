@@ -8,7 +8,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,16 +17,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.twitstreet.base.Result;
 import com.twitstreet.session.SessionMgr;
-import com.twitstreet.twitter.TwitterAuth;
 
 @Singleton
 public class AuthenticationFilter implements Filter {
 	private static Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
-
-	@Inject
-	private final TwitterAuth twitterAnywhere = null;
 
 	@Inject
 	private final SessionMgr sessionMgr = null;
@@ -53,48 +47,13 @@ public class AuthenticationFilter implements Filter {
 				session.invalidate();
 				logger.warn("Invalidating empty session: {}", session.getId());
 			}
-
-		} else {
-			Cookie taCookie = getCookie(req.getCookies(), "twitter_anywhere_identity");
-
-			if (taCookie != null) {
-				Result<String> useridResult = twitterAnywhere.getUserIdFromTACookie(taCookie.getValue());
-
-				if (useridResult.isSuccessful()) {
-					Result<?> loginResult = sessionMgr.login(useridResult.getPayload());
-
-					if (loginResult.isSuccessful()) {
-						req.getSession(true).setAttribute(sessionKey, loginResult.getPayload());
-
-					} else {
-						logger.warn("Failed to create session for userid: {}", useridResult.getPayload());
-						taCookie.setMaxAge(0);
-						resp.addCookie(taCookie);
-					}
-
-				} else {
-					logger.warn("Invalid cookie: {}", taCookie.getValue());
-					taCookie.setMaxAge(0);
-					resp.addCookie(taCookie);
-				}
-			}
 		}
 
-		chain.doFilter(request, response);
+		chain.doFilter(req, resp);
 	}
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
 	}
 
-	private Cookie getCookie(Cookie[] cookies, String name) {
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (name.equals(cookie.getName())) {
-					return cookie;
-				}
-			}
-		}
-		return null;
-	}
 }

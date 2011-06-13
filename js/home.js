@@ -1,20 +1,18 @@
-$('body').bind('ajaxSuccess', function(event, request, settings) {
-	if (request.getResponseHeader('REQUIRES_AUTH') === '1') {
-		window.location = '/';
-	}
-	;
-});
-
+//TODO: Move these into dashboard prototype
 function post(action, _data, f) {
-	$.post(action, {
-		data : JSON.stringify(_data)
-	}, f, "json");
+	$.ajax({
+		  type: 'POST',
+		  url: action,
+		  data: _data,
+		  success: f,
+		  dataType: 'json'
+		});
 }
 
 function gettwituser() {
 	// see dashboard.jsp
-	var twituser = $("#twituser").val();
-	post("/a/gettwituser", {
+	var twituser = $('#twituser').val();
+	$.post('/a/gettwituser', {
 		twituser : twituser
 	}, function(data) {
 		alert(data);
@@ -32,43 +30,47 @@ function _dashboard(dashdiv) {
 	};
 }
 
-$(document).ready(
-		function() {
-			var dashboard = _dashboard($("#dashboard"));
-			function ta(T) {
-				var currentUser, screenName, profileImage, profileImageTag;
+var callback;
 
-				if (T.isConnected()) {
-					currentUser = T.currentUser;
-					screenName = currentUser.data('screen_name');
-					profileImage = currentUser.data('profile_image_url');
-					profileImageTag = '<img src="' + profileImage + '"/>';
-					$('#tcp').append(
-							profileImageTag
-									+ ' <a href="#" id=\"signout-link\">'
-									+ screenName + ', Sign out &gt;&gt;</a>');
+function _login(logindiv) {
+	var nli = $('div.login_Notloggedin',logindiv);
+	var li = $('div.login_Loggedin',logindiv);
+	var un = $('div.login_Loggedin span.login_userName',li);
+	
+	$('input.login_Login',nli).click( function(event) {
+		var x,y;
+		if ($.browser.msie) {//hacked together for IE browsers
+			y = window.screenTop - 120;
+			x = window.screenLeft + ((document.body.offsetWidth + 20)/2) - 800;
+		}else{
+			y = window.screenY;
+			x = window.screenX + window.outerWidth - 800;
+		}
 
-					$("#signout-link").bind("click", function() {
-						twttr.anywhere.signOut();
-						window.location = '/logout'
-					});
-				} else {
-					T('#tcp').connectButton({
-						authComplete : function(user) {
-							dashboard.reload(user);
-						},
-						signOut : function() {
-						}
-					});
-				}
-			}
-			twttr.anywhere.config({ callbackURL: "http://twitstreet.com/callback" });
-			twttr.anywhere(ta);
+		window.open('/login','twitstreet_login',
+				'height=10,width=800,left='+x+',top='+y+
+				',toolbar=0,scrollbars=0,status=0,resizable=0,location=0,menuBar=0'
+				).focus();
 		});
 
-function setCookie(c_name, value, expiredays) {
-	var exdate = new Date();
-	exdate.setDate(exdate.getDate() + expiredays);
-	document.cookie = c_name + "=" + escape(value)
-			+ ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+	return {
+		callback : function(userId, userName) {
+			un.text(userName);
+			nli.hide();
+			li.show();
+		}
+	}
 }
+
+$(document).ready(
+		function() {
+			$('body').bind('ajaxSuccess', function(event, request, settings) {
+				if (request.getResponseHeader('REQUIRES_AUTH') === '1') {
+					window.location = '/';
+				}
+			});
+			
+			var dashboard = _dashboard($('#dashboard'));
+			var login = _login($('#login'));
+			callback = login.callback;
+		});

@@ -11,6 +11,7 @@ import com.twitstreet.filter.RequireAuthenticationFilter;
 import com.twitstreet.servlet.CallbackServlet;
 import com.twitstreet.servlet.FollowerQuoteServlet;
 import com.twitstreet.servlet.HomePageServlet;
+import com.twitstreet.servlet.LoginServlet;
 import com.twitstreet.servlet.LogoutServlet;
 
 public class TSServletConfig extends GuiceServletContextListener {
@@ -24,8 +25,9 @@ public class TSServletConfig extends GuiceServletContextListener {
 				filter("/a/*").through(RequireAuthenticationFilter.class);
 
 				serve("/").with(HomePageServlet.class);
-				serve("/logout").with(LogoutServlet.class);
+				serve("/login").with(LoginServlet.class);
 				serve("/callback").with(CallbackServlet.class);
+				serve("/logout").with(LogoutServlet.class);
 
 				serve("/a/gettwituser").with(FollowerQuoteServlet.class);
 			}

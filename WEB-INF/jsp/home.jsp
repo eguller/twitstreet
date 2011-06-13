@@ -27,7 +27,9 @@
 				<li><a href="#">Services</a></li>
 				<li><a href="#">Contact us</a></li>
 			</ul>
-			<div style="text-align: right"><span id="tcp"></span></div>
+			<div id="login" style="text-align: right">
+				<tag:login data="<%=data.login%>"></tag:login>
+			</div>
 		</div>
 	</div>
 	
@@ -116,5 +118,4 @@
 
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 	<script type="text/javascript" src="/js/home.js"></script>
-	<script type="text/javascript" src="http://platform.twitter.com/anywhere.js?id=<%=data.taApiKey%>&v=1"></script>
 </body>

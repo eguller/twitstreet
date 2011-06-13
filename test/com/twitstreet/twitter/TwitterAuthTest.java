@@ -1,6 +1,6 @@
 package com.twitstreet.twitter;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -35,18 +35,24 @@ public class TwitterAuthTest extends AbstractModule {
 		fail("Not yet implemented");
 	}
 
-	//@Test
+	@Test
 	public void authorize() throws Exception {
-		String[] requestTokenPair = twitterAuth.getNewRequestTokenPair();
-		String authorizationUrl = twitterAuth.getAuthorizationUrl(requestTokenPair);
+		String authorizationUrl = twitterAuth.getAuthenticationUrl("http://twitstreet.com/test").getPayload();
+		System.out.println("Make sure you are signed out from twitter");
 		System.out.println("go to: " + authorizationUrl + " and Approve twitstreet App.");
 		
-		System.out.println("What is the oauth_verifier in url?");
+		System.out.println("What is the oauth_token in url?");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String requestToken = br.readLine();
+		
+		System.out.println("What is the oauth_verifier in url?");
+		br = new BufferedReader(new InputStreamReader(System.in));
         String oauth_verifier = br.readLine();
 
-        String[] accessTokenPair = twitterAuth.getAccessTokenPair(requestTokenPair, oauth_verifier);
-        System.out.println("Access token/secret: " + accessTokenPair[0] + " / " + accessTokenPair[1]);
+        Result<TwitterAccessData> result = twitterAuth.getAccess(requestToken, oauth_verifier);
+        assertTrue(result.isSuccessful());
+        TwitterAccessData access = result.getPayload();
+        System.out.println("Access token/secret: " + access.getOauthToken() + " / " + access.getOauthTokenSecret());
         
         System.out.println("Trying to access an authorized method...");
         //String response = twitterAuth.doGet(accessTokenPair, "/1/account/verify_credentials.xml");
@@ -58,16 +64,6 @@ public class TwitterAuthTest extends AbstractModule {
 		//String[] accessTokenPair = new String[] { "14546643-tnvmhTtsvU0Q6fUCyomNtEFl86cKtQx9GQLhqwL6I", "7IX2WDTuP8HCAHs9vjitAF1ttveUkLlrTRKfGeZI" };
         //String response = twitterAuth.doGet(accessTokenPair, "/1/account/verify_credentials.xml");
         //System.out.println("Got:\n" + response);
-	}
-	
-	@Test
-	public void bridge() {
-		String requestToken = "0/bdAAAAAAC/bchNAAAAAPilDAAAAAAAnHSUTrCTvXA/umTqGHQhya9yzS4=tnvmhTtsvU0Q6fUCyomNtEFl86cKtQx9GQLhqwL6I";
-		String bridgeCode = "EsYLB6Bisd1wqPR0LosYvgY88pxA239NhVhgkk8Zok";
-		Result<TwitterAccessData> result = twitterAuth.getAccessDataWithBridge(requestToken, bridgeCode);
-		TwitterAccessData access = result.getPayload();
-        //String response = twitterProxy.doGet(accessTokenPair, "/1/account/verify_credentials.xml");
-        System.out.println("Got:\n" + access.getOauthToken());
 	}
 
 	@Override

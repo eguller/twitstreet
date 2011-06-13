@@ -12,7 +12,7 @@ public class SessionMgrImpl implements SessionMgr {
 	}
 
 	@Override
-	public Result<SessionData> login(String userId) {
+	public Result<SessionData> login(long userId) {
 		//TODO read from DB
 		TwitterAccessData accessData = new TwitterAccessData("oauthToken", "oauthTokenSecret", userId, "screenName");
 		return Result.success(new SessionData(accessData));

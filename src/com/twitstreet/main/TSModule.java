@@ -1,10 +1,14 @@
 package com.twitstreet.main;
 
 import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.twitstreet.session.SessionMgr;
 import com.twitstreet.session.SessionMgrImpl;
@@ -37,4 +41,12 @@ public class TSModule extends AbstractModule {
 			e.printStackTrace();
 		}
 	}
+	
+	@Provides
+	@Named("twitter.oauth.request")
+	Map<String,String> getTwitterOauthRequestMap() {
+		return new HashMap<String, String>();
+	}
+	
+	//TODO: cache provider
 }

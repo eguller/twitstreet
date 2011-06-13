@@ -10,7 +10,7 @@ public interface SessionMgr {
 	 * @param userId
 	 * @return 
 	 */
-	public Result<SessionData> login(String userId);
+	public Result<SessionData> login(long userId);
 	
 	/**
 	 * Start a session for new user. Save to DB.

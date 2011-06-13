@@ -13,6 +13,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.twitstreet.data.DashboardData;
 import com.twitstreet.data.HomeData;
+import com.twitstreet.data.LoginData;
 import com.twitstreet.session.SessionData;
 
 @SuppressWarnings("serial")
@@ -29,18 +30,19 @@ public class HomePageServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		DashboardData dashboardData = new DashboardData();
-
+		LoginData loginData = new LoginData();
+		
 		if( req.getSession(false) != null ) {
 			SessionData sessionData = sessionDataProvider.get();
-			dashboardData.userid = sessionData.getTwitterAccess().getUserId();
+			dashboardData.userid = sessionData.getTwitterAccess().getUserIdStr();
 			dashboardData.isVisible = true;
 		}
 		else {
-			dashboardData.isVisible = false;			
+			dashboardData.isVisible = false;
 		}
 
 		HomeData data = new HomeData();
-		
+		data.login = loginData;
 		data.dashboard = dashboardData;
 		data.taApiKey = consumerKey;
 		

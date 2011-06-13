@@ -3,38 +3,44 @@ package com.twitstreet.twitter;
 import java.security.MessageDigest;
 import java.util.Map;
 
-import org.scribe.builder.ServiceBuilder;
-import org.scribe.builder.api.TwitterApi;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.Token;
-import org.scribe.model.Verb;
-import org.scribe.model.Verifier;
-import org.scribe.oauth.OAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
+import twitter4j.conf.ConfigurationBuilder;
+
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.twitstreet.base.Result;
-import com.twitstreet.base.TSHttpUtils;
 
+@Singleton
 public class TwitterAuthImpl implements TwitterAuth {
 
-	private static Logger logger = LoggerFactory.getLogger(TwitterAuthImpl.class);
+	private static Logger logger = LoggerFactory
+			.getLogger(TwitterAuthImpl.class);
 
 	private final String consumerSecret;
 
-	private final OAuthService service;
+	private final TwitterFactory twitterFactory;
+	
+	@Inject
+	@Named("twitter.oauth.request")
+	private final Map<String,String> requestCache = null;
 
 	@Inject
-	public TwitterAuthImpl(@Named("com.twitstreet.meta.ConsumerKey") String consumerKey,
+	public TwitterAuthImpl(
+			@Named("com.twitstreet.meta.ConsumerKey") String consumerKey,
 			@Named("com.twitstreet.meta.ConsumerSecret") String consumerSecret) {
 
-		this.consumerSecret = consumerSecret;
+		ConfigurationBuilder confbuilder = new ConfigurationBuilder();
+		confbuilder.setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(
+				consumerSecret);
+		twitterFactory = new TwitterFactory(confbuilder.build());
 
-		this.service = new ServiceBuilder().provider(TwitterApi.class).apiKey(consumerKey).callback(
-				"http://twitstreet.com/callback").apiSecret(consumerSecret).build();
+		this.consumerSecret = consumerSecret;
 	}
 
 	@Override
@@ -77,56 +83,39 @@ public class TwitterAuthImpl implements TwitterAuth {
 
 	}
 
+	/*
+	 * Methods for getting OAuth 1.0a Access Token (REST API)
+	 */
 	@Override
-	public Result<TwitterAccessData> getAccessDataWithBridge(String accessToken, String oauth_bridge_code) {
+	public Result<TwitterAccessData> getAccess(String requestTokenStr,
+			String requestVerifier) {
 		try {
-			Token token = new Token(accessToken, "");
-			OAuthRequest request = new OAuthRequest(Verb.POST, "https://api.twitter.com/oauth/access_token");
-			request.addBodyParameter("oauth_bridge_code", oauth_bridge_code);
-			service.signRequest(token, request);
-			Response response = request.send();
-			logger.info("access token response({}) : {}", response.getCode(), response.getBody());
-	
-			if (response.getCode() == 200) {
-				Map<String, String> parmMap = TSHttpUtils.parseQueryParms(response.getBody());
-				String oauth_token = parmMap.get("oauth_token");
-				String oauth_token_secret = parmMap.get("oauth_token_secret");
-				String userId = parmMap.get("user_id");
-				String screenName = parmMap.get("screen_name");
-				
-				if(oauth_token!=null && oauth_token_secret!=null && userId!=null && screenName!=null) {
-					return Result.success( new TwitterAccessData(oauth_token, oauth_token_secret, userId, screenName) );
-				}
-				// else: fall through to fail result.
-	
-			}
-			// else: fall through to fail result.
-			
-			return Result.fail(TwitterError.BridgeAuthFailed);
+			String requestTokenSecret = requestCache.get(requestTokenStr);
+			RequestToken requestToken = new RequestToken(requestTokenStr,
+					requestTokenSecret);
+			AccessToken accessToken = twitterFactory.getInstance()
+					.getOAuthAccessToken(requestToken, requestVerifier);
+			return Result.success(new TwitterAccessData(accessToken.getToken(),
+					accessToken.getTokenSecret(), accessToken.getUserId(),
+					accessToken.getScreenName()));
 
 		} catch (Exception e) {
 			return Result.fail(e);
 		}
 	}
 
-	/*
-	 * Methods for getting OAuth 1.0a Access Token (REST API)
-	 */
-	public String[] getNewRequestTokenPair() {
-		Token token = service.getRequestToken();
-		return new String[] { token.getToken(), token.getSecret() };
-	}
+	@Override
+	public Result<String> getAuthenticationUrl(String callbackURL) {
+		try {
+			RequestToken token = twitterFactory.getInstance()
+					.getOAuthRequestToken(callbackURL);
+			requestCache.put(token.getToken(), token.getTokenSecret() );
+			return Result.success(token.getAuthenticationURL());
 
-	public String getAuthorizationUrl(String[] requestTokenPair) {
-		Token token = new Token(requestTokenPair[0], requestTokenPair[1]);
-		return service.getAuthorizationUrl(token);
-	}
-
-	public String[] getAccessTokenPair(String[] requestTokenPair, String oauth_verifier) {
-		Token token = new Token(requestTokenPair[0], requestTokenPair[1]);
-		Verifier verifier = new Verifier(oauth_verifier);
-		Token accessToken = service.getAccessToken(token, verifier);
-		return new String[] { accessToken.getToken(), accessToken.getSecret() };
+		} catch (Exception e) {
+			logger.info("OAuth failed", e);
+			return Result.fail(e);
+		}
 	}
 
 }

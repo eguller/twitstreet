@@ -4,14 +4,14 @@ public class TwitterAccessData {
 
 	private final String oauthToken;
 	private final String oauthTokenSecret;
-	private final String userId;
+	private final long userId;
 	private final String screenName;
 	
 	public TwitterAccessData() {
 		throw new RuntimeException("Not authenticated.");
 	}
 	
-	public TwitterAccessData(String oauthToken, String oauthTokenSecret, String userId, String screenName) {
+	public TwitterAccessData(String oauthToken, String oauthTokenSecret, long userId, String screenName) {
 		this.oauthToken = oauthToken;
 		this.oauthTokenSecret = oauthTokenSecret;
 		this.userId = userId;
@@ -26,8 +26,12 @@ public class TwitterAccessData {
 		return oauthTokenSecret;
 	}
 	
-	public String getUserId() {
+	public long getUserId() {
 		return userId;
+	}
+	
+	public String getUserIdStr() {
+		return String.valueOf(userId);
 	}
 	
 	public String getScreenName() {

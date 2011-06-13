@@ -27,17 +27,19 @@ public class RequireAuthenticationFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
-			ServletException {
-		
+	public void doFilter(ServletRequest request, ServletResponse response,
+			FilterChain filterChain) throws IOException, ServletException {
+
 		HttpServletRequest req = ((HttpServletRequest) request);
 
 		HttpSession session = req.getSession(false);
-		
+
 		String sessionKey = sessionMgr.getKey().toString();
 
-		if(session==null || session.getAttribute(sessionKey)==null) {
-			((HttpServletResponse)response).addHeader("REQUIRES_AUTH", "1");
+		if (session == null || session.getAttribute(sessionKey) == null) {
+			((HttpServletResponse) response).addHeader("REQUIRES_AUTH", "1");
+		} else {
+			filterChain.doFilter(request, response);
 		}
 
 	}
