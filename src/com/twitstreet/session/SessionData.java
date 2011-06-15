@@ -17,7 +17,7 @@ public class SessionData {
 		this.accessData = accessData;
 	}
 	
-	public TwitterAccessData getTwitterAccess() {
+	public TwitterAccessData getTwitterAccessData() {
 		return accessData;
 	}
 }

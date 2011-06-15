@@ -6,13 +6,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Singleton;
 
 @SuppressWarnings("serial")
 @Singleton
 public class FollowerQuoteServlet extends HttpServlet {
-	private static final Gson gson = new Gson();
+	private static Logger logger = LoggerFactory.getLogger(FollowerQuoteServlet.class);
 	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -21,8 +23,8 @@ public class FollowerQuoteServlet extends HttpServlet {
 	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String twitterUser = (String)request.getAttribute("twitteruser");
-		
+		String twitterUser = (String)request.getParameter("twitteruser");
+		logger.info("user:{}", twitterUser);
 	}
 	
 }

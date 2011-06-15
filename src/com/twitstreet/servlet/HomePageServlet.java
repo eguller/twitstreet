@@ -34,7 +34,7 @@ public class HomePageServlet extends HttpServlet {
 		
 		if( req.getSession(false) != null ) {
 			SessionData sessionData = sessionDataProvider.get();
-			dashboardData.userid = sessionData.getTwitterAccess().getUserIdStr();
+			dashboardData.userid = sessionData.getTwitterAccessData().getUserIdStr();
 			dashboardData.isVisible = true;
 		}
 		else {
