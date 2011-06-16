@@ -33,11 +33,11 @@ function _dashboard(dashdiv) {
 var callback;
 
 function _login(logindiv) {
-	var nli = $('div.login_Notloggedin',logindiv);
-	var li = $('div.login_Loggedin',logindiv);
-	var un = $('div.login_Loggedin span.login_userName',li);
+	var nli = $('div.Notloggedin',logindiv);
+	var li = $('div.Loggedin',logindiv);
+	var un = $('span.UserName',li);
 	
-	$('input.login_Login',nli).click( function(event) {
+	$('input.BtnLogin',nli).click( function(event) {
 		var x,y;
 		if ($.browser.msie) {//hacked together for IE browsers
 			y = window.screenTop - 120;
@@ -54,8 +54,8 @@ function _login(logindiv) {
 		});
 
 	return {
-		callback : function(userId, userName) {
-			un.text(userName);
+		callback : function(callbackData) {
+			un.text(callbackData.screenName);
 			nli.hide();
 			li.show();
 		}

@@ -90,7 +90,10 @@ public class TwitterAuthImpl implements TwitterAuth {
 	public Result<TwitterAccessData> getAccess(String requestTokenStr,
 			String requestVerifier) {
 		try {
-			String requestTokenSecret = requestCache.get(requestTokenStr);
+			String requestTokenSecret = requestCache.remove(requestTokenStr);
+			if(requestTokenSecret==null) {
+				return Result.fail(TwitterError.Timeout);				
+			}
 			RequestToken requestToken = new RequestToken(requestTokenStr,
 					requestTokenSecret);
 			AccessToken accessToken = twitterFactory.getInstance()
