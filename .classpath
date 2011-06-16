@@ -15,6 +15,8 @@
 	<classpathentry kind="lib" path="lib/cglib-nodep-2.2.2.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/ehcache-core-2.4.2.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/ehcache-jcache-1.2.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jsr107cache-1.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/gson-1.6.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.0.17-ga-bin.jar"/>

@@ -1,10 +1,13 @@
 package com.twitstreet.main;
 
 import java.io.FileReader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.jcache.JCache;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -42,10 +45,13 @@ public class TSModule extends AbstractModule {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Provides
 	@Named("twitter.oauth.request")
 	Map<String,String> getTwitterOauthRequestMap() {
-		return new HashMap<String, String>();
+		CacheManager cacheManager = CacheManager.create();
+		Cache cache = cacheManager.getCache("twitter.oauth.request");
+		return new JCache(cache);
 	}
 	
 	//TODO: cache provider
