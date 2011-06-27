@@ -13,14 +13,14 @@ public class SessionMgrImpl implements SessionMgr {
 
 	@Override
 	public Result<SessionData> login(long userId) {
-		//TODO read from DB
+		//TODO remove this method. We probably don't need it anymore.
 		TwitterAccessData accessData = new TwitterAccessData("oauthToken", "oauthTokenSecret", userId, "screenName");
 		return Result.success(new SessionData(accessData));
 	}
 
 	@Override
 	public Result<SessionData> register(TwitterAccessData accessData) {
-		// TODO Save to DB (insert or update, screenName may change)
+		// TODO 
 		return Result.success(new SessionData(accessData));
 	}
 

@@ -5,15 +5,11 @@ import com.twitstreet.base.Result;
 import com.twitstreet.twitter.TwitterAccessData;
 
 public interface SessionMgr {
-	/**
-	 * Start a session for registered user. Read from DB.
-	 * @param userId
-	 * @return 
-	 */
+	//TODO remove this method. We probably don't need it anymore.
 	public Result<SessionData> login(long userId);
 	
 	/**
-	 * Start a session for new user. Save to DB.
+	 * Start a session for new user. At least log it.
 	 * @param accessData
 	 * @return 
 	 */
