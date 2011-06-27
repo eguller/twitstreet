@@ -34,5 +34,8 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/httpclient-cache-4.1.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/httpcore-4.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/httpmime-4.1.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/logback-classic-0.9.28.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/logback-core-0.9.28.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
