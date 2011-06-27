@@ -23,7 +23,7 @@ public class FollowerQuoteServlet extends HttpServlet {
 	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String twitterUser = (String)request.getParameter("twitteruser");
+		String twitterUser = (String)request.getParameter("twituser");
 		logger.info("user:{}", twitterUser);
 	}
 	
