@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.data.StockDO;
-import com.twitstreet.db.mgr.StockMgr;
+import com.twitstreet.market.StockMgr;
 import com.twitstreet.twitter.TwitterProxy;
 
 @SuppressWarnings("serial")
@@ -30,7 +30,7 @@ public class StockQuoteServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String screenName = (String)request.getParameter("twituser");
 		StockDO stockFromTwitter = twitterProxy.getStock(screenName);
-		StockDO stockDO =  stockMgr.getStock(screenName);
+		StockDO stockDO =  stockMgr.getStock(screenName).getPayload();
 		if(stockDO == null){
 			stockMgr.makePersistent(stockFromTwitter);
 		}
