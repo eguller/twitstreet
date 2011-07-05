@@ -11,8 +11,14 @@ import net.sf.ehcache.jcache.JCache;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
+import com.twitstreet.db.base.ConnectionProvider;
+import com.twitstreet.db.base.HibernateConnection;
+import com.twitstreet.db.mgr.StockMgr;
+import com.twitstreet.db.mgr.StockMgrImpl;
 import com.twitstreet.session.SessionMgr;
 import com.twitstreet.session.SessionMgrImpl;
 import com.twitstreet.twitter.TwitterAuth;
@@ -25,9 +31,12 @@ public class TSModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bindPropertiesFile(System.getProperty("user.home")+"/.twitstreet/app.properties");
+		bind(HibernateConnection.class).toProvider(ConnectionProvider.class).in(Scopes.SINGLETON);  
 		bind(TwitterProxy.class).to(TwitterProxyImpl.class);
 		bind(TwitterAuth.class).to(TwitterAuthImpl.class);
 		bind(SessionMgr.class).to(SessionMgrImpl.class);
+		bind(StockMgr.class).to(StockMgrImpl.class).in(Scopes.SINGLETON);
+		
 	}
 
 	private void bindPropertiesFile(String propFileName) {

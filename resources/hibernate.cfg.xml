@@ -7,7 +7,7 @@
 		<!-- Database connection settings -->
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
 		<property name="connection.url">jdbc:mysql://localhost/twitstreet</property>
-		<property name="connection.username">twitsreet</property>
+		<property name="connection.username">twitstreet</property>
 		<property name="connection.password">123456</property>
 
 		<!-- JDBC connection pool (use the built-in) -->
@@ -22,5 +22,6 @@
 		<!-- Drop and re-create the database schema on startup -->
 		<property name="hbm2ddl.auto">update</property>
 		<property name="current_session_context_class">thread</property>
+		<mapping resource="com/twitstreet/dao/StockDO.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

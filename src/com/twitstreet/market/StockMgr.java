@@ -24,4 +24,10 @@ public interface StockMgr {
 	 * @return Result with no payload
 	 */
 	Result<Object> notifyBuy(String stock, double amount);
+	
+	/**
+	 * @param stock - Twitter user screen name
+	 * @return - Returns current stock state of twitter user.
+	 */
+	Result<Object> getStock(String stock);
 }

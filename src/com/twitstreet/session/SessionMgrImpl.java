@@ -14,7 +14,7 @@ public class SessionMgrImpl implements SessionMgr {
 	@Override
 	public Result<SessionData> login(long userId) {
 		//TODO remove this method. We probably don't need it anymore.
-		TwitterAccessData accessData = new TwitterAccessData("oauthToken", "oauthTokenSecret", userId, "screenName");
+		TwitterAccessData accessData = new TwitterAccessData("oauthToken", "oauthTokenSecret", userId, "name");
 		return Result.success(new SessionData(accessData));
 	}
 

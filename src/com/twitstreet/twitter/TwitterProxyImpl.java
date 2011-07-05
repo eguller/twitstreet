@@ -10,6 +10,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.twitstreet.db.data.StockDO;
 
 public class TwitterProxyImpl implements TwitterProxy {
 
@@ -28,9 +29,9 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	@Override
-	public int getFollowerCount(String screenName) {
+	public int getStockCount(String name) {
 		try {
-			User user = twitter.showUser(screenName);
+			User user = twitter.showUser(name);
 			return user.getFollowersCount();
 
 		} catch (Exception e) {
@@ -38,4 +39,22 @@ public class TwitterProxyImpl implements TwitterProxy {
 			return -1;
 		}
 	}
+
+	@Override
+	public StockDO getStock(String name) {
+		StockDO stockDO = new StockDO();
+		try {
+			User user = twitter.showUser(name);
+			stockDO.setId(user.getId());
+			stockDO.setTotal(user.getFollowersCount());
+			stockDO.setName(user.getScreenName());
+			stockDO.setSold(0);
+
+		} catch (Exception e) {
+			logger.error("twitter exception.", e);
+		}
+		return stockDO;
+	}
+	
+	
 }

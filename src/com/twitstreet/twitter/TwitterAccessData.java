@@ -8,7 +8,10 @@ public class TwitterAccessData {
 	private final String screenName;
 	
 	public TwitterAccessData() {
-		throw new RuntimeException("Not authenticated.");
+		this.oauthToken = null;
+		this.oauthTokenSecret = null;
+		this.userId = 0;
+		this.screenName = null;
 	}
 	
 	public TwitterAccessData(String oauthToken, String oauthTokenSecret, long userId, String screenName) {

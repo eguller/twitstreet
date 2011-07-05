@@ -1,8 +1,8 @@
-package com.twitstreet.dao;
+package com.twitstreet.db.data;
 
 import java.util.Date;
 
-public class UserDO {
+public class UserDO{
 	int id;
 	String username;
 	Date lastLogin;
