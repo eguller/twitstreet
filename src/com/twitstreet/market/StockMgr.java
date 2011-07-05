@@ -1,8 +1,8 @@
 package com.twitstreet.market;
 
+import com.twitstreet.base.IGenericMgr;
 import com.twitstreet.base.Result;
 import com.twitstreet.db.data.StockDO;
-import com.twitstreet.db.mgr.IGenericMgr;
 
 /**
  * Manages a cache of "percent available" of stocks.

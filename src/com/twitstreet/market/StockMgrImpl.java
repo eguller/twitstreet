@@ -9,13 +9,10 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
 import com.twitstreet.base.Result;
 import com.twitstreet.db.base.HibernateConnection;
 import com.twitstreet.db.base.IConnection;
 import com.twitstreet.db.data.StockDO;
-import com.twitstreet.twitter.TwitterProxy;
 
 public class StockMgrImpl implements StockMgr {
 	private HibernateConnection connection;  
@@ -66,7 +63,9 @@ public class StockMgrImpl implements StockMgr {
 	public void makePersistent(StockDO stockDO) {
 		try{
 			Session session = (Session) this.getConnection().getSession(); 
+			this.getConnection().beginTransaction();
 			session.save(stockDO);
+			this.getConnection().commitTransaction();
 		}
 		catch(HibernateException ex){
 			this.getConnection().rollbackTransaction();  
@@ -91,6 +90,7 @@ public class StockMgrImpl implements StockMgr {
 	public void updateTotal(StockDO stockDO) {
 		try{
 			Session session = (Session) this.getConnection().getSession();
+			this.getConnection().beginTransaction();
 			String hql = "update Stock set total =:total where id =:id";
 			Query query = session.createQuery(hql);
 			query.setInteger("total", stockDO.getTotal());

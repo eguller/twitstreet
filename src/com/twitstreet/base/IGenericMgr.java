@@ -1,4 +1,4 @@
-package com.twitstreet.db.mgr;
+package com.twitstreet.base;
 
 import com.twitstreet.db.base.IConnection;
 

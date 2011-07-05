@@ -12,5 +12,7 @@ public interface IConnection<T> {
     public void commitTransaction();  
   
     public void closeSession();  
+    
+    public void beginTransaction();
   
 }
