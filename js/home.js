@@ -15,7 +15,9 @@ function gettwituser() {
 	$.post('/a/gettwituser', {
 		twituser : twituser
 	}, function(data) {
-		//alert(data);
+        $('#s_total').html(data.total);
+        $('#s_available').html(data.total - data.sold);
+        $('#s_sold').html(data.sold);
 	});
 }
 

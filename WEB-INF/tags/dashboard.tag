@@ -25,15 +25,15 @@
 						</tr>
 						<tr>
 							<td>Available</td>
-							<td>400</td>
+							<td id="s_available"></td>
 						</tr>
 						<tr>
 							<td>Sold</td>
-							<td>200</td>
+							<td id="s_sold"></td>
 						</tr>
 						<tr>
 							<td>Total</td>
-							<td>600</td>
+							<td id="s_total"></td>
 						</tr>
 					</table>
 				</div>

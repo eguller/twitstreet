@@ -31,14 +31,15 @@ public interface StockMgr extends IGenericMgr<StockDO>{
 	 * @param stock - Twitter user screen name
 	 * @return - Returns current stock state of twitter user.
 	 */
-	Result<StockDO> getStock(String name);
+	Result<StockDO> getStock(String stock);
 	
 	/**
 	 * Update total follower count.
 	 * Do not call makePersistenUpdate directly,
 	 * if there is a sold/buy request
 	 * we do not want to sold stock count.
-	 * @param stockDO - stock object with updated <code>total</code>. 
+	 * @param stockId - stockId.
+     * @param total - total
 	 */
-	public void updateTotal(StockDO stockDO);
+	public void updateTotal(long stockId, int total);
 }

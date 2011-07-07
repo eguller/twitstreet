@@ -1,20 +1,18 @@
 package com.twitstreet.twitter;
 
-import java.security.MessageDigest;
-import java.util.Map;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
+import com.twitstreet.base.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-import com.twitstreet.base.Result;
+import java.security.MessageDigest;
+import java.util.Map;
 
 @Singleton
 public class TwitterAuthImpl implements TwitterAuth {
@@ -43,7 +41,6 @@ public class TwitterAuthImpl implements TwitterAuth {
 		this.consumerSecret = consumerSecret;
 	}
 
-	@Override
 	public Result<String> getUserIdFromTACookie(String value) {
 		// parse cookie "user_id:signature"
 		int idx = value.indexOf(':');
@@ -86,7 +83,6 @@ public class TwitterAuthImpl implements TwitterAuth {
 	/*
 	 * Methods for getting OAuth 1.0a Access Token (REST API)
 	 */
-	@Override
 	public Result<TwitterAccessData> getAccess(String requestTokenStr,
 			String requestVerifier) {
 		try {
@@ -107,7 +103,6 @@ public class TwitterAuthImpl implements TwitterAuth {
 		}
 	}
 
-	@Override
 	public Result<String> getAuthenticationUrl(String callbackURL) {
 		try {
 			RequestToken token = twitterFactory.getInstance()

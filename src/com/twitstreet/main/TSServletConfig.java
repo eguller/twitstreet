@@ -1,7 +1,5 @@
 package com.twitstreet.main;
 
-import javax.servlet.ServletContextEvent;
-
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -11,15 +9,15 @@ import com.twitstreet.db.base.HibernateConnection;
 import com.twitstreet.filter.AuthenticationFilter;
 import com.twitstreet.filter.RequireAuthenticationFilter;
 import com.twitstreet.market.StockMgr;
-import com.twitstreet.servlet.CallbackServlet;
-import com.twitstreet.servlet.StockQuoteServlet;
-import com.twitstreet.servlet.HomePageServlet;
-import com.twitstreet.servlet.LoginServlet;
-import com.twitstreet.servlet.LogoutServlet;
+import com.twitstreet.servlet.*;
+import com.twitstreet.session.SessionMgr;
+
+import javax.servlet.ServletContextEvent;
 
 public class TSServletConfig extends GuiceServletContextListener {
 	HibernateConnection connection;
 	@Inject StockMgr stockMgr;
+    @Inject SessionMgr sessionMgr;
 	@Override
 	protected Injector getInjector() {
 		return Guice.createInjector(new TSModule(), new ServletModule() {
@@ -48,6 +46,7 @@ public class TSServletConfig extends GuiceServletContextListener {
         stockMgr = getInjector().getInstance(StockMgr.class);
 		connection.connect();
         stockMgr.setConnection(connection);
+        sessionMgr.setConnection(connection);
 	}
 
 }

@@ -1,10 +1,17 @@
 package com.twitstreet.session;
 
 import com.google.inject.Key;
+import com.twitstreet.base.IGenericMgr;
 import com.twitstreet.base.Result;
+import com.twitstreet.db.data.UserDO;
 import com.twitstreet.twitter.TwitterAccessData;
 
-public interface SessionMgr {
+/**
+ * TODO
+ * Session Manager may be a bad place to make user-db operations.
+ * If this class has another intend make a new class for user-db operations.
+ * */
+public interface SessionMgr extends IGenericMgr<UserDO> {
 	//TODO remove this method. We probably don't need it anymore.
 	public Result<SessionData> login(long userId);
 	
@@ -20,4 +27,12 @@ public interface SessionMgr {
 	 * @return
 	 */
 	public Key<SessionData> getKey();
+
+    /**
+     * Return user by given twitter id
+     * @param userId - User id given by twitter.
+     * @return - user details.
+     */
+    public Result<UserDO> getUserById(long userId);
+
 }
