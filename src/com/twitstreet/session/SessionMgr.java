@@ -20,7 +20,7 @@ public interface SessionMgr extends IGenericMgr<UserDO> {
 	 * @param accessData
 	 * @return 
 	 */
-	public Result<SessionData> register(TwitterAccessData accessData);
+	public Result<UserDO> register(TwitterAccessData accessData);
 	
 	/**
 	 * Gets the guice binding key for Session Data.

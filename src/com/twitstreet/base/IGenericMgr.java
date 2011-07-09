@@ -8,10 +8,10 @@ public interface IGenericMgr<T> {
   
     public IConnection getConnection(); 
   
-    public void makePersistent(T var) ; 
+    public Result<T> makePersistent(T var) ; 
   
-    public void makePersistentUpdate(T var);
+    public Result<T> makePersistentUpdate(T var);
   
-    public void makeTransient(T var);  
+    public Result<T> makeTransient(T var);  
   
 }

@@ -33,7 +33,7 @@ public class TSModule extends AbstractModule {
 		bind(HibernateConnection.class).toProvider(ConnectionProvider.class).in(Scopes.SINGLETON);  
 		bind(TwitterProxy.class).to(TwitterProxyImpl.class);
 		bind(TwitterAuth.class).to(TwitterAuthImpl.class);
-		bind(SessionMgr.class).to(SessionMgrImpl.class);
+		bind(SessionMgr.class).to(SessionMgrImpl.class).in(Scopes.SINGLETON);
 		bind(StockMgr.class).to(StockMgrImpl.class).in(Scopes.SINGLETON);
 		
 	}

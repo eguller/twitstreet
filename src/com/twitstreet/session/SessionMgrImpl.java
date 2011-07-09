@@ -1,6 +1,7 @@
 package com.twitstreet.session;
 
 import com.google.inject.Key;
+import com.google.inject.name.Named;
 import com.twitstreet.base.Result;
 import com.twitstreet.db.base.HibernateConnection;
 import com.twitstreet.db.base.IConnection;
@@ -13,11 +14,13 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class SessionMgrImpl implements SessionMgr {
     private HibernateConnection connection;
     private static Logger logger = LoggerFactory.getLogger(SessionMgrImpl.class);
+    @Named("com.twitstreet.meta.InitialCash") int initialCash;
 	public Key<SessionData> getKey() {
 		return Key.get(SessionData.class);
 	}
@@ -28,10 +31,23 @@ public class SessionMgrImpl implements SessionMgr {
 		return Result.success(new SessionData(accessData));
 	}
 
-	public Result<SessionData> register(TwitterAccessData accessData) {
-		// TODO 
-		return Result.success(new SessionData(accessData));
+	public Result<UserDO> register(TwitterAccessData accessData) {
+		UserDO userDO = getUserById(accessData.getUserId()).getPayload();
+		if(userDO == null){
+			userDO = new UserDO();
+			userDO.setUserId(accessData.getUserId());
+			userDO.setScreenName(accessData.getScreenName());
+			userDO.setFirstLogin(Calendar.getInstance().getTime());
+			userDO.setLastLogin(Calendar.getInstance().getTime());
+			userDO.setPortfolio(0);
+			userDO.setCash(initialCash);
+			userDO.setOauthToken(accessData.getOauthToken());
+			userDO.setOauthTokenSecret(accessData.getOauthTokenSecret());
+			makePersistent(userDO);
+		}
+		return Result.success(userDO);
 	}
+	
 
     public Result<UserDO> getUserById(long id){
         UserDO userDO = null;
@@ -57,15 +73,30 @@ public class SessionMgrImpl implements SessionMgr {
     }
 
     public IConnection getConnection() {
-        return null;
+        return connection;
     }
 
-    public void makePersistent(UserDO var) {
+    public Result<UserDO> makePersistent(UserDO userDO) {
+    	try {
+            Session session = (Session) this.getConnection().getSession();
+            this.getConnection().beginTransaction();
+            session.save(userDO);
+            this.getConnection().commitTransaction();
+        } catch (HibernateException ex) {
+            this.getConnection().rollbackTransaction();
+            logger.error("Exception in StockMgrImpl.makePersistent().", ex);
+            Result.fail(ex);
+        } finally {
+            this.getConnection().closeSession();
+        }
+        return Result.success(userDO);
     }
 
-    public void makePersistentUpdate(UserDO var) {
+    public Result<UserDO> makePersistentUpdate(UserDO var) {
+    	return Result.success(var);
     }
 
-    public void makeTransient(UserDO var) {
+    public Result<UserDO> makeTransient(UserDO var) {
+    	return Result.success(var);
     }
 }

@@ -2,6 +2,8 @@ package com.twitstreet.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +18,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.base.Result;
 import com.twitstreet.data.CallbackData;
+import com.twitstreet.db.data.PortfolioDO;
+import com.twitstreet.db.data.UserDO;
 import com.twitstreet.session.SessionData;
 import com.twitstreet.session.SessionMgr;
 import com.twitstreet.twitter.TwitterAccessData;
@@ -51,17 +55,23 @@ public class CallbackServlet extends HttpServlet {
 		
 		if(result.isSuccessful()) {
 			TwitterAccessData accessData = result.getPayload();
-			Result<SessionData> registerResult = sessionMgr.register(accessData);
+			Result<UserDO> registerResult = sessionMgr.register(accessData);
 			
 			if(registerResult.isSuccessful()) {
 				String sessionKey = sessionMgr.getKey().toString();
-				SessionData sessionData = registerResult.getPayload();
-				req.getSession(true).setAttribute(sessionKey, sessionData );
+				UserDO userDO = registerResult.getPayload();
+
+				SessionData sessionData = new SessionData(userDO);
+				accessData = sessionData.getTwitterAccessData();
 				
 				CallbackData data = new CallbackData();
-				accessData = sessionData.getTwitterAccessData();
-				data.userId = accessData.getUserIdStr();
-				data.screenName = accessData.getScreenName();
+				data.setUserId(accessData.getUserIdStr());
+				data.setScreenName(accessData.getScreenName());
+				data.setCash(userDO.getCash());
+				data.setPortfolio(userDO.getPortfolio());
+				data.setPortfolioDOList(new ArrayList<PortfolioDO>());
+				
+				req.getSession(true).setAttribute(sessionKey, sessionData );
 				req.setAttribute("data", gson.toJson(data));
 				getServletContext().getRequestDispatcher("/WEB-INF/jsp/callback.jsp").forward(req, resp);
 				return;

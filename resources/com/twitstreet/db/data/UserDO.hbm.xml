@@ -10,5 +10,7 @@
 		<property name="firstLogin" column="firstLogin" type="timestamp" not-null="true" />
 		<property name="cash" column="cash" type="integer" not-null="true" />
 		<property name="portfolio" column="portfolio" type="integer" not-null="true" />
+		<property name="oauthToken" column="oauthToken" type="string" not-null="true"></property>
+		<property name="oauthTokenSecret" column="oauthTokenSecret" type="string" not-null="true"></property>
 	</class>
 </hibernate-mapping>

@@ -44,6 +44,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent){
 		connection = getInjector().getInstance(HibernateConnection.class);  
         stockMgr = getInjector().getInstance(StockMgr.class);
+        sessionMgr = getInjector().getInstance(SessionMgr.class);
 		connection.connect();
         stockMgr.setConnection(connection);
         sessionMgr.setConnection(connection);

@@ -9,7 +9,9 @@ public class UserDO{
     Date lastLogin;
     int cash;
     int portfolio;
-
+    String oauthToken;
+    String oauthTokenSecret;
+    
     public long getUserId() {
         return userId;
     }
@@ -58,5 +60,19 @@ public class UserDO{
         this.portfolio = portfolio;
     }
 
+	public String getOauthToken() {
+		return oauthToken;
+	}
 
+	public void setOauthToken(String oauthToken) {
+		this.oauthToken = oauthToken;
+	}
+
+	public String getOauthTokenSecret() {
+		return oauthTokenSecret;
+	}
+
+	public void setOauthTokenSecret(String oauthTokenSecret) {
+		this.oauthTokenSecret = oauthTokenSecret;
+	}
 }

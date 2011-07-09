@@ -54,7 +54,7 @@ public class StockMgrImpl implements StockMgr {
         return connection;
     }
 
-    public void makePersistent(StockDO stockDO) {
+    public Result<StockDO> makePersistent(StockDO stockDO) {
         try {
             Session session = (Session) this.getConnection().getSession();
             this.getConnection().beginTransaction();
@@ -63,17 +63,19 @@ public class StockMgrImpl implements StockMgr {
         } catch (HibernateException ex) {
             this.getConnection().rollbackTransaction();
             logger.error("Exception in StockMgrImpl.makePersistent().", ex);
+            Result.fail(ex);
         } finally {
             this.getConnection().closeSession();
         }
+        return Result.success(stockDO);
     }
 
-    public void makePersistentUpdate(StockDO var) {
-
+    public Result<StockDO> makePersistentUpdate(StockDO var) {
+    	return Result.success(var);
     }
 
-    public void makeTransient(StockDO var) {
-
+    public Result<StockDO> makeTransient(StockDO var) {
+    	return Result.success(var);
     }
 
     public void updateTotal(long id, int total) {
