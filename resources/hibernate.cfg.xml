@@ -23,5 +23,6 @@
 		<property name="hbm2ddl.auto">update</property>
 		<property name="current_session_context_class">thread</property>
 		<mapping resource="com/twitstreet/db/data/StockDO.hbm.xml" />
+		<mapping resource="com/twitstreet/db/data/UserDO.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

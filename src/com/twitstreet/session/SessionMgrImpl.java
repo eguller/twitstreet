@@ -20,7 +20,7 @@ import java.util.List;
 public class SessionMgrImpl implements SessionMgr {
     private HibernateConnection connection;
     private static Logger logger = LoggerFactory.getLogger(SessionMgrImpl.class);
-    @Named("com.twitstreet.meta.InitialCash") int initialCash;
+    private static final int initialCash = 10000;
 	public Key<SessionData> getKey() {
 		return Key.get(SessionData.class);
 	}
@@ -60,6 +60,7 @@ public class SessionMgrImpl implements SessionMgr {
             this.getConnection().commitTransaction();
         } catch (HibernateException ex) {
             ex.printStackTrace();
+            logger.error("Exception in SessionMgrImpl.getUserById" , ex);
             return Result.fail(ex);
         } finally {
             this.getConnection().closeSession();
@@ -84,7 +85,7 @@ public class SessionMgrImpl implements SessionMgr {
             this.getConnection().commitTransaction();
         } catch (HibernateException ex) {
             this.getConnection().rollbackTransaction();
-            logger.error("Exception in StockMgrImpl.makePersistent().", ex);
+            logger.error("Exception in SessionMgrImpl.makePersistent().", ex);
             Result.fail(ex);
         } finally {
             this.getConnection().closeSession();
