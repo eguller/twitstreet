@@ -16,8 +16,14 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.twitstreet.db.base.ConnectionProvider;
 import com.twitstreet.db.base.HibernateConnection;
+import com.twitstreet.market.PortfolioMgr;
+import com.twitstreet.market.PortfolioMgrImpl;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.market.StockMgrImpl;
+import com.twitstreet.market.StockPriceMgr;
+import com.twitstreet.market.StockPriceMgrImpl;
+import com.twitstreet.market.TransactionMgr;
+import com.twitstreet.market.TransactionMgrImpl;
 import com.twitstreet.session.SessionMgr;
 import com.twitstreet.session.SessionMgrImpl;
 import com.twitstreet.twitter.TwitterAuth;
@@ -33,8 +39,11 @@ public class TSModule extends AbstractModule {
 		bind(HibernateConnection.class).toProvider(ConnectionProvider.class).in(Scopes.SINGLETON);  
 		bind(TwitterProxy.class).to(TwitterProxyImpl.class);
 		bind(TwitterAuth.class).to(TwitterAuthImpl.class);
-		bind(SessionMgr.class).to(SessionMgrImpl.class).in(Scopes.SINGLETON);
-		bind(StockMgr.class).to(StockMgrImpl.class).in(Scopes.SINGLETON);
+		bind(SessionMgr.class).to(SessionMgrImpl.class);
+		bind(StockMgr.class).to(StockMgrImpl.class);
+		bind(TransactionMgr.class).to(TransactionMgrImpl.class);
+		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class);
+		bind(StockPriceMgr.class).to(StockPriceMgrImpl.class);
 		
 	}
 

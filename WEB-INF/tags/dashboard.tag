@@ -4,14 +4,15 @@
 	<div class="sectionHeader">Dashboard (<%=data.userid%>)</div>
 	<table width="100%">
 		<tr>
-			<td colspan="2">Cash: 34000$ - Follower: 47000$ - Total: 81000$
-				- Rank: 241.</td>
+			<td colspan="2" id="balance-rank">Cash: ***$ - Portfolio: ***$ - Total: ***$
+				- Rank: ***.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
 				<div>
 					<input type="text" title="Type a twitter's user name"
-						value="twit_street" id="twituser"  /> <input type="button" value="Get User!" onclick="gettwituser();"/>
+						value="twit_street" id="stock"  /> <input type="button" value="Get User!" onclick="getstock();"/>
+						<input type="hidden" value="twit_street" id="current_stock" />
 				</div>
 			</td>
 		</tr>
@@ -49,13 +50,13 @@
 						<tr>
 							<td><input type="text" />
 							</td>
-							<td><input type="button" value="Buy!" />
+							<td><input type="button" value="Buy!" id="buy_amount" onclick="buy();" />
 							</td>
 						</tr>
 						<tr>
 							<td><input type="text" />
 							</td>
-							<td><input type="button" value="Sell" />
+							<td><input type="button" value="Sell" id="sell_amount" onclick="sell();"/>
 							</td>
 						</tr>
 					</table>

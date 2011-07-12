@@ -9,16 +9,32 @@ function post(action, _data, f) {
 		});
 }
 
-function gettwituser() {
+function getstock() {
 	// see dashboard.jsp
-	var twituser = $('#twituser').val();
-	$.post('/a/gettwituser', {
-		twituser : twituser
+	var stock = $('#stock').val();
+	$("current_stock").val(stock);
+	$.post('/a/getstock', {
+		stock : stock
 	}, function(data) {
         $('#s_total').html(data.total);
         $('#s_available').html(data.total - data.sold);
         $('#s_sold').html(data.sold);
 	});
+}
+
+function buy(){
+	var currentStock = $("current_stock").val();
+	var amount = $("buy_amount").val();
+	$.post('/a/buy', {
+		stock : currentStock,
+		amount : amount
+	}, function(data){
+		alert('hello data');
+	});
+}
+
+function sell(){
+	alert('hello sell');
 }
 
 // Move to dashboard.js if we need to reuse.
@@ -58,6 +74,7 @@ function _login(logindiv) {
 	return {
 		callback : function(callbackData) {
 			un.text(callbackData.screenName);
+			$("#balance-rank").html("Cash: " + callbackData.cash + " - Portfolio: " + callbackData.portfolio + " - Total: " + callbackData.cash + callbackData.portfolio + " - Rank: ***" );
 			nli.hide();
 			li.show();
 		}

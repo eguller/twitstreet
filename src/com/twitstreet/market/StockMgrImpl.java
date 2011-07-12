@@ -1,5 +1,6 @@
 package com.twitstreet.market;
 
+import com.google.inject.Inject;
 import com.twitstreet.base.Result;
 import com.twitstreet.db.base.HibernateConnection;
 import com.twitstreet.db.base.IConnection;
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class StockMgrImpl implements StockMgr {
-    private HibernateConnection connection;
+    @Inject private HibernateConnection connection;
     private static Logger logger = LoggerFactory.getLogger(StockMgrImpl.class);
 
     public Result<Double> getPercentSold(String stock) {

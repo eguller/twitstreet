@@ -15,9 +15,6 @@ import com.twitstreet.session.SessionMgr;
 import javax.servlet.ServletContextEvent;
 
 public class TSServletConfig extends GuiceServletContextListener {
-	HibernateConnection connection;
-	@Inject StockMgr stockMgr;
-    @Inject SessionMgr sessionMgr;
 	@Override
 	protected Injector getInjector() {
 		return Guice.createInjector(new TSModule(), new ServletModule() {
@@ -31,23 +28,10 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/callback").with(CallbackServlet.class);
 				serve("/logout").with(LogoutServlet.class);
 
-				serve("/a/gettwituser").with(StockQuoteServlet.class);
+				serve("/a/getstock").with(StockQuoteServlet.class);
+				serve("/a/buy").with(BuyServlet.class);
+				serve("/a/sell").with(SellServlet.class);
 			}
 		});
 	}
-	
-	@Override
-	public void contextDestroyed(ServletContextEvent arg0) {
-	}
-	
-	@Override
-	public void contextInitialized(ServletContextEvent servletContextEvent){
-		connection = getInjector().getInstance(HibernateConnection.class);  
-        stockMgr = getInjector().getInstance(StockMgr.class);
-        sessionMgr = getInjector().getInstance(SessionMgr.class);
-		connection.connect();
-        stockMgr.setConnection(connection);
-        sessionMgr.setConnection(connection);
-	}
-
 }

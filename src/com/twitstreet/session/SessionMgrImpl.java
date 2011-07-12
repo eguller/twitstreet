@@ -1,5 +1,6 @@
 package com.twitstreet.session;
 
+import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.google.inject.name.Named;
 import com.twitstreet.base.Result;
@@ -18,7 +19,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class SessionMgrImpl implements SessionMgr {
-    private HibernateConnection connection;
+    @Inject private HibernateConnection connection;
     private static Logger logger = LoggerFactory.getLogger(SessionMgrImpl.class);
     private static final int initialCash = 10000;
 	public Key<SessionData> getKey() {

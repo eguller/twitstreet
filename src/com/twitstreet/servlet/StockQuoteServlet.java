@@ -18,9 +18,9 @@ import java.io.IOException;
 @Singleton
 public class StockQuoteServlet extends HttpServlet {
 	private static Logger logger = LoggerFactory.getLogger(StockQuoteServlet.class);
-	@Inject StockMgr stockMgr = null;
+	@Inject private final StockMgr stockMgr = null;
 	@Inject TwitterProxy twitterProxy = null;
-    @Inject Gson gson = null;
+    @Inject private final Gson gson = null;
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
@@ -29,7 +29,7 @@ public class StockQuoteServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         response.setContentType("application/json;charset=utf-8");
-		String screenName = (String)request.getParameter("twituser");
+		String screenName = (String)request.getParameter("stock");
 		StockDO stockFromTwitter = twitterProxy.getStock(screenName);
 		StockDO stockDO =  stockMgr.getStock(screenName).getPayload();
         StockDO currentStock = new StockDO();
