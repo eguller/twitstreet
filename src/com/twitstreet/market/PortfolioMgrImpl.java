@@ -8,13 +8,6 @@ import com.twitstreet.db.data.PortfolioDO;
 
 public class PortfolioMgrImpl implements PortfolioMgr {
 	@Inject private HibernateConnection connection;
-	@Inject private 
-	@Override
-	public Result<Object> buy(String buyer, int price, String stock,
-			double percent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public void setConnection(IConnection connection) {
@@ -39,5 +32,12 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	@Override
 	public Result<PortfolioDO> makeTransient(PortfolioDO var) {
 		return Result.fail(new RuntimeException("Method not supported"));
+	}
+
+	@Override
+	public Result<Object> buy(String buyer, int price, String stock,
+			double percent) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
