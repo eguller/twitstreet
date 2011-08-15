@@ -48,7 +48,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 			stockDO.setId(user.getId());
 			stockDO.setTotal(user.getFollowersCount());
 			stockDO.setName(user.getScreenName());
-			stockDO.setSold(0);
+			stockDO.setPercentSold(0.0);
 
 		} catch (Exception e) {
 			logger.error("twitter exception.", e);

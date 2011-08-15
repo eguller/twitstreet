@@ -20,8 +20,6 @@ import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.PortfolioMgrImpl;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.market.StockMgrImpl;
-import com.twitstreet.market.StockPriceMgr;
-import com.twitstreet.market.StockPriceMgrImpl;
 import com.twitstreet.market.TransactionMgr;
 import com.twitstreet.market.TransactionMgrImpl;
 import com.twitstreet.session.SessionMgr;
@@ -43,8 +41,6 @@ public class TSModule extends AbstractModule {
 		bind(StockMgr.class).to(StockMgrImpl.class);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class);
 		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class);
-		bind(StockPriceMgr.class).to(StockPriceMgrImpl.class);
-		
 	}
 
 	private void bindPropertiesFile(String propFileName) {

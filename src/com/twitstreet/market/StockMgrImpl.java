@@ -19,11 +19,6 @@ public class StockMgrImpl implements StockMgr {
     @Inject private HibernateConnection connection;
     private static Logger logger = LoggerFactory.getLogger(StockMgrImpl.class);
 
-    public Result<Double> getPercentSold(String stock) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     public Result<StockDO> notifyBuy(String stock, double amount) {
         return null;
     }
@@ -34,6 +29,25 @@ public class StockMgrImpl implements StockMgr {
             Session session = (Session) this.getConnection().getSession();
             Criteria criteria = session.createCriteria(StockDO.class);
             criteria.add(Restrictions.eq("name", name));
+            List<StockDO> stockDOList = criteria.list();
+            stockDO = stockDOList.size() == 0 ? null : stockDOList.get(0);
+            this.getConnection().commitTransaction();
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return Result.fail(ex);
+        } finally {
+            this.getConnection().closeSession();
+        }
+
+        return Result.success(stockDO);
+    }
+    
+    public Result<StockDO> getStockById(long id) {
+        StockDO stockDO = null;
+        try {
+            Session session = (Session) this.getConnection().getSession();
+            Criteria criteria = session.createCriteria(StockDO.class);
+            criteria.add(Restrictions.eq("id", id));
             List<StockDO> stockDOList = criteria.list();
             stockDO = stockDOList.size() == 0 ? null : stockDOList.get(0);
             this.getConnection().commitTransaction();
@@ -72,30 +86,38 @@ public class StockMgrImpl implements StockMgr {
     }
 
     public Result<StockDO> makePersistentUpdate(StockDO var) {
-    	return Result.success(var);
+    	return Result.fail(new RuntimeException("Method not supported"));
     }
 
     public Result<StockDO> makeTransient(StockDO var) {
-    	return Result.success(var);
+    	return Result.fail(new RuntimeException("Method not supported"));
     }
 
-    public void updateTotal(long id, int total) {
+    public StockDO updateTotal(long stockId, int total) {
         {
+        	StockDO stockDO = null;
             try {
                 Session session = (Session) this.getConnection().getSession();
                 this.getConnection().beginTransaction();
                 String hql = "update StockDO set total =:total where id =:id";
                 Query query = session.createQuery(hql);
                 query.setInteger("total", total);
-                query.setLong("id", id);
+                query.setLong("id", stockId);
                 query.executeUpdate();
                 this.getConnection().commitTransaction();
+                stockDO = getStockById(stockId).getPayload();
             } catch (HibernateException ex) {
                 this.getConnection().rollbackTransaction();
                 logger.error("Exception in StockMgrImpl.updateTotal().", ex);
             } finally {
                 this.getConnection().closeSession();
             }
+            return stockDO;
         }
     }
+
+	@Override
+	public Result<Double> getPercentSold(String stockName) {
+		return Result.success(0.0);
+	}
 }

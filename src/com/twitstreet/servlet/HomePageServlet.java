@@ -36,7 +36,7 @@ public class HomePageServlet extends HttpServlet {
 			SessionData sessionData = sessionDataProvider.get();
 			
 			loginData.isLoggedIn = true;
-			loginData.userName = sessionData.getTwitterAccessData().getScreenName();
+			loginData.screenName = sessionData.getTwitterAccessData().getScreenName();
 			
 			dashboardData.userid = sessionData.getTwitterAccessData().getUserIdStr();
 			dashboardData.isVisible = true;

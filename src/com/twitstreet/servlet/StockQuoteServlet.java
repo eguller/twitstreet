@@ -29,9 +29,9 @@ public class StockQuoteServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         response.setContentType("application/json;charset=utf-8");
-		String screenName = (String)request.getParameter("stock");
-		StockDO stockFromTwitter = twitterProxy.getStock(screenName);
-		StockDO stockDO =  stockMgr.getStock(screenName).getPayload();
+		String stockName = (String)request.getParameter("stock");
+		StockDO stockFromTwitter = twitterProxy.getStock(stockName);
+		StockDO stockDO =  stockMgr.getStock(stockName).getPayload();
         StockDO currentStock = new StockDO();
 		if(stockDO == null){
 			stockMgr.makePersistent(stockFromTwitter);
@@ -47,7 +47,7 @@ public class StockQuoteServlet extends HttpServlet {
                 currentStock.setTotal(stockFromTwitter.getTotal());
 			}
 		}
-		logger.info("user:{}", screenName);
+		logger.info("user:{}", stockName);
         response.getWriter().write(gson.toJson(currentStock));
 	}
 	

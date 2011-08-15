@@ -12,12 +12,6 @@ import com.twitstreet.db.data.StockDO;
  *
  */
 public interface StockMgr extends IGenericMgr<StockDO>{
-	/**
-	 * Returns the percent of sold stocks. May query the sum from DB.
-	 * @param stock is the twitter id of stock
-	 * @return Result with percent sold for the stock.
-	 */
-	Result<Double> getPercentSold(String stock);
 	
 	/**
 	 * Updates the percent of sold stocks on cache.
@@ -34,6 +28,13 @@ public interface StockMgr extends IGenericMgr<StockDO>{
 	Result<StockDO> getStock(String stock);
 	
 	/**
+	 * Returns stock information by given id
+	 * @param id - Stock id
+	 * @return - Stock
+	 */
+	public Result<StockDO> getStockById(long id);
+	
+	/**
 	 * Update total follower count.
 	 * Do not call makePersistenUpdate directly,
 	 * if there is a sold/buy request
@@ -41,5 +42,12 @@ public interface StockMgr extends IGenericMgr<StockDO>{
 	 * @param stockId - stockId.
      * @param total - total
 	 */
-	public void updateTotal(long stockId, int total);
+	public StockDO updateTotal(long stockId, int total);
+	
+	/**
+	 * Returns stock sold percentage by name
+	 * @param stockName
+	 * @return
+	 */
+	public Result<Double> getPercentSold(String stockName);
 }

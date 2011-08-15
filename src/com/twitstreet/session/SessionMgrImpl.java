@@ -93,6 +93,25 @@ public class SessionMgrImpl implements SessionMgr {
         }
         return Result.success(userDO);
     }
+    
+    public Result<UserDO> getUserByName(String stockName){
+        UserDO userDO = null;
+        try {
+            Session session = (Session) this.getConnection().getSession();
+            Criteria criteria = session.createCriteria(UserDO.class);
+            criteria.add(Restrictions.eq("name", stockName));
+            List<UserDO> userList = criteria.list();
+            userDO = userList.size() == 0 ? null : userList.get(0);
+            this.getConnection().commitTransaction();
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            logger.error("Exception in SessionMgrImpl.getUserById" , ex);
+            return Result.fail(ex);
+        } finally {
+            this.getConnection().closeSession();
+        }
+        return Result.success(userDO);
+    }
 
     public Result<UserDO> makePersistentUpdate(UserDO var) {
     	return Result.success(var);

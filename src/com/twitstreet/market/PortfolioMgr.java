@@ -1,6 +1,9 @@
 package com.twitstreet.market;
 
+import com.twitstreet.base.IGenericMgr;
 import com.twitstreet.base.Result;
+import com.twitstreet.db.data.PortfolioDO;
+import com.twitstreet.db.data.StockDO;
 
 /**
  * Maintains a cache of stock portfolio and money of Users.
@@ -9,7 +12,7 @@ import com.twitstreet.base.Result;
  * @author ooktay
  *
  */
-public interface PortfolioMgr {
+public interface PortfolioMgr extends IGenericMgr<PortfolioDO>{
 	/**
 	 * Checks that buyer has enough enough money and updates buyer's portfolio
 	 * adding stocks.

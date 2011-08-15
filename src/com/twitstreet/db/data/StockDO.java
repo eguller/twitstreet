@@ -4,7 +4,8 @@ public class StockDO {
 	long id;
 	String name;
 	int total;
-	int sold;
+	double percentSold;
+	
 	public long getId() {
 		return id;
 	}
@@ -14,8 +15,8 @@ public class StockDO {
 	public String getName() {
 		return name;
 	}
-	public void setName(String screenName) {
-		this.name = screenName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public int getTotal() {
 		return total;
@@ -23,10 +24,13 @@ public class StockDO {
 	public void setTotal(int total) {
 		this.total = total;
 	}
-	public int getSold() {
-		return sold;
+	public double getPercentSold() {
+		return percentSold;
 	}
-	public void setSold(int sold) {
-		this.sold = sold;
+	public void setPercentSold(double percenSold) {
+		this.percentSold = percenSold;
+	}
+	public int getAvailable(){
+		return (int)(total * ( 1 - percentSold / 100));
 	}
 }

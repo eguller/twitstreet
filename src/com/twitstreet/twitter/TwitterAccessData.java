@@ -5,20 +5,20 @@ public class TwitterAccessData {
 	private final String oauthToken;
 	private final String oauthTokenSecret;
 	private final long userId;
-	private final String screenName;
+	private final String stockName;
 	
 	public TwitterAccessData() {
 		this.oauthToken = null;
 		this.oauthTokenSecret = null;
 		this.userId = 0;
-		this.screenName = null;
+		this.stockName = null;
 	}
 	
-	public TwitterAccessData(String oauthToken, String oauthTokenSecret, long userId, String screenName) {
+	public TwitterAccessData(String oauthToken, String oauthTokenSecret, long userId, String stockName) {
 		this.oauthToken = oauthToken;
 		this.oauthTokenSecret = oauthTokenSecret;
 		this.userId = userId;
-		this.screenName = screenName;
+		this.stockName = stockName;
 	}
 	
 	public String getOauthToken() {
@@ -38,6 +38,6 @@ public class TwitterAccessData {
 	}
 	
 	public String getScreenName() {
-		return screenName;
+		return stockName;
 	}
 }
