@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.base.Result;
 import com.twitstreet.data.CallbackData;
-import com.twitstreet.db.data.PortfolioDO;
+import com.twitstreet.db.data.UserStockDO;
 import com.twitstreet.db.data.UserDO;
 import com.twitstreet.session.SessionData;
 import com.twitstreet.session.SessionMgr;
@@ -69,7 +69,7 @@ public class CallbackServlet extends HttpServlet {
 				data.setScreenName(accessData.getScreenName());
 				data.setCash(userDO.getCash());
 				data.setPortfolio(userDO.getPortfolio());
-				data.setPortfolioDOList(new ArrayList<PortfolioDO>());
+				data.setPortfolioDOList(new ArrayList<UserStockDO>());
 				
 				req.getSession(true).setAttribute(sessionKey, sessionData );
 				req.setAttribute("data", gson.toJson(data));

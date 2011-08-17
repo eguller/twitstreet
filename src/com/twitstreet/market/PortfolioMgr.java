@@ -2,7 +2,8 @@ package com.twitstreet.market;
 
 import com.twitstreet.base.IGenericMgr;
 import com.twitstreet.base.Result;
-import com.twitstreet.db.data.PortfolioDO;
+import com.twitstreet.db.data.Portfolio;
+import com.twitstreet.db.data.UserStockDO;
 
 /**
  * Maintains a cache of stock portfolio and money of Users.
@@ -11,7 +12,7 @@ import com.twitstreet.db.data.PortfolioDO;
  * @author ooktay
  *
  */
-public interface PortfolioMgr extends IGenericMgr<PortfolioDO>{
+public interface PortfolioMgr extends IGenericMgr<UserStockDO>{
 	/**
 	 * Checks that buyer has enough enough money and updates buyer's portfolio
 	 * adding stocks.
@@ -22,4 +23,34 @@ public interface PortfolioMgr extends IGenericMgr<PortfolioDO>{
 	 * @return
 	 */
 	public Result<Object> buy(String buyer, int price, String stock, double percent);
+	
+	/**
+	 * Returns user portfolio
+	 * @param userId - User id
+	 * @return
+	 */
+	public Result<Portfolio> getUserPortfolio(long userId);
+	
+	/**
+	 * Returns user stock state in portfolio
+	 * @param userId - User Id
+	 * @param stockId - Stock Id
+	 * @return
+	 */
+	public Result<UserStockDO> getStockInPortfolio(long userId, long stockId);
+	
+	/**
+	 * Returns user portfolio
+	 * @param user
+	 * @return
+	 */
+	public Result<Portfolio> getUserPortfolio(String user);
+	
+	/**
+	 * Returns user stock state in portfolio
+	 * @param buyer
+	 * @param stock
+	 * @return
+	 */
+	public Result<UserStockDO> getStockInPortfolio(String buyer, String stock);
 }

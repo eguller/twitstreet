@@ -24,6 +24,6 @@
 		<property name="current_session_context_class">thread</property>
 		<mapping resource="com/twitstreet/db/data/StockDO.hbm.xml" />
 		<mapping resource="com/twitstreet/db/data/UserDO.hbm.xml" />
-		<mapping resource="com/twitstreet/db/data/PortfolioDO.hbm.xml" />
+		<mapping resource="com/twitstreet/db/data/UserStockDO.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

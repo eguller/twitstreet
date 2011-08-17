@@ -1,6 +1,6 @@
 package com.twitstreet.db.data;
 
-public class PortfolioDO {
+public class UserStockDO {
 	UserDO user;
 	StockDO stock;
 	double  percent;

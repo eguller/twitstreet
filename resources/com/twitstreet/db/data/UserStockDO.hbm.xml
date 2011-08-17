@@ -3,7 +3,7 @@
 	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.twitstreet.db.data">
-	<class name="PortfolioDO" table="portfolio" lazy="false">
+	<class name="UserStockDO" table="userstock" lazy="false">
 		<id name="id" column="id">
 			<generator class="native"></generator>
 		</id>
