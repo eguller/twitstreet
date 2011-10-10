@@ -1,18 +1,12 @@
 package com.twitstreet.main;
 
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.twitstreet.db.base.HibernateConnection;
 import com.twitstreet.filter.AuthenticationFilter;
-import com.twitstreet.filter.RequireAuthenticationFilter;
-import com.twitstreet.market.StockMgr;
 import com.twitstreet.servlet.*;
-import com.twitstreet.session.SessionMgr;
 
-import javax.servlet.ServletContextEvent;
 
 public class TSServletConfig extends GuiceServletContextListener {
 	@Override
@@ -20,13 +14,12 @@ public class TSServletConfig extends GuiceServletContextListener {
 		return Guice.createInjector(new TSModule(), new ServletModule() {
 			@Override
 			protected void configureServlets() {
-				filter("/a/*","/").through(AuthenticationFilter.class);
-				filter("/a/*").through(RequireAuthenticationFilter.class);
+				filter("/a/*").through(AuthenticationFilter.class);
 
 				serve("/").with(HomePageServlet.class);
-				serve("/login").with(LoginServlet.class);
-				serve("/callback").with(CallbackServlet.class);
-				serve("/logout").with(LogoutServlet.class);
+				serve("/signin").with(SigninServlet.class);
+				serve("/signout").with(SignoutServlet.class);
+				serve("signup").with(SignupServlet.class);
 
 				serve("/a/getstock").with(StockQuoteServlet.class);
 				serve("/a/buy").with(BuyServlet.class);

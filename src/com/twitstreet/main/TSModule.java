@@ -22,8 +22,8 @@ import com.twitstreet.market.StockMgr;
 import com.twitstreet.market.StockMgrImpl;
 import com.twitstreet.market.TransactionMgr;
 import com.twitstreet.market.TransactionMgrImpl;
-import com.twitstreet.session.SessionMgr;
-import com.twitstreet.session.SessionMgrImpl;
+import com.twitstreet.session.UserMgr;
+import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.twitter.TwitterAuth;
 import com.twitstreet.twitter.TwitterAuthImpl;
 import com.twitstreet.twitter.TwitterProxy;
@@ -37,7 +37,7 @@ public class TSModule extends AbstractModule {
 		bind(HibernateConnection.class).toProvider(ConnectionProvider.class).in(Scopes.SINGLETON);  
 		bind(TwitterProxy.class).to(TwitterProxyImpl.class);
 		bind(TwitterAuth.class).to(TwitterAuthImpl.class);
-		bind(SessionMgr.class).to(SessionMgrImpl.class);
+		bind(UserMgr.class).to(UserMgrImpl.class);
 		bind(StockMgr.class).to(StockMgrImpl.class);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class);
 		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class);
@@ -66,6 +66,4 @@ public class TSModule extends AbstractModule {
 		Cache cache = cacheManager.getCache("twitter.oauth.request");
 		return new JCache(cache);
 	}
-	
-	//TODO: cache provider
 }

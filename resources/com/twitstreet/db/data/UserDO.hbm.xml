@@ -4,13 +4,19 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.twitstreet.db.data">
 	<class name="UserDO" table="user" lazy="false">
-		<id name="userId" column="id" />
-        <property name="screenName" column="screenName" type="string" not-null="true" />
-		<property name="lastLogin" column="lastLogin" type="timestamp" not-null="true" />
-		<property name="firstLogin" column="firstLogin" type="timestamp" not-null="true" />
+		<id name="id" column="id">
+			<generator class="native"></generator>
+		</id>
+		<property name="userName" column="userName" type="string"
+			not-null="true" />
+		<property name="password" column="password" type="string"></property>
+		<property name="lastLogin" column="lastLogin" type="timestamp"
+			not-null="true" />
+		<property name="firstLogin" column="firstLogin" type="timestamp"
+			not-null="true" />
 		<property name="cash" column="cash" type="integer" not-null="true" />
-		<property name="portfolio" column="portfolio" type="integer" not-null="true" />
-		<property name="oauthToken" column="oauthToken" type="string" not-null="true"></property>
-		<property name="oauthTokenSecret" column="oauthTokenSecret" type="string" not-null="true"></property>
+		<property name="portfolio" column="portfolio" type="integer"
+			not-null="true" />
+		<property name="lastIp" column="lastIp" type="string"></property>
 	</class>
 </hibernate-mapping>

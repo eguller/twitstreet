@@ -11,22 +11,15 @@ import com.twitstreet.twitter.TwitterAccessData;
  * Session Manager may be a bad place to make user-db operations.
  * If this class has another intend make a new class for user-db operations.
  * */
-public interface SessionMgr extends IGenericMgr<UserDO> {
-	//TODO remove this method. We probably don't need it anymore.
-	public Result<SessionData> login(long userId);
+public interface UserMgr extends IGenericMgr<UserDO> {
 	
 	/**
 	 * Start a session for new user. At least log it.
 	 * @param accessData
 	 * @return 
 	 */
-	public Result<UserDO> register(TwitterAccessData accessData);
+	public Result<UserDO> signup(UserDO user);
 	
-	/**
-	 * Gets the guice binding key for Session Data.
-	 * @return
-	 */
-	public Key<SessionData> getKey();
 
     /**
      * Return user by given twitter id

@@ -1,0 +1,26 @@
+<script src="libjs/jquery.validate.min.js"></script>
+<script src="libjs/jquery.form.js"></script>
+<script src="js/twitstreet.js"></script>
+<script language="javascript" type="text/javascript">
+function randomString() {
+	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+	var string_length = 8;
+	var randomstring = '';
+	for (var i=0; i<string_length; i++) {
+		var rnum = Math.floor(Math.random() * chars.length);
+		randomstring += chars.substring(rnum,rnum+1);
+	}
+	return randomstring;
+}
+function randomNumber() {
+	var chars = "123456789";
+	var string_length = 4;
+	var randomnumber = '';
+	for (var i=0; i<string_length; i++) {
+		var rnum = Math.floor(Math.random() * chars.length);
+		randomnumber += chars.substring(rnum,rnum+1);
+	}
+	return randomnumber;
+}
+</script>
+<link rel="stylesheet" type="text/css" href="css/twitstreet.css" />

@@ -36,5 +36,7 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/easymock-3.0.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/objenesis-1.2.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jsp-api.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/bcprov-jdk16-146.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

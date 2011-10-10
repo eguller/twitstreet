@@ -15,21 +15,17 @@ import com.twitstreet.twitter.TwitterAuth;
 
 @SuppressWarnings("serial")
 @Singleton
-public class LoginServlet extends HttpServlet {
-	
-	@Inject
-	private final TwitterAuth auth = null;
-	
+public class SigninServlet extends HttpServlet {
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		Result<String> authURL = auth.getAuthenticationUrl("http://twitstreet.com/callback");
-		if(authURL.isSuccessful()) {
-			resp.sendRedirect(authURL.getPayload());
-		}
-		else {
-			PrintWriter out = resp.getWriter();
-			out.println(authURL);
-		}
+		doPost(req,resp);
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+
 	}
 }

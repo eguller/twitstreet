@@ -17,14 +17,14 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.twitstreet.session.SessionMgr;
+import com.twitstreet.session.UserMgr;
 
 @Singleton
 public class AuthenticationFilter implements Filter {
 	private static Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
 	@Inject
-	private final SessionMgr sessionMgr = null;
+	private final UserMgr sessionMgr = null;
 
 	@Override
 	public void destroy() {
@@ -35,21 +35,8 @@ public class AuthenticationFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException {
 
-		HttpServletRequest req = ((HttpServletRequest) request);
-		HttpServletResponse resp = ((HttpServletResponse) response);
-
-		HttpSession session = req.getSession(false);
-
-		String sessionKey = sessionMgr.getKey().toString();
-
-		if (session != null) {
-			if (session.getAttribute(sessionKey) == null) {
-				session.invalidate();
-				logger.warn("Invalidating empty session: {}", session.getId());
-			}
-		}
-
-		chain.doFilter(req, resp);
+		
+		chain.doFilter(request, response);
 	}
 
 	@Override

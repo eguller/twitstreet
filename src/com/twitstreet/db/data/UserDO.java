@@ -3,29 +3,30 @@ package com.twitstreet.db.data;
 import java.util.Date;
 
 public class UserDO{
-    long userId;
-    String screenName;
+    long id;
+    String userName;
+    String password;
+    String email;
     Date firstLogin;
     Date lastLogin;
     int cash;
     int portfolio;
-    String oauthToken;
-    String oauthTokenSecret;
+    String lastIp;
     
-    public long getUserId() {
-        return userId;
+	public long getId() {
+        return id;
     }
 
     public void setUserId(long userId) {
-        this.userId = userId;
+        this.id = userId;
     }
 
     public String getScreenName() {
-        return screenName;
+        return userName;
     }
 
-    public void setScreenName(String screenName) {
-        this.screenName = screenName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Date getFirstLogin() {
@@ -60,19 +61,25 @@ public class UserDO{
         this.portfolio = portfolio;
     }
 
-	public String getOauthToken() {
-		return oauthToken;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setOauthToken(String oauthToken) {
-		this.oauthToken = oauthToken;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public String getOauthTokenSecret() {
-		return oauthTokenSecret;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setOauthTokenSecret(String oauthTokenSecret) {
-		this.oauthTokenSecret = oauthTokenSecret;
+	public void setEmail(String email) {
+		this.email = email;
+	}
+    public String getLastIp() {
+		return lastIp;
+	}
+	public void setLastIp(String lastIp) {
+		this.lastIp = lastIp;
 	}
 }
