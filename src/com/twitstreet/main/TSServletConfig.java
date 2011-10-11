@@ -33,6 +33,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/signin").with(SigninServlet.class);
 				serve("/signout").with(SignoutServlet.class);
 				serve("/callback").with(CallBackServlet.class);
+				serve("/setup").with(SetupServlet.class);
 
 				serve("/a/getstock").with(StockQuoteServlet.class);
 				serve("/a/buy").with(BuyServlet.class);

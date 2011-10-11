@@ -9,7 +9,8 @@
 			</tr>
 			<tr>
 				<td>Database Port</td>
-				<td><input type="text" class="textbox" value="3309"></td>
+				<td><input type="text" class="textbox" value="3309">
+				</td>
 			</tr>
 			<tr>
 				<td>Database Schema</td>
@@ -18,11 +19,23 @@
 			</tr>
 			<tr>
 				<td>Consumer Key</td>
-				<td><input type="text" class="textbox" value=""></td>
+				<td><input type="text" class="textbox" value="">
+				</td>
 			</tr>
 			<tr>
 				<td>Consumer Secret</td>
-				<td><input type="text" class="textbox" value=""></td>
+				<td><input type="text" class="textbox" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>Database Admin</td>
+				<td><input type="text" class="textbox" value="root">
+				</td>
+			</tr>
+			<tr>
+				<td>Database Admin Password</td>
+				<td><input type="text" class="textbox">
+				</td>
 			</tr>
 			<tr>
 				<td colspan="2" align="right"><button class="button">Setup</button>

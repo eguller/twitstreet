@@ -8,9 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Singleton;
 
-@SuppressWarnings("serial")
 @Singleton
-public class SellServlet extends HttpServlet {
+public class SetupServlet extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -20,6 +19,6 @@ public class SellServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-
+		
 	}
 }
