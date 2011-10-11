@@ -92,6 +92,9 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	public Result<UserDO> makePersistentUpdate(UserDO var) {
+		Session session = (Session) this.getConnection().getSession();
+		session.update(var);
+		this.getConnection().commitTransaction();
 		return Result.success(var);
 	}
 

@@ -115,7 +115,7 @@ CUSTOM CLASSES
 ------------------------------ */
 #loginbox {
 	float: right;
-	width: 280px;
+	width: 150px;
 }
 
 #loginbox input {
@@ -197,6 +197,7 @@ CUSTOM CLASSES
 	outline: medium none;
 	text-shadow: none;
 }
+
 
 .datatbl {
 	border: 0;

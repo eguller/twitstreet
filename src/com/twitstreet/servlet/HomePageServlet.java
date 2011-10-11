@@ -2,25 +2,134 @@ package com.twitstreet.servlet;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.User;
+import twitter4j.auth.AccessToken;
+
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.twitstreet.data.DashboardData;
-import com.twitstreet.data.HomeData;
-import com.twitstreet.data.LoginData;
+import com.twitstreet.base.Result;
+import com.twitstreet.db.data.UserDO;
+import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
 @Singleton
 public class HomePageServlet extends HttpServlet {
+	public static final String TWITTER = "twitter";
+	@Inject
+	UserMgr userMgr;
+	String consumerKey;
+	String consumerSecret;
+
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		getServletContext().getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(req, resp);
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+
+		Twitter twitter = (Twitter) request.getSession()
+				.getAttribute("twitter");
+		if (twitter != null) {
+			try {
+				User twitUser = twitter.showUser(273572038);
+				System.out.println("Name: " + twitUser.getName());
+				System.out.println("Name: " + twitUser.getScreenName());
+			} catch (TwitterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			getServletContext().getRequestDispatcher(
+					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
+		} else if (validateCookies(request)) {
+			getServletContext().getRequestDispatcher(
+					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
+		} else {
+			getServletContext().getRequestDispatcher(
+					"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
+		}
+	}
+
+	private boolean validateCookies(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		boolean idFound = false;
+		boolean oAuthFound = false;
+		String idStr = "";
+		String oAuth = "";
+		boolean valid = false;
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(CallBackServlet.COOKIE_ID)) {
+				idStr = cookie.getValue();
+				idFound = true;
+			}
+			if (cookie.getName().equals(CallBackServlet.COOKIE_OAUTHTOKEN)) {
+				oAuth = cookie.getValue();
+				oAuthFound = true;
+			}
+
+			if (idFound && oAuthFound) {
+				try {
+					long id = Long.parseLong(idStr);
+					Result<UserDO> result = userMgr.getUserById(id);
+					if (result.getPayload() != null) {
+						UserDO user = result.getPayload();
+						if (user.getOauthToken() != null && user.getOauthToken().equals(oAuth)) {
+							Twitter twitter = createTwitterInstance(user);
+							request.getSession().setAttribute(TWITTER, twitter);
+							valid = true;
+						}
+					}
+				} catch (NumberFormatException nfe) {
+					// log here someday.
+				}
+				break;
+			}
+		}
+		return valid;
+	}
+
+	public String getConsumerKey() {
+		return consumerKey;
+	}
+
+	@Inject
+	public void setConsumerKey(
+			@Named("com.twitstreet.meta.ConsumerKey") String consumerKey) {
+		this.consumerKey = consumerKey;
+	}
+
+	public String getConsumerSecret() {
+		return consumerSecret;
+	}
+
+	@Inject
+	public void setConsumerSecret(
+			@Named("com.twitstreet.meta.ConsumerSecret") String consumerSecret) {
+		this.consumerSecret = consumerSecret;
+	}
+
+	public Twitter createTwitterInstance(UserDO user) {
+		Twitter twitter = new TwitterFactory().getInstance();
+		try {
+			User twitUser = twitter.showUser(user.getId());
+			System.out.println("Name: " + twitUser.getName());
+			System.out.println("Name: " + twitUser.getScreenName());
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		twitter.setOAuthConsumer(getConsumerKey(), getConsumerSecret());
+		AccessToken oathAccessToken = new AccessToken(user.getOauthToken(),
+				user.getOauthTokenSecret());
+		twitter.setOAuthAccessToken(oathAccessToken);
+		return twitter;
 	}
 
 }

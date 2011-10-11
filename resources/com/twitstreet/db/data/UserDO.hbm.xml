@@ -4,17 +4,14 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.twitstreet.db.data">
 	<class name="UserDO" table="user" lazy="false">
-		<id name="id" column="id">
-			<generator class="native"></generator>
-		</id>
+		<id name="id" column="id"></id>
 		<property name="userName" column="userName" type="string"
 			not-null="true" />
-		<property name="password" column="password" type="string"></property>
 		<property name="lastLogin" column="lastLogin" type="timestamp"
 			not-null="true" />
 		<property name="firstLogin" column="firstLogin" type="timestamp"
 			not-null="true" />
-		<property name="cash" column="cash" type="integer" not-null="true" />
+		<property name="cash" column="cash" type="integer" not-null="true"  />
 		<property name="portfolio" column="portfolio" type="integer"
 			not-null="true" />
 		<property name="lastIp" column="lastIp" type="string"></property>

@@ -1,5 +1,5 @@
 <div id="howtoplay">
-	<h3>Do you want to learn how to play ?</h3>
+	<h3>How to play ?</h3>
 	<p>Twitstreet is a stock exchange game. But in this game we are
 		buying and selling followers of twitter users.</p>
 	<p>In this game you will have 10.000$ cash initially. Every

@@ -5,23 +5,23 @@ import java.util.Date;
 public class UserDO{
     long id;
     String userName;
-    String password;
-    String email;
     Date firstLogin;
     Date lastLogin;
     int cash;
     int portfolio;
     String lastIp;
+    String oauthToken;
+    String oauthTokenSecret;
     
 	public long getId() {
         return id;
     }
 
-    public void setUserId(long userId) {
-        this.id = userId;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getScreenName() {
+    public String getUserName() {
         return userName;
     }
 
@@ -61,25 +61,26 @@ public class UserDO{
         this.portfolio = portfolio;
     }
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
     public String getLastIp() {
 		return lastIp;
 	}
 	public void setLastIp(String lastIp) {
 		this.lastIp = lastIp;
+	}
+
+	public String getOauthToken() {
+		return oauthToken;
+	}
+
+	public void setOauthToken(String oauthToken) {
+		this.oauthToken = oauthToken;
+	}
+
+	public String getOauthTokenSecret() {
+		return oauthTokenSecret;
+	}
+
+	public void setOauthTokenSecret(String oauthTokenSecret) {
+		this.oauthTokenSecret = oauthTokenSecret;
 	}
 }
