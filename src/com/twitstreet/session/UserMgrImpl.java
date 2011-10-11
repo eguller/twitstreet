@@ -7,7 +7,6 @@ import com.twitstreet.base.Result;
 import com.twitstreet.db.base.HibernateConnection;
 import com.twitstreet.db.base.IConnection;
 import com.twitstreet.db.data.UserDO;
-import com.twitstreet.twitter.TwitterAccessData;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

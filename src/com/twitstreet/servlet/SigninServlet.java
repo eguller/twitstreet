@@ -34,7 +34,7 @@ public class SigninServlet extends HttpServlet {
             StringBuffer callbackURL = req.getRequestURL();
             int index = callbackURL.lastIndexOf("/");
             callbackURL.replace(index, callbackURL.length(), "").append("/callback");
-            twitter.setOAuthConsumer(getConsumerKey(), getConsumerSecret());
+            twitter.setOAuthConsumer(consumerKey, consumerSecret);
             RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
             req.getSession().setAttribute("requestToken", requestToken);
             resp.sendRedirect(requestToken.getAuthenticationURL());
@@ -43,21 +43,6 @@ public class SigninServlet extends HttpServlet {
             throw new ServletException(e);
         }
 	}
-	
-	
-	public String getConsumerKey() {
-		return consumerKey;
-	}
-	@Inject
-	public void setConsumerKey(@Named("com.twitstreet.meta.ConsumerKey")String consumerKey) {
-		this.consumerKey = consumerKey;
-	}
-	public String getConsumerSecret() {
-		return consumerSecret;
-	}
-	
-	@Inject
-	public void setConsumerSecret(@Named("com.twitstreet.meta.ConsumerSecret")String consumerSecret) {
-		this.consumerSecret = consumerSecret;
-	}
+
+
 }

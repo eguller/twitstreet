@@ -13,15 +13,7 @@ public interface TwitterAuth {
 	 */
 	Result<String> getUserIdFromTACookie(String value);
 
-	/**
-	 * Return access data for REST API (OAuth 1.0a) using OAuth verifier
-	 * 
-	 * @param requestToken
-	 * @param requestVerifier
-	 * @return Result with TwitterAccessData
-	 */
-	Result<TwitterAccessData> getAccess(String requestToken, String requestVerifier);
-
+	
 	/**
 	 * Retrieve OAuth request token from twitter, save token secret and return
 	 * authentication url that includes the request token. Token secret is saved

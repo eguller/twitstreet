@@ -16,17 +16,18 @@ import twitter4j.User;
 import twitter4j.auth.AccessToken;
 
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.twitstreet.base.Result;
 import com.twitstreet.db.data.UserDO;
+import com.twitstreet.main.Twitstreet;
 import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
 @Singleton
 public class HomePageServlet extends HttpServlet {
 	public static final String TWITTER = "twitter";
-	@Inject
-	UserMgr userMgr;
+	@Inject UserMgr userMgr;
+	@Inject Twitstreet twitstreet;
+	
 	String consumerKey;
 	String consumerSecret;
 
@@ -34,6 +35,12 @@ public class HomePageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
+		if(!twitstreet.isInitialized()){
+			getServletContext().getRequestDispatcher(
+					"/WEB-INF/jsp/setup.jsp").forward(request, response);
+			return;
+		}
+		
 		Twitter twitter = (Twitter) request.getSession()
 				.getAttribute("twitter");
 		if (twitter != null) {
@@ -99,8 +106,7 @@ public class HomePageServlet extends HttpServlet {
 	}
 
 	@Inject
-	public void setConsumerKey(
-			@Named("com.twitstreet.meta.ConsumerKey") String consumerKey) {
+	public void setConsumerKey(String consumerKey) {
 		this.consumerKey = consumerKey;
 	}
 
@@ -109,8 +115,7 @@ public class HomePageServlet extends HttpServlet {
 	}
 
 	@Inject
-	public void setConsumerSecret(
-			@Named("com.twitstreet.meta.ConsumerSecret") String consumerSecret) {
+	public void setConsumerSecret(String consumerSecret) {
 		this.consumerSecret = consumerSecret;
 	}
 

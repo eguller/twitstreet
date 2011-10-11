@@ -1,6 +1,11 @@
 package com.twitstreet.main;
 
+import java.io.File;
+
+import javax.servlet.ServletContextEvent;
+
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
@@ -9,6 +14,14 @@ import com.twitstreet.servlet.*;
 
 
 public class TSServletConfig extends GuiceServletContextListener {
+	public void contextInitialized(ServletContextEvent servletContextEvent)  
+    {  
+		Twitstreet twitStreet = getInjector().getInstance(Twitstreet.class);
+		File f = new File(System.getProperty("user.home") + "/.twitstreet/twitstreet.properties");
+		if (f.exists()) {
+			twitStreet.initialize();
+		}
+    }   
 	@Override
 	protected Injector getInjector() {
 		return Guice.createInjector(new TSModule(), new ServletModule() {

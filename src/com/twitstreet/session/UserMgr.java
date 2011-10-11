@@ -4,7 +4,6 @@ import com.google.inject.Key;
 import com.twitstreet.base.IGenericMgr;
 import com.twitstreet.base.Result;
 import com.twitstreet.db.data.UserDO;
-import com.twitstreet.twitter.TwitterAccessData;
 
 /**
  * TODO

@@ -1,5 +1,6 @@
 package com.twitstreet.main;
 
+import java.io.File;
 import java.io.FileReader;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,6 +11,7 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.jcache.JCache;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.name.Named;
@@ -24,19 +26,19 @@ import com.twitstreet.market.TransactionMgr;
 import com.twitstreet.market.TransactionMgrImpl;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
-import com.twitstreet.twitter.TwitterAuth;
-import com.twitstreet.twitter.TwitterAuthImpl;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyImpl;
 
 public class TSModule extends AbstractModule {
-
+	@Inject Twitstreet twitStreet;
 	@Override
 	protected void configure() {
-		bindPropertiesFile(System.getProperty("user.home")+"/.twitstreet/app.properties");
-		bind(HibernateConnection.class).toProvider(ConnectionProvider.class).in(Scopes.SINGLETON);  
+		//bindPropertiesFile(System.getProperty("user.home")
+		//		+ "/.twitstreet/app.properties");
+		bind(HibernateConnection.class).toProvider(ConnectionProvider.class)
+				.in(Scopes.SINGLETON);
+		bind(Twitstreet.class).to(TwitstreetImpl.class).in(Scopes.SINGLETON);
 		bind(TwitterProxy.class).to(TwitterProxyImpl.class);
-		bind(TwitterAuth.class).to(TwitterAuthImpl.class);
 		bind(UserMgr.class).to(UserMgrImpl.class);
 		bind(StockMgr.class).to(StockMgrImpl.class);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class);
@@ -47,23 +49,15 @@ public class TSModule extends AbstractModule {
 		try {
 			Properties props = new Properties();
 			props.load(new FileReader(propFileName));
-			for(Entry<Object, Object> entry:props.entrySet()) {
+			for (Entry<Object, Object> entry : props.entrySet()) {
 				String name = (String) entry.getKey();
 				String value = (String) entry.getValue();
 				bindConstant().annotatedWith(Names.named(name)).to(value);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Provides
-	@Named("twitter.oauth.request")
-	Map<String,String> getTwitterOauthRequestMap() {
-		CacheManager cacheManager = CacheManager.create();
-		Cache cache = cacheManager.getCache("twitter.oauth.request");
-		return new JCache(cache);
-	}
+
 }
