@@ -1,4 +1,5 @@
 .DS_Store
 .idea
 twitstreet.iml
-WEB-INF/classes/*
+WEB-INF/classes/com
+WEB-INF/classes/*.xml
