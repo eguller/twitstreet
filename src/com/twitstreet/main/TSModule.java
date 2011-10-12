@@ -1,23 +1,20 @@
 package com.twitstreet.main;
 
-import java.io.File;
 import java.io.FileReader;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.jcache.JCache;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
-import com.google.inject.Provides;
 import com.google.inject.Scopes;
-import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.twitstreet.db.base.ConnectionProvider;
 import com.twitstreet.db.base.HibernateConnection;
+import com.twitstreet.db.init.DBScriptParser;
+import com.twitstreet.db.init.DBScriptParserImpl;
+import com.twitstreet.db.init.DBSetup;
+import com.twitstreet.db.init.DBSetupImpl;
 import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.PortfolioMgrImpl;
 import com.twitstreet.market.StockMgr;
@@ -43,6 +40,8 @@ public class TSModule extends AbstractModule {
 		bind(StockMgr.class).to(StockMgrImpl.class);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class);
 		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class);
+		bind(DBSetup.class).to(DBSetupImpl.class);
+		bind(DBScriptParser.class).to(DBScriptParserImpl.class);
 	}
 
 	private void bindPropertiesFile(String propFileName) {

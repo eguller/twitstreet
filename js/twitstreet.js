@@ -37,37 +37,29 @@ function sell(){
 	alert('hello sell');
 }
 
-function signup(){
-	var userName = $("#signup_username").val();
-	var email = $("#signup_email").val();
-	var password ="#signup_password").val();
-	var valid = true;
-	if(userName == null || userName.length() < 4 || userName.length() > 9){
-		valid = false;
-	}
-	if(password == null || password.length() == 0 || password.length() > 16){
-		valid = false;
-	}
-	if(!validateemail(email)){
-		valid = false;
-	}
+function setup(){
+	var dbIp = $("#dbIp").val();
+	var dbPort = $("#dbPort").val();
+	var dbAdmin =$("#dbAdmin").val();
+	var dbAdminPassword = $("#dbAdminPassword").val();
+	var dbName = $("#dbName").val();
+	var admin = $("#admin").val();
+	var adminPassword = $("#adminPassword").val();
+	var consumerKey = $("#consumerKey").val();
+	var consumerSecret = $("#consumerSecret").val();
 
-	$.post('/signup', {
-		userName : userName,
-		email : email,
-		password : password
+	$.post('/setup', {
+		dbIp : dbIp,
+		dbPort : dbPort,
+		dbAdmin : dbAdmin,
+		dbAdminPassword : dbAdminPassword,
+		dbName : dbName,
+		admin : admin,
+		adminPassword : adminPassword,
+		consumerKey : consumerKey,
+		consumerSecret : consumerSecret
 	}, function(data) {
 		
 	});
-	
-	
-	
 }
-function validateemail(address) {
-	var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-	if(reg.test(address) == false) {
-		return false;
-		}
-		return true;
-	}
-}
+
