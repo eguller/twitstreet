@@ -38,7 +38,7 @@ function sell(){
 }
 
 function setup(){
-	var dbIp = $("#dbIp").val();
+	var dbHost = $("#dbHost").val();
 	var dbPort = $("#dbPort").val();
 	var dbAdmin =$("#dbAdmin").val();
 	var dbAdminPassword = $("#dbAdminPassword").val();
@@ -49,7 +49,7 @@ function setup(){
 	var consumerSecret = $("#consumerSecret").val();
 
 	$.post('/setup', {
-		dbIp : dbIp,
+		dbHost : dbHost,
 		dbPort : dbPort,
 		dbAdmin : dbAdmin,
 		dbAdminPassword : dbAdminPassword,
@@ -59,7 +59,18 @@ function setup(){
 		consumerKey : consumerKey,
 		consumerSecret : consumerSecret
 	}, function(data) {
-		
+		if(data.result){
+			window.location = '/';
+		}
+		else{
+			$(".error").empty();
+			$(".error").append(document.createElement("ul"));
+			for(var i=0,len=data.reasons.length; value=data.reasons[i], i<len; i++) {
+				var li = document.createElement("li");
+				$(li).text(value);
+				$(".error ul").append(li)
+			}
+		}
 	});
 }
 

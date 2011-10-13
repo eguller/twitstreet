@@ -141,7 +141,6 @@ CUSTOM CLASSES
 .textbox {
 	border: 1px solid #CCCCCC;
 	border-radius: 3px 3px 3px 3px;
-	font: 13px Arial, sans-serif;
 	padding: 6px 6px 4px;
 	width: 200px;
 }
@@ -210,4 +209,8 @@ CUSTOM CLASSES
 
 .datatbl tr.odd {
 	background-color: #EDF3FE;
+}
+
+.error {
+	color : red;
 }

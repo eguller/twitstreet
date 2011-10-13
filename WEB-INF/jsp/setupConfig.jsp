@@ -3,8 +3,8 @@
 	<div id="setupConfigHolder">
 		<table>
 			<tr>
-				<td>Database Ip</td>
-				<td><input type="text" class="textbox" value="localhost" id="dbIp">
+				<td>Database Host</td>
+				<td><input type="text" class="textbox" value="localhost" id="dbHost">
 				</td>
 			</tr>
 			<tr>
@@ -46,7 +46,7 @@
 				</td>
 			</tr>
 		</table>
-
+		<p class="error"></p>
 
 	</div>
 </div>

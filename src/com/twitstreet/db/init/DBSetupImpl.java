@@ -29,10 +29,10 @@ public class DBSetupImpl implements DBSetup {
 	@Inject Twitstreet twitstreet;
 
 	@Override
-	public void openConnection(String dbIp, int dbPort, String dbUser, String dbPassword) throws ClassNotFoundException, SQLException {
+	public void openConnection(String dbHost, int dbPort, String dbUser, String dbPassword) throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
 		con = DriverManager.getConnection(
-				"jdbc:mysql://"+dbIp+":"+dbPort + "/mysql", dbUser, dbPassword);
+				"jdbc:mysql://"+dbHost+":"+dbPort + "/mysql", dbUser, dbPassword);
 	}
 
 	@Override

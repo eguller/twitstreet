@@ -1,14 +1,17 @@
 package com.twitstreet.servlet;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.init.DBSetup;
@@ -19,7 +22,10 @@ import com.twitstreet.util.Util;
 public class SetupServlet extends HttpServlet {
 	@Inject
 	Twitstreet twitStreet;
-	@Inject DBSetup dbSetup;
+	@Inject
+	DBSetup dbSetup;
+	private static final Gson gson = new Gson();
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -29,8 +35,12 @@ public class SetupServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
+		response.setContentType("application/json;charset=utf-8");
+		response.setHeader("Cache-Control", "no-cache");
+		Response resp = Response.create().success();
 		if (!twitStreet.isInitialized()) {
-			String dbIp = request.getParameter("dbIp");
+			Properties properties = new Properties();
+			String dbHost = request.getParameter("dbHost");
 			String dbPortStr = request.getParameter("dbPort");
 			String dbAdmin = request.getParameter("dbAdmin");
 			String dbAdminPassword = request.getParameter("dbAdminPassword");
@@ -39,55 +49,88 @@ public class SetupServlet extends HttpServlet {
 			String adminPassword = request.getParameter("adminPassword");
 			String consumerSecret = request.getParameter("consumerSecret");
 			String consumerKey = request.getParameter("consumerKey");
-			
+
 			int dbPort = Integer.parseInt(dbPortStr);
-			try {
-				adminPassword = Util.MD5(adminPassword);
-			} catch (NoSuchAlgorithmException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			if (resp.isSuccess()) {
+				try {
+					adminPassword = Util.MD5(adminPassword);
+				} catch (NoSuchAlgorithmException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					resp.fail().reason(e1.getMessage());
+				}
 			}
-			try {
-				dbSetup.openConnection(dbIp, dbPort, dbAdmin, dbAdminPassword);
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			if (resp.isSuccess()) {
+				try {
+					dbSetup.openConnection(dbHost, dbPort, dbAdmin,
+							dbAdminPassword);
+					properties.put(Twitstreet.DB_HOST, dbHost);
+					properties.put(Twitstreet.DB_PORT, dbPortStr);
+					properties.put(Twitstreet.DB_ADMIN, dbAdmin);
+					properties.put(Twitstreet.DB_PASSWORD, dbAdminPassword);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+					resp.fail().reason(e.getMessage());
+				} catch (SQLException e) {
+					e.printStackTrace();
+					resp.fail().reason(e.getMessage());
+				}
 			}
-			
-			try {
-				dbSetup.createDatabase(dbName);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			if (resp.isSuccess()) {
+				try {
+					dbSetup.createDatabase(dbName);
+					properties.put(Twitstreet.DATABASE, dbName);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					resp.fail().reason(e.getMessage());
+				}
 			}
-			
-			try {
-				dbSetup.createTables();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			if (resp.isSuccess()) {
+				try {
+					dbSetup.createTables();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					resp.fail().reason(e.getMessage());
+				}
 			}
-			
-			try {
-				dbSetup.dataFill(admin, adminPassword, consumerKey, consumerSecret);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			if (resp.isSuccess()) {
+				try {
+					dbSetup.dataFill(admin, adminPassword, consumerKey,
+							consumerSecret);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					resp.fail().reason(e.getMessage());
+				}
 			}
-			
-			try {
-				dbSetup.closeConnection();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			if (resp.isSuccess()) {
+				try {
+					dbSetup.closeConnection();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					resp.fail().reason(e.getMessage());
+				}
 			}
+
+			if (resp.isSuccess()) {
+				try {
+					File twitStreetFile =  new File(
+							Twitstreet.TWITSTREET_PROPERTIES);
+					twitStreetFile.getParentFile().mkdirs();
+					properties.store(new FileOutputStream(twitStreetFile),
+							Twitstreet.TWITSTREET_PROPERTIES);
+				} catch (IOException e) {
+					e.printStackTrace();
+					resp.fail().reason(e.getMessage());
+				}
+			}
+			response.getWriter().write(gson.toJson(resp));
 			
-			
-		}
-		else{
+		} else {
 			response.sendRedirect(response.encodeRedirectURL("/"));
 		}
 	}
