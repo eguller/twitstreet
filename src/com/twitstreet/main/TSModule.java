@@ -9,11 +9,15 @@ import com.google.inject.Inject;
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 import com.twitstreet.db.base.ConnectionProvider;
+import com.twitstreet.db.base.DBMgr;
+import com.twitstreet.db.base.DBMgrImpl;
 import com.twitstreet.db.base.HibernateConnection;
 import com.twitstreet.db.init.DBScriptParser;
 import com.twitstreet.db.init.DBScriptParserImpl;
 import com.twitstreet.db.init.DBSetup;
 import com.twitstreet.db.init.DBSetupImpl;
+import com.twitstreet.db.table.ConfigMgr;
+import com.twitstreet.db.table.ConfigMgrImpl;
 import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.PortfolioMgrImpl;
 import com.twitstreet.market.StockMgr;
@@ -41,6 +45,8 @@ public class TSModule extends AbstractModule {
 		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class);
 		bind(DBSetup.class).to(DBSetupImpl.class);
 		bind(DBScriptParser.class).to(DBScriptParserImpl.class);
+		bind(DBMgr.class).to(DBMgrImpl.class);
+		bind(ConfigMgr.class).to(ConfigMgrImpl.class);
 	}
 
 	private void bindPropertiesFile(String propFileName) {

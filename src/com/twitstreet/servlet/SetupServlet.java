@@ -129,7 +129,7 @@ public class SetupServlet extends HttpServlet {
 				}
 			}
 			response.getWriter().write(gson.toJson(resp));
-			
+			twitStreet.initialize();
 		} else {
 			response.sendRedirect(response.encodeRedirectURL("/"));
 		}

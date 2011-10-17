@@ -18,6 +18,7 @@ import twitter4j.auth.AccessToken;
 import com.google.inject.Singleton;
 import com.twitstreet.base.Result;
 import com.twitstreet.db.data.UserDO;
+import com.twitstreet.db.table.ConfigMgr;
 import com.twitstreet.main.Twitstreet;
 import com.twitstreet.session.UserMgr;
 
@@ -27,9 +28,8 @@ public class HomePageServlet extends HttpServlet {
 	public static final String TWITTER = "twitter";
 	@Inject UserMgr userMgr;
 	@Inject Twitstreet twitstreet;
+	@Inject ConfigMgr configMgr;
 	
-	String consumerKey;
-	String consumerSecret;
 
 	@Override
 	protected void doGet(HttpServletRequest request,
@@ -64,7 +64,7 @@ public class HomePageServlet extends HttpServlet {
 	}
 
 	private boolean validateCookies(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
+		Cookie[] cookies = request.getCookies() == null ? new Cookie[]{} : request.getCookies();
 		boolean idFound = false;
 		boolean oAuthFound = false;
 		String idStr = "";
@@ -101,23 +101,6 @@ public class HomePageServlet extends HttpServlet {
 		return valid;
 	}
 
-	public String getConsumerKey() {
-		return consumerKey;
-	}
-
-	@Inject
-	public void setConsumerKey(String consumerKey) {
-		this.consumerKey = consumerKey;
-	}
-
-	public String getConsumerSecret() {
-		return consumerSecret;
-	}
-
-	@Inject
-	public void setConsumerSecret(String consumerSecret) {
-		this.consumerSecret = consumerSecret;
-	}
 
 	public Twitter createTwitterInstance(UserDO user) {
 		Twitter twitter = new TwitterFactory().getInstance();
@@ -130,7 +113,7 @@ public class HomePageServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		twitter.setOAuthConsumer(getConsumerKey(), getConsumerSecret());
+		twitter.setOAuthConsumer(configMgr.getConsumerKey(), configMgr.getConsumerSecret());
 		AccessToken oathAccessToken = new AccessToken(user.getOauthToken(),
 				user.getOauthTokenSecret());
 		twitter.setOAuthAccessToken(oathAccessToken);

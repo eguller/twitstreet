@@ -17,13 +17,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.twitstreet.base.Result;
+import com.twitstreet.db.table.ConfigMgr;
 import com.twitstreet.twitter.TwitterAuth;
 
 @SuppressWarnings("serial")
 @Singleton
 public class SigninServlet extends HttpServlet {
-	String consumerKey;
-	String consumerSecret;
+	@Inject ConfigMgr configMgr;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -34,7 +34,7 @@ public class SigninServlet extends HttpServlet {
             StringBuffer callbackURL = req.getRequestURL();
             int index = callbackURL.lastIndexOf("/");
             callbackURL.replace(index, callbackURL.length(), "").append("/callback");
-            twitter.setOAuthConsumer(consumerKey, consumerSecret);
+            twitter.setOAuthConsumer(configMgr.getConsumerKey(), configMgr.getConsumerSecret());
             RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
             req.getSession().setAttribute("requestToken", requestToken);
             resp.sendRedirect(requestToken.getAuthenticationURL());
