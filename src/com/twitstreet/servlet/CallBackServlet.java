@@ -28,6 +28,11 @@ public class CallBackServlet extends HttpServlet{
 	public static final String COOKIE_OAUTHTOKEN = "oauthtoken";
 	private static final String REQUEST_TOKEN = "requestToken";
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
+	/*
+	 * I will be dead when this cookie is expired.
+	 * Wed, 08 Nov 2079 04:24:42 GMT
+	 * */
+	private static final int COOKIE_EXPIRE = Integer.MAX_VALUE;
 	@Inject UserMgr userMgr;
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -76,8 +81,8 @@ public class CallBackServlet extends HttpServlet{
 	public Cookie[] createCookie(long userId, String oauthToken){
 		Cookie ck1 = new Cookie(COOKIE_ID,String.valueOf(userId));
 		Cookie ck2 = new Cookie(COOKIE_OAUTHTOKEN,oauthToken);
-		ck1.setMaxAge(-1);
-		ck2.setMaxAge(-1);
+		ck1.setMaxAge(COOKIE_EXPIRE);
+		ck2.setMaxAge(COOKIE_EXPIRE);
 		return new Cookie[]{ck1,ck2};
 	}
 	public void writeCookies(HttpServletResponse response, Cookie[] cookies){

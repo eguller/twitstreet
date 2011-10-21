@@ -32,9 +32,13 @@ public class ConfigMgrImpl implements ConfigMgr{
 				config.setVal(rs.getString(Config.VAL));
 				configMap.put(config.getParm(), config);
 			}
+			rs.close();
+			stmt.close();
+			connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	public String get(String parm){
 		Config config = configMap.get(parm);
