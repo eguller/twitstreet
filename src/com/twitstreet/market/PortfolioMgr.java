@@ -1,7 +1,5 @@
 package com.twitstreet.market;
 
-import com.twitstreet.base.IGenericMgr;
-import com.twitstreet.base.Result;
 import com.twitstreet.db.data.Portfolio;
 import com.twitstreet.db.data.UserStockDO;
 
@@ -12,7 +10,7 @@ import com.twitstreet.db.data.UserStockDO;
  * @author ooktay
  *
  */
-public interface PortfolioMgr extends IGenericMgr<UserStockDO>{
+public interface PortfolioMgr {
 	/**
 	 * Checks that buyer has enough enough money and updates buyer's portfolio
 	 * adding stocks.
@@ -22,14 +20,14 @@ public interface PortfolioMgr extends IGenericMgr<UserStockDO>{
 	 * @param percent is the ratio of bought followers to the total followers.
 	 * @return
 	 */
-	public Result<Object> buy(String buyer, int price, String stock, double percent);
+	public Object buy(String buyer, int price, String stock, double percent);
 	
 	/**
 	 * Returns user portfolio
 	 * @param userId - User id
 	 * @return
 	 */
-	public Result<Portfolio> getUserPortfolio(long userId);
+	public Portfolio getUserPortfolio(long userId);
 	
 	/**
 	 * Returns user stock state in portfolio
@@ -37,14 +35,14 @@ public interface PortfolioMgr extends IGenericMgr<UserStockDO>{
 	 * @param stockId - Stock Id
 	 * @return
 	 */
-	public Result<UserStockDO> getStockInPortfolio(long userId, long stockId);
+	public UserStockDO getStockInPortfolio(long userId, long stockId);
 	
 	/**
 	 * Returns user portfolio
 	 * @param user
 	 * @return
 	 */
-	public Result<Portfolio> getUserPortfolio(String user);
+	public Portfolio getUserPortfolio(String user);
 	
 	/**
 	 * Returns user stock state in portfolio
@@ -52,5 +50,5 @@ public interface PortfolioMgr extends IGenericMgr<UserStockDO>{
 	 * @param stock
 	 * @return
 	 */
-	public Result<UserStockDO> getStockInPortfolio(String buyer, String stock);
+	public UserStockDO getStockInPortfolio(String buyer, String stock);
 }

@@ -1,4 +1,4 @@
-package com.twitstreet.db.table;
+package com.twitstreet.config;
 
 public interface ConfigMgr {
 	public static final String CONSUMER_KEY = "consumerKey";

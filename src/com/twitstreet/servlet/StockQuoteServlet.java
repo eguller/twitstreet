@@ -6,18 +6,20 @@ import com.google.inject.Singleton;
 import com.twitstreet.db.data.StockDO;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.twitter.TwitterProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
+import java.sql.SQLException;
 
 @SuppressWarnings("serial")
 @Singleton
 public class StockQuoteServlet extends HttpServlet {
-	private static Logger logger = LoggerFactory.getLogger(StockQuoteServlet.class);
+	private static Logger logger = Logger.getLogger(StockQuoteServlet.class);
 	@Inject private final StockMgr stockMgr = null;
 	@Inject TwitterProxy twitterProxy = null;
     @Inject private final Gson gson = null;
@@ -31,10 +33,21 @@ public class StockQuoteServlet extends HttpServlet {
         response.setContentType("application/json;charset=utf-8");
 		String stockName = (String)request.getParameter("stock");
 		StockDO stockFromTwitter = twitterProxy.getStock(stockName);
-		StockDO stockDO =  stockMgr.getStock(stockName).getPayload();
+		StockDO stockDO = null;
+		try {
+			stockDO = stockMgr.getStock(stockName);
+		} catch (SQLException e) {
+			// TODO stock could not be retrieved inform user
+			e.printStackTrace();
+		}
         StockDO currentStock = new StockDO();
 		if(stockDO == null){
-			stockMgr.makePersistent(stockFromTwitter);
+			try {
+				stockMgr.saveStock(stockFromTwitter);
+			} catch (SQLException e) {
+				// TODO Stock could not be save inform user
+				e.printStackTrace();
+			}
             //New stock sold is 0
             currentStock = stockFromTwitter;
 		}
@@ -42,12 +55,17 @@ public class StockQuoteServlet extends HttpServlet {
             //stock already exist
             currentStock = stockDO;
 			if(stockDO.getTotal() != stockFromTwitter.getTotal()){
-				stockMgr.updateTotal(stockFromTwitter.getId(), stockFromTwitter.getTotal());
+				try {
+					stockMgr.updateTotal(stockFromTwitter.getId(), stockFromTwitter.getTotal());
+				} catch (SQLException e) {
+					// TODO Stock could not be update inform user.
+					e.printStackTrace();
+				}
                 //Update total value from twitter.
                 currentStock.setTotal(stockFromTwitter.getTotal());
 			}
 		}
-		logger.info("user:{}", stockName);
+		logger.info("info");
         response.getWriter().write(gson.toJson(currentStock));
 	}
 	

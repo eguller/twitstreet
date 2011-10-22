@@ -1,7 +1,6 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,10 +14,7 @@ import twitter4j.auth.RequestToken;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-import com.twitstreet.base.Result;
-import com.twitstreet.db.table.ConfigMgr;
-import com.twitstreet.twitter.TwitterAuth;
+import com.twitstreet.config.ConfigMgr;
 
 @SuppressWarnings("serial")
 @Singleton

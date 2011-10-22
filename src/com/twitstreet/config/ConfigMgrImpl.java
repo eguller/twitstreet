@@ -1,4 +1,4 @@
-package com.twitstreet.db.table;
+package com.twitstreet.config;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

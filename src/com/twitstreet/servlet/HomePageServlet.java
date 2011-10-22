@@ -1,6 +1,7 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -16,9 +17,8 @@ import twitter4j.User;
 import twitter4j.auth.AccessToken;
 
 import com.google.inject.Singleton;
-import com.twitstreet.base.Result;
+import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.UserDO;
-import com.twitstreet.db.table.ConfigMgr;
 import com.twitstreet.main.Twitstreet;
 import com.twitstreet.session.UserMgr;
 
@@ -83,9 +83,14 @@ public class HomePageServlet extends HttpServlet {
 			if (idFound && oAuthFound) {
 				try {
 					long id = Long.parseLong(idStr);
-					Result<UserDO> result = userMgr.getUserById(id);
-					if (result.getPayload() != null) {
-						UserDO user = result.getPayload();
+					UserDO user = null;
+					try {
+						user = userMgr.getUserById(id);
+					} catch (SQLException e) {
+						e.printStackTrace();
+						//TODO -- log here
+					}
+					if (user != null) {
 						if (user.getOauthToken() != null && user.getOauthToken().equals(oAuth)) {
 							Twitter twitter = createTwitterInstance(user);
 							request.getSession().setAttribute(TWITTER, twitter);

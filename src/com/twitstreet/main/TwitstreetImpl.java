@@ -10,8 +10,8 @@ import javax.servlet.ServletContext;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
-import com.twitstreet.db.table.ConfigMgr;
 import com.twitstreet.servlet.HomePageServlet;
 
 

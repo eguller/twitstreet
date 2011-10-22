@@ -1,6 +1,6 @@
 package com.twitstreet.market;
 
-import com.twitstreet.base.Result;
+import java.sql.SQLException;
 
 /**
  * Main facade for stock transactions buy&sell.<br>
@@ -20,6 +20,7 @@ public interface TransactionMgr {
 	 * @param stock is the twitter id of Stock
 	 * @param amount is the amount of followers requested
 	 * @return Result with no payload
+	 * @throws SQLException 
 	 */
-	Result<Object> buy(String buyer, String stock, int amount);
+	Object buy(String buyer, String stock, int amount) throws SQLException;
 }

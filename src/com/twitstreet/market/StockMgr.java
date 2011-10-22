@@ -1,7 +1,7 @@
 package com.twitstreet.market;
 
-import com.twitstreet.base.IGenericMgr;
-import com.twitstreet.base.Result;
+import java.sql.SQLException;
+
 import com.twitstreet.db.data.StockDO;
 
 /**
@@ -11,7 +11,7 @@ import com.twitstreet.db.data.StockDO;
  * @author ooktay
  *
  */
-public interface StockMgr extends IGenericMgr<StockDO>{
+public interface StockMgr {
 	
 	/**
 	 * Updates the percent of sold stocks on cache.
@@ -19,20 +19,20 @@ public interface StockMgr extends IGenericMgr<StockDO>{
 	 * @param amount
 	 * @return Result with no payload
 	 */
-	Result<StockDO> notifyBuy(String stock, double amount);
+	StockDO notifyBuy(String stock, double amount);
 	
 	/**
 	 * @param stock - Twitter user screen name
 	 * @return - Returns current stock state of twitter user.
 	 */
-	Result<StockDO> getStock(String stock);
+	StockDO getStock(String stock) throws SQLException;
 	
 	/**
 	 * Returns stock information by given id
 	 * @param id - Stock id
 	 * @return - Stock
 	 */
-	public Result<StockDO> getStockById(long id);
+	public StockDO getStockById(long id) throws SQLException;
 	
 	/**
 	 * Update total follower count.
@@ -41,13 +41,16 @@ public interface StockMgr extends IGenericMgr<StockDO>{
 	 * we do not want to sold stock count.
 	 * @param stockId - stockId.
      * @param total - total
+	 * @return 
 	 */
-	public StockDO updateTotal(long stockId, int total);
+	public void updateTotal(long stockId, int total) throws SQLException;
 	
 	/**
 	 * Returns stock sold percentage by name
 	 * @param stockName
 	 * @return
 	 */
-	public Result<Double> getPercentSold(String stockName);
+	public double getPercentSold(String stockName) throws SQLException;
+
+	public void saveStock(StockDO stock) throws SQLException;
 }

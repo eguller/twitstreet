@@ -1,6 +1,7 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Calendar;
 
 import javax.inject.Inject;
@@ -10,10 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.HttpResponse;
 
 import com.google.inject.Singleton;
-import com.twitstreet.base.Result;
 import com.twitstreet.db.data.UserDO;
 import com.twitstreet.session.UserMgr;
 
@@ -47,18 +46,23 @@ public class CallBackServlet extends HttpServlet{
 			String screenName = accessToken.getScreenName();
 			String oauthToken = accessToken.getToken();
 			String oauthTokenSecret = accessToken.getTokenSecret();
-			Result<UserDO> result = userMgr.getUserById(userId);
-			if(result.getPayload() != null){
-				UserDO user = result.getPayload();
+			UserDO user = null;
+			try {
+				user = userMgr.getUserById(userId);
+			} catch (SQLException e) {
+				// TODO Log here and take appropriate action to inform user.
+				e.printStackTrace();
+			}
+			if(user != null){
 				user.setLastLogin(Calendar.getInstance().getTime());
 				user.setUserName(screenName);
 				user.setLastIp(request.getRemoteHost());
 				user.setOauthToken(oauthToken);
 				user.setOauthTokenSecret(oauthTokenSecret);
-				userMgr.makePersistentUpdate(user);
+				userMgr.saveUser(user);
 			}
 			else{
-				UserDO user = new UserDO();
+				user = new UserDO();
 				user.setId(userId);
 				user.setUserName(screenName);
 				user.setFirstLogin(Calendar.getInstance().getTime());
@@ -67,13 +71,16 @@ public class CallBackServlet extends HttpServlet{
 				user.setOauthToken(oauthToken);
 				user.setOauthTokenSecret(oauthTokenSecret);
 				user.setCash(10000);
-				userMgr.makePersistent(user);
+				userMgr.saveUser(user);
 			}
 			request.getSession().removeAttribute(REQUEST_TOKEN);
 			Cookie cookies[] = createCookie(userId, oauthToken);
 			writeCookies(response, cookies);
 		} catch (TwitterException e) {
 			throw new ServletException(e);
+		} catch (SQLException e) {
+			// TODO Log here and inform user
+			e.printStackTrace();
 		}
 		response.sendRedirect(request.getContextPath() + "/");
 	}

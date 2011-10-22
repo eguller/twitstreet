@@ -1,6 +1,7 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,14 @@ public class BuyServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		String stock = request.getParameter("stock");
 		String amount = request.getParameter("amount");
-		transactionMgr.buy("buyer", stock, Integer.parseInt(amount));
+		try {
+			transactionMgr.buy("buyer", stock, Integer.parseInt(amount));
+		} catch (NumberFormatException e) {
+			// TODO Wrong stock amount inform user
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Database operation failed inform user
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,8 +1,8 @@
 package com.twitstreet.session;
 
+import java.sql.SQLException;
+
 import com.google.inject.Key;
-import com.twitstreet.base.IGenericMgr;
-import com.twitstreet.base.Result;
 import com.twitstreet.db.data.UserDO;
 
 /**
@@ -10,14 +10,8 @@ import com.twitstreet.db.data.UserDO;
  * Session Manager may be a bad place to make user-db operations.
  * If this class has another intend make a new class for user-db operations.
  * */
-public interface UserMgr extends IGenericMgr<UserDO> {
+public interface UserMgr{
 	
-	/**
-	 * Start a session for new user. At least log it.
-	 * @param accessData
-	 * @return 
-	 */
-	public Result<UserDO> signup(UserDO user);
 	
 
     /**
@@ -25,6 +19,9 @@ public interface UserMgr extends IGenericMgr<UserDO> {
      * @param userId - User id given by twitter.
      * @return - user details.
      */
-    public Result<UserDO> getUserById(long userId);
+    public UserDO getUserById(long userId) throws SQLException;
+
+
+	public void saveUser(UserDO user) throws SQLException;
 
 }

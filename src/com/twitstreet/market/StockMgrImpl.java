@@ -1,123 +1,100 @@
 package com.twitstreet.market;
 
-import com.google.inject.Inject;
-import com.twitstreet.base.Result;
-import com.twitstreet.db.base.HibernateConnection;
-import com.twitstreet.db.base.IConnection;
-import com.twitstreet.db.data.StockDO;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import java.util.List;
+import org.apache.log4j.Logger;
+
+
+import com.google.inject.Inject;
+import com.twitstreet.db.base.DBMgr;
+import com.twitstreet.db.data.StockDO;
 
 public class StockMgrImpl implements StockMgr {
-    @Inject private HibernateConnection connection;
-    private static Logger logger = LoggerFactory.getLogger(StockMgrImpl.class);
+	@Inject
+	private DBMgr dbMgr;
+	private static Logger logger = Logger.getLogger(StockMgrImpl.class);
 
-    public Result<StockDO> notifyBuy(String stock, double amount) {
-        return null;
-    }
+	public StockDO notifyBuy(String stock, double amount) {
+		return null;
+	}
 
-    public Result<StockDO> getStock(String name) {
-        StockDO stockDO = null;
-        try {
-            Session session = (Session) this.getConnection().getSession();
-            Criteria criteria = session.createCriteria(StockDO.class);
-            criteria.add(Restrictions.eq("name", name));
-            List<StockDO> stockDOList = criteria.list();
-            stockDO = stockDOList.size() == 0 ? null : stockDOList.get(0);
-            this.getConnection().commitTransaction();
-        } catch (HibernateException ex) {
-            ex.printStackTrace();
-            return Result.fail(ex);
-        } finally {
-            this.getConnection().closeSession();
-        }
+	public StockDO getStock(String name) throws SQLException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		StockDO stockDO = null;
+		connection = dbMgr.getConnection();
+		ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
+		ps.setString(0, name);
+		rs = ps.executeQuery();
+		while(rs.next()){
+			stockDO = new StockDO();
+			stockDO.setId(rs.getLong("id"));
+			stockDO.setName(rs.getString("name"));
+			stockDO.setTotal(rs.getInt("total"));
+			stockDO.setSold(rs.getDouble("sold"));
+			break;
+		}
+		if(!rs.isClosed()) { rs.close(); }
+		if(!ps.isClosed()) { ps.close(); }
+		if(!connection.isClosed()){ connection.close(); }
+		return stockDO;
+	}
 
-        return Result.success(stockDO);
-    }
-    
-    public Result<StockDO> getStockById(long id) {
-        StockDO stockDO = null;
-        try {
-            Session session = (Session) this.getConnection().getSession();
-            Criteria criteria = session.createCriteria(StockDO.class);
-            criteria.add(Restrictions.eq("id", id));
-            List<StockDO> stockDOList = criteria.list();
-            stockDO = stockDOList.size() == 0 ? null : stockDOList.get(0);
-            this.getConnection().commitTransaction();
-        } catch (HibernateException ex) {
-            ex.printStackTrace();
-            return Result.fail(ex);
-        } finally {
-            this.getConnection().closeSession();
-        }
+	public StockDO getStockById(long id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		StockDO stockDO = null;
+		connection = dbMgr.getConnection();
+		ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
+		ps.setLong(0, id);
+		rs = ps.executeQuery();
+		while(rs.next()){
+			stockDO = new StockDO();
+			stockDO.setId(rs.getLong("id"));
+			stockDO.setName(rs.getString("name"));
+			stockDO.setTotal(rs.getInt("total"));
+			stockDO.setSold(rs.getDouble("sold"));
+			break;
+		}
+		if(!rs.isClosed()) { rs.close(); }
+		if(!ps.isClosed()) { ps.close(); }
+		if(!connection.isClosed()){ connection.close(); }
+		return stockDO;
+	}
 
-        return Result.success(stockDO);
-    }
-
-    public void setConnection(IConnection connection) {
-        this.connection = (HibernateConnection) connection;
-    }
-
-    public IConnection getConnection() {
-        return connection;
-    }
-
-    public Result<StockDO> makePersistent(StockDO stockDO) {
-        try {
-            Session session = (Session) this.getConnection().getSession();
-            this.getConnection().beginTransaction();
-            session.save(stockDO);
-            this.getConnection().commitTransaction();
-        } catch (HibernateException ex) {
-            this.getConnection().rollbackTransaction();
-            logger.error("Exception in StockMgrImpl.makePersistent().", ex);
-            Result.fail(ex);
-        } finally {
-            this.getConnection().closeSession();
-        }
-        return Result.success(stockDO);
-    }
-
-    public Result<StockDO> makePersistentUpdate(StockDO var) {
-    	return Result.fail(new RuntimeException("Method not supported"));
-    }
-
-    public Result<StockDO> makeTransient(StockDO var) {
-    	return Result.fail(new RuntimeException("Method not supported"));
-    }
-
-    public StockDO updateTotal(long stockId, int total) {
-        {
-        	StockDO stockDO = null;
-            try {
-                Session session = (Session) this.getConnection().getSession();
-                this.getConnection().beginTransaction();
-                String hql = "update StockDO set total =:total where id =:id";
-                Query query = session.createQuery(hql);
-                query.setInteger("total", total);
-                query.setLong("id", stockId);
-                query.executeUpdate();
-                this.getConnection().commitTransaction();
-                stockDO = getStockById(stockId).getPayload();
-            } catch (HibernateException ex) {
-                this.getConnection().rollbackTransaction();
-                logger.error("Exception in StockMgrImpl.updateTotal().", ex);
-            } finally {
-                this.getConnection().closeSession();
-            }
-            return stockDO;
-        }
-    }
+	public void updateTotal(long id, int total) throws SQLException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		connection = dbMgr.getConnection();
+		ps = connection.prepareStatement("update stock set total = ? where id = ?");
+		ps.setInt(0, total);
+		ps.setLong(1, id);
+		ps.executeUpdate();
+		if(!ps.isClosed()) { ps.close(); }
+		if(!connection.isClosed()){ connection.close(); }
+	}
 
 	@Override
-	public Result<Double> getPercentSold(String stockName) {
-		return Result.success(0.0);
+	public double getPercentSold(String stockName) {
+		return 0.0;
+	}
+
+	@Override
+	public void saveStock(StockDO stock) throws SQLException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		connection = dbMgr.getConnection();
+		ps = connection.prepareStatement("insert into stock(name, total, sold) values(?, ?, ?)");
+		ps.setString(0, stock.getName());
+		ps.setInt(1, stock.getTotal());
+		ps.setDouble(3, stock.getSold());
+		ps.executeUpdate();
+		if(!ps.isClosed()) { ps.close(); }
+		if(!connection.isClosed()){ connection.close(); }
 	}
 }

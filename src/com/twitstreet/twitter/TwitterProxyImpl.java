@@ -1,20 +1,16 @@
 package com.twitstreet.twitter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.log4j.Logger;
 
 import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
 import twitter4j.User;
-import twitter4j.conf.ConfigurationBuilder;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import com.twitstreet.db.data.StockDO;
 
 public class TwitterProxyImpl implements TwitterProxy {
 
-	private static Logger logger = LoggerFactory.getLogger(TwitterProxyImpl.class);
+	private static Logger logger = Logger.getLogger(TwitterProxyImpl.class);
 	
 	private Twitter twitter;
 	String consumerKey;
@@ -58,7 +54,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 			stockDO.setId(user.getId());
 			stockDO.setTotal(user.getFollowersCount());
 			stockDO.setName(user.getScreenName());
-			stockDO.setPercentSold(0.0);
+			stockDO.setSold(0.0);
 
 		} catch (Exception e) {
 			logger.error("twitter exception.", e);

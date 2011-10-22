@@ -8,13 +8,8 @@ import java.util.regex.Pattern;
 
 public class Util {
 
-	public static boolean isValidEmailAddress(String emailAddress) {
-		String expression = "^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-		CharSequence inputStr = emailAddress;
-		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-		Matcher matcher = pattern.matcher(inputStr);
-		return matcher.matches();
-
+	public static java.sql.Date toSqlDate(java.util.Date date){
+		return new java.sql.Date(date.getTime());
 	}
 	  private static String convertToHex(byte[] data) { 
 	        StringBuffer buf = new StringBuffer();

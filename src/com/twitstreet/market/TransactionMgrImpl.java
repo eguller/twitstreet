@@ -1,11 +1,11 @@
 package com.twitstreet.market;
 
-import static com.twitstreet.base.Result.*;
+
+import java.sql.SQLException;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.base.KeyLock;
-import com.twitstreet.base.Result;
 import com.twitstreet.db.data.StockDO;
 import com.twitstreet.twitter.TwitterProxy;
 
@@ -43,23 +43,23 @@ public class TransactionMgrImpl implements TransactionMgr {
 	private KeyLock<String> userLock;
 
 	@Override
-	public Result<Object> buy(final String buyer, final String stock, int amount) {
-		Result<Object> result = null;
+	public Object buy(final String buyer, final String stock, int amount) throws SQLException {
+		Object result = null;
 		if (!userLock.tryLock(buyer)) {
-			return fail(Error.ConcurrentUserTransaction);
+			return null;
 		}
 
 		stockLock.waitAndlock(stock);
 		try {
 			StockDO stockDO = twitterProxy.getStock(stock);
-			stockDO = stockMgr.updateTotal(stockDO.getId(), stockDO.getTotal());
+			stockMgr.updateTotal(stockDO.getId(), stockDO.getTotal());
 			
 			int available = stockDO.getAvailable();
 			double percent = amount / stockDO.getTotal() * 100;
 			
 			
 			if(available < 1){
-				result = Result.fail(Error.NoStocksAvailable);
+				result = null;
 			}
 			else if (available < amount){
 				result = portfolioMgr.buy(buyer, amount, stock, percent);
