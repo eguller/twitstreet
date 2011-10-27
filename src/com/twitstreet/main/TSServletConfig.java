@@ -16,6 +16,9 @@ import com.twitstreet.servlet.*;
 public class TSServletConfig extends GuiceServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent)  
     {  
+		//turnoff twitter4j logging
+		System.setProperty ("twitter4j.loggerFactory", 
+		"twitter4j.internal.logging.NullLoggerFactory"); 
 		Twitstreet twitStreet = getInjector().getInstance(Twitstreet.class);
 		ServletContext servletContext = servletContextEvent.getServletContext();
 		twitStreet.setServletContext(servletContext);

@@ -56,7 +56,7 @@ public class DBMgrImpl implements DBMgr {
         p.setRemoveAbandonedTimeout(ABANDONED_TIMEOUT);
         p.setMinEvictableIdleTimeMillis(MIN_EVICTABLE_IDLE_TIME);
         p.setMinIdle(MIN_IDLE);
-        p.setLogAbandoned(true);
+        p.setLogAbandoned(false);
         p.setRemoveAbandoned(true);
         p.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;"+
           "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");

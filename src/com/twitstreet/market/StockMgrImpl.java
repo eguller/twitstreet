@@ -28,7 +28,7 @@ public class StockMgrImpl implements StockMgr {
 		StockDO stockDO = null;
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
-		ps.setString(0, name);
+		ps.setString(1, name);
 		rs = ps.executeQuery();
 		while(rs.next()){
 			stockDO = new StockDO();
@@ -51,7 +51,7 @@ public class StockMgrImpl implements StockMgr {
 		StockDO stockDO = null;
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
-		ps.setLong(0, id);
+		ps.setLong(1, id);
 		rs = ps.executeQuery();
 		while(rs.next()){
 			stockDO = new StockDO();
@@ -72,8 +72,8 @@ public class StockMgrImpl implements StockMgr {
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("update stock set total = ? where id = ?");
-		ps.setInt(0, total);
-		ps.setLong(1, id);
+		ps.setInt(1, total);
+		ps.setLong(2, id);
 		ps.executeUpdate();
 		if(!ps.isClosed()) { ps.close(); }
 		if(!connection.isClosed()){ connection.close(); }
@@ -90,8 +90,8 @@ public class StockMgrImpl implements StockMgr {
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("insert into stock(name, total, sold) values(?, ?, ?)");
-		ps.setString(0, stock.getName());
-		ps.setInt(1, stock.getTotal());
+		ps.setString(1, stock.getName());
+		ps.setInt(2, stock.getTotal());
 		ps.setDouble(3, stock.getSold());
 		ps.executeUpdate();
 		if(!ps.isClosed()) { ps.close(); }

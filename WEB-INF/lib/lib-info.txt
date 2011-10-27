@@ -1,0 +1,17 @@
+#gson libraries
+gson-1.7.1.jar=gson
+
+#guice libraries
+aopalliance.jar=guice
+guice-3.0.jar=guice
+guice-servlet-3.0.jar=guice
+javax.inject.jar=guice
+
+#mysql connector libraries
+mysql-connector-java-5.1.18-bin.jar=mysql connector
+
+#log4j libraries
+log4j-1.2.16.jar=log4j
+
+#twitter4j libraries
+twitter4j-core-2.2.4.jar=twitter4j

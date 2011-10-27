@@ -3,7 +3,7 @@
 -- user table
 create table `users`(
 	`id` bigint not null,
-	`username` varchar(45) not null,
+	`userName` varchar(45) not null,
 	`firstLogin` datetime not null,
 	`lastLogin` datetime not null,
 	`cash` int not null default 10000,
@@ -12,7 +12,8 @@ create table `users`(
 	`oauthToken` varchar(100) not null,
 	`oauthTokenSecret` varchar(100) not null,
 	`rank` int,
-	 primary key (`id`)
+	 primary key (`id`),
+	 unique key `username_unique` (`username`)
 )  engine=innodb default charset=`utf8`;
 
 -- admin table
