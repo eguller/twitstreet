@@ -1,9 +1,9 @@
 package com.twitstreet.db.data;
 
-public class UserStockDO {
+public class UserStock {
 	long id;
-	UserDO user;
-	StockDO stock;
+	User user;
+	Stock stock;
 	double  percent;
 	
 	public double getPercent() {
@@ -12,16 +12,16 @@ public class UserStockDO {
 	public void setPercent(double percent) {
 		this.percent = percent;
 	}
-	public UserDO getUser() {
+	public User getUser() {
 		return user;
 	}
-	public void setUser(UserDO user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
-	public StockDO getStock() {
+	public Stock getStock() {
 		return stock;
 	}
-	public void setStock(StockDO stock) {
+	public void setStock(Stock stock) {
 		this.stock = stock;
 	}
 	public long getId() {

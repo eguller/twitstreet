@@ -15,30 +15,39 @@ import twitter4j.auth.RequestToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.db.data.User;
 
 @SuppressWarnings("serial")
 @Singleton
 public class SigninServlet extends HttpServlet {
-	@Inject ConfigMgr configMgr;
+	@Inject
+	ConfigMgr configMgr;
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		Twitter twitter = new TwitterFactory().getInstance();
-        req.getSession().setAttribute("twitter", twitter);
-        try {
-            StringBuffer callbackURL = req.getRequestURL();
-            int index = callbackURL.lastIndexOf("/");
-            callbackURL.replace(index, callbackURL.length(), "").append("/callback");
-            twitter.setOAuthConsumer(configMgr.getConsumerKey(), configMgr.getConsumerSecret());
-            RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
-            req.getSession().setAttribute("requestToken", requestToken);
-            resp.sendRedirect(requestToken.getAuthenticationURL());
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 
-        } catch (TwitterException e) {
-            throw new ServletException(e);
-        }
+		User user = (User) request.getSession().getAttribute(
+				User.USER);
+		if (user == null) {
+			Twitter twitter = new TwitterFactory().getInstance();
+			try {
+				StringBuffer callbackURL = request.getRequestURL();
+				int index = callbackURL.lastIndexOf("/");
+				callbackURL.replace(index, callbackURL.length(), "").append(
+						"/callback");
+				twitter.setOAuthConsumer(configMgr.getConsumerKey(),
+						configMgr.getConsumerSecret());
+				RequestToken requestToken = twitter
+						.getOAuthRequestToken(callbackURL.toString());
+				request.getSession().setAttribute("requestToken", requestToken);
+				response.sendRedirect(requestToken.getAuthenticationURL());
+
+			} catch (TwitterException e) {
+				throw new ServletException(e);
+			}
+		} else {
+			response.sendRedirect(request.getContextPath() + "/");
+		}
 	}
-
-
 }

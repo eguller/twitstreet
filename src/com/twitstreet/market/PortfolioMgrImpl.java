@@ -5,8 +5,8 @@ import java.sql.SQLException;
 import com.google.inject.Inject;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Portfolio;
-import com.twitstreet.db.data.UserStockDO;
-import com.twitstreet.db.data.StockDO;
+import com.twitstreet.db.data.UserStock;
+import com.twitstreet.db.data.Stock;
 
 public class PortfolioMgrImpl implements PortfolioMgr {
 	@Inject DBMgr dbMgr;
@@ -19,7 +19,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	public Object buy(String buyer, int price, String stock,
 			double percent) {
 		try {
-			StockDO stockDO = stockMgr.getStock(stock);
+			Stock stockDO = stockMgr.getStock(stock);
 		} catch (SQLException e) {
 			// TODO Stock could not be retrieved inform user.
 			e.printStackTrace();
@@ -35,7 +35,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	}
 
 	@Override
-	public UserStockDO getStockInPortfolio(long userId, long stockId) {
+	public UserStock getStockInPortfolio(long userId, long stockId) {
 		return null;
 	}
 
@@ -45,7 +45,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	}
 
 	@Override
-	public UserStockDO getStockInPortfolio(String buyer, String stock) {
+	public UserStock getStockInPortfolio(String buyer, String stock) {
 		return null;
 	}
 	

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.base.KeyLock;
-import com.twitstreet.db.data.StockDO;
+import com.twitstreet.db.data.Stock;
 import com.twitstreet.twitter.TwitterProxy;
 
 @Singleton
@@ -51,7 +51,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 
 		stockLock.waitAndlock(stock);
 		try {
-			StockDO stockDO = twitterProxy.getStock(stock);
+			Stock stockDO = null; //twitterProxy.getTwUser(stock);
 			stockMgr.updateTotal(stockDO.getId(), stockDO.getTotal());
 			
 			int available = stockDO.getAvailable();

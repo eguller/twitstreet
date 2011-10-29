@@ -3,7 +3,7 @@ package com.twitstreet.session;
 import java.sql.SQLException;
 
 import com.google.inject.Key;
-import com.twitstreet.db.data.UserDO;
+import com.twitstreet.db.data.User;
 
 /**
  * TODO
@@ -19,9 +19,13 @@ public interface UserMgr{
      * @param userId - User id given by twitter.
      * @return - user details.
      */
-    public UserDO getUserById(long userId) throws SQLException;
+    public User getUserById(long userId) throws SQLException;
 
 
-	public void saveUser(UserDO user) throws SQLException;
+	public void saveUser(User user) throws SQLException;
+	
+	public void updateUser(User user) throws SQLException;
+	
+	public User random();
 
 }

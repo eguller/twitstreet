@@ -1,7 +1,7 @@
 package com.twitstreet.market;
 
 import com.twitstreet.db.data.Portfolio;
-import com.twitstreet.db.data.UserStockDO;
+import com.twitstreet.db.data.UserStock;
 
 /**
  * Maintains a cache of stock portfolio and money of Users.
@@ -35,7 +35,7 @@ public interface PortfolioMgr {
 	 * @param stockId - Stock Id
 	 * @return
 	 */
-	public UserStockDO getStockInPortfolio(long userId, long stockId);
+	public UserStock getStockInPortfolio(long userId, long stockId);
 	
 	/**
 	 * Returns user portfolio
@@ -50,5 +50,5 @@ public interface PortfolioMgr {
 	 * @param stock
 	 * @return
 	 */
-	public UserStockDO getStockInPortfolio(String buyer, String stock);
+	public UserStock getStockInPortfolio(String buyer, String stock);
 }

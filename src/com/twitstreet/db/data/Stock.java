@@ -1,6 +1,6 @@
 package com.twitstreet.db.data;
 
-public class StockDO {
+public class Stock {
 	long id;
 	String name;
 	int total;

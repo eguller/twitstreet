@@ -10,28 +10,28 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.twitstreet.db.base.DBMgr;
-import com.twitstreet.db.data.StockDO;
+import com.twitstreet.db.data.Stock;
 
 public class StockMgrImpl implements StockMgr {
 	@Inject
 	private DBMgr dbMgr;
 	private static Logger logger = Logger.getLogger(StockMgrImpl.class);
 
-	public StockDO notifyBuy(String stock, double amount) {
+	public Stock notifyBuy(String stock, double amount) {
 		return null;
 	}
 
-	public StockDO getStock(String name) throws SQLException {
+	public Stock getStock(String name) throws SQLException {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		StockDO stockDO = null;
+		Stock stockDO = null;
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
 		ps.setString(1, name);
 		rs = ps.executeQuery();
 		while(rs.next()){
-			stockDO = new StockDO();
+			stockDO = new Stock();
 			stockDO.setId(rs.getLong("id"));
 			stockDO.setName(rs.getString("name"));
 			stockDO.setTotal(rs.getInt("total"));
@@ -44,17 +44,17 @@ public class StockMgrImpl implements StockMgr {
 		return stockDO;
 	}
 
-	public StockDO getStockById(long id) throws SQLException {
+	public Stock getStockById(long id) throws SQLException {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		StockDO stockDO = null;
+		Stock stockDO = null;
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
 		ps.setLong(1, id);
 		rs = ps.executeQuery();
 		while(rs.next()){
-			stockDO = new StockDO();
+			stockDO = new Stock();
 			stockDO.setId(rs.getLong("id"));
 			stockDO.setName(rs.getString("name"));
 			stockDO.setTotal(rs.getInt("total"));
@@ -85,7 +85,7 @@ public class StockMgrImpl implements StockMgr {
 	}
 
 	@Override
-	public void saveStock(StockDO stock) throws SQLException {
+	public void saveStock(Stock stock) throws SQLException {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
@@ -93,6 +93,35 @@ public class StockMgrImpl implements StockMgr {
 		ps.setString(1, stock.getName());
 		ps.setInt(2, stock.getTotal());
 		ps.setDouble(3, stock.getSold());
+		ps.executeUpdate();
+		if(!ps.isClosed()) { ps.close(); }
+		if(!connection.isClosed()){ connection.close(); }
+	}
+
+	@Override
+	public void updateTotalAndName(long id, int total,
+			String name) throws SQLException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		connection = dbMgr.getConnection();
+		ps = connection.prepareStatement("update stock set total = ?, set name = ? where id = ?");
+		ps.setInt(1, total);
+		ps.setString(2, name);
+		ps.setLong(3, id);
+		ps.executeUpdate();
+		if(!ps.isClosed()) { ps.close(); }
+		if(!connection.isClosed()){ connection.close(); }
+		
+	}
+
+	@Override
+	public void updateName(long id, String name) throws SQLException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		connection = dbMgr.getConnection();
+		ps = connection.prepareStatement("update stock set name = ? where id = ?");
+		ps.setString(1, name);
+		ps.setLong(2, id);
 		ps.executeUpdate();
 		if(!ps.isClosed()) { ps.close(); }
 		if(!connection.isClosed()){ connection.close(); }

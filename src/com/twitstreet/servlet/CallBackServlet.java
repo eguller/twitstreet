@@ -13,11 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import com.google.inject.Singleton;
-import com.twitstreet.db.data.UserDO;
+import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.db.data.User;
 import com.twitstreet.session.UserMgr;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 @SuppressWarnings("serial")
@@ -33,10 +35,14 @@ public class CallBackServlet extends HttpServlet{
 	 * */
 	private static final int COOKIE_EXPIRE = Integer.MAX_VALUE;
 	@Inject UserMgr userMgr;
+	@Inject ConfigMgr configMgr;
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		Twitter twitter = (Twitter) request.getSession()
-				.getAttribute(HomePageServlet.TWITTER);
+
+		Twitter twitter = new TwitterFactory().getInstance();
+		twitter.setOAuthConsumer(configMgr.getConsumerKey(),
+				configMgr.getConsumerSecret());
+		
 		RequestToken requestToken = (RequestToken) request.getSession()
 				.getAttribute(REQUEST_TOKEN);
 		String verifier = request.getParameter(OAUTH_VERIFIER);
@@ -46,23 +52,15 @@ public class CallBackServlet extends HttpServlet{
 			String screenName = accessToken.getScreenName();
 			String oauthToken = accessToken.getToken();
 			String oauthTokenSecret = accessToken.getTokenSecret();
-			UserDO user = null;
+			User user = null;
 			try {
 				user = userMgr.getUserById(userId);
 			} catch (SQLException e) {
 				// TODO Log here and take appropriate action to inform user.
 				e.printStackTrace();
 			}
-			if(user != null){
-				user.setLastLogin(Calendar.getInstance().getTime());
-				user.setUserName(screenName);
-				user.setLastIp(request.getRemoteHost());
-				user.setOauthToken(oauthToken);
-				user.setOauthTokenSecret(oauthTokenSecret);
-				userMgr.saveUser(user);
-			}
-			else{
-				user = new UserDO();
+			if(user == null){
+				user = new User();
 				user.setId(userId);
 				user.setUserName(screenName);
 				user.setFirstLogin(Calendar.getInstance().getTime());
@@ -72,6 +70,17 @@ public class CallBackServlet extends HttpServlet{
 				user.setOauthTokenSecret(oauthTokenSecret);
 				user.setCash(10000);
 				userMgr.saveUser(user);
+				request.getSession().setAttribute(User.USER, user);
+			}
+			else{
+				user = new User();
+				user.setLastLogin(Calendar.getInstance().getTime());
+				user.setUserName(screenName);
+				user.setLastIp(request.getRemoteHost());
+				user.setOauthToken(oauthToken);
+				user.setOauthTokenSecret(oauthTokenSecret);
+				userMgr.updateUser(user);
+				request.getSession().setAttribute(User.USER, user);
 			}
 			request.getSession().removeAttribute(REQUEST_TOKEN);
 			Cookie cookies[] = createCookie(userId, oauthToken);

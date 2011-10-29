@@ -3,8 +3,11 @@ package com.twitstreet.servlet;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.twitstreet.db.data.StockDO;
+import com.twitstreet.db.data.Stock;
+import com.twitstreet.db.data.User;
 import com.twitstreet.market.StockMgr;
+import com.twitstreet.session.UserMgr;
+import com.twitstreet.twitter.SimpleTwitterUser;
 import com.twitstreet.twitter.TwitterProxy;
 
 import javax.servlet.http.HttpServlet;
@@ -13,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import twitter4j.TwitterException;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -20,53 +25,145 @@ import java.sql.SQLException;
 @Singleton
 public class StockQuoteServlet extends HttpServlet {
 	private static Logger logger = Logger.getLogger(StockQuoteServlet.class);
-	@Inject private final StockMgr stockMgr = null;
-	@Inject TwitterProxy twitterProxy = null;
-    @Inject private final Gson gson = null;
+	@Inject
+	private final StockMgr stockMgr = null;
+	@Inject
+	private final UserMgr userMgr = null;
+	@Inject
+	private final Gson gson = null;
+
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
 	}
-	
+
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        response.setContentType("application/json;charset=utf-8");
-		String stockName = (String)request.getParameter("stock");
-		StockDO stockFromTwitter = twitterProxy.getStock(stockName);
-		StockDO stockDO = null;
-		try {
-			stockDO = stockMgr.getStock(stockName);
-		} catch (SQLException e) {
-			// TODO stock could not be retrieved inform user
-			e.printStackTrace();
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		response.setContentType("application/json;charset=utf-8");
+		String twUserName = (String) request.getParameter("tuser");
+
+		User user = (User) request.getSession(false).getAttribute(User.USER);
+		TwitterProxy twitterProxy = null;
+		Response resp = Response.create();
+		if (user == null) {
+			// uses someone else account to get quote for unauthenticated users.
+			user = userMgr.random();
 		}
-        StockDO currentStock = new StockDO();
-		if(stockDO == null){
+
+		twitterProxy = user == null ? null : user.getTwitterProxy();
+
+		if (twitterProxy != null) {
+
+			// Get user info from twitter.
+			twitter4j.User twUser = null;
 			try {
-				stockMgr.saveStock(stockFromTwitter);
-			} catch (SQLException e) {
-				// TODO Stock could not be save inform user
-				e.printStackTrace();
+				twUser = twitterProxy.getTwUser(twUserName);
+			} catch (TwitterException e1) {
+				resp.fail()
+						.reason("Something wrong, we could not connected to Twitter. Working on it.");
+				response.getWriter().write(gson.toJson(resp));
+				return;
 			}
-            //New stock sold is 0
-            currentStock = stockFromTwitter;
-		}
-		else{
-            //stock already exist
-            currentStock = stockDO;
-			if(stockDO.getTotal() != stockFromTwitter.getTotal()){
+
+			// Get user info from database
+			Stock stock = null;
+			if (twUser != null) {
 				try {
-					stockMgr.updateTotal(stockFromTwitter.getId(), stockFromTwitter.getTotal());
+					stock = stockMgr.getStockById(twUser.getId());
 				} catch (SQLException e) {
-					// TODO Stock could not be update inform user.
-					e.printStackTrace();
+					resp.fail()
+							.reason("Something wrong, we could not retrieved quote info. Working on it");
+					response.getWriter().write(gson.toJson(resp));
+					return;
 				}
-                //Update total value from twitter.
-                currentStock.setTotal(stockFromTwitter.getTotal());
+
+				// User info retrieved both from twitter and database.
+				if (stock == null) {
+					// This user was not queried before.
+					logger.debug("Servlet: Stock queried first time. Stock name: "
+							+ twUserName);
+					stock = new Stock();
+					stock.setId(twUser.getId());
+					stock.setName(twUser.getScreenName());
+					stock.setTotal(twUser.getFollowersCount());
+					stock.setSold(0.0D);
+					try {
+						stockMgr.saveStock(stock);
+
+					} catch (SQLException e) {
+						// Save failed but give same response. We could not
+						// go further without saving stock info.
+						resp.fail()
+								.reason("Something wrong, we could not retrieved quote info. Working on it");
+						response.getWriter().write(gson.toJson(resp));
+						return;
+					}
+				} else {
+					// User queried before. Check that follower count
+					// changed or not.
+					if (stock.getTotal() != twUser.getFollowersCount()
+							&& stock.getName().equals(twUser.getScreenName())) {
+						// if follower count changed update database.
+						try {
+							stockMgr.updateTotal(stock.getId(),
+									twUser.getFollowersCount());
+						} catch (SQLException e) {
+							resp.fail()
+									.reason("Something wrong, we could not retrieved quote info. Working on it");
+							response.getWriter().write(gson.toJson(resp));
+							return;
+						}
+						// Update total value with latest one from twitter
+						stock.setTotal(twUser.getFollowersCount());
+					} else if (stock.getTotal() != twUser.getFollowersCount()
+							&& !stock.getName().equals(twUser.getScreenName())) {
+						try {
+							stockMgr.updateTotalAndName(stock.getId(),
+									twUser.getFollowersCount(),
+									twUser.getScreenName());
+						} catch (SQLException e) {
+							resp.fail()
+									.reason("Something wrong, we could not retrieved quote info. Working on it");
+							response.getWriter().write(gson.toJson(resp));
+							return;
+						}
+					} else if (stock.getTotal() == twUser.getFollowersCount()
+							&& !stock.getName().equals(twUser.getScreenName())) {
+						try {
+							stockMgr.updateName(stock.getId(),
+									twUser.getScreenName());
+						} catch (SQLException e) {
+							resp.fail()
+									.reason("Something wrong, we could not retrieved quote info. Working on it");
+							response.getWriter().write(gson.toJson(resp));
+							return;
+						}
+					}
+				}
+				logger.debug("Servlet: Stock queried successfully. Stock name:"
+						+ stock.getName());
+				resp.success().setRespOjb(stock);
+				response.getWriter().write(gson.toJson(resp));
+				return;
+			} else {
+				logger.debug("Servlet: User name does not exist. Making twitter search. Query: "
+						+ twUserName);
+				try {
+					SimpleTwitterUser[] searchResult = twitterProxy.searchUsers(twUserName);
+				} catch (TwitterException e) {
+					resp.fail()
+							.reason("Something wrong, we could not retrieved quote info. Working on it");
+					response.getWriter().write(gson.toJson(resp));
+				}
 			}
+
+		} else {
+			logger.error("Servlet: Twitter proxy could not be created. Username: "
+					+ twUserName);
+			resp.fail()
+					.reason("Something wrong, we could not retrieved quote info. Working on it");
 		}
-		logger.info("info");
-        response.getWriter().write(gson.toJson(currentStock));
 	}
-	
 }

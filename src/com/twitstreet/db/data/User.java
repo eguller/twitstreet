@@ -2,7 +2,17 @@ package com.twitstreet.db.data;
 
 import java.util.Date;
 
-public class UserDO{
+import com.google.inject.Inject;
+import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.twitter.TwitterProxy;
+import com.twitstreet.twitter.TwitterProxyImpl;
+
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+
+public class User{
+	public static final String USER = "user";
     long id;
     String userName;
     Date firstLogin;
@@ -12,7 +22,8 @@ public class UserDO{
     String lastIp;
     String oauthToken;
     String oauthTokenSecret;
-    
+    @Inject TwitterProxy twitterProxy = null;
+    @Inject ConfigMgr configMgr = null;
 	public long getId() {
         return id;
     }
@@ -82,5 +93,16 @@ public class UserDO{
 
 	public void setOauthTokenSecret(String oauthTokenSecret) {
 		this.oauthTokenSecret = oauthTokenSecret;
+	}
+	
+	public TwitterProxy getTwitterProxy(){
+		if(twitterProxy.getTwitter() == null){
+			Twitter twitter = new TwitterFactory().getInstance();
+			twitter.setOAuthConsumer(configMgr.getConsumerKey(), configMgr.getConsumerSecret());
+			AccessToken accessToken = new AccessToken(oauthToken, oauthTokenSecret);
+			twitter.setOAuthAccessToken(accessToken);
+			twitterProxy.setTwitter(twitter);
+		}
+		return twitterProxy;
 	}
 }

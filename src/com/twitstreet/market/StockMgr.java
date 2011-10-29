@@ -2,7 +2,7 @@ package com.twitstreet.market;
 
 import java.sql.SQLException;
 
-import com.twitstreet.db.data.StockDO;
+import com.twitstreet.db.data.Stock;
 
 /**
  * Manages a cache of "percent available" of stocks.
@@ -19,20 +19,20 @@ public interface StockMgr {
 	 * @param amount
 	 * @return Result with no payload
 	 */
-	StockDO notifyBuy(String stock, double amount);
+	Stock notifyBuy(String stock, double amount);
 	
 	/**
 	 * @param stock - Twitter user screen name
 	 * @return - Returns current stock state of twitter user.
 	 */
-	StockDO getStock(String stock) throws SQLException;
+	Stock getStock(String stock) throws SQLException;
 	
 	/**
 	 * Returns stock information by given id
 	 * @param id - Stock id
 	 * @return - Stock
 	 */
-	public StockDO getStockById(long id) throws SQLException;
+	public Stock getStockById(long id) throws SQLException;
 	
 	/**
 	 * Update total follower count.
@@ -52,5 +52,9 @@ public interface StockMgr {
 	 */
 	public double getPercentSold(String stockName) throws SQLException;
 
-	public void saveStock(StockDO stock) throws SQLException;
+	public void saveStock(Stock stock) throws SQLException;
+
+	public void updateTotalAndName(long id, int total, String name) throws SQLException;
+
+	public void updateName(long id, String name) throws SQLException;
 }
