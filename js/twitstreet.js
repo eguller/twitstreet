@@ -9,16 +9,13 @@ function post(action, _data, f) {
 		});
 }
 
-function getstock() {
+function getquote() {
 	// see dashboard.jsp
-	var stock = $('#stock').val();
-	$("current_stock").val(stock);
-	$.post('/a/getstock', {
-		stock : stock
+	var quote = $('#quote').val();
+	$.post('/getquote', {
+		quote : quote
 	}, function(data) {
-        $('#s_total').html(data.total);
-        $('#s_available').html(data.total - data.sold);
-        $('#s_sold').html(data.sold);
+        aler(data);
 	});
 }
 

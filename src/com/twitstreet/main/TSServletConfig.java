@@ -40,7 +40,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/callback").with(CallBackServlet.class);
 				serve("/setup").with(SetupServlet.class);
 
-				serve("/a/getstock").with(StockQuoteServlet.class);
+				serve("/getquote").with(StockQuoteServlet.class);
 				serve("/a/buy").with(BuyServlet.class);
 				serve("/a/sell").with(SellServlet.class);
 			}

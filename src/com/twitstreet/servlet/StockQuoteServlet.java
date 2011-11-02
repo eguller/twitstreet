@@ -9,6 +9,7 @@ import com.twitstreet.market.StockMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.SimpleTwitterUser;
 import com.twitstreet.twitter.TwitterProxy;
+import com.twitstreet.twitter.TwitterProxyFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import java.sql.SQLException;
 @SuppressWarnings("serial")
 @Singleton
 public class StockQuoteServlet extends HttpServlet {
+	private static final String QUOTE = "quote";
 	private static Logger logger = Logger.getLogger(StockQuoteServlet.class);
 	@Inject
 	private final StockMgr stockMgr = null;
@@ -31,6 +33,7 @@ public class StockQuoteServlet extends HttpServlet {
 	private final UserMgr userMgr = null;
 	@Inject
 	private final Gson gson = null;
+	@Inject TwitterProxyFactory twitterProxyFactory = null;
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -42,9 +45,9 @@ public class StockQuoteServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		response.setContentType("application/json;charset=utf-8");
-		String twUserName = (String) request.getParameter("tuser");
+		String twUserName = (String) request.getParameter(QUOTE);
 
-		User user = (User) request.getSession(false).getAttribute(User.USER);
+		User user =  request.getSession(false) == null ? null : (User)request.getSession(false).getAttribute(User.USER);
 		TwitterProxy twitterProxy = null;
 		Response resp = Response.create();
 		if (user == null) {
@@ -52,7 +55,7 @@ public class StockQuoteServlet extends HttpServlet {
 			user = userMgr.random();
 		}
 
-		twitterProxy = user == null ? null : user.getTwitterProxy();
+		twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 
 		if (twitterProxy != null) {
 
@@ -152,10 +155,13 @@ public class StockQuoteServlet extends HttpServlet {
 						+ twUserName);
 				try {
 					SimpleTwitterUser[] searchResult = twitterProxy.searchUsers(twUserName);
+					resp.success().resultCode("user-notfound").reason("We could not find \""+twUserName+"\" but following ones close.").setRespOjb(searchResult);
+					return;
 				} catch (TwitterException e) {
 					resp.fail()
 							.reason("Something wrong, we could not retrieved quote info. Working on it");
 					response.getWriter().write(gson.toJson(resp));
+					return;
 				}
 			}
 

@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/twitter4j-core-2.2.4.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-5.1.18-bin.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/guice-assistedinject-3.0.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

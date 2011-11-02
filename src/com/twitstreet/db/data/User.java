@@ -5,8 +5,6 @@ import java.util.Date;
 import com.google.inject.Inject;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.twitter.TwitterProxy;
-import com.twitstreet.twitter.TwitterProxyImpl;
-
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
@@ -23,7 +21,6 @@ public class User{
     String oauthToken;
     String oauthTokenSecret;
     @Inject TwitterProxy twitterProxy = null;
-    @Inject ConfigMgr configMgr = null;
 	public long getId() {
         return id;
     }
@@ -93,16 +90,5 @@ public class User{
 
 	public void setOauthTokenSecret(String oauthTokenSecret) {
 		this.oauthTokenSecret = oauthTokenSecret;
-	}
-	
-	public TwitterProxy getTwitterProxy(){
-		if(twitterProxy.getTwitter() == null){
-			Twitter twitter = new TwitterFactory().getInstance();
-			twitter.setOAuthConsumer(configMgr.getConsumerKey(), configMgr.getConsumerSecret());
-			AccessToken accessToken = new AccessToken(oauthToken, oauthTokenSecret);
-			twitter.setOAuthAccessToken(accessToken);
-			twitterProxy.setTwitter(twitter);
-		}
-		return twitterProxy;
 	}
 }

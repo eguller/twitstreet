@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 
 import com.google.inject.Inject;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Stock;
 
@@ -52,18 +53,26 @@ public class StockMgrImpl implements StockMgr {
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
 		ps.setLong(1, id);
-		rs = ps.executeQuery();
-		while(rs.next()){
-			stockDO = new Stock();
-			stockDO.setId(rs.getLong("id"));
-			stockDO.setName(rs.getString("name"));
-			stockDO.setTotal(rs.getInt("total"));
-			stockDO.setSold(rs.getDouble("sold"));
-			break;
+		try{
+			rs = ps.executeQuery();
+			if(rs.next()){
+				stockDO = new Stock();
+				stockDO.setId(rs.getLong("id"));
+				stockDO.setName(rs.getString("name"));
+				stockDO.setTotal(rs.getInt("total"));
+				stockDO.setSold(rs.getDouble("sold"));
+			}
+			logger.debug("DB: Query executed successfully - " + ps.toString());
 		}
-		if(!rs.isClosed()) { rs.close(); }
-		if(!ps.isClosed()) { ps.close(); }
-		if(!connection.isClosed()){ connection.close(); }
+		catch(SQLException ex){
+			logger.debug("DB: Query failed - " + ps.toString(), ex);
+			throw ex;
+		}
+		finally{
+			if(!rs.isClosed()) { rs.close(); }
+			if(!ps.isClosed()) { ps.close(); }
+			if(!connection.isClosed()){ connection.close(); }
+		}
 		return stockDO;
 	}
 
@@ -89,13 +98,30 @@ public class StockMgrImpl implements StockMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("insert into stock(name, total, sold) values(?, ?, ?)");
-		ps.setString(1, stock.getName());
-		ps.setInt(2, stock.getTotal());
-		ps.setDouble(3, stock.getSold());
-		ps.executeUpdate();
-		if(!ps.isClosed()) { ps.close(); }
-		if(!connection.isClosed()){ connection.close(); }
+		ps = connection.prepareStatement("insert into stock(id, name, total, sold) values(?, ?, ?, ?)");
+		ps.setLong(1, stock.getId());
+		ps.setString(2, stock.getName());
+		ps.setInt(3, stock.getTotal());
+		ps.setDouble(4, stock.getSold());
+		try{
+			ps.executeUpdate();
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		}
+		catch (MySQLIntegrityConstraintViolationException e) {
+			logger.warn("DB: Stock already exist - Stock Id:" + stock.getId()
+					+ " User Name: " + stock.getName() + " - "
+					+ e.getMessage());
+		} catch (SQLException ex) {
+			logger.error("DB: Query failed = " + ps.toString(), ex);
+			throw ex;
+		} finally {
+			if (!ps.isClosed()) {
+				ps.close();
+			}
+			if (!ps.isClosed()) {
+				connection.close();
+			}
+		}
 	}
 
 	@Override

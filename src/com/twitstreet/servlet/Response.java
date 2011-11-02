@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Response {
 	boolean result = false;
+	String resultCode = "";
 	ArrayList<String> reasons = new ArrayList<String>();
 	Object respOjb = null;
 
@@ -36,5 +37,12 @@ public class Response {
 	}
 	public void setRespOjb(Object respOjb) {
 		this.respOjb = respOjb;
+	}
+	public String getResultCode() {
+		return resultCode;
+	}
+	public Response resultCode(String resultCode) {
+		this.resultCode = resultCode;
+		return this;
 	}
 }

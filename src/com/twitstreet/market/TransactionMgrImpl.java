@@ -34,9 +34,6 @@ public class TransactionMgrImpl implements TransactionMgr {
 	private PortfolioMgr portfolioMgr;
 	
 	@Inject
-	private TwitterProxy twitterProxy;
-
-	@Inject
 	private KeyLock<String> stockLock;
 
 	@Inject

@@ -6,6 +6,7 @@ aopalliance.jar=guice
 guice-3.0.jar=guice
 guice-servlet-3.0.jar=guice
 javax.inject.jar=guice
+guice-assistedinject-3.0.jar
 
 #mysql connector libraries
 mysql-connector-java-5.1.18-bin.jar=mysql connector

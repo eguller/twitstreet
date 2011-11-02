@@ -1,23 +1,40 @@
 package com.twitstreet.twitter;
 
-import java.util.ArrayList;
-
 import org.apache.log4j.Logger;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.twitstreet.config.ConfigMgr;
 
 import twitter4j.ResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 import twitter4j.User;
-
-import com.twitstreet.db.data.Stock;
+import twitter4j.auth.AccessToken;
 
 public class TwitterProxyImpl implements TwitterProxy {
+	private static final int NOT_FOUND = 404;
 
 	private static Logger logger = Logger.getLogger(TwitterProxyImpl.class);
-
+	@Inject
+	ConfigMgr configMgr = null;
 	private Twitter twitter;
 	String consumerKey;
 	String consumerSecret;
+
+	@Inject
+	public TwitterProxyImpl(ConfigMgr configMgr,
+			@Assisted("ouathToken") String ouathToken,
+			@Assisted("oauthTokenSecret") String oauthTokenSecret) {
+		this.configMgr = configMgr;
+		Twitter twitter = new TwitterFactory().getInstance();
+		twitter.setOAuthConsumer(configMgr.getConsumerKey(),
+				configMgr.getConsumerSecret());
+		AccessToken accessToken = new AccessToken(ouathToken, oauthTokenSecret);
+		twitter.setOAuthAccessToken(accessToken);
+		this.setTwitter(twitter);
+	}
 
 	@Override
 	public int getFollowerCount(String name) throws TwitterException {
@@ -79,9 +96,13 @@ public class TwitterProxyImpl implements TwitterProxy {
 			logger.debug("Twitter: User retrieved successfully. Username: "
 					+ name);
 		} catch (TwitterException e) {
-			logger.error(
-					"Twitter: Error while retrieving twitter user:" + name, e);
-			throw e;
+			if (e.getStatusCode() == NOT_FOUND) {
+				logger.debug("Twitter: User not found. Username: " + name);
+			} else {
+				logger.error(
+						"Twitter: Error while retrieving twitter user:" + name, e);
+				throw e;
+			}
 		}
 		return user;
 	}
@@ -112,18 +133,19 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	@Override
-	public SimpleTwitterUser[] searchUsers(String query) throws TwitterException {
+	public SimpleTwitterUser[] searchUsers(String user)
+			throws TwitterException {
 		SimpleTwitterUser[] searchResult = null;
 		ResponseList<User> userResponseList = null;
 		try {
-			userResponseList = twitter.searchUsers(query, 1);
+			userResponseList = twitter.searchUsers(user, 10);
 		} catch (TwitterException e) {
-			logger.error("Twitter: User search failed for query: " + query, e);
+			logger.error("Twitter: User search failed for query: " + user, e);
 			throw e;
 		}
 		if (userResponseList != null) {
 			searchResult = new SimpleTwitterUser[userResponseList.size()];
-			for (int i = 0; i < userResponseList.size(); i ++) {
+			for (int i = 0; i < userResponseList.size(); i++) {
 				searchResult[i] = new SimpleTwitterUser(userResponseList.get(i));
 			}
 		}

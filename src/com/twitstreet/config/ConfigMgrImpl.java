@@ -15,6 +15,10 @@ import com.twitstreet.db.data.Config;
 public class ConfigMgrImpl implements ConfigMgr{
 	@Inject DBMgr dbMgr;
 	private HashMap<String, Config> configMap = new HashMap<String, Config>();
+	
+	@Inject public ConfigMgrImpl(DBMgr dbMgr) {
+		this.dbMgr = dbMgr;
+	}
 
 	public void load(){
 		Connection connection = null;

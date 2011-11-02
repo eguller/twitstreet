@@ -3,10 +3,14 @@ package com.twitstreet.main;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Scopes;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.assistedinject.FactoryProvider;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.config.ConfigMgrImpl;
+import com.twitstreet.config.ConfigMgrProvider;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.base.DBMgrImpl;
+import com.twitstreet.db.base.DBMgrProvider;
 import com.twitstreet.db.init.DBScriptParser;
 import com.twitstreet.db.init.DBScriptParserImpl;
 import com.twitstreet.db.init.DBSetup;
@@ -20,6 +24,7 @@ import com.twitstreet.market.TransactionMgrImpl;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.twitter.TwitterProxy;
+import com.twitstreet.twitter.TwitterProxyFactory;
 import com.twitstreet.twitter.TwitterProxyImpl;
 
 public class TSModule extends AbstractModule {
@@ -27,14 +32,16 @@ public class TSModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(Twitstreet.class).to(TwitstreetImpl.class).in(Scopes.SINGLETON);
-		bind(TwitterProxy.class).to(TwitterProxyImpl.class);
 		bind(UserMgr.class).to(UserMgrImpl.class);
 		bind(StockMgr.class).to(StockMgrImpl.class);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class);
 		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class);
 		bind(DBSetup.class).to(DBSetupImpl.class);
 		bind(DBScriptParser.class).to(DBScriptParserImpl.class);
-		bind(DBMgr.class).to(DBMgrImpl.class);
-		bind(ConfigMgr.class).to(ConfigMgrImpl.class);
+		bind(DBMgr.class).toProvider(DBMgrProvider.class).in(Scopes.SINGLETON);
+		bind(ConfigMgr.class).toProvider(ConfigMgrProvider.class).in(Scopes.SINGLETON);
+		install(new FactoryModuleBuilder()
+	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
+	     .build(TwitterProxyFactory.class));
 	}
 }

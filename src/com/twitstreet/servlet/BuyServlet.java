@@ -19,6 +19,7 @@ import com.twitstreet.market.TransactionMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.twitter.TwitterProxy;
+import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
 @Singleton
@@ -27,6 +28,7 @@ public class BuyServlet extends HttpServlet {
 	@Inject TransactionMgr transactionMgr;
 	@Inject UserMgr sessionMgr;
 	@Inject UserMgr userMgr;
+	@Inject TwitterProxyFactory twitterProxyFactory = null;
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -41,13 +43,13 @@ public class BuyServlet extends HttpServlet {
 			//uses someone else account to get quote for unauthenticated users.
 			user = userMgr.random();
 			if(user != null){
-				TwitterProxy twitterProxy = user.getTwitterProxy();
+				TwitterProxy twitterProxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 			}
 		}
 		else{
 			String stock = request.getParameter("tuser");
 			String amount = request.getParameter("amount");
-			TwitterProxy proxy = user.getTwitterProxy();
+			TwitterProxy proxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 			
 			try {
 				transactionMgr.buy("buyer", stock, Integer.parseInt(amount));

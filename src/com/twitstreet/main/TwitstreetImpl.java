@@ -20,11 +20,12 @@ import com.twitstreet.servlet.HomePageServlet;
 public class TwitstreetImpl implements Twitstreet {
 	private boolean initialized = false;
 	@Inject HomePageServlet homePageServlet;
-	@Inject DBMgr dbMgr;
-	@Inject ConfigMgr configMgr;
+	DBMgr dbMgr;
+	ConfigMgr configMgr;
 	ServletContext servletContext;
-	public TwitstreetImpl(){
-		
+	@Inject public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr){
+		this.dbMgr = dbMgr;
+		this.configMgr = configMgr;
 	}
 	
 	@Override
