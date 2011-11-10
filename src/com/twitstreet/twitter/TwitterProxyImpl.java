@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.util.Util;
 
 import twitter4j.ResponseList;
 import twitter4j.Twitter;
@@ -135,12 +136,14 @@ public class TwitterProxyImpl implements TwitterProxy {
 	@Override
 	public SimpleTwitterUser[] searchUsers(String user)
 			throws TwitterException {
+	
 		SimpleTwitterUser[] searchResult = null;
 		ResponseList<User> userResponseList = null;
+		String query = Util.collapseSpaces(user).replace(' ', '+');
 		try {
-			userResponseList = twitter.searchUsers(user, 10);
+			userResponseList = twitter.searchUsers(query, 10);
 		} catch (TwitterException e) {
-			logger.error("Twitter: User search failed for query: " + user, e);
+			logger.error("Twitter: User search failed for query: " + query, e);
 			throw e;
 		}
 		if (userResponseList != null) {

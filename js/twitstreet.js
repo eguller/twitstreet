@@ -15,7 +15,17 @@ function getquote() {
 	$.post('/getquote', {
 		quote : quote
 	}, function(data) {
-        aler(data);
+        if(data.result){
+        	if(data.resultCode == 'user-notfound'){
+        		
+        	}
+        	else{
+        		
+        	}
+        }
+        else{
+        	
+        }
 	});
 }
 
