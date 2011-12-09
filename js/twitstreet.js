@@ -21,12 +21,25 @@ function getquote() {
         	}
         	else{
         		
+        		showQuotePanel("userfound");
         	}
         }
         else{
         	
         }
 	});
+}
+
+function showQuotePanel(panel){
+	var panels = new Array("userfound", "searchresult", "searchnoresult", "searchfailed");
+	for ( var i=0, len=panels.length; i<len; ++i ){
+		if(panels[i] == panel){
+			$("#"+panels[i]).show();
+		}
+		else{
+			$("#"+panels[i]).hide();
+		}
+	}	
 }
 
 function buy(){
