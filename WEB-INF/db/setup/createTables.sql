@@ -35,14 +35,18 @@ create table `stock`(
 	 primary key (`id`)
 )  engine=innodb default charset=`utf8`;
 
--- admin table
+-- portfolio table
 create table `portfolio`(
 	`id` bigint not null auto_increment,
-	`username` varchar(45) not null,
-	`password` varchar(45) not null,
-	`lastLogin` datetime not null,
-	`lastIp` varchar(45) not null,
-	 primary key (`id`)
+	`user_id` bigint not null,
+	`stock` bigint not null,
+	`percentage` double not null,
+	 primary key (`id`),
+	 unique key `unique_portfolio` (`user_id` , `stock`),
+	 key `fk_users` (`user_id`),
+     key `fk_stock` (`stock`),
+     constraint `fk_users` foreign key (`user_id`) references `users` (`id`) on delete cascade,
+     constraint `fk_stock` foreign key (`stock`) references `stock` (`id`) on delete cascade
 )  engine=innodb default charset=`utf8`;
 
 -- config table

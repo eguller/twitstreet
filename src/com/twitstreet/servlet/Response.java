@@ -6,7 +6,7 @@ public class Response {
 	boolean result = false;
 	String resultCode = "";
 	ArrayList<String> reasons = new ArrayList<String>();
-	Object respOjb = null;
+	Object respObj = null;
 
 	private Response(){}
 	private Response(boolean result){
@@ -33,10 +33,10 @@ public class Response {
 		return new Response();
 	}
 	public Object getRespOjb() {
-		return respOjb;
+		return respObj;
 	}
 	public void setRespOjb(Object respOjb) {
-		this.respOjb = respOjb;
+		this.respObj = respOjb;
 	}
 	public String getResultCode() {
 		return resultCode;

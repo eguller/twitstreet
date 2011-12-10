@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
+import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.SimpleTwitterUser;
@@ -35,6 +36,9 @@ public class StockQuoteServlet extends HttpServlet {
 	private final Gson gson = null;
 	@Inject TwitterProxyFactory twitterProxyFactory = null;
 
+	@Inject 
+	private final PortfolioMgr portfolioMgr = null;
+	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -147,7 +151,14 @@ public class StockQuoteServlet extends HttpServlet {
 				}
 				logger.debug("Servlet: Stock queried successfully. Stock name:"
 						+ stock.getName());
-				resp.success().setRespOjb(stock);
+				double percentage = 0.0;
+				try{
+					percentage = portfolioMgr.getStockSoldPercentage(user.getId(), stock.getId());
+				}
+				catch(SQLException ex){
+					logger.warn("Servlet: Query percentage failed", ex);
+				}
+				resp.success().setRespOjb(new QuoteResponse(stock, percentage));
 				response.getWriter().write(gson.toJson(resp));
 				return;
 			} else {

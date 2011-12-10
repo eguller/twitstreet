@@ -1,5 +1,7 @@
 package com.twitstreet.market;
 
+import java.sql.SQLException;
+
 import com.twitstreet.db.data.Portfolio;
 import com.twitstreet.db.data.UserStock;
 
@@ -20,7 +22,7 @@ public interface PortfolioMgr {
 	 * @param percent is the ratio of bought followers to the total followers.
 	 * @return
 	 */
-	public Object buy(String buyer, int price, String stock, double percent);
+	public Object buy(long buyer,int stock, int amount);
 	
 	/**
 	 * Returns user portfolio
@@ -36,6 +38,14 @@ public interface PortfolioMgr {
 	 * @return
 	 */
 	public UserStock getStockInPortfolio(long userId, long stockId);
+	
+	/**
+	 *  
+	 * @param userId - User Id
+	 * @param stockId - Stock Id
+	 * @return
+	 */
+	public double getStockSoldPercentage(long userId, long stockId) throws SQLException;
 	
 	/**
 	 * Returns user portfolio

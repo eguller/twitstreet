@@ -12,6 +12,7 @@ public class Portfolio {
 	}
 	
 	public Portfolio(ArrayList<UserStock> userStock){
+		/*
 		if(userStock.size() > 0){
 			this.user = userStock.get(0).getUser();
 		}
@@ -20,5 +21,6 @@ public class Portfolio {
 		for(UserStock userStockDO : userStock){
 			stockList.add(userStockDO.getStock());
 		}
+		*/
 	}
 }

@@ -47,12 +47,12 @@ public class BuyServlet extends HttpServlet {
 			}
 		}
 		else{
-			String stock = request.getParameter("tuser");
+			String stock = request.getParameter("stock");
 			String amount = request.getParameter("amount");
 			TwitterProxy proxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 			
 			try {
-				transactionMgr.buy("buyer", stock, Integer.parseInt(amount));
+				transactionMgr.buy(user.getId(), stock, Integer.parseInt(amount));
 			} catch (NumberFormatException e) {
 				// TODO Wrong stock amount inform user
 				e.printStackTrace();

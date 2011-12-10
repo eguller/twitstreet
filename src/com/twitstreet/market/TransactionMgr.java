@@ -22,5 +22,5 @@ public interface TransactionMgr {
 	 * @return Result with no payload
 	 * @throws SQLException 
 	 */
-	Object buy(String buyer, String stock, int amount) throws SQLException;
+	Object buy(long buyer, long stock, int amount) throws SQLException;
 }

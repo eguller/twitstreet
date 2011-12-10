@@ -214,3 +214,32 @@ CUSTOM CLASSES
 .error {
 	color : red;
 }
+
+a.buy {
+	color : green;
+	text-decoration: none;
+}
+
+a.buy:hover {
+	color : green;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+a.sell {
+	color: red;
+	text-decoration: none;
+}
+
+a.sell:hover {
+	color: red;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+
+.right_aligned tr td {
+	text-align: right;
+}

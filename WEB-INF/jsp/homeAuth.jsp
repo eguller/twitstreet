@@ -6,6 +6,7 @@
   <template:put name="navigation" content="navigation.jsp" />
   <template:put name='dashboard' content='dashboard.jsp' />
   <template:put name='portfolio' content='portfolio.jsp' />
+  <template:put name='balance' content='balance.jsp' />
   <template:put name='yourtransactions' content='yourtransactions.jsp' />
   <template:put name='latesttransactions' content='latesttransactions.jsp' />
   <template:put name='topranks' content='topranks.jsp' />
