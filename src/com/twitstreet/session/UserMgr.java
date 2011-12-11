@@ -27,5 +27,7 @@ public interface UserMgr{
 	public void updateUser(User user) throws SQLException;
 	
 	public User random();
+	
+	public void updateCash(long userId, int cash) throws SQLException;
 
 }

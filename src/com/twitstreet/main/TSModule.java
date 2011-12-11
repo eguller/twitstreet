@@ -19,8 +19,6 @@ import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.PortfolioMgrImpl;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.market.StockMgrImpl;
-import com.twitstreet.market.TransactionMgr;
-import com.twitstreet.market.TransactionMgrImpl;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.twitter.TwitterProxy;
@@ -34,7 +32,6 @@ public class TSModule extends AbstractModule {
 		bind(Twitstreet.class).to(TwitstreetImpl.class).in(Scopes.SINGLETON);
 		bind(UserMgr.class).to(UserMgrImpl.class);
 		bind(StockMgr.class).to(StockMgrImpl.class);
-		bind(TransactionMgr.class).to(TransactionMgrImpl.class);
 		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class);
 		bind(DBSetup.class).to(DBSetupImpl.class);
 		bind(DBScriptParser.class).to(DBScriptParserImpl.class);

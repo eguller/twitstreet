@@ -6,16 +6,14 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import twitter4j.Twitter;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
-import com.twitstreet.market.TransactionMgr;
+import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.twitter.TwitterProxy;
@@ -25,10 +23,10 @@ import com.twitstreet.twitter.TwitterProxyFactory;
 @Singleton
 public class BuyServlet extends HttpServlet {
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
-	@Inject TransactionMgr transactionMgr;
 	@Inject UserMgr sessionMgr;
 	@Inject UserMgr userMgr;
 	@Inject TwitterProxyFactory twitterProxyFactory = null;
+	@Inject PortfolioMgr portfolioMgr = null;
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -52,7 +50,8 @@ public class BuyServlet extends HttpServlet {
 			TwitterProxy proxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 			
 			try {
-				transactionMgr.buy(user.getId(), stock, Integer.parseInt(amount));
+				Stock stockObj = portfolioMgr.buy(user.getId(), Long.parseLong(stock), Integer.parseInt(amount));
+				
 			} catch (NumberFormatException e) {
 				// TODO Wrong stock amount inform user
 				e.printStackTrace();

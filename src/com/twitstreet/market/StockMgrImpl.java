@@ -152,4 +152,17 @@ public class StockMgrImpl implements StockMgr {
 		if(!ps.isClosed()) { ps.close(); }
 		if(!connection.isClosed()){ connection.close(); }
 	}
+
+	@Override
+	public void updateSold(long stock, double sold) throws SQLException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		connection = dbMgr.getConnection();
+		ps = connection.prepareStatement("update stock set sold = ? where id = ?");
+		ps.setDouble(1, sold);
+		ps.setLong(2, stock);
+		ps.executeUpdate();
+		if(!ps.isClosed()) { ps.close(); }
+		if(!connection.isClosed()){ connection.close(); }
+	}
 }
