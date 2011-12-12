@@ -25,33 +25,49 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	public Stock buy(long buyer,long stock, int amount) throws SQLException{
 		User user = userMgr.getUserById(buyer);
 		int amount2Buy = user.getCash() < amount ? user.getCash() : amount;
-		userMgr.updateCash(buyer, amount2Buy);
-		Stock stockObj = stockMgr.getStockById(buyer);
-		double sold = amount2Buy / stockObj.getTotal();
+		userMgr.updateCash(buyer, user.getCash() - amount2Buy);
+		Stock stockObj = stockMgr.getStockById(stock);
+		double sold = (double)amount2Buy / (double)stockObj.getTotal();
 		stockObj.setSold(stockObj.getSold() + sold);
 	    stockMgr.updateSold(stock, sold);
 	    UserStock userStock = getStockInPortfolio(buyer, stock);
-	    
-	    
-	    
+	      
 	    if(userStock == null){
 	    	addStock2Portfolio(buyer, stock, sold);
 	    }
 	    else{
 	    	updateStockInPortfolio(buyer, stock, sold);
 	    }
-	    return null;
+	    return stockObj;
 
 	}
 
 
-	private void updateStockInPortfolio(long buyer, long stock, double sold) {
-		
+	private void updateStockInPortfolio(long buyer, long stock, double sold) throws SQLException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		connection = dbMgr.getConnection();
+		ps = connection.prepareStatement("update portfolio set sold = ? where buyer = ? and stock = ?");
+		ps.setDouble(1, sold);
+		ps.setLong(2, buyer);
+		ps.setLong(3, stock);
+		ps.execute();
+		if(!ps.isClosed()) { ps.close(); }
+		if(!connection.isClosed()){ connection.close(); }
 	}
 
 
-	private void addStock2Portfolio(long buyer, long stock, double sold) {
-		
+	private void addStock2Portfolio(long buyer, long stock, double sold) throws SQLException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		connection = dbMgr.getConnection();
+		ps = connection.prepareStatement("insert into portfolio(user_id, stock, percentage) values(?, ?, ?)");
+		ps.setLong(1, buyer);
+		ps.setLong(2, stock);
+		ps.setDouble(3, sold);
+		ps.execute();
+		if(!ps.isClosed()) { ps.close(); }
+		if(!connection.isClosed()){ connection.close(); }
 	}
 
 

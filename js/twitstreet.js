@@ -60,12 +60,13 @@ function writeBuyLinks(){
 	var buyLink = "";
 	var cash = parseInt($("#cash").val());
 	var available = parseInt($("#available").val());
-	var quote = $("#quote-hidden").val();
+	var quote = $("#quote-id").val();
 	var min = cash;
 	if(cash > available){
 		min = available;
 	}	
 	var length = min.toString().length;
+	$("#buy-links").empty();
 	for(var i = length; i > 0; i --){
 		var amount = Math.pow(10,i - 1);
 		var link = $("<a>"+amount+"</a>").attr('onclick', "buy(\'"+quote+"\',"+amount+");").addClass("buy");

@@ -220,7 +220,7 @@ public class UserMgrImpl implements UserMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update user set cash = ? where id = ?");
+		ps = connection.prepareStatement("update users set cash = ? where id = ?");
 		ps.setInt(1, cash);
 		ps.setLong(2, userId);
 
@@ -234,7 +234,7 @@ public class UserMgrImpl implements UserMgr {
 			if (!ps.isClosed()) {
 				ps.close();
 			}
-			if (!ps.isClosed()) {
+			if (!connection.isClosed()) {
 				connection.close();
 			}
 		}
