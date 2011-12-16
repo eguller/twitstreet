@@ -26,7 +26,6 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	public BuySellResponse buy(long buyer,long stock, int amount) throws SQLException{
 		User user = userMgr.getUserById(buyer);
 		int amount2Buy = user.getCash() < amount ? user.getCash() : amount;
-		userMgr.increaseCash(buyer, user.getCash() - amount2Buy);
 		Stock stockObj = stockMgr.getStockById(stock);
 		double sold = (double)amount2Buy / (double)stockObj.getTotal();
 		stockObj.setSold(stockObj.getSold() + sold);
@@ -50,7 +49,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update portfolio set sold = ? where buyer = ? and stock = ?");
+		ps = connection.prepareStatement("update portfolio set percentage = ? where user_id = ? and stock = ?");
 		ps.setDouble(1, sold);
 		ps.setLong(2, buyer);
 		ps.setLong(3, stock);
