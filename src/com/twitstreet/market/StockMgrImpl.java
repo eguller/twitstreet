@@ -154,11 +154,11 @@ public class StockMgrImpl implements StockMgr {
 	}
 
 	@Override
-	public void updateSold(long stock, double sold) throws SQLException {
+	public void increaseSold(long stock, double sold) throws SQLException {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update stock set sold = ? where id = ?");
+		ps = connection.prepareStatement("update stock set sold = (sold + ?) where id = ?");
 		ps.setDouble(1, sold);
 		ps.setLong(2, stock);
 		ps.executeUpdate();

@@ -41,7 +41,7 @@ function getquote() {
         			$("#user-stock").html("You do not have any " + quote);
         		}
         		else{
-        			$("#user-stock").html("You have " + parseInt(data.respObj.stock.tota * data.respObj.percentage) + " of " + quote);
+        			$("#user-stock").html("You have " + parseInt(data.respObj.stock.total * data.respObj.percentage) + " of " + quote);
         		}
         		showQuotePanel("userfound");
         	}
@@ -82,6 +82,7 @@ function writeSellLinks(){
 	var length = parseInt($("#user-stock-val").val()) == 0 ? 0 : $("#user-stock-val").val().length;
 	for(var i = length; i > 0; i --){
 		var amount = Math.pow(10,i - 1);
+		$("#sell-links").empty();
 		var link = $("<a>"+amount+"</a>").attr('onclick', "sell(\'"+quote+"\',"+amount+");").addClass("sell");
 		$("#sell-links").append(link);
 		if( i > 1){
@@ -108,7 +109,14 @@ function buy(stock, amount){
 		stock : stock,
 		amount : amount
 	}, function(data){
-		alert('hello data');
+		$("#total").html(data.stockTotal);
+		var sold =  parseInt( data.stockTotal * data.stockSold);
+		$("#sold").html( sold );
+		$("#available").html(data.stockTotal - sold);
+		$("#cash_value").html(data.userCash);
+		$("#portfolio_value").html(data.userPortfolio);
+		writeBuyLinks();
+		writeSellLinks();
 	});
 }
 

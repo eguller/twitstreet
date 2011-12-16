@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import com.twitstreet.db.data.Portfolio;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.UserStock;
+import com.twitstreet.servlet.BuySellResponse;
 
 /**
  * Maintains a cache of stock portfolio and money of Users.
@@ -23,7 +24,7 @@ public interface PortfolioMgr {
 	 * @param percent is the ratio of bought followers to the total followers.
 	 * @return
 	 */
-	public Stock buy(long buyer,long stock, int amount) throws SQLException;
+	public BuySellResponse buy(long buyer,long stock, int amount) throws SQLException;
 	
 	/**
 	 * Returns user portfolio

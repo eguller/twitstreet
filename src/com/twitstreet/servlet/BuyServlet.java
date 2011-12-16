@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.data.Stock;
@@ -27,6 +28,7 @@ public class BuyServlet extends HttpServlet {
 	@Inject UserMgr userMgr;
 	@Inject TwitterProxyFactory twitterProxyFactory = null;
 	@Inject PortfolioMgr portfolioMgr = null;
+	@Inject private final Gson gson = null;
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -50,8 +52,8 @@ public class BuyServlet extends HttpServlet {
 			TwitterProxy proxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 			
 			try {
-				Stock stockObj = portfolioMgr.buy(user.getId(), Long.parseLong(stock), Integer.parseInt(amount));
-				
+				BuySellResponse buySellResponse = portfolioMgr.buy(user.getId(), Long.parseLong(stock), Integer.parseInt(amount));
+				response.getWriter().write(gson.toJson(buySellResponse));
 			} catch (NumberFormatException e) {
 				// TODO Wrong stock amount inform user
 				e.printStackTrace();

@@ -216,14 +216,39 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	@Override
-	public void updateCash(long userId, int cash) throws SQLException{
+	public void increaseCash(long userId, int cash) throws SQLException{
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update users set cash = ? where id = ?");
+		ps = connection.prepareStatement("update users set cash = (cash + ?) where id = ?");
 		ps.setInt(1, cash);
 		ps.setLong(2, userId);
 
+		try {
+			ps.executeUpdate();
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		} catch (SQLException ex) {
+			logger.error("DB: Query failed = " + ps.toString(), ex);
+			throw ex;
+		} finally {
+			if (!ps.isClosed()) {
+				ps.close();
+			}
+			if (!connection.isClosed()) {
+				connection.close();
+			}
+		}
+	}
+
+	@Override
+	public void updateCashAndPortfolio(long userId, int amount) throws SQLException{
+		Connection connection = null;
+		PreparedStatement ps = null;
+		connection = dbMgr.getConnection();
+		ps = connection.prepareStatement("update users set cash = (cash - ?), portfolio = (portfolio + ?)  where id = ?");
+		ps.setInt(1, amount);
+		ps.setInt(2, amount);
+		ps.setLong(3, userId);
 		try {
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());

@@ -58,5 +58,5 @@ public interface StockMgr {
 
 	public void updateName(long id, String name) throws SQLException;
 
-	public void updateSold(long stock, double sold) throws SQLException;
+	public void increaseSold(long stock, double sold) throws SQLException;
 }

@@ -13,6 +13,7 @@ import com.twitstreet.db.data.Portfolio;
 import com.twitstreet.db.data.User;
 import com.twitstreet.db.data.UserStock;
 import com.twitstreet.db.data.Stock;
+import com.twitstreet.servlet.BuySellResponse;
 import com.twitstreet.session.UserMgr;
 
 public class PortfolioMgrImpl implements PortfolioMgr {
@@ -22,14 +23,14 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	@Inject private UserMgr userMgr;
 
 	@Override
-	public Stock buy(long buyer,long stock, int amount) throws SQLException{
+	public BuySellResponse buy(long buyer,long stock, int amount) throws SQLException{
 		User user = userMgr.getUserById(buyer);
 		int amount2Buy = user.getCash() < amount ? user.getCash() : amount;
-		userMgr.updateCash(buyer, user.getCash() - amount2Buy);
+		userMgr.increaseCash(buyer, user.getCash() - amount2Buy);
 		Stock stockObj = stockMgr.getStockById(stock);
 		double sold = (double)amount2Buy / (double)stockObj.getTotal();
 		stockObj.setSold(stockObj.getSold() + sold);
-	    stockMgr.updateSold(stock, sold);
+	    stockMgr.increaseSold(stock, sold);
 	    UserStock userStock = getStockInPortfolio(buyer, stock);
 	      
 	    if(userStock == null){
@@ -38,7 +39,9 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	    else{
 	    	updateStockInPortfolio(buyer, stock, sold);
 	    }
-	    return stockObj;
+	    stockMgr.increaseSold(stock, sold);
+	    userMgr.updateCashAndPortfolio(buyer, amount2Buy);
+	    return new BuySellResponse(user, stockObj);
 
 	}
 
@@ -78,14 +81,25 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 	@Override
 	public UserStock getStockInPortfolio(long userId, long stockId) throws SQLException{
+		UserStock userStock = null;
 	    Connection connection = null;
 		PreparedStatement ps = null;
+		ResultSet rs = null;
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("select id, percentage from portfolio where user_id = ? and stock = ?");
-		ps.executeQuery();
+		ps.setLong(1, userId);
+		ps.setLong(2, stockId);
+		rs = ps.executeQuery();
+		
+		if(rs.next()){
+			userStock = new UserStock();
+			userStock.setId(rs.getLong("id"));
+			userStock.setPercent(rs.getDouble("percentage"));
+		}
+		if(!rs.isClosed()) { rs.close(); }
 		if(!ps.isClosed()) { ps.close(); }
 		if(!connection.isClosed()){ connection.close(); }
-		return null;
+		return userStock;
 	}
 
 	@Override
@@ -100,7 +114,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		try{
 			rs = ps.executeQuery();
 			if(rs.next()){
-				return rs.getDouble("percentange");
+				return rs.getDouble("percentage");
 
 			}
 			logger.debug("DB: Query executed successfully - " + ps.toString());

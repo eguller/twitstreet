@@ -28,6 +28,8 @@ public interface UserMgr{
 	
 	public User random();
 	
-	public void updateCash(long userId, int cash) throws SQLException;
+	public void increaseCash(long userId, int cash) throws SQLException;
+	
+	public void updateCashAndPortfolio(long userId, int amount) throws SQLException;
 
 }
