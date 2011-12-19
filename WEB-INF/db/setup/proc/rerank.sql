@@ -22,7 +22,7 @@ begin
 			update users set rank = @new_rank, direction = 0 where id = user_id;
 		end if;
 		set @new_rank := @new_rank + 1;
-  	end loop;	
+  	end loop read_loop;	
   	close cur1;
 end $$
 delimiter ; 
