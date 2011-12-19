@@ -38,8 +38,10 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	    else{
 	    	updateStockInPortfolio(buyer, stock, sold);
 	    }
-	    stockMgr.increaseSold(stock, sold);
+	    stockMgr.updateSold(stock, sold);
 	    userMgr.updateCashAndPortfolio(buyer, amount2Buy);
+	    user.setCash(user.getCash() - amount2Buy);
+	    user.setPortfolio(user.getPortfolio() + amount2Buy);
 	    return new BuySellResponse(user, stockObj);
 
 	}
@@ -49,7 +51,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update portfolio set percentage = ? where user_id = ? and stock = ?");
+		ps = connection.prepareStatement("update portfolio set percentage = (percentage + ?) where user_id = ? and stock = ?");
 		ps.setDouble(1, sold);
 		ps.setLong(2, buyer);
 		ps.setLong(3, stock);
@@ -70,12 +72,6 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		ps.execute();
 		if(!ps.isClosed()) { ps.close(); }
 		if(!connection.isClosed()){ connection.close(); }
-	}
-
-
-	@Override
-	public Portfolio getUserPortfolio(long userId) {
-		return null;
 	}
 
 	@Override
@@ -132,9 +128,24 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 
 	@Override
-	public BuySellResponse sell(long userId, long stock, int amount)
+	public BuySellResponse sell(long seller, long stock, int amount)
 			throws SQLException {
-		return null;
+		User user = userMgr.getUserById(seller);
+		int amount2Buy = user.getCash() < amount ? user.getCash() : amount;
+		Stock stockObj = stockMgr.getStockById(stock);
+		double sold = (double)amount2Buy / (double)stockObj.getTotal();
+		stockObj.setSold(stockObj.getSold() - sold);
+	    UserStock userStock = getStockInPortfolio(seller, stock);
+	      
+	    if(userStock != null){
+	    	updateStockInPortfolio(seller, stock, -sold);
+	    }
+	    
+	    stockMgr.updateSold(stock, -sold);
+	    userMgr.updateCashAndPortfolio(seller, -amount2Buy);
+	    user.setCash(user.getCash() + amount2Buy);
+	    user.setPortfolio(user.getPortfolio() - amount2Buy);
+	    return new BuySellResponse(user, stockObj);
 	}
 
 
@@ -159,5 +170,12 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				logger.error("DB: Resources could not be closed properly", e);
 			}
 		}
+	}
+
+
+	@Override
+	public Portfolio getUserPortfolio(long userId) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

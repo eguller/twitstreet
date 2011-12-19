@@ -69,7 +69,7 @@ function writeBuyLinks(){
 	}	
 	var length = min.toString().length;
 	$("#buy-links").empty();
-	for(var i = length; i > 1; i --){
+	for(var i = length; i > 0; i --){
 		var amount = Math.pow(10,i - 1);
 		var link = $("<a>"+amount+"</a>").attr('onclick', "buy(\'"+quote+"\',"+amount+");").addClass("buy");
 		$("#buy-links").append(link);
@@ -83,6 +83,7 @@ function writeBuyLinks(){
 function writeSellLinks(){
 	var length = parseInt($("#sold").html()) == 0 ? 0 : $("#sold").html().length;
 	$("#sell-links").empty();
+	var quote = $("#quote-id").val();
 	for(var i = length; i > 0; i --){
 		var amount = Math.pow(10,i - 1);
 		var link = $("<a>"+amount+"</a>").attr('onclick', "sell(\'"+quote+"\',"+amount+");").addClass("sell");
@@ -124,7 +125,7 @@ function buy(stock, amount){
 	});
 }
 
-function sell(){
+function sell(stock, amount){
 	$.post('/a/sell', {
 		stock : stock,
 		amount : amount

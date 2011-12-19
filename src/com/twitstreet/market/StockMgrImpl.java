@@ -190,7 +190,7 @@ public class StockMgrImpl implements StockMgr {
 	}
 
 	@Override
-	public void increaseSold(long stock, double sold) throws SQLException {
+	public void updateSold(long stock, double sold) throws SQLException {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
