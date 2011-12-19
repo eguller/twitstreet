@@ -12,6 +12,7 @@ create table `users`(
 	`oauthToken` varchar(100) not null,
 	`oauthTokenSecret` varchar(100) not null,
 	`rank` int,
+	`direction` tinyint,
 	 primary key (`id`),
 	 unique key `username_unique` (`username`)
 )  engine=innodb default charset=`utf8`;

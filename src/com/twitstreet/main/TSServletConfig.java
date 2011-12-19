@@ -18,14 +18,19 @@ public class TSServletConfig extends GuiceServletContextListener {
     {  
 		//turnoff twitter4j logging
 		System.setProperty ("twitter4j.loggerFactory", 
-		"twitter4j.internal.logging.NullLoggerFactory"); 
-		Twitstreet twitStreet = getInjector().getInstance(Twitstreet.class);
+		"twitter4j.internal.logging.NullLoggerFactory");
+		Injector injector = getInjector();
+		Twitstreet twitStreet = injector.getInstance(Twitstreet.class);
 		ServletContext servletContext = servletContextEvent.getServletContext();
 		twitStreet.setServletContext(servletContext);
+		servletContext.setAttribute(Injector.class.getName(), injector);
 		File f = new File(System.getProperty("user.home") + "/.twitstreet/twitstreet.properties");
 		if (f.exists()) {
 			twitStreet.initialize();
 		}
+		
+		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
+		new Thread(reRankTask).start();
     }   
 	@Override
 	protected Injector getInjector() {
@@ -43,6 +48,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/getquote").with(StockQuoteServlet.class);
 				serve("/a/buy").with(BuyServlet.class);
 				serve("/a/sell").with(SellServlet.class);
+				serve("/toprank").with(TopRankServlet.class);
 			}
 		});
 	}

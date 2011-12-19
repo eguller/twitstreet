@@ -1,6 +1,8 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	isELIgnored="true" session="false"%>
 <%@ taglib uri='/WEB-INF/tlds/template.tld' prefix='template'%>
+
+
 <html>
 <head>
 <title><template:get name="title" />

@@ -38,6 +38,7 @@ public class BuyServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
+		response.setContentType("application/json;charset=utf-8");
 		User user = (User) request.getSession(false).getAttribute(User.USER);
 		if(user == null){
 			//uses someone else account to get quote for unauthenticated users.

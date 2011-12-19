@@ -1,33 +1,39 @@
+<%@ page import="com.google.inject.Injector"%>
+<%@ page import="com.google.inject.Guice"%>
+<%@ page import="com.twitstreet.session.UserMgr"%>
+<%@ page import="com.twitstreet.db.data.User"%>
+<%@ page import="java.util.ArrayList"%>
+
+
+<%
+Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+User sessionUser = (User)request.getSession().getAttribute(User.USER);
+UserMgr userMgr = inj.getInstance(UserMgr.class);
+ArrayList<User> userList = userMgr.getTopRank();
+
+%>
+
 <div id="topranks">
 	<h3>Ranking</h3>
-	<table class="datatbl">
-		<script language="javascript" type="text/javascript">
-			for ( var i = 0; i < 100; i++) {
-				if (i % 2 == 1){
-					document.write('<tr>');
-				}
-				else{
-					document.write('<tr class=\'odd\'>');
-				}
-				document.write('<td>');
-				document.write(i + 1 + '.');
-				document.write('</td>');
-				document.write('<td>');
-				document.write(randomString());
-				document.write('</td>');
-				document.write('<td>');
-				document.write(randomNumber() + '$');
-				document.write('</td>');
-				document.write('<td>');
-				if(Math.random() < 0.5){
-					document.write('<img src=\'../images/down.gif\'');
-				}
-				else{
-					document.write('<img src=\'../images/up.gif\'');
-				}
-				document.write('</td>');
-				document.write('</tr>');
-			}
-		</script>
+	<table class="datatbl" id="topranktable">
+		<% for(int i = 0; i < userList.size(); i++){ 
+				int rank = i + 1;
+				User user = userList.get(i);
+				int total = user.getCash() + user.getPortfolio();
+				if( i == 0){ %>
+					<tr>
+	    		<% }else{ %>
+	    			<tr class="odd">
+	    		<% } %>
+						<td><%=rank%>.</td>
+						<td><%=user.getUserName() %></td>
+						<td><%=total%></td>
+						<% if (user.getDirection() == 1) { %>
+							<td><img src="../images/up.gif" /></td>
+						<% } else { %>
+							<td><img src="../images/down.gif" /></td>
+						<% } %>
+					</tr>
+		<% } %>
 	</table>
 </div>

@@ -1,5 +1,6 @@
 package com.twitstreet.market;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +30,6 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		Stock stockObj = stockMgr.getStockById(stock);
 		double sold = (double)amount2Buy / (double)stockObj.getTotal();
 		stockObj.setSold(stockObj.getSold() + sold);
-	    stockMgr.increaseSold(stock, sold);
 	    UserStock userStock = getStockInPortfolio(buyer, stock);
 	      
 	    if(userStock == null){
@@ -128,5 +128,36 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			if(!connection.isClosed()){ connection.close(); }
 		}
 		return 0.0;
+	}
+
+
+	@Override
+	public BuySellResponse sell(long userId, long stock, int amount)
+			throws SQLException {
+		return null;
+	}
+
+
+	@Override
+	public void rerank() {
+		Connection connection = null;
+		CallableStatement cs = null;
+		try{
+			connection = dbMgr.getConnection();
+			cs = connection.prepareCall("{call rerank()}");
+			cs.execute();
+			logger.debug("DB: Query executed successfully - " + cs.toString());
+		}
+		catch(SQLException ex){
+			logger.debug("DB: Query failed - " + cs.toString(), ex);
+		}
+		finally{
+			try{
+				if(!cs.isClosed()) { cs.close(); }
+				if(!connection.isClosed()){ connection.close(); }
+			} catch (SQLException e) {
+				logger.error("DB: Resources could not be closed properly", e);
+			}
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.twitstreet.session;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.google.inject.Key;
 import com.twitstreet.db.data.User;
@@ -31,5 +32,7 @@ public interface UserMgr{
 	public void increaseCash(long userId, int cash) throws SQLException;
 	
 	public void updateCashAndPortfolio(long userId, int amount) throws SQLException;
+	
+	public ArrayList<User> getTopRank();
 
 }

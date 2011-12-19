@@ -28,20 +28,30 @@ public class StockMgrImpl implements StockMgr {
 		ResultSet rs = null;
 		Stock stockDO = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
-		ps.setString(1, name);
-		rs = ps.executeQuery();
-		while(rs.next()){
-			stockDO = new Stock();
-			stockDO.setId(rs.getLong("id"));
-			stockDO.setName(rs.getString("name"));
-			stockDO.setTotal(rs.getInt("total"));
-			stockDO.setSold(rs.getDouble("sold"));
-			break;
+		try{
+			ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
+			ps.setString(1, name);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				stockDO = new Stock();
+				stockDO.setId(rs.getLong("id"));
+				stockDO.setName(rs.getString("name"));
+				stockDO.setTotal(rs.getInt("total"));
+				stockDO.setSold(rs.getDouble("sold"));
+				break;
+			}
+			logger.debug("DB: Query executed successfully - " + ps.toString());
 		}
-		if(!rs.isClosed()) { rs.close(); }
-		if(!ps.isClosed()) { ps.close(); }
-		if(!connection.isClosed()){ connection.close(); }
+		catch(SQLException ex){
+			logger.debug("DB: Query failed - " + ps.toString(), ex);
+			throw ex;
+			
+		}
+		finally{
+			if(!rs.isClosed()) { rs.close(); }
+			if(!ps.isClosed()) { ps.close(); }
+			if(!connection.isClosed()){ connection.close(); }
+		}
 		return stockDO;
 	}
 
@@ -80,12 +90,21 @@ public class StockMgrImpl implements StockMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update stock set total = ? where id = ?");
-		ps.setInt(1, total);
-		ps.setLong(2, id);
-		ps.executeUpdate();
-		if(!ps.isClosed()) { ps.close(); }
-		if(!connection.isClosed()){ connection.close(); }
+		try{
+			ps = connection.prepareStatement("update stock set total = ? where id = ?");
+			ps.setInt(1, total);
+			ps.setLong(2, id);
+			ps.executeUpdate();
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		}
+		catch(SQLException ex){
+			logger.debug("DB: Query failed - " + ps.toString(), ex);
+			throw ex;
+		}
+		finally{
+			if(!ps.isClosed()) { ps.close(); }
+			if(!connection.isClosed()){ connection.close(); }
+		}
 	}
 
 	@Override
@@ -130,14 +149,22 @@ public class StockMgrImpl implements StockMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update stock set total = ?, set name = ? where id = ?");
-		ps.setInt(1, total);
-		ps.setString(2, name);
-		ps.setLong(3, id);
-		ps.executeUpdate();
-		if(!ps.isClosed()) { ps.close(); }
-		if(!connection.isClosed()){ connection.close(); }
-		
+		try{
+			ps = connection.prepareStatement("update stock set total = ?, set name = ? where id = ?");
+			ps.setInt(1, total);
+			ps.setString(2, name);
+			ps.setLong(3, id);
+			ps.executeUpdate();
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		}
+		catch(SQLException ex){
+			logger.error("DB: Query failed = " + ps.toString(), ex);
+			throw ex;
+		}
+		finally{
+			if(!ps.isClosed()) { ps.close(); }
+			if(!connection.isClosed()){ connection.close(); }
+		}
 	}
 
 	@Override
@@ -145,12 +172,21 @@ public class StockMgrImpl implements StockMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update stock set name = ? where id = ?");
-		ps.setString(1, name);
-		ps.setLong(2, id);
-		ps.executeUpdate();
-		if(!ps.isClosed()) { ps.close(); }
-		if(!connection.isClosed()){ connection.close(); }
+		try{
+			ps = connection.prepareStatement("update stock set name = ? where id = ?");
+			ps.setString(1, name);
+			ps.setLong(2, id);
+			ps.executeUpdate();
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		}
+		catch(SQLException ex){
+			logger.error("DB: Query failed = " + ps.toString(), ex);
+			throw ex;
+		}
+		finally{
+			if(!ps.isClosed()) { ps.close(); }
+			if(!connection.isClosed()){ connection.close(); }
+		}
 	}
 
 	@Override
@@ -158,11 +194,20 @@ public class StockMgrImpl implements StockMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update stock set sold = (sold + ?) where id = ?");
-		ps.setDouble(1, sold);
-		ps.setLong(2, stock);
-		ps.executeUpdate();
-		if(!ps.isClosed()) { ps.close(); }
-		if(!connection.isClosed()){ connection.close(); }
+		try{
+			ps = connection.prepareStatement("update stock set sold = (sold + ?) where id = ?");
+			ps.setDouble(1, sold);
+			ps.setLong(2, stock);
+			ps.executeUpdate();
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		}
+		catch(SQLException ex){
+			logger.error("DB: Query failed = " + ps.toString(), ex);
+			throw ex;
+		}
+		finally{
+			if(!ps.isClosed()) { ps.close(); }
+			if(!connection.isClosed()){ connection.close(); }
+		}
 	}
 }

@@ -2,6 +2,8 @@ $(document).ready(function() {
   showQuotePanel("hide-all");
 });
 
+setInterval(toprank, 5000);
+
 function post(action, _data, f) {
 	$.ajax({
 		  type: 'POST',
@@ -31,7 +33,7 @@ function getquote() {
         	else{
         		$("#total").html(data.respObj.stock.total);
         		$("#quote-id").val(data.respObj.stock.id);
-        		$("#user-stock-val").val(parseInt(data.respObj.stock.total * data.respObj.percentage));
+        		$("#user-stock-val").val(parseInt(data.respObj.stock.total));
         		var sold = calculateSold(data.respObj.stock.total, data.respObj.stock.sold);
         		$("#sold").html(sold);
         		$("#available").html(data.respObj.stock.total - sold);
@@ -67,7 +69,7 @@ function writeBuyLinks(){
 	}	
 	var length = min.toString().length;
 	$("#buy-links").empty();
-	for(var i = length; i > 0; i --){
+	for(var i = length; i > 1; i --){
 		var amount = Math.pow(10,i - 1);
 		var link = $("<a>"+amount+"</a>").attr('onclick', "buy(\'"+quote+"\',"+amount+");").addClass("buy");
 		$("#buy-links").append(link);
@@ -79,10 +81,10 @@ function writeBuyLinks(){
 }
 
 function writeSellLinks(){
-	var length = parseInt($("#user-stock-val").val()) == 0 ? 0 : $("#user-stock-val").val().length;
+	var length = parseInt($("#sold").html()) == 0 ? 0 : $("#sold").html().length;
+	$("#sell-links").empty();
 	for(var i = length; i > 0; i --){
 		var amount = Math.pow(10,i - 1);
-		$("#sell-links").empty();
 		var link = $("<a>"+amount+"</a>").attr('onclick', "sell(\'"+quote+"\',"+amount+");").addClass("sell");
 		$("#sell-links").append(link);
 		if( i > 1){
@@ -113,15 +115,31 @@ function buy(stock, amount){
 		var sold =  parseInt( data.stockTotal * data.stockSold);
 		$("#sold").html( sold );
 		$("#available").html(data.stockTotal - sold);
-		$("#cash_value").html(data.userCash);
+		$("#cash_value").html(data.userCash + "$");
+		$("#cash").val(data.userCash);
 		$("#portfolio_value").html(data.userPortfolio);
+		$("#total_value").html(data.userCash + data.userPortfolio);
 		writeBuyLinks();
 		writeSellLinks();
 	});
 }
 
 function sell(){
-	alert('hello sell');
+	$.post('/a/sell', {
+		stock : stock,
+		amount : amount
+	}, function(data){
+		$("#total").html(data.stockTotal);
+		var sold =  parseInt( data.stockTotal * data.stockSold);
+		$("#sold").html( sold );
+		$("#available").html(data.stockTotal - sold);
+		$("#cash_value").html(data.userCash + "$");
+		$("#cash").val(data.userCash);
+		$("#portfolio_value").html(data.userPortfolio + "$");
+		$("#total_value").html(data.userCash + data.userPortfolio + "$");
+		writeBuyLinks();
+		writeSellLinks();
+	});
 }
 
 function setup(){
@@ -159,5 +177,25 @@ function setup(){
 			}
 		}
 	});
+}
+
+function toprank(){
+	$("topranktable").empty();
+	$.getJSON('/toprank', function(data) {
+		  for(var i = 0, length = data.length; i < length; i ++){
+			  var rank = data[i];
+			  var tr = $("<tr></tr>");
+			  tr.append($("<td>" + rank.rank + "</td>"));
+			  tr.append($("<td>" + rank.userName +"</td>"));
+			  tr.append($("<td>" + rank.cash + rank.portfolio) + "</td>");
+			  if(data.direction == 1){
+				  tr.append($("td><img src=\"../images/up.gif\" /></td>"));
+			  }
+			  else{
+				  tr.append($("td><img src=\"../images/down.gif\" /></td>"));
+			  }			  
+			  $("topranktable").append(tr);
+		  }
+		});
 }
 

@@ -4,12 +4,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Scopes;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.assistedinject.FactoryProvider;
 import com.twitstreet.config.ConfigMgr;
-import com.twitstreet.config.ConfigMgrImpl;
 import com.twitstreet.config.ConfigMgrProvider;
 import com.twitstreet.db.base.DBMgr;
-import com.twitstreet.db.base.DBMgrImpl;
 import com.twitstreet.db.base.DBMgrProvider;
 import com.twitstreet.db.init.DBScriptParser;
 import com.twitstreet.db.init.DBScriptParserImpl;
@@ -37,6 +34,7 @@ public class TSModule extends AbstractModule {
 		bind(DBScriptParser.class).to(DBScriptParserImpl.class);
 		bind(DBMgr.class).toProvider(DBMgrProvider.class).in(Scopes.SINGLETON);
 		bind(ConfigMgr.class).toProvider(ConfigMgrProvider.class).in(Scopes.SINGLETON);
+		bind(ReRankTask.class).in(Scopes.SINGLETON);
 		install(new FactoryModuleBuilder()
 	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
 	     .build(TwitterProxyFactory.class));

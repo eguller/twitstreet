@@ -18,13 +18,21 @@ public interface PortfolioMgr {
 	/**
 	 * Checks that buyer has enough enough money and updates buyer's portfolio
 	 * adding stocks.
-	 * @param buyer is the twitter id of Buyer
-	 * @param price is the total money to be paid.
-	 * @param stock is the twitter id of stock.
-	 * @param percent is the ratio of bought followers to the total followers.
+	 * @param userId - twitter id of Buyer
+	 * @param stock - twitter id of stock.
+	 * @param amount - Amount bought
 	 * @return
 	 */
-	public BuySellResponse buy(long buyer,long stock, int amount) throws SQLException;
+	public BuySellResponse buy(long userId,long stock, int amount) throws SQLException;
+	
+	/**
+	 * @param userId is the twitter id of Seller
+	 * @param stock 
+	 * @param amount
+	 * @return
+	 * @throws SQLException
+	 */
+	public BuySellResponse sell(long userId, long stock, int amount) throws SQLException;
 	
 	/**
 	 * Returns user portfolio
@@ -49,5 +57,7 @@ public interface PortfolioMgr {
 	 * @return
 	 */
 	public UserStock getStockInPortfolio(long buyer, long stock) throws SQLException;
+
+	public void rerank();
 	
 }

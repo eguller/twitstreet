@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -15,6 +16,7 @@ import com.twitstreet.db.data.User;
 import com.twitstreet.util.Util;
 
 public class UserMgrImpl implements UserMgr {
+	private static final int TOP = 100;
 	@Inject
 	DBMgr dbMgr;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
@@ -28,7 +30,7 @@ public class UserMgrImpl implements UserMgr {
 		ps = connection
 				.prepareStatement("select id, userName, "
 						+ "lastLogin, firstLogin, cash, "
-						+ "portfolio, lastIp, oauthToken, oauthTokenSecret from users where id = ?");
+						+ "portfolio, lastIp, oauthToken, oauthTokenSecret, rank, direction from users where id = ?");
 		ps.setLong(1, id);
 
 		try {
@@ -37,6 +39,8 @@ public class UserMgrImpl implements UserMgr {
 			while (rs.next()) {
 				userDO = new User();
 				userDO.setId(rs.getLong("id"));
+				userDO.setRank(rs.getInt("rank"));
+				userDO.setDirection(rs.getInt("direction"));
 				userDO.setUserName(rs.getString("userName"));
 				userDO.setLastLogin(rs.getDate("lastLogin"));
 				userDO.setFirstLogin(rs.getDate("firstLogin"));
@@ -110,7 +114,7 @@ public class UserMgrImpl implements UserMgr {
 		ps = connection.prepareStatement("select id, userName, "
 				+ "lastLogin, firstLogin, cash, "
 				+ "portfolio, lastIp, oauthToken, "
-				+ "oauthTokenSecret from users where userName = ?");
+				+ "oauthTokenSecret, rank, direction from users where userName = ?");
 		ps.setString(1, userName);
 		try {
 			rs = ps.executeQuery();
@@ -118,6 +122,8 @@ public class UserMgrImpl implements UserMgr {
 			while (rs.next()) {
 				userDO = new User();
 				userDO.setId(rs.getLong("id"));
+				userDO.setRank(rs.getInt("rank"));
+				userDO.setDirection(rs.getInt("direction"));
 				userDO.setUserName(rs.getString("userName"));
 				userDO.setLastLogin(rs.getDate("lastLogin"));
 				userDO.setFirstLogin(rs.getDate("firstLogin"));
@@ -179,10 +185,12 @@ public class UserMgrImpl implements UserMgr {
 			rs = stmt
 					.executeQuery("select id, userName, "
 							+ "lastLogin, firstLogin, cash, "
-							+ "portfolio, lastIp, oauthToken, oauthTokenSecret from users where id >= (select floor( max(id) * rand()) from users ) order by id limit 1;");
+							+ "portfolio, lastIp, oauthToken, oauthTokenSecret, rank, direction from users where id >= (select floor( max(id) * rand()) from users ) order by id limit 1;");
 			if (rs.next()) {
 				user = new User();
 				user.setId(rs.getLong("id"));
+				user.setRank(rs.getInt("rank"));
+				user.setDirection(rs.getInt("direction"));
 				user.setUserName(rs.getString("userName"));
 				user.setLastLogin(rs.getDate("lastLogin"));
 				user.setFirstLogin(rs.getDate("firstLogin"));
@@ -263,5 +271,50 @@ public class UserMgrImpl implements UserMgr {
 				connection.close();
 			}
 		}
+	}
+
+	@Override
+	public ArrayList<User> getTopRank() {
+		ArrayList<User> userList = new ArrayList<User>(100);
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement("select id, userName, "
+					+ "lastLogin, firstLogin, cash, "
+					+ "portfolio, lastIp, oauthToken, "
+					+ "oauthTokenSecret, rank, direction from users order by rank asc limit " + TOP);
+			rs = ps.executeQuery();
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+			while (rs.next()) {
+				userDO = new User();
+				userDO.setId(rs.getLong("id"));
+				userDO.setRank(rs.getInt("rank"));
+				userDO.setDirection(rs.getInt("direction"));
+				userDO.setUserName(rs.getString("userName"));
+				userDO.setLastLogin(rs.getDate("lastLogin"));
+				userDO.setFirstLogin(rs.getDate("firstLogin"));
+				userDO.setCash(rs.getInt("cash"));
+				userDO.setPortfolio(rs.getInt("portfolio"));
+				userDO.setLastIp(rs.getString("lastIp"));
+				userDO.setOauthToken(rs.getString("oauthToken"));
+				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
+				userList.add(userDO);
+			}
+		} catch (SQLException ex) {
+			logger.error("DB: Query failed = " + ps.toString(), ex);
+		} finally {
+			try {
+				rs.close();
+				ps.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return userList;
 	}
 }
