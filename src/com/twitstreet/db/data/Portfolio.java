@@ -3,24 +3,40 @@ package com.twitstreet.db.data;
 import java.util.ArrayList;
 
 public class Portfolio {
-	User user;
-	ArrayList<Stock> stockList;
-	
-	public Portfolio(User user, ArrayList<Stock> stockList){
-		this.user = user;
-		this.stockList = stockList;
+	long userId;
+	String userName;
+	ArrayList<StockInPortfolio> stockInPortfolioList = new ArrayList<StockInPortfolio>();
+	public Portfolio(User user){
+		this.userId = user.getId();
+		this.userName = user.getUserName();
 	}
 	
-	public Portfolio(ArrayList<UserStock> userStock){
-		/*
-		if(userStock.size() > 0){
-			this.user = userStock.get(0).getUser();
-		}
-		stockList = new ArrayList<Stock>(userStock.size());
-		
-		for(UserStock userStockDO : userStock){
-			stockList.add(userStockDO.getStock());
-		}
-		*/
+	public void add(StockInPortfolio stockInPortfolio){
+		this.stockInPortfolioList.add(stockInPortfolio);
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public ArrayList<StockInPortfolio> getStockInPortfolioList() {
+		return stockInPortfolioList;
+	}
+
+	public void setStockInPortfolioList(
+			ArrayList<StockInPortfolio> stockInPortfolioList) {
+		this.stockInPortfolioList = stockInPortfolioList;
 	}
 }

@@ -39,7 +39,7 @@ public interface PortfolioMgr {
 	 * @param userId - User id
 	 * @return
 	 */
-	public Portfolio getUserPortfolio(long userId) throws SQLException;
+	public Portfolio getUserPortfolio(long userId);
 	
 	/**
 	 *  
