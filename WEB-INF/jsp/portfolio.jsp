@@ -17,9 +17,16 @@ Portfolio portfolio = portfolioMgr.getUserPortfolio(sessionUser.getId());
 <div id="portfolio">
 	<h3>Portfolio</h3>
 	<table>
-	<% for(int i = 0; i < portfolio.getStockInPortfolioList().size(); i ++){ %>
+	<% for(int i = 0; i < portfolio.getStockInPortfolioList().size();){ %>
 		<tr>
-			
+			<% for(int j = 0; j < 4; j ++) { 
+				if( i < portfolio.getStockInPortfolioList().size())
+			%>
+				
+				
+			<% 
+				i++;
+			} %>
 		</tr>
 	<% } %>
 	</table>
