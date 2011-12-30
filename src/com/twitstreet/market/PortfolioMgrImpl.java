@@ -185,7 +185,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			cs.execute();
 			logger.debug("DB: Query executed successfully - " + cs.toString());
 		} catch (SQLException ex) {
-			logger.debug("DB: Query failed - " + cs.toString(), ex);
+			logger.error("DB: Query failed - " + cs.toString(), ex);
 		} finally {
 			try {
 				if (!cs.isClosed()) {
@@ -218,18 +218,18 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			try {
 				connection = dbMgr.getConnection();
 				ps = connection
-						.prepareStatement("select stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount from portfolio, stock where users.id = portfolio.user_id and portfolio.stock = stock.id and where porfolio.user_id = ?");
+						.prepareStatement("select stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ?");
 				ps.setLong(1, userId);
 				rs = ps.executeQuery();
 
-				if (rs.next()) {
+				while (rs.next()) {
 					StockInPortfolio stockInPortfolio = new StockInPortfolio(rs.getLong("stockId"), rs.getString("stockName"), (int) Math.rint(rs.getDouble("amount")));
 					portfolio.add(stockInPortfolio);
 				}
 				
 				logger.debug("DB: Query executed successfully - " + ps.toString());
 			} catch (SQLException ex) {
-
+				logger.error("DB: Query failed - " + ps.toString(), ex);
 			} finally {
 				try {
 					if (!rs.isClosed()) {

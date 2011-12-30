@@ -20,11 +20,17 @@ Portfolio portfolio = portfolioMgr.getUserPortfolio(sessionUser.getId());
 	<% for(int i = 0; i < portfolio.getStockInPortfolioList().size();){ %>
 		<tr>
 			<% for(int j = 0; j < 4; j ++) { 
-				if( i < portfolio.getStockInPortfolioList().size())
+				if( i < portfolio.getStockInPortfolioList().size()){
 			%>
-				
-				
+				<td>
+					<% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %>
+					<br>
+					<% out.write(Integer.toString(portfolio.getStockInPortfolioList().get(i).getAmount())); %>
+				</td>
+				<% } else { %>
+				<td></td>
 			<% 
+				}
 				i++;
 			} %>
 		</tr>
