@@ -58,6 +58,14 @@ create table `config`(
 	 primary key (`id`)
 )  engine=innodb default charset=`utf8`;
 
+-- saves transaction log
+create  table `transactions` (
+  `id` bigint not null ,
+  `user_id` bigint null ,
+  `stock` bigint null ,
+  `t_action` tinyint null ,
+  primary key (`id`) );
+
 
 
 
