@@ -16,6 +16,8 @@ import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.PortfolioMgrImpl;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.market.StockMgrImpl;
+import com.twitstreet.market.TransactionMgr;
+import com.twitstreet.market.TransactionMgrImpl;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.twitter.TwitterProxy;
@@ -35,6 +37,7 @@ public class TSModule extends AbstractModule {
 		bind(DBMgr.class).toProvider(DBMgrProvider.class).in(Scopes.SINGLETON);
 		bind(ConfigMgr.class).toProvider(ConfigMgrProvider.class).in(Scopes.SINGLETON);
 		bind(ReRankTask.class).in(Scopes.SINGLETON);
+		bind(TransactionMgr.class).to(TransactionMgrImpl.class).in(Scopes.SINGLETON);
 		install(new FactoryModuleBuilder()
 	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
 	     .build(TwitterProxyFactory.class));

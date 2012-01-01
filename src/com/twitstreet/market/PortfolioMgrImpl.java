@@ -26,7 +26,10 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	private StockMgr stockMgr;
 	@Inject
 	private UserMgr userMgr;
-
+	@Inject 
+	private TransactionMgr transactionMgr;
+	
+	
 	@Override
 	public BuySellResponse buy(long buyer, long stock, int amount)
 			throws SQLException {
@@ -44,6 +47,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		}
 		stockMgr.updateSold(stock, sold);
 		userMgr.updateCashAndPortfolio(buyer, amount2Buy);
+		transactionMgr.recordTransaction(user, stock, amount2Buy, TransactionMgr.BUY);
 		user.setCash(user.getCash() - amount2Buy);
 		user.setPortfolio(user.getPortfolio() + amount2Buy);
 		return new BuySellResponse(user, stockObj);
@@ -170,6 +174,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 		stockMgr.updateSold(stock, -sold);
 		userMgr.updateCashAndPortfolio(seller, -amount2Buy);
+		transactionMgr.recordTransaction(user, stock, amount2Buy, TransactionMgr.SELL);
 		user.setCash(user.getCash() + amount2Buy);
 		user.setPortfolio(user.getPortfolio() - amount2Buy);
 		return new BuySellResponse(user, stockObj);
