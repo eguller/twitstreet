@@ -7,8 +7,8 @@ import com.twitstreet.market.PortfolioMgr;
 @Singleton
 public class ReRankTask implements Runnable {
 	//Re-rank in every 5 minute
-	//private static final int interval = 5 * 60 * 1000;
-	private static final int interval = 5000;
+	private static final int interval = 5 * 60 * 1000;
+	//private static final int interval = 5000;
 	@Inject PortfolioMgr portfolioMgr;
 	@Override
 	public void run() {
