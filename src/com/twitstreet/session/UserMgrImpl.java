@@ -151,12 +151,13 @@ public class UserMgrImpl implements UserMgr {
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("update users set userName = ?, "
 				+ "lastLogin = ?, "
-				+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ?");
+				+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ? where id = ?");
 		ps.setString(1, user.getUserName());
 		ps.setDate(2, Util.toSqlDate(user.getLastLogin()));
 		ps.setString(3, user.getLastIp());
 		ps.setString(4, user.getOauthToken());
 		ps.setString(5, user.getOauthTokenSecret());
+		ps.setLong(6, user.getId());
 		try {
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());

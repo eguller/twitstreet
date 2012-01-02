@@ -35,7 +35,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement(
-							"insert into transactions(user_id,stock,t_action) values(?, ?, ?, ?)",
+							"insert into transactions(user_id,stock,t_action,t_date) values(?, ?, ?, ?)",
 							Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, user.getId());
 			ps.setLong(2, stockId);

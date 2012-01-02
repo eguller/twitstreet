@@ -74,6 +74,7 @@ public class CallBackServlet extends HttpServlet{
 			}
 			else{
 				user = new User();
+				user.setId(userId);
 				user.setLastLogin(Calendar.getInstance().getTime());
 				user.setUserName(screenName);
 				user.setLastIp(request.getRemoteHost());
