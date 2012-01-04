@@ -20,7 +20,7 @@ ArrayList<User> userList = userMgr.getTopRank();
 				int rank = i + 1;
 				User user = userList.get(i);
 				int total = user.getCash() + user.getPortfolio();
-				if( i == 0){ %>
+				if( i%2 == 0){ %>
 					<tr>
 	    		<% }else{ %>
 	    			<tr class="odd">

@@ -208,7 +208,7 @@ CUSTOM CLASSES
 }
 
 .datatbl tr.odd {
-	background-color: #F9F9F9;
+	background-color: #EEEEEE;
 }
 
 .error {
@@ -242,4 +242,14 @@ a.sell:hover {
 
 .right_aligned tr td {
 	text-align: right;
+}
+
+.red {
+	font-weight: bold;
+	color: #CC0000;
+}
+
+.green {
+	font-weight: bold;
+	color: #4D9900;
 }

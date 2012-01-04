@@ -60,9 +60,10 @@ create table `config`(
 
 -- saves transaction log
 create  table `transactions` (
-  `id` bigint not null auto_increment ,
-  `user_id` bigint null ,
-  `stock` bigint null ,
+  `id` bigint not null auto_increment,
+  `user_id` bigint null,
+  `stock` bigint null,
+  `amount` int null,
   `t_action` tinyint null,
   `t_date` datetime,
   primary key (`id`) );

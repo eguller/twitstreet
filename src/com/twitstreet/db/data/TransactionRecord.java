@@ -3,6 +3,8 @@ package com.twitstreet.db.data;
 import java.util.Date;
 
 public class TransactionRecord {
+	public static final int BUY = 1;
+	public static final int SELL = 0;
 	long id;
 	long stockId;
 	int amount;
@@ -10,6 +12,7 @@ public class TransactionRecord {
 	Date date;
 	long userId;
 	String userName;
+	String stockName;
 	public long getId() {
 		return id;
 	}
@@ -51,5 +54,11 @@ public class TransactionRecord {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public String getStockName() {
+		return stockName;
+	}
+	public void setStockName(String stockName) {
+		this.stockName = stockName;
 	}
 }

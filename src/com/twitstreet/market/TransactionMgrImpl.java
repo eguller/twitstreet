@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -35,12 +36,13 @@ public class TransactionMgrImpl implements TransactionMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement(
-							"insert into transactions(user_id,stock,t_action,t_date) values(?, ?, ?, ?)",
+							"insert into transactions(user_id,stock, amount, t_action,t_date) values(?, ?, ?, ?, ?)",
 							Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, user.getId());
 			ps.setLong(2, stockId);
-			ps.setInt(3, operation);
-			ps.setDate(4, new Date(currentDate));
+			ps.setInt(3, amount);
+			ps.setInt(4, operation);
+			ps.setTimestamp(5, new Timestamp(currentDate));
 			int affectedRows = ps.executeUpdate();
 			if (affectedRows > 0) {
 				generatedKeys = ps.getGeneratedKeys();
@@ -106,7 +108,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select users.id as user_id, users.userName as userName, transactions.id as transaction_id, transactions.amount as amount, transactions.t_action as t_action from users, transactions where users.id = ? limit ?");
+					.prepareStatement("select users.id as user_id, users.userName as userName, transactions.id as transaction_id, transactions.amount as amount, transactions.t_action as t_action, stock.name as stock from users, transactions, stock where stock.id = transactions.stock and users.id = ? order by t_date desc limit ?");
 
 			ps.setLong(1, user.getId());
 			ps.setInt(2, TransactionMgr.CURRENT_TRANSACTIONS);
@@ -114,10 +116,11 @@ public class TransactionMgrImpl implements TransactionMgr {
 			while(rs.next()){
 				TransactionRecord transactionRecord = new TransactionRecord();
 				transactionRecord.setUserId(rs.getLong("user_id"));
-				transactionRecord.setUserName(rs.getString("user_name"));
+				transactionRecord.setUserName(rs.getString("userName"));
 				transactionRecord.setId(rs.getLong("transaction_id"));
 				transactionRecord.setAmount(rs.getInt("amount"));
 				transactionRecord.setTransactionAction(rs.getInt("t_action"));
+				transactionRecord.setStockName(rs.getString("stock"));
 				transactionRecordList.add(transactionRecord);
 			}
 			logger.debug("DB: Query executed successfully - " + ps.toString());
