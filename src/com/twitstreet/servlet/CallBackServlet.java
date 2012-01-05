@@ -16,6 +16,7 @@ import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.User;
 import com.twitstreet.session.UserMgr;
+import com.twitstreet.twitter.TwitterProxy;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -59,6 +60,7 @@ public class CallBackServlet extends HttpServlet{
 				// TODO Log here and take appropriate action to inform user.
 				e.printStackTrace();
 			}
+			twitter4j.User twUser = twitter.showUser(userId);
 			if(user == null){
 				user = new User();
 				user.setId(userId);
@@ -69,6 +71,7 @@ public class CallBackServlet extends HttpServlet{
 				user.setOauthToken(oauthToken);
 				user.setOauthTokenSecret(oauthTokenSecret);
 				user.setCash(10000);
+				user.setPictureUrl(twUser.getProfileImageURL().toString());
 				userMgr.saveUser(user);
 				request.getSession().setAttribute(User.USER, user);
 			}
@@ -80,6 +83,7 @@ public class CallBackServlet extends HttpServlet{
 				user.setLastIp(request.getRemoteHost());
 				user.setOauthToken(oauthToken);
 				user.setOauthTokenSecret(oauthTokenSecret);
+				user.setPictureUrl(twUser.getProfileImageURL().toString());
 				userMgr.updateUser(user);
 				request.getSession().setAttribute(User.USER, user);
 			}

@@ -47,7 +47,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		}
 		stockMgr.updateSold(stock, sold);
 		userMgr.updateCashAndPortfolio(buyer, amount2Buy);
-		transactionMgr.recordTransaction(user, stock, amount2Buy, TransactionMgr.BUY);
+		transactionMgr.recordTransaction(user, stockObj, amount2Buy, TransactionMgr.BUY);
 		user.setCash(user.getCash() - amount2Buy);
 		user.setPortfolio(user.getPortfolio() + amount2Buy);
 		return new BuySellResponse(user, stockObj);
@@ -174,7 +174,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 		stockMgr.updateSold(stock, -sold);
 		userMgr.updateCashAndPortfolio(seller, -amount2Buy);
-		transactionMgr.recordTransaction(user, stock, amount2Buy, TransactionMgr.SELL);
+		transactionMgr.recordTransaction(user, stockObj, amount2Buy, TransactionMgr.SELL);
 		user.setCash(user.getCash() + amount2Buy);
 		user.setPortfolio(user.getPortfolio() - amount2Buy);
 		return new BuySellResponse(user, stockObj);
@@ -223,12 +223,12 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			try {
 				connection = dbMgr.getConnection();
 				ps = connection
-						.prepareStatement("select stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ?");
+						.prepareStatement("select stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount, stock.pictureUrl as pictureUrl from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ?");
 				ps.setLong(1, userId);
 				rs = ps.executeQuery();
 
 				while (rs.next()) {
-					StockInPortfolio stockInPortfolio = new StockInPortfolio(rs.getLong("stockId"), rs.getString("stockName"), (int) Math.rint(rs.getDouble("amount")));
+					StockInPortfolio stockInPortfolio = new StockInPortfolio(rs.getLong("stockId"), rs.getString("stockName"), (int) Math.rint(rs.getDouble("amount")), rs.getString("pictureUrl"));
 					portfolio.add(stockInPortfolio);
 				}
 				

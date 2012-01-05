@@ -22,6 +22,7 @@ public class User{
     String oauthTokenSecret;
     int rank;
     int direction;
+    String pictureUrl;
     @Inject TwitterProxy twitterProxy = null;
 	public long getId() {
         return id;
@@ -108,5 +109,13 @@ public class User{
 
 	public void setDirection(int direction) {
 		this.direction = direction;
+	}
+
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
 	}
 }

@@ -25,9 +25,9 @@ ArrayList<User> userList = userMgr.getTopRank();
 	    		<% }else{ %>
 	    			<tr class="odd">
 	    		<% } %>
-						<td><%=rank%>.</td>
-						<td><%=user.getUserName() %></td>
-						<td><%=total%></td>
+						<td class="rank-number"><%=rank%>.</td>
+						<td><img src="<%=user.getPictureUrl()%>"/></td>
+						<td><%=user.getUserName() %> <br> <%=total%>$</td>
 						<% if (user.getDirection() == 1) { %>
 							<td><img src="../images/up.gif" /></td>
 						<% } else { %>

@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.base.DBMgr;
+import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.TransactionRecord;
 import com.twitstreet.db.data.User;
 
@@ -26,7 +27,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 	LinkedList<TransactionRecord> currentTransactions = new LinkedList<TransactionRecord>();
 
 	@Override
-	public void recordTransaction(User user, long stockId, int amount,
+	public void recordTransaction(User user, Stock stock, int amount,
 			int operation) {
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -39,7 +40,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 							"insert into transactions(user_id,stock, amount, t_action,t_date) values(?, ?, ?, ?, ?)",
 							Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, user.getId());
-			ps.setLong(2, stockId);
+			ps.setLong(2, stock.getId());
 			ps.setInt(3, amount);
 			ps.setInt(4, operation);
 			ps.setTimestamp(5, new Timestamp(currentDate));
@@ -53,7 +54,8 @@ public class TransactionMgrImpl implements TransactionMgr {
 					transactionRecord.setId(generatedKeys.getLong(1));
 					transactionRecord.setAmount(amount);
 					transactionRecord.setDate(new Date(currentDate));
-					transactionRecord.setStockId(stockId);
+					transactionRecord.setStockId(stock.getId());
+					transactionRecord.setStockName(stock.getName());
 					transactionRecord.setTransactionAction(operation);
 					transactionRecord.setUserId(user.getId());
 					transactionRecord.setUserName(user.getUserName());

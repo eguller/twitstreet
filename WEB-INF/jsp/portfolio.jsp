@@ -16,16 +16,26 @@ Portfolio portfolio = portfolioMgr.getUserPortfolio(sessionUser.getId());
 %>
 <div id="portfolio">
 	<h3>Portfolio</h3>
-	<table>
+	<table class="datatbl">
 	<% for(int i = 0; i < portfolio.getStockInPortfolioList().size();){ %>
 		<tr>
 			<% for(int j = 0; j < 4; j ++) { 
 				if( i < portfolio.getStockInPortfolioList().size()){
 			%>
+			
 				<td>
-					<% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %>
-					<br>
-					<% out.write(Integer.toString(portfolio.getStockInPortfolioList().get(i).getAmount())); %>
+					<table>
+						<tr>
+							<td>
+								<img src="<%=portfolio.getStockInPortfolioList().get(i).getPictureUrl()%>"/>
+							</td>
+							<td>
+								<% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %>
+								<br>
+								<% out.write(Integer.toString(portfolio.getStockInPortfolioList().get(i).getAmount())); %>$
+							</td>
+						</tr>
+					</table>
 				</td>
 				<% } else { %>
 				<td></td>

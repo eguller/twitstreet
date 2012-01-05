@@ -63,11 +63,11 @@ public class HomePageServlet extends HttpServlet {
 		String oAuth = "";
 		boolean valid = false;
 		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(CallBackServlet.COOKIE_ID)) {
+			if (cookie.getName().equals(CallBackServlet.COOKIE_ID) && cookie.getMaxAge() > 0) {
 				idStr = cookie.getValue();
 				idFound = true;
 			}
-			if (cookie.getName().equals(CallBackServlet.COOKIE_OAUTHTOKEN)) {
+			if (cookie.getName().equals(CallBackServlet.COOKIE_OAUTHTOKEN) && cookie.getMaxAge() > 0) {
 				oAuth = cookie.getValue();
 				oAuthFound = true;
 			}

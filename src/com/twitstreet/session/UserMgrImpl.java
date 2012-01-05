@@ -30,7 +30,7 @@ public class UserMgrImpl implements UserMgr {
 		ps = connection
 				.prepareStatement("select id, userName, "
 						+ "lastLogin, firstLogin, cash, "
-						+ "portfolio, lastIp, oauthToken, oauthTokenSecret, rank, direction from users where id = ?");
+						+ "portfolio, lastIp, oauthToken, oauthTokenSecret, rank, direction, pictureUrl from users where id = ?");
 		ps.setLong(1, id);
 
 		try {
@@ -49,6 +49,7 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setLastIp(rs.getString("lastIp"));
 				userDO.setOauthToken(rs.getString("oauthToken"));
 				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
+				userDO.setPictureUrl(rs.getString("pictureUrl"));
 				break;
 			}
 		} catch (SQLException ex) {
@@ -74,8 +75,8 @@ public class UserMgrImpl implements UserMgr {
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("insert into users(id, userName, "
 				+ "lastLogin, firstLogin, "
-				+ "cash, portfolio, lastIp, oauthToken, oauthTokenSecret) "
-				+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				+ "cash, portfolio, lastIp, oauthToken, oauthTokenSecret, pictureUrl) "
+				+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		ps.setLong(1, userDO.getId());
 		ps.setString(2, userDO.getUserName());
 		ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));
@@ -85,6 +86,7 @@ public class UserMgrImpl implements UserMgr {
 		ps.setString(7, userDO.getLastIp());
 		ps.setString(8, userDO.getOauthToken());
 		ps.setString(9, userDO.getOauthTokenSecret());
+		ps.setString(10, userDO.getPictureUrl());
 		try {
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
@@ -114,7 +116,7 @@ public class UserMgrImpl implements UserMgr {
 		ps = connection.prepareStatement("select id, userName, "
 				+ "lastLogin, firstLogin, cash, "
 				+ "portfolio, lastIp, oauthToken, "
-				+ "oauthTokenSecret, rank, direction from users where userName = ?");
+				+ "oauthTokenSecret, rank, direction, pictureUrl from users where userName = ?");
 		ps.setString(1, userName);
 		try {
 			rs = ps.executeQuery();
@@ -132,6 +134,7 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setLastIp(rs.getString("lastIp"));
 				userDO.setOauthToken(rs.getString("oauthToken"));
 				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
+				userDO.setPictureUrl(rs.getString("pictureUrl"));
 				break;
 			}
 		} catch (SQLException ex) {
@@ -151,13 +154,14 @@ public class UserMgrImpl implements UserMgr {
 		connection = dbMgr.getConnection();
 		ps = connection.prepareStatement("update users set userName = ?, "
 				+ "lastLogin = ?, "
-				+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ? where id = ?");
+				+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ?, pictureUrl = ? where id = ?");
 		ps.setString(1, user.getUserName());
 		ps.setDate(2, Util.toSqlDate(user.getLastLogin()));
 		ps.setString(3, user.getLastIp());
 		ps.setString(4, user.getOauthToken());
 		ps.setString(5, user.getOauthTokenSecret());
 		ps.setLong(6, user.getId());
+		ps.setString(7, user.getPictureUrl());
 		try {
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
@@ -186,7 +190,7 @@ public class UserMgrImpl implements UserMgr {
 			rs = stmt
 					.executeQuery("select id, userName, "
 							+ "lastLogin, firstLogin, cash, "
-							+ "portfolio, lastIp, oauthToken, oauthTokenSecret, rank, direction from users where id >= (select floor( max(id) * rand()) from users ) order by id limit 1;");
+							+ "portfolio, lastIp, oauthToken, oauthTokenSecret, rank, direction, pictureUrl from users where id >= (select floor( max(id) * rand()) from users ) order by id limit 1;");
 			if (rs.next()) {
 				user = new User();
 				user.setId(rs.getLong("id"));
@@ -200,6 +204,7 @@ public class UserMgrImpl implements UserMgr {
 				user.setLastIp(rs.getString("lastIp"));
 				user.setOauthToken(rs.getString("oauthToken"));
 				user.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
+				user.setPictureUrl(rs.getString("pictureUrl"));
 			} else {
 				logger.error("DB: Random user selection query is not working properly");
 			}
@@ -286,7 +291,7 @@ public class UserMgrImpl implements UserMgr {
 			ps = connection.prepareStatement("select id, userName, "
 					+ "lastLogin, firstLogin, cash, "
 					+ "portfolio, lastIp, oauthToken, "
-					+ "oauthTokenSecret, rank, direction from users order by rank asc limit " + TOP);
+					+ "oauthTokenSecret, rank, direction, pictureUrl from users order by rank asc limit " + TOP);
 			rs = ps.executeQuery();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 			while (rs.next()) {
@@ -302,6 +307,7 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setLastIp(rs.getString("lastIp"));
 				userDO.setOauthToken(rs.getString("oauthToken"));
 				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
+				userDO.setPictureUrl(rs.getString("pictureUrl"));
 				userList.add(userDO);
 			}
 		} catch (SQLException ex) {

@@ -95,10 +95,10 @@ public class StockQuoteServlet extends HttpServlet {
 					stock.setId(twUser.getId());
 					stock.setName(twUser.getScreenName());
 					stock.setTotal(twUser.getFollowersCount());
+					stock.setPictureUrl(twUser.getProfileImageURL().toString());
 					stock.setSold(0.0D);
 					try {
 						stockMgr.saveStock(stock);
-
 					} catch (SQLException e) {
 						// Save failed but give same response. We could not
 						// go further without saving stock info.

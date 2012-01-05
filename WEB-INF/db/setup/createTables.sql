@@ -13,6 +13,7 @@ create table `users`(
 	`oauthTokenSecret` varchar(100) not null,
 	`rank` int,
 	`direction` tinyint,
+    `pictureUrl` varchar(255),
 	 primary key (`id`),
 	 unique key `username_unique` (`username`)
 )  engine=innodb default charset=`utf8`;
@@ -33,6 +34,7 @@ create table `stock`(
 	`name` varchar(45) not null,
 	`total` int not null,
 	`sold` double not null,
+	`pictureUrl` varchar(255),
 	 primary key (`id`)
 )  engine=innodb default charset=`utf8`;
 
@@ -65,7 +67,7 @@ create  table `transactions` (
   `stock` bigint null,
   `amount` int null,
   `t_action` tinyint null,
-  `t_date` datetime,
+  `t_date` timestamp,
   primary key (`id`) );
 
 

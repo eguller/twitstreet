@@ -29,7 +29,7 @@ public class StockMgrImpl implements StockMgr {
 		Stock stockDO = null;
 		connection = dbMgr.getConnection();
 		try{
-			ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
+			ps = connection.prepareStatement("select id, name, total, sold, pictureUrl from stock where id = ?");
 			ps.setString(1, name);
 			rs = ps.executeQuery();
 			while(rs.next()){
@@ -38,6 +38,7 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.setName(rs.getString("name"));
 				stockDO.setTotal(rs.getInt("total"));
 				stockDO.setSold(rs.getDouble("sold"));
+				stockDO.setPictureUrl(rs.getString("pictureUrl"));
 				break;
 			}
 			logger.debug("DB: Query executed successfully - " + ps.toString());
@@ -61,7 +62,7 @@ public class StockMgrImpl implements StockMgr {
 		ResultSet rs = null;
 		Stock stockDO = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("select id, name, total, sold from stock where id = ?");
+		ps = connection.prepareStatement("select id, name, total, sold, pictureUrl from stock where id = ?");
 		ps.setLong(1, id);
 		try{
 			rs = ps.executeQuery();
@@ -71,6 +72,7 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.setName(rs.getString("name"));
 				stockDO.setTotal(rs.getInt("total"));
 				stockDO.setSold(rs.getDouble("sold"));
+				stockDO.setPictureUrl(rs.getString("pictureUrl"));
 			}
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		}
@@ -117,11 +119,12 @@ public class StockMgrImpl implements StockMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("insert into stock(id, name, total, sold) values(?, ?, ?, ?)");
+		ps = connection.prepareStatement("insert into stock(id, name, total, sold, pictureUrl) values(?, ?, ?, ?, ?)");
 		ps.setLong(1, stock.getId());
 		ps.setString(2, stock.getName());
 		ps.setInt(3, stock.getTotal());
 		ps.setDouble(4, stock.getSold());
+		ps.setString(5, stock.getPictureUrl());
 		try{
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());

@@ -3,13 +3,13 @@ HTML Redefine Tags
 ------------------------------ */
 body {
 	font-family: "lucida grande", tahoma, verdana, arial, sans-serif;
-	font-size: 11px;
+	font-size: 14px;
 	margin: 20px;
 	padding: 0;
 }
 
 table {
-	font-size: 11px;
+	font-size: 14px;
 }
 
 input,form,textarea
@@ -118,6 +118,11 @@ CUSTOM CLASSES
 	width: 150px;
 }
 
+#logoutbox {
+	float: right;
+	width: 150px;
+}
+
 #loginbox input {
 	font-size: 13px;
 	padding: 6px;
@@ -201,6 +206,7 @@ CUSTOM CLASSES
 .datatbl {
 	border: 0;
 	border-collapse:collapse;
+	width: 100%;
 }
 
 .datatbl tr td {
@@ -252,4 +258,9 @@ a.sell:hover {
 .green {
 	font-weight: bold;
 	color: #4D9900;
+}
+
+.rank-number {
+	font-size: 20px;
+	font-weight: bolder;
 }

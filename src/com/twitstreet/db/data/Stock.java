@@ -5,7 +5,7 @@ public class Stock {
 	String name;
 	int total;
 	double sold;
-	
+	String pictureUrl;
 	public long getId() {
 		return id;
 	}
@@ -32,5 +32,11 @@ public class Stock {
 	}
 	public int getAvailable(){
 		return (int)(total * ( 1 - sold / 100));
+	}
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
 	}
 }
