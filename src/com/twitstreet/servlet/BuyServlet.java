@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
 import com.twitstreet.market.PortfolioMgr;
@@ -40,18 +41,9 @@ public class BuyServlet extends HttpServlet {
 			throws IOException {
 		response.setContentType("application/json;charset=utf-8");
 		User user = (User) request.getSession(false).getAttribute(User.USER);
-		if(user == null){
-			//uses someone else account to get quote for unauthenticated users.
-			user = userMgr.random();
-			if(user != null){
-				TwitterProxy twitterProxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
-			}
-		}
-		else{
+		if(user != null){
 			String stock = request.getParameter("stock");
 			String amount = request.getParameter("amount");
-			TwitterProxy proxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
-			
 			try {
 				BuySellResponse buySellResponse = portfolioMgr.buy(user.getId(), Long.parseLong(stock), Integer.parseInt(amount));
 				response.getWriter().write(gson.toJson(buySellResponse));

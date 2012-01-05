@@ -28,16 +28,19 @@ h2 {
 }
 
 h3 {
-	font-size: 13px;
-	padding: 4px 0;
+	font-size: 16px;
+	font-weight: bolder;
+	padding: 4px 5px;
 	margin-bottom: 10px;
 	background-color: #F2F2F2;
 	border-bottom: 1px solid #D9D9D9;
 	border-top: 1px solid #E5E5E5;
 }
 
-a:link,a:visited {
-	color: #0033CC;
+a {
+    color: #4183C4;
+    text-decoration: none;
+    font-weight: bolder;
 }
 
 a:hover {
@@ -48,9 +51,9 @@ a:hover {
 PAGE STRUCTURE
 ------------------------------ */
 
-/* #container has an absolute width (780 pixel) */
+/* #container has an absolute width (1024 pixel) */
 #container {
-	width: 820px;
+	width: 1020px;
 	margin: 0 auto;
 }
 
@@ -80,19 +83,19 @@ PAGE STRUCTURE
 }
 
 #column_left {
-	width: 460px;
+	width: 500px;
 	margin-right: 20px;
 	float: left;
 }
 
 #column_center {
-	width: 160px;
+	width: 240px;
 	margin-right: 20px;
 	float: left;
 }
 
 #column_right {
-	width: 160px;
+	width: 240px;
 	float: left;
 }
 
@@ -124,23 +127,23 @@ CUSTOM CLASSES
 }
 
 #loginbox input {
-	font-size: 13px;
+	font-size: 14px;
 	padding: 6px;
 	width: 105px;
 }
 
 #signup input {
-	font-size: 13px;
+	font-size: 14px;
 	padding: 6px;
 	width: 300px;
 }
 
 #quote {
-	font-size: 13px;
+	font-size: 14px;
 	padding: 6px;
-	width: 376px;
-	font-size: 13px;
+	width: 416px;
 	padding: 6px;
+	font-weight: bolder;
 }
 
 .textbox {
@@ -204,9 +207,13 @@ CUSTOM CLASSES
 
 
 .datatbl {
-	border: 0;
+	border-width: 4px;
+	border-spacing: 1px;
 	border-collapse:collapse;
 	width: 100%;
+}
+
+.datatbl tr {
 }
 
 .datatbl tr td {
@@ -263,4 +270,8 @@ a.sell:hover {
 .rank-number {
 	font-size: 20px;
 	font-weight: bolder;
+}
+
+img.twuser {
+	margin: 0px 5px 2px 0px;
 }

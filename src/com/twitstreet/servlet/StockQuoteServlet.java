@@ -3,6 +3,7 @@ package com.twitstreet.servlet;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
 import com.twitstreet.market.PortfolioMgr;
@@ -38,6 +39,8 @@ public class StockQuoteServlet extends HttpServlet {
 
 	@Inject 
 	private final PortfolioMgr portfolioMgr = null;
+	
+	@Inject ConfigMgr configMgr;
 	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -158,7 +161,12 @@ public class StockQuoteServlet extends HttpServlet {
 				catch(SQLException ex){
 					logger.warn("Servlet: Query percentage failed", ex);
 				}
-				resp.success().setRespOjb(new QuoteResponse(stock, percentage));
+				if(stock.getTotal() < configMgr.getMinFollower()){
+					resp.success().resultCode("min-follower-count").setRespOjb(new MinFollowerCountResponse(stock, configMgr.getMinFollower()));
+				}
+				else{
+					resp.success().setRespOjb(new QuoteResponse(stock, percentage));
+				}
 				response.getWriter().write(gson.toJson(resp));
 				return;
 			} else {

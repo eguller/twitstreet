@@ -26,12 +26,12 @@
 				<td>:</td>
 				<td id="available"></td>
 			</tr>
-			<tr>
+			<tr id="buy-links-row">
 				<td style="text-align: right">Buy</td>
 				<td>:</td>
 				<td id="buy-links"></td>
 			</tr>
-			<tr>
+			<tr id="sell-links-row">
 				<td style="text-align: right">Sell</td>
 				<td>:</td>
 				<td id="sell-links"></td>

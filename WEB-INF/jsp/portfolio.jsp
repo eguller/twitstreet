@@ -5,6 +5,7 @@
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="com.twitstreet.util.Util" %>
 
 
 <%
@@ -27,12 +28,12 @@ Portfolio portfolio = portfolioMgr.getUserPortfolio(sessionUser.getId());
 					<table>
 						<tr>
 							<td>
-								<img src="<%=portfolio.getStockInPortfolioList().get(i).getPictureUrl()%>"/>
+								<img class="twuser" src="<%=portfolio.getStockInPortfolioList().get(i).getPictureUrl()%>"/>
 							</td>
 							<td>
-								<% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %>
+								<a href="/stock/<% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %>"><% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %></a>
 								<br>
-								<% out.write(Integer.toString(portfolio.getStockInPortfolioList().get(i).getAmount())); %>$
+								<% out.write(Util.commaSep(portfolio.getStockInPortfolioList().get(i).getAmount())); %>$
 							</td>
 						</tr>
 					</table>

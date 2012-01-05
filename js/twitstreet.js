@@ -37,13 +37,22 @@ function getquote() {
         		var sold = calculateSold(data.respObj.stock.total, data.respObj.stock.sold);
         		$("#sold").html(sold);
         		$("#available").html(data.respObj.stock.total - sold);
-        		writeBuyLinks();
-        		writeSellLinks();
-        		if(data.respObj.percentage == 0){
-        			$("#user-stock").html("You do not have any " + quote);
+        		if(data.resultCode != 'min-follower-count'){
+        			$("#buy-links-row").show();
+        			$("#sell-links-row").show();
+	        		writeBuyLinks();
+	        		writeSellLinks();
+	        		if(data.respObj.percentage == 0){
+	        			$("#user-stock").html("You do not have any " + quote);
+	        		}
+	        		else{
+	        			$("#user-stock").html("You have " + parseInt(data.respObj.stock.total * data.respObj.percentage) + " of " + quote);
+	        		}
         		}
         		else{
-        			$("#user-stock").html("You have " + parseInt(data.respObj.stock.total * data.respObj.percentage) + " of " + quote);
+        			$("#buy-links-row").hide();
+        			$("#sell-links-row").hide();
+        			$("#user-stock").html(data.respObj.stock.name + " has <b>" + data.respObj.stock.total + "</b> follower. <br>You cannot buy followers if total is less than <b>" + data.respObj.minFollowerCount +"</b>");
         		}
         		showQuotePanel("userfound");
         	}
@@ -188,15 +197,28 @@ function toprank(){
 			  var tr = $("<tr></tr>");
 			  tr.append($("<td>" + rank.rank + "</td>"));
 			  tr.append($("<td>" + rank.userName +"</td>"));
-			  tr.append($("<td>" + rank.cash + rank.portfolio) + "</td>");
+			  tr.append($("<td>" + commasep(rank.cash + rank.portfolio)) + "</td>");
 			  if(data.direction == 1){
-				  tr.append($("td><img src=\"../images/up.gif\" /></td>"));
+				  tr.append($("td><img src=\"../images/up.png\" /></td>"));
 			  }
 			  else{
-				  tr.append($("td><img src=\"../images/down.gif\" /></td>"));
+				  tr.append($("td><img src=\"../images/down.png\" /></td>"));
 			  }			  
 			  $("topranktable").append(tr);
 		  }
 		});
+}
+
+function commasep(number){
+	var numberStr = number + '';
+	var newNumber = '';
+	var remaining = numberStr.length % 3 == 0 ? 3 : numberStr.length % 3;
+    newNumber = numberStr.substr(0,remaining);
+	
+	for(var i = remaining; i < numberStr.length; i = i + 3){
+		newNumber = newNumber + "," + numberStr.substr(i,3);
+		
+	}
+	return newNumber;
 }
 

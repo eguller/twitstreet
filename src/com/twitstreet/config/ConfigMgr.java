@@ -8,5 +8,5 @@ public interface ConfigMgr {
 	public String get(String parm);
 	public String getConsumerKey();
 	public String getConsumerSecret();
-	public String getMinFollower();
+	public int getMinFollower();
 }

@@ -28,7 +28,7 @@ ArrayList<TransactionRecord> transactionRecordList = transactionMgr.queryTransac
 	    	<% } %>
 				<td>
 					<% if(transactionRecord.getTransactionAction() == TransactionRecord.BUY){  
-						out.write("You <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " " + transactionRecord.getStockName());
+						out.write("You <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " <a href=\"/stock/" + transactionRecord.getStockName() + "\">"+transactionRecord.getStockName()+"</a>");
 					}
 					else{
 						out.write("You <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " " + transactionRecord.getStockName());

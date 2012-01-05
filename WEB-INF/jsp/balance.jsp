@@ -2,6 +2,7 @@
 <%@ page import="com.google.inject.Guice"%>
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.db.data.User"%>
+<%@ page import="com.twitstreet.util.Util" %>
 
 <%
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
@@ -19,26 +20,26 @@ User user = userMgr.getUserById(sessionUser.getId());
 			<td>:</td>
 			<td><%=user.getRank()%>.</td>
 			<% if (user.getDirection() == 1) { %>
-				<td><img src="../images/up.gif" /></td>
+				<td><img src="../images/up.png" /></td>
 			<% } else { %>
-				<td><img src="../images/down.gif" /></td>
+				<td><img src="../images/down.png" /></td>
 			<% } %>
 		</tr>
 		<tr>
 			<td>Cash</td>
 			<td>:</td>
-			<td colspan="2" id="cash_value"><%=user.getCash()%>$</td>
+			<td colspan="2" id="cash_value"><%=Util.commaSep(user.getCash())%>$</td>
 			
 		</tr>
 		<tr>
 			<td>Portfolio</td>
 			<td>:</td>
-			<td colspan="2" id="portfolio_value"><%=user.getPortfolio()%>$</td>
+			<td colspan="2" id="portfolio_value"><%=Util.commaSep(user.getPortfolio())%>$</td>
 		</tr>
 		<tr>
 			<td>Total</td>
 			<td>:</td>
-			<td colspan="2" id="total_value"><%=user.getCash() + user.getPortfolio()%>$</td>
+			<td colspan="2" id="total_value"><%=Util.commaSep(user.getCash() + user.getPortfolio())%>$</td>
 		</tr>
 	</table>
 </div>

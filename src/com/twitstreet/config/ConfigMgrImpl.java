@@ -56,7 +56,7 @@ public class ConfigMgrImpl implements ConfigMgr{
 		return get(ConfigMgr.CONSUMER_SECRET);
 	}
 	@Override
-	public String getMinFollower() {
-		return get(ConfigMgr.MIN_FOLLOWER);
+	public int getMinFollower() {
+		return Integer.parseInt(get(ConfigMgr.MIN_FOLLOWER));
 	}
 }

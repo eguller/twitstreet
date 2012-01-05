@@ -37,29 +37,41 @@ public class Util {
 		md5hash = md.digest();
 		return convertToHex(md5hash);
 	}
+
+	/**
+	 * Remove/collapse multiple spaces.
+	 * 
+	 * @param argStr
+	 *            string to remove multiple spaces from.
+	 * @return String
+	 */
+	public static String collapseSpaces(String argStr) {
+		char last = argStr.charAt(0);
+		StringBuffer argBuf = new StringBuffer();
+
+		for (int cIdx = 0; cIdx < argStr.length(); cIdx++) {
+			char ch = argStr.charAt(cIdx);
+			if (ch != ' ' || last != ' ') {
+				argBuf.append(ch);
+				last = ch;
+			}
+		}
+
+		return argBuf.toString();
+	}
+
+	public static String commaSep(String amount) {
+		String commaAmount = "";
+		int remaining = amount.length() % 3 == 0 ? 3 : amount.length() % 3;
+		commaAmount = amount.substring(0, remaining);
+		for (int i = remaining; i < amount.length(); i = i + 3) {
+			commaAmount = commaAmount + "," + amount.substring(i, i + 3);
+
+		}
+		return commaAmount;
+	}
 	
-	  /**
-	   * Remove/collapse multiple spaces.
-	   *
-	   * @param argStr string to remove multiple spaces from.
-	   * @return String
-	   */
-	  public static String collapseSpaces(String argStr)
-	  {
-	      char last = argStr.charAt(0);
-	      StringBuffer argBuf = new StringBuffer();
-
-	      for (int cIdx = 0 ; cIdx < argStr.length(); cIdx++)
-	      {
-	          char ch = argStr.charAt(cIdx);
-	          if (ch != ' ' || last != ' ')
-	          {
-	              argBuf.append(ch);
-	              last = ch;
-	          }
-	      }
-
-	      return argBuf.toString();
-	  }
-
+	public static String commaSep(int amount) {
+		return commaSep(String.valueOf(amount));
+	}
 }
