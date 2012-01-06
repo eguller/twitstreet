@@ -318,8 +318,7 @@ public class UserMgrImpl implements UserMgr {
 				ps.close();
 				connection.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("DB: Resources could not be closed properly", e);
 			}
 		}
 		return userList;
