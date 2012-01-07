@@ -29,7 +29,7 @@ public class StockMgrImpl implements StockMgr {
 		Stock stockDO = null;
 		connection = dbMgr.getConnection();
 		try{
-			ps = connection.prepareStatement("select id, name, total, sold, pictureUrl from stock where id = ?");
+			ps = connection.prepareStatement("select id, name, total, sold, pictureUrl from stock where name = ?");
 			ps.setString(1, name);
 			rs = ps.executeQuery();
 			while(rs.next()){
@@ -88,7 +88,7 @@ public class StockMgrImpl implements StockMgr {
 		return stockDO;
 	}
 
-	public void updateTotal(long id, int total) throws SQLException {
+	public void updateTotalAndPicture(long id, int total, String pictureUrl) throws SQLException {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();

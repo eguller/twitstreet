@@ -43,7 +43,7 @@ public interface StockMgr {
      * @param total - total
 	 * @return 
 	 */
-	public void updateTotal(long stockId, int total) throws SQLException;
+	public void updateTotalAndPicture(long stockId, int total, String pictureUrl) throws SQLException;
 	
 	/**
 	 * Returns stock sold percentage by name

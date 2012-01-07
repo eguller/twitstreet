@@ -31,7 +31,7 @@ public class Stock {
 		this.sold = sold;
 	}
 	public int getAvailable(){
-		return (int)(total * ( 1 - sold / 100));
+		return (int)(total * ( 1 - sold));
 	}
 	public String getPictureUrl() {
 		return pictureUrl;

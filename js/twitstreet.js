@@ -1,6 +1,12 @@
 $(document).ready(function() {
-  showQuotePanel("hide-all");
+	$("#quote").keyup(function(event){
+	    if(event.keyCode == 13){
+	        $("#getquotebutton").click();
+	    }
+	});
 });
+
+
 
 setInterval(toprank, 5000);
 
@@ -37,6 +43,8 @@ function getquote() {
         		var sold = calculateSold(data.respObj.stock.total, data.respObj.stock.sold);
         		$("#sold").html(sold);
         		$("#available").html(data.respObj.stock.total - sold);
+        		$("#dashboard-stock-follower-status").html(data.respObj.stock.name+"\'s follower status");
+        		$("#dashboard-picture").attr("src",data.respObj.stock.pictureUrl);
         		if(data.resultCode != 'min-follower-count'){
         			$("#buy-links-row").show();
         			$("#sell-links-row").show();

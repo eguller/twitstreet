@@ -27,7 +27,7 @@ import java.sql.SQLException;
 @SuppressWarnings("serial")
 @Singleton
 public class StockQuoteServlet extends HttpServlet {
-	private static final String QUOTE = "quote";
+	public static final String QUOTE = "quote";
 	private static Logger logger = Logger.getLogger(StockQuoteServlet.class);
 	@Inject
 	private final StockMgr stockMgr = null;
@@ -55,6 +55,7 @@ public class StockQuoteServlet extends HttpServlet {
 		String twUserName = (String) request.getParameter(QUOTE);
 
 		User user =  request.getSession(false) == null ? null : (User)request.getSession(false).getAttribute(User.USER);
+		request.getSession().setAttribute(QUOTE, twUserName);
 		TwitterProxy twitterProxy = null;
 		Response resp = Response.create();
 		if (user == null) {
@@ -117,8 +118,8 @@ public class StockQuoteServlet extends HttpServlet {
 							&& stock.getName().equals(twUser.getScreenName())) {
 						// if follower count changed update database.
 						try {
-							stockMgr.updateTotal(stock.getId(),
-									twUser.getFollowersCount());
+							stockMgr.updateTotalAndPicture(stock.getId(),
+									twUser.getFollowersCount(), twUser.getProfileImageURL().toString());
 						} catch (SQLException e) {
 							resp.fail()
 									.reason("Something wrong, we could not retrieved quote info. Working on it");
