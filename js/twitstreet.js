@@ -4,6 +4,9 @@ $(document).ready(function() {
 	        $("#getquotebutton").click();
 	    }
 	});
+	
+	$("#dashboard-message-field").corner();
+	$("#buy-links div").corner();
 });
 
 

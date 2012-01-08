@@ -1,3 +1,5 @@
+<%@page import="com.sun.tools.javac.code.Attribute.Array"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.db.data.UserStock"%>
 <%@page import="java.sql.SQLException" %>
 <%@page import="com.twitstreet.servlet.StockQuoteServlet" %>
@@ -10,6 +12,7 @@
 <%@page import="com.twitstreet.db.data.Portfolio"%>
 <%@page import="com.twitstreet.market.PortfolioMgr"%>
 <%@page import="com.twitstreet.config.ConfigMgr"%>
+<%@page import="com.twitstreet.session.UserMgr"%>
 
 <%
 User sessionUser = (User)request.getSession().getAttribute(User.USER);
@@ -17,6 +20,11 @@ Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.
 StockMgr stockMgr = inj.getInstance(StockMgr.class);
 PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
+UserMgr userMgr = inj.getInstance(UserMgr.class);
+User user = null;
+if(sessionUser != null){
+	user = userMgr.getUserById(sessionUser.getId());
+}
 %>
 
 <div id="dashboard">
@@ -50,10 +58,18 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 			}
 		%>
 	>
-		<p style="width: 100%; text-align: center"><span id="user-stock">
+		<div id="dashboard-message-field" style="margin-top: 6px;" class="
+		<% if( stock != null && stock.getTotal() < configMgr.getMinFollower()){
+			out.write("field-red");
+		}else{
+			out.write("field-green");
+		} %>"
+		>
+		<p style="width: 100%; text-align: center; margin-top: 10px; margin-bottom: 10px; padding-top: 10px; padding-bottom: 10px;"><span id="user-stock">
 			<%
-				if(sessionUser != null && stock != null){
-					UserStock userStock =  portfolioMgr.getStockInPortfolio(sessionUser.getId(), stock.getId());
+			    UserStock userStock = null;
+				if(user != null && stock != null){
+					userStock =  portfolioMgr.getStockInPortfolio(user.getId(), stock.getId());
 					if(userStock == null){
 						out.write("You don't have any " + stock.getName());
 					}
@@ -70,6 +86,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 				}
 			%>
 		</span></p>
+		</div>
 		<input type="hidden" id="user-stock-val"/>
 		<table class="datatbl">
 			<tr>
@@ -116,10 +133,66 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 				</td>
 			</tr>
 			<tr id="buy-links-row">
-				<td colspan="3" id="buy-links"></td>
+				<td colspan="3" id="buy-links">
+					<% 
+						if(user != null && stock != null){
+							ArrayList<Integer> buyValues = new ArrayList<Integer>();
+							ArrayList<Integer> sellValues = new ArrayList<Integer>();
+							int totalCash = user.getCash();
+							int available = stock.getAvailable();
+							int min = Math.min(totalCash, available);
+							buyValues.add(min);
+							int i = String.valueOf(min).length();
+
+							for(; i > 0; i--){
+								buyValues.add((int)Math.pow(10,i - 1));
+							}
+							
+							if(userStock != null){
+								int userTotalStock = (int) (userStock.getPercent() * stock.getTotal());
+								sellValues.add(userTotalStock);
+								i = String.valueOf(userTotalStock).length(); 
+								for(; i > 0; i--){
+									sellValues.add((int)Math.pow(10,i - 1));
+								}
+							}
+							i = 0;
+							out.write("<table class=\"buy-sell-table\">");
+							while(true){
+								out.write("<tr>");
+								out.write("<td>");
+								if(i < buyValues.size()){
+									out.write("<div class=\"field-green-light\">");
+									out.write("Buy<br>");
+									out.write(String.valueOf(buyValues.get(i)));
+									out.write("</div>");
+								}
+								out.write("</td>");
+								out.write("<td>");
+								if(i < sellValues.size()){
+									out.write("<div class=\"field-red\">");
+									out.write("Sell<br>");
+									out.write(String.valueOf(sellValues.get(i)));
+									out.write("</div>");
+								}
+								out.write("</td>");
+								out.write("</tr>");
+								i++;
+								if(i > buyValues.size() && i > sellValues.size()){
+									break;
+								}
+							}
+							out.write("</table>");
+						}
+					%>
+				</td>
 			</tr>
 			<tr id="sell-links-row">
-				<td colspan="3" id="sell-links"></td>
+				<td colspan="3" id="sell-links">
+					<%
+					
+					%>
+				</td>
 			</tr>
 		</table>
 	</div>

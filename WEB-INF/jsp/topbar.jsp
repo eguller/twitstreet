@@ -14,7 +14,7 @@ User sessionUser = (User)request.getSession().getAttribute(User.USER);
 		<div id="logoutbox">
 			<table>
 				<tr>
-					<td rowspan="2"><img src="<%= sessionUser.getPictureUrl() %>" /></td>
+					<td rowspan="2"><img class="twuser" src="<%= sessionUser.getPictureUrl() %>" /></td>
 					<td>@<%= sessionUser.getUserName() %></td>
 				</tr>
 				<tr>

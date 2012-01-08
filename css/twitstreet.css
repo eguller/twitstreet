@@ -275,3 +275,33 @@ a.sell:hover {
 img.twuser {
 	margin: 0px 5px 2px 0px;
 }
+
+.field-green {
+	background-color: #99cc33;
+	text-align: center;
+	margin: 1px;
+	
+}
+
+.field-green-light {
+	background-color: #92ec00;
+	text-align: center;
+	margin: 1px;
+	border-color: #5f9900;
+	border: 1px solid;
+	
+}
+
+.field-red {
+	background-color: #ff6666;
+	text-align: center;
+	margin: 1px;
+	border-color: #99333333;
+	border: 1px solid;
+}
+
+.buy-sell-table {
+	width: 100%;
+}
+
+.buy-sell-table td { width: 50%;}
