@@ -65,7 +65,7 @@ if(sessionUser != null){
 			out.write("field-green");
 		} %>"
 		>
-		<p style="width: 100%; text-align: center; margin-top: 10px; margin-bottom: 10px; padding-top: 10px; padding-bottom: 10px;"><span id="user-stock">
+		<p style="width: 100%; text-align: center; margin-top: 10px; margin-bottom: 10px; padding-top: 5px; padding-bottom: 5px;"><span id="user-stock">
 			<%
 			    UserStock userStock = null;
 				if(user != null && stock != null){
@@ -88,7 +88,7 @@ if(sessionUser != null){
 		</span></p>
 		</div>
 		<input type="hidden" id="user-stock-val"/>
-		<table class="datatbl">
+		<table class="datatbl" style="margin-top: 10px;">
 			<tr>
 				<td colspan="3" >
 					<%if(stock != null){%>
@@ -141,17 +141,22 @@ if(sessionUser != null){
 							int totalCash = user.getCash();
 							int available = stock.getAvailable();
 							int min = Math.min(totalCash, available);
-							buyValues.add(min);
+							
 							int i = String.valueOf(min).length();
-
+							if((int)Math.pow(10,i - 1) != min){
+								buyValues.add(min);
+							}
+							
 							for(; i > 0; i--){
 								buyValues.add((int)Math.pow(10,i - 1));
 							}
 							
 							if(userStock != null){
 								int userTotalStock = (int) (userStock.getPercent() * stock.getTotal());
-								sellValues.add(userTotalStock);
 								i = String.valueOf(userTotalStock).length(); 
+								if(userTotalStock != (int)Math.pow(10,i - 1)){
+									sellValues.add(userTotalStock);
+								}
 								for(; i > 0; i--){
 									sellValues.add((int)Math.pow(10,i - 1));
 								}
@@ -164,7 +169,7 @@ if(sessionUser != null){
 								if(i < buyValues.size()){
 									out.write("<div class=\"field-green-light\">");
 									out.write("Buy<br>");
-									out.write(String.valueOf(buyValues.get(i)));
+									out.write( Util.commaSep(buyValues.get(i)));
 									out.write("</div>");
 								}
 								out.write("</td>");
@@ -172,7 +177,7 @@ if(sessionUser != null){
 								if(i < sellValues.size()){
 									out.write("<div class=\"field-red\">");
 									out.write("Sell<br>");
-									out.write(String.valueOf(sellValues.get(i)));
+									out.write(Util.commaSep(sellValues.get(i)));
 									out.write("</div>");
 								}
 								out.write("</td>");

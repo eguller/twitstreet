@@ -5,8 +5,8 @@ $(document).ready(function() {
 	    }
 	});
 	
-	$("#dashboard-message-field").corner();
-	$("#buy-links div").corner();
+	$("#dashboard-message-field").corner("round 3px");
+	$("#buy-links div").corner("round 5px");
 });
 
 
