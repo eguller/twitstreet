@@ -31,7 +31,7 @@ LinkedList<TransactionRecord> transactionRecordList = transactionMgr.getCurrentT
 						out.write("<a href=\"/user/" + transactionRecord.getUserName() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " <a href=\"/stock/" + transactionRecord.getStockName() + "\">"+ transactionRecord.getStockName() +"</a>");
 					}
 					else{
-						out.write(transactionRecord.getUserName() + " <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " " + transactionRecord.getStockName());
+						out.write("<a href=\"/user/" + transactionRecord.getUserName() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " <a href=\"/stock/" + transactionRecord.getStockName() + "\">"+ transactionRecord.getStockName() +"</a>");
 					}
 					%>
 						

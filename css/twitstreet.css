@@ -285,12 +285,11 @@ img.twuser {
 	
 }
 
-.field-green-light {
-	background-color: #9BDC50;
+.field-white {
 	text-align: center;
 	margin: 1px;
 	border-color: #5f9900;
-	border: 1px solid;
+	border: 1px solid #D9D9D9;
 	
 }
 
@@ -308,3 +307,7 @@ img.twuser {
 }
 
 .buy-sell-table td { width: 50%;}
+
+.buy-sell-table td div:HOVER {
+	cursor: pointer;
+}

@@ -61,9 +61,9 @@ public class TransactionMgrImpl implements TransactionMgr {
 					transactionRecord.setUserName(user.getUserName());
 
 					synchronized (transactionRecord) {
-						currentTransactions.add(transactionRecord);
+						currentTransactions.addFirst(transactionRecord);
 						if (currentTransactions.size() > TransactionMgr.CURRENT_TRANSACTIONS) {
-							currentTransactions.poll();
+							currentTransactions.pollLast();
 						}
 					}
 

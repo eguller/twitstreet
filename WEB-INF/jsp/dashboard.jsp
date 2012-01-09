@@ -1,4 +1,3 @@
-<%@page import="com.sun.tools.javac.code.Attribute.Array"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.db.data.UserStock"%>
 <%@page import="java.sql.SQLException" %>
@@ -45,8 +44,8 @@ if(sessionUser != null){
 	    %>
 		<input type="text" class="textbox" id="quote" value="<%=quote%>" />
 		<button class="button" onclick="getquote();" id="getquotebutton">Get quote</button>
-		<input type="hidden" id="quote-hidden" />
-		<input type="hidden" id="quote-id" />
+		<input type="hidden" id="quote-hidden" value="<%=quote%>" />
+		<input type="hidden" id="quote-id" value="<%=stock == null ? "" : stock.getId()%>"/>
 	</div>
 	<div id="userfound" 
 		<% 
@@ -58,13 +57,7 @@ if(sessionUser != null){
 			}
 		%>
 	>
-		<div id="dashboard-message-field" style="margin-top: 6px;" class="
-		<% if( stock != null && stock.getTotal() < configMgr.getMinFollower()){
-			out.write("field-red");
-		}else{
-			out.write("field-green");
-		} %>"
-		>
+		<div id="dashboard-message-field" style="margin-top: 6px;" class="field-white">
 		<p style="width: 100%; text-align: center; margin-top: 10px; margin-bottom: 10px; padding-top: 5px; padding-bottom: 5px;"><span id="user-stock">
 			<%
 			    UserStock userStock = null;
@@ -105,26 +98,26 @@ if(sessionUser != null){
 				</td>
 			</tr>
 			<tr>
-				<td>Available</td>
-				<td>Sold</td>
-				<td>Total</td>
+				<td style="width: 33%; text-align: center;">Available</td>
+				<td style="width: 33%; text-align: center;">Sold</td>
+				<td style="width: 33%; text-align: center;">Total</td>
 			</tr>
 			<tr>
-				<td id = "available">
+				<td id = "available" style="width: 33%; text-align: center;">
 					<%
 					if(stock != null){
 						out.write(Util.commaSep(stock.getAvailable()));
 					}
 					%>
 				</td>
-				<td id = "sold">
+				<td id = "sold" style="width: 33%; text-align: center;">
 					<%
 					if(stock != null){
 						out.write(Util.commaSep(stock.getTotal() - stock.getAvailable()));
 					}
 					%>
 				</td>
-				<td id="total">
+				<td id="total" style="width: 33%; text-align: center;">
 					<%
 					if(stock != null){
 						out.write(Util.commaSep(stock.getTotal()));
@@ -166,8 +159,8 @@ if(sessionUser != null){
 							while(true){
 								out.write("<tr>");
 								out.write("<td>");
-								if(i < buyValues.size()){
-									out.write("<div class=\"field-green-light\">");
+								if(i < buyValues.size() && stock.getTotal() > configMgr.getMinFollower()){
+									out.write("<div class=\"field-green\" onclick=\"buy("+stock.getId()+","+buyValues.get(i)+");\">");
 									out.write("Buy<br>");
 									out.write( Util.commaSep(buyValues.get(i)));
 									out.write("</div>");
@@ -175,7 +168,7 @@ if(sessionUser != null){
 								out.write("</td>");
 								out.write("<td>");
 								if(i < sellValues.size()){
-									out.write("<div class=\"field-red\">");
+									out.write("<div class=\"field-red\" onclick=\"sell("+stock.getId()+","+buyValues.get(i)+");\">");
 									out.write("Sell<br>");
 									out.write(Util.commaSep(sellValues.get(i)));
 									out.write("</div>");
@@ -189,13 +182,6 @@ if(sessionUser != null){
 							}
 							out.write("</table>");
 						}
-					%>
-				</td>
-			</tr>
-			<tr id="sell-links-row">
-				<td colspan="3" id="sell-links">
-					<%
-					
 					%>
 				</td>
 			</tr>
