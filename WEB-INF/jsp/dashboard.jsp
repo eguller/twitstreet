@@ -134,9 +134,9 @@ if(sessionUser != null){
 							int totalCash = user.getCash();
 							int available = stock.getAvailable();
 							int min = Math.min(totalCash, available);
-							
-							int i = String.valueOf(min).length();
-							if((int)Math.pow(10,i - 1) != min){
+						
+							int i = min == 0 ? 0 : String.valueOf(min).length();
+							if((int)Math.pow(10,i - 1) != min && min > 0){
 								buyValues.add(min);
 							}
 							
@@ -168,7 +168,7 @@ if(sessionUser != null){
 								out.write("</td>");
 								out.write("<td>");
 								if(i < sellValues.size()){
-									out.write("<div class=\"field-red\" onclick=\"sell("+stock.getId()+","+buyValues.get(i)+");\">");
+									out.write("<div class=\"field-red\" onclick=\"sell("+stock.getId()+","+sellValues.get(i)+");\">");
 									out.write("Sell<br>");
 									out.write(Util.commaSep(sellValues.get(i)));
 									out.write("</div>");

@@ -79,7 +79,6 @@ function calculateSold(total, soldPercentage){
 }
 
 function writeBuyLinks(){
-	var buyLink = "";
 	var cash = parseInt($("#cash").val());
 	var available = parseInt($("#available").val());
 	var quote = $("#quote-id").val();
@@ -87,16 +86,47 @@ function writeBuyLinks(){
 	if(cash > available){
 		min = available;
 	}	
-	var length = min.toString().length;
-	$("#buy-links").empty();
-	for(var i = length; i > 0; i --){
+	
+	var buyValues = new Array();
+	var sellValues = new Array();
+	if(min > 0){
+		buyValues.push(min);
+	}
+	var i = min.toString().length;
+	$(".buy-sell-table").empty();
+	for(; i > 0; i --){
 		var amount = Math.pow(10,i - 1);
-		var link = $("<a>"+amount+"</a>").attr('onclick', "buy(\'"+quote+"\',"+amount+");").addClass("buy");
-		$("#buy-links").append(link);
-		if( i > 1){
-			$("#buy-links").append(" | ");
+		buyValues.push(amount);
+	}
+	
+	var sold = parseInt($("#sold").html())
+	if(sold > 0){
+		sellValues.push(sold);
+	}	
+	
+	i = sold == 0 ? 0 : sold.toString().length;
+	for(; i > 0; i --){
+		var amount = Math.pow(10,i - 1);
+		sellValues.push(amount);
+	}
+	
+	i = 0
+	while(true){
+		var tr = $('tr');
+		var buyTd = $('td');
+		var sellTd = $('td');
+		if(i < buyValues.length){
+			var div = $('div');
+			div.innerText = buyValues[i];
+			div.attr('class', 'field-green');
+			div.attr('onclick','buy('+quote+', '+buyValues[i]+');');
+			buyTd.append(div);
 		}
 		
+		i++;
+		if(i > sellValues.length && i > buyValues.length){
+			break;
+		}
 	}
 }
 
