@@ -12,7 +12,7 @@ User user = userMgr.getUserById(sessionUser.getId());
 
 %>
 <div id="balance">
-	<input id="cash" type="hidden" value="3426" />
+	<input id="cash" type="hidden" value="<%=user.getCash()%>" />
 	<h3>Balance</h3>
 	<table class="right_aligned">
 		<tr>

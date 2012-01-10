@@ -80,7 +80,12 @@ if(sessionUser != null){
 			%>
 		</span></p>
 		</div>
+		
 		<input type="hidden" id="user-stock-val"/>
+		<input type="hidden" id="available-hidden" value="<%=stock == null ? "" : stock.getAvailable()%>"/>
+		<input type="hidden" id="sold-hidden" value="<%=stock == null ? "" : stock.getSold() %>" />
+		<input type="hidden" id="total-hidden" value="<%=stock == null ? "" : stock.getTotal() %>" />
+		
 		<table class="datatbl" style="margin-top: 10px;">
 			<tr>
 				<td colspan="3" >
@@ -146,7 +151,7 @@ if(sessionUser != null){
 							
 							if(userStock != null){
 								int userTotalStock = (int) (userStock.getPercent() * stock.getTotal());
-								i = String.valueOf(userTotalStock).length(); 
+								i = userTotalStock == 0 ? 0 : String.valueOf(userTotalStock).length(); 
 								if(userTotalStock != (int)Math.pow(10,i - 1)){
 									sellValues.add(userTotalStock);
 								}

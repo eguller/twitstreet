@@ -40,19 +40,24 @@ function getquote() {
         		
         	}
         	else{
-        		$("#total").html(data.respObj.stock.total);
+        		$("#total").html(commasep(data.respObj.stock.total));
+        		$("#total-hidden").value(data.respObj.stock.total);
+        		
         		$("#quote-id").val(data.respObj.stock.id);
         		$("#user-stock-val").val(parseInt(data.respObj.stock.total));
+        		
         		var sold = calculateSold(data.respObj.stock.total, data.respObj.stock.sold);
-        		$("#sold").html(sold);
-        		$("#available").html(data.respObj.stock.total - sold);
+        		$("#sold").html(commasep(sold));
+        		$("#sold-hidden").value(sold);
+        		
+        		$("#available").html(commasep(data.respObj.stock.total - sold));
+        		$("#available-hidden").value(data.respObj.stock.total - sold);
         		$("#dashboard-stock-follower-status").html(data.respObj.stock.name+"\'s follower status");
         		$("#dashboard-picture").attr("src",data.respObj.stock.pictureUrl);
         		if(data.resultCode != 'min-follower-count'){
         			$("#buy-links-row").show();
         			$("#sell-links-row").show();
-	        		writeBuyLinks();
-	        		writeSellLinks();
+        			writeBuySellLinks();
 	        		if(data.respObj.percentage == 0){
 	        			$("#user-stock").html("You do not have any " + quote);
 	        		}
@@ -78,9 +83,9 @@ function calculateSold(total, soldPercentage){
 	return parseInt(total * soldPercentage);
 }
 
-function writeBuyLinks(){
+function writeBuySellLinks(){
 	var cash = parseInt($("#cash").val());
-	var available = parseInt($("#available").val());
+	var available = parseInt($("#available-hidden").val());
 	var quote = $("#quote-id").val();
 	var min = cash;
 	if(cash > available){
@@ -92,19 +97,21 @@ function writeBuyLinks(){
 	if(min > 0){
 		buyValues.push(min);
 	}
-	var i = min.toString().length;
+	var i = min == 0 ? 0 : min.toString().length;
 	$(".buy-sell-table").empty();
 	for(; i > 0; i --){
 		var amount = Math.pow(10,i - 1);
 		buyValues.push(amount);
 	}
 	
-	var sold = parseInt($("#sold").html())
-	if(sold > 0){
+	var sold = parseInt($("#sold-hidden").val());
+	i = sold == 0 ? 0 : sold.toString().length;
+	
+	if(sold > 0 && sold != Math.pow(10,i - 1)){
 		sellValues.push(sold);
 	}	
 	
-	i = sold == 0 ? 0 : sold.toString().length;
+	
 	for(; i > 0; i --){
 		var amount = Math.pow(10,i - 1);
 		sellValues.push(amount);
@@ -112,16 +119,31 @@ function writeBuyLinks(){
 	
 	i = 0
 	while(true){
-		var tr = $('tr');
-		var buyTd = $('td');
-		var sellTd = $('td');
+		var tr = $('<tr></tr>');
+		var buyTd = $('<td></td>');
+		var sellTd = $('<td></td>');
 		if(i < buyValues.length){
-			var div = $('div');
-			div.innerText = buyValues[i];
-			div.attr('class', 'field-green');
-			div.attr('onclick','buy('+quote+', '+buyValues[i]+');');
-			buyTd.append(div);
+			var div = $('<div></div>');
+			$(div).html('Buy <br>' + commasep(buyValues[i]));
+			$(div).attr('class', 'field-green');
+			$(div).attr('onclick','buy('+quote+', '+buyValues[i]+');');
+			$(div).corner("round 5px");
+			$(buyTd).append($(div));
+			
 		}
+		
+		if(i < sellValues.length){
+			var div = $('<div></div>');
+			$(div).html( 'Sell <br>' + commasep(sellValues[i]));
+			$(div).attr('class', 'field-red');
+			$(div).attr('onclick','sell('+quote+', '+sellValues[i]+');');
+			$(div).corner("round 5px");
+			$(sellTd).append($(div));
+		}
+		
+		tr.append(buyTd);
+		tr.append(sellTd);
+		$(".buy-sell-table").append(tr);
 		
 		i++;
 		if(i > sellValues.length && i > buyValues.length){
@@ -130,20 +152,6 @@ function writeBuyLinks(){
 	}
 }
 
-function writeSellLinks(){
-	var length = parseInt($("#sold").html()) == 0 ? 0 : $("#sold").html().length;
-	$("#sell-links").empty();
-	var quote = $("#quote-id").val();
-	for(var i = length; i > 0; i --){
-		var amount = Math.pow(10,i - 1);
-		var link = $("<a>"+amount+"</a>").attr('onclick', "sell(\'"+quote+"\',"+amount+");").addClass("sell");
-		$("#sell-links").append(link);
-		if( i > 1){
-			$("#sell-links").append(" | ");
-		}
-		
-	}
-}
 
 function showQuotePanel(panel){
 	var panels = new Array("userfound", "searchresult", "searchnoresult", "searchfailed");
@@ -163,15 +171,20 @@ function buy(stock, amount){
 		amount : amount
 	}, function(data){
 		$("#total").html(data.stockTotal);
+		$("#total-hidden").val(data.stockTotal);
+		
 		var sold =  parseInt( data.stockTotal * data.stockSold);
-		$("#sold").html( sold );
+		$("#sold").html( commasep(sold) );
+		$("#sold-hidden").val(sold);
+		
 		$("#available").html(data.stockTotal - sold);
+		$("#available-hidden").val(data.stockTotal - sold);
+		
 		$("#cash_value").html(data.userCash + "$");
 		$("#cash").val(data.userCash);
 		$("#portfolio_value").html(data.userPortfolio);
 		$("#total_value").html(data.userCash + data.userPortfolio);
-		writeBuyLinks();
-		writeSellLinks();
+		writeBuySellLinks();
 	});
 }
 
@@ -180,16 +193,22 @@ function sell(stock, amount){
 		stock : stock,
 		amount : amount
 	}, function(data){
-		$("#total").html(data.stockTotal);
+		$("#total").html(commasep(data.stockTotal));
+		$("#total-hidden").val(data.stockTotal);
+		
 		var sold =  parseInt( data.stockTotal * data.stockSold);
-		$("#sold").html( sold );
-		$("#available").html(data.stockTotal - sold);
+		$("#sold").html( commasep(sold) );
+		$("#sold-hidden").val(sold);
+		
+		$("#available").html(commasep(data.stockTotal - sold));
+		$("#available-hidden").val(data.stockTotal - sold);
+		
+		
 		$("#cash_value").html(data.userCash + "$");
 		$("#cash").val(data.userCash);
 		$("#portfolio_value").html(data.userPortfolio + "$");
 		$("#total_value").html(data.userCash + data.userPortfolio + "$");
-		writeBuyLinks();
-		writeSellLinks();
+		writeBuySellLinks();
 	});
 }
 
