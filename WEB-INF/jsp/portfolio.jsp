@@ -31,7 +31,7 @@ Portfolio portfolio = portfolioMgr.getUserPortfolio(sessionUser.getId());
 								<img class="twuser" src="<%=portfolio.getStockInPortfolioList().get(i).getPictureUrl()%>"/>
 							</td>
 							<td>
-								<a href="/stock/<% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %>"><% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %></a>
+								<a href='#' onClick="writeAndGetQuote('<% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %>');"><% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %></a>
 								<br>
 								<% out.write(Util.commaSep(portfolio.getStockInPortfolioList().get(i).getAmount())); %>$
 							</td>

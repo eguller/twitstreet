@@ -23,7 +23,7 @@ function post(action, _data, f) {
 		});
 }
 
-function getquote(quote){
+function writeAndGetQuote(quote){
 	$("#quote").val(quote);
 	$("#quote-hidden").val(quote);
 	getquote();
@@ -52,7 +52,7 @@ function getquote() {
         		$("#sold-hidden").val(sold);
         		
         		$("#available").html(commasep(data.respObj.stock.total - sold));
-        		$("#available-hidden").value(data.respObj.stock.total - sold);
+        		$("#available-hidden").val(data.respObj.stock.total - sold);
         		$("#dashboard-stock-follower-status").html(data.respObj.stock.name+"\'s follower status");
         		$("#dashboard-picture").attr("src",data.respObj.stock.pictureUrl);
         		if(data.resultCode != 'min-follower-count'){

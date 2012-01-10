@@ -89,17 +89,15 @@ if(sessionUser != null){
 		<table class="datatbl" style="margin-top: 10px;">
 			<tr>
 				<td colspan="3" >
-					<%if(stock != null){%>
 					<table width="100%">
 						<tr>
 							<td width="36px;">
-								<img class="twuser" src="<%=stock.getPictureUrl()%>" id="dashboard-picture">
+								<img class="twuser" src="<%=stock == null ? "" : stock.getPictureUrl()%>" id="dashboard-picture">
 							</td>
 							<td style="text-align: left;" id="dashboard-stock-follower-status"><%=stock.getName()%>'s follower status </td>
 							<td style="text-align: right;"><a href="/stock/<%=stock.getName()%>">See All</a></td>
 						</tr>
 					</table>
-					<% } %>
 				</td>
 			</tr>
 			<tr>
