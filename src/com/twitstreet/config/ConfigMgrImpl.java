@@ -59,4 +59,9 @@ public class ConfigMgrImpl implements ConfigMgr{
 	public int getMinFollower() {
 		return Integer.parseInt(get(ConfigMgr.MIN_FOLLOWER));
 	}
+
+	@Override
+	public String getGaAccount() {
+		return get(ConfigMgr.GA_ACCOUNT);
+	}
 }

@@ -25,6 +25,7 @@ function post(action, _data, f) {
 
 function getquote(quote){
 	$("#quote").val(quote);
+	$("#quote-hidden").val(quote);
 	getquote();
 }
 
@@ -41,14 +42,14 @@ function getquote() {
         	}
         	else{
         		$("#total").html(commasep(data.respObj.stock.total));
-        		$("#total-hidden").value(data.respObj.stock.total);
+        		$("#total-hidden").val(data.respObj.stock.total);
         		
         		$("#quote-id").val(data.respObj.stock.id);
         		$("#user-stock-val").val(parseInt(data.respObj.stock.total));
         		
         		var sold = calculateSold(data.respObj.stock.total, data.respObj.stock.sold);
         		$("#sold").html(commasep(sold));
-        		$("#sold-hidden").value(sold);
+        		$("#sold-hidden").val(sold);
         		
         		$("#available").html(commasep(data.respObj.stock.total - sold));
         		$("#available-hidden").value(data.respObj.stock.total - sold);
@@ -84,7 +85,7 @@ function calculateSold(total, soldPercentage){
 }
 
 function writeBuySellLinks(){
-	var cash = parseInt($("#cash").val());
+	var cash = parseInt($("#cash-hidden").val());
 	var available = parseInt($("#available-hidden").val());
 	var quote = $("#quote-id").val();
 	var min = cash;
@@ -170,21 +171,22 @@ function buy(stock, amount){
 		stock : stock,
 		amount : amount
 	}, function(data){
-		$("#total").html(data.stockTotal);
+		$("#total").html(commasep(data.stockTotal));
 		$("#total-hidden").val(data.stockTotal);
 		
 		var sold =  parseInt( data.stockTotal * data.stockSold);
-		$("#sold").html( commasep(sold) );
+		$("#sold").html( commasep(sold));
 		$("#sold-hidden").val(sold);
 		
-		$("#available").html(data.stockTotal - sold);
+		$("#available").html(commasep(data.stockTotal - sold));
 		$("#available-hidden").val(data.stockTotal - sold);
 		
-		$("#cash_value").html(data.userCash + "$");
-		$("#cash").val(data.userCash);
-		$("#portfolio_value").html(data.userPortfolio);
-		$("#total_value").html(data.userCash + data.userPortfolio);
+		$("#cash_value").html(commasep(data.userCash) + "$");
+		$("#cash-hidden").val(data.userCash);
+		$("#portfolio_value").html(commasep(data.userPortfolio) + "$");
+		$("#total_value").html(commasep(data.userCash + data.userPortfolio) + "$");
 		writeBuySellLinks();
+		$("#user-stock").html("You have <b>" + commasep(parseInt(data.userStock)) + "</b> of " + data.stockName);
 	});
 }
 
@@ -204,11 +206,12 @@ function sell(stock, amount){
 		$("#available-hidden").val(data.stockTotal - sold);
 		
 		
-		$("#cash_value").html(data.userCash + "$");
-		$("#cash").val(data.userCash);
-		$("#portfolio_value").html(data.userPortfolio + "$");
-		$("#total_value").html(data.userCash + data.userPortfolio + "$");
+		$("#cash_value").html(commasep(data.userCash) + "$");
+		$("#cash-hidden").val(data.userCash);
+		$("#portfolio_value").html(commasep(data.userPortfolio) + "$");
+		$("#total_value").html(commasep(data.userCash + data.userPortfolio) + "$");
 		writeBuySellLinks();
+		$("#user-stock").html("You have <b>" + commasep(parseInt(data.userStock)) + "</b> of " + data.stockName);
 	});
 }
 

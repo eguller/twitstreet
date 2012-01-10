@@ -42,6 +42,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 		if (userStock == null) {
 			addStock2Portfolio(buyer, stock, sold);
+			
 		} else {
 			updateStockInPortfolio(buyer, stock, sold);
 		}
@@ -50,7 +51,9 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		transactionMgr.recordTransaction(user, stockObj, amount2Buy, TransactionMgr.BUY);
 		user.setCash(user.getCash() - amount2Buy);
 		user.setPortfolio(user.getPortfolio() + amount2Buy);
-		return new BuySellResponse(user, stockObj);
+		UserStock updateUserStock = getStockInPortfolio(buyer, stock);
+		int userStockValue = (int)(updateUserStock.getPercent() * stockObj.getTotal()); 
+		return new BuySellResponse(user, stockObj, userStockValue);
 
 	}
 
@@ -177,7 +180,9 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		transactionMgr.recordTransaction(user, stockObj, amount2Buy, TransactionMgr.SELL);
 		user.setCash(user.getCash() + amount2Buy);
 		user.setPortfolio(user.getPortfolio() - amount2Buy);
-		return new BuySellResponse(user, stockObj);
+		UserStock updateUserStock = getStockInPortfolio(seller, stock);
+		int userStockValue = (int)(updateUserStock.getPercent() * stockObj.getTotal()); 
+		return new BuySellResponse(user, stockObj, userStockValue);
 	}
 
 	@Override

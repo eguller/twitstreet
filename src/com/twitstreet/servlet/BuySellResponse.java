@@ -5,20 +5,25 @@ import com.twitstreet.db.data.User;
 
 public class BuySellResponse {
 	long stockId;
+	String stockName;
 	int stockTotal;
 	double stockSold;
 	long userId;
 	int userCash;
 	int userPortfolio;
+	int userStock;
 	
-	public BuySellResponse(User user, Stock stock){
+	public BuySellResponse(User user, Stock stock, int userStockValue){
 		this.stockId = stock.getId();
 		this.stockTotal = stock.getTotal();
 		this.stockSold = stock.getSold();
+		this.stockName = stock.getName();
 		
 		this.userId = user.getId();
 		this.userCash = user.getCash();
 		this.userPortfolio = user.getPortfolio();
+		
+		this.userStock = userStockValue;
 	}
 
 	public long getStockId() {
