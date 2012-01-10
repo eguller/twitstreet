@@ -3,7 +3,6 @@
   <template:put name='title' content='twitstreet.com' direct='true'/>
   <template:put name='header' content='header.jsp' />
   <template:put name='topbar' content='topbar.jsp' />
-  <template:put name="navigation" content="navigation.jsp" />
   <template:put name='dashboard' content='dashboard.jsp' />
   <template:put name='howtoplay' content='howtoplay.jsp' />
   <template:put name='signup' content='signup.jsp' />

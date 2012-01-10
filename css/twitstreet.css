@@ -63,19 +63,6 @@ PAGE STRUCTURE
 	height: 60px;
 }
 
-#navbar {
-	width: auto;
-	display: block;
-	height: 28px;
-}
-
-#navbar a {
-	heigth: 28px;
-	line-height: 28px;
-	padding: 0 8px;
-	display: inline;
-}
-
 #main {
 	width: auto;
 	display: block;

@@ -11,9 +11,6 @@
 
 	<div id="container">
 		<template:get name="topbar"></template:get>
-
-		<template:get name="navigation"></template:get>
-
 		<div id="main">
 			<div id="column_left">
 				<template:get name="dashboard"></template:get>
