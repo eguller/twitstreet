@@ -24,7 +24,10 @@ public class PortfolioServlet extends HttpServlet {
 		response.setContentType("application/json;charset=utf-8");
 		String userIdStr = (String) request.getAttribute("user");
 		if(userIdStr == null){
-			userIdStr = (String) request.getSession(false).getAttribute(User.USER);
+			User user  = (User) request.getSession(false).getAttribute(User.USER);
+			if(user != null){
+				userIdStr = String.valueOf(user.getId());
+			}
 		}
 		
 		if(userIdStr != null){

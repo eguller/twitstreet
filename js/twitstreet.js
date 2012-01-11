@@ -1,3 +1,4 @@
+var latest
 $(document).ready(function() {
 	$("#quote").keyup(function(event){
 	    if(event.keyCode == 13){
@@ -153,6 +154,56 @@ function writeBuySellLinks(){
 	}
 }
 
+function loadPortfolio(){
+	$.post('/portfolio', {
+
+	}, function(data){
+		var stockInPortfolioList = data.stockInPortfolioList;
+		$("#portfolio-table").empty();
+		for(var i = 0; i < stockInPortfolioList.length;){
+			var tr = $('<tr></tr>');
+			for(var j = 0; j < 4; j++){
+				var stockInPortfolio = null;
+				
+				if(i < stockInPortfolioList.length){
+					stockInPortfolio = stockInPortfolioList[i];
+				}
+				
+				var td = $('<td></td>');
+				var table = $('<table></table');
+				var tableTr = $('<tr></tr>');
+				
+				var tableTd1 = $('<td></td>');
+				if(stockInPortfolio != null){
+					var img = $('<img />').attr('class','twuser').attr('src',stockInPortfolio.pictureUrl);
+					$(tableTd1).append(img);
+				}
+				
+				var tableTd2 = $('<td></td>');
+				if(stockInPortfolio != null){
+					var tdA = $('<a>'+stockInPortfolio.stockName+'</a>');
+					tdA.attr('onclick', 'writeAndGetQuote(\''+stockInPortfolio.stockName+'\');').attr('href','#');
+					tableTd2.append(tdA).append('<br>' + stockInPortfolio.amount + '$');
+				}
+				$(tableTr).append(tableTd1);
+				$(tableTr).append(tableTd2);			
+				$(table).append(tableTr);	
+				$(td).append(table);
+				$(tr).append(td);
+				i++;
+			}
+			$("#portfolio-table").append(tr);
+		}
+	});
+}
+
+function loadCurrentTransactions(){
+	
+}
+
+function loadUserTransactions(){
+	
+}
 
 function showQuotePanel(panel){
 	var panels = new Array("userfound", "searchresult", "searchnoresult", "searchfailed");
@@ -187,6 +238,7 @@ function buy(stock, amount){
 		$("#total_value").html(commasep(data.userCash + data.userPortfolio) + "$");
 		writeBuySellLinks();
 		$("#user-stock").html("You have <b>" + commasep(parseInt(data.userStock)) + "</b> of " + data.stockName);
+		loadPortfolio();
 	});
 }
 
@@ -212,6 +264,7 @@ function sell(stock, amount){
 		$("#total_value").html(commasep(data.userCash + data.userPortfolio) + "$");
 		writeBuySellLinks();
 		$("#user-stock").html("You have <b>" + commasep(parseInt(data.userStock)) + "</b> of " + data.stockName);
+		loadPortfolio();
 	});
 }
 

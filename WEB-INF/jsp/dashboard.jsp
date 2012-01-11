@@ -86,7 +86,7 @@ if(sessionUser != null){
 		<input type="hidden" id="sold-hidden" value="<%=stock == null ? "" : stock.getSold() %>" />
 		<input type="hidden" id="total-hidden" value="<%=stock == null ? "" : stock.getTotal() %>" />
 		
-		<table class="datatbl" style="margin-top: 10px;">
+		<table class="datatbl" style="margin-top: 10px;" <% if(stock == null){ out.write("style='display: none;'"); } %>>
 			<tr>
 				<td colspan="3" >
 					<table width="100%">
@@ -94,8 +94,8 @@ if(sessionUser != null){
 							<td width="36px;">
 								<img class="twuser" src="<%=stock == null ? "" : stock.getPictureUrl()%>" id="dashboard-picture">
 							</td>
-							<td style="text-align: left;" id="dashboard-stock-follower-status"><%=stock.getName()%>'s follower status </td>
-							<td style="text-align: right;"><a href="/stock/<%=stock.getName()%>">See All</a></td>
+							<td style="text-align: left;" id="dashboard-stock-follower-status"><%=stock == null ? "" : stock.getName()%>'s follower status </td>
+							<td style="text-align: right;"><a href="/stock/<%=stock == null ? "" : stock.getName()%>">See All</a></td>
 						</tr>
 					</table>
 				</td>
@@ -130,6 +130,7 @@ if(sessionUser != null){
 			</tr>
 			<tr id="buy-links-row">
 				<td colspan="3" id="buy-links">
+					<table class="buy-sell-table">
 					<% 
 						if(user != null && stock != null){
 							ArrayList<Integer> buyValues = new ArrayList<Integer>();
@@ -158,7 +159,6 @@ if(sessionUser != null){
 								}
 							}
 							i = 0;
-							out.write("<table class=\"buy-sell-table\">");
 							while(true){
 								out.write("<tr>");
 								out.write("<td>");
@@ -183,9 +183,9 @@ if(sessionUser != null){
 									break;
 								}
 							}
-							out.write("</table>");
 						}
 					%>
+					</table>
 				</td>
 			</tr>
 		</table>

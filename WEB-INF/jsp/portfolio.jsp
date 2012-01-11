@@ -15,9 +15,9 @@ PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 Portfolio portfolio = portfolioMgr.getUserPortfolio(sessionUser.getId());
 
 %>
-<div id="portfolio">
+<div id="portfolio" style="margin-top: 10px;">
 	<h3>Portfolio</h3>
-	<table class="datatbl">
+	<table class="datatbl" id="portfolio-table">
 	<% for(int i = 0; i < portfolio.getStockInPortfolioList().size();){ %>
 		<tr>
 			<% for(int j = 0; j < 4; j ++) { 

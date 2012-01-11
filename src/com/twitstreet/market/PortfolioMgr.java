@@ -57,6 +57,8 @@ public interface PortfolioMgr {
 	 * @return
 	 */
 	public UserStock getStockInPortfolio(long buyer, long stock) throws SQLException;
+	
+	public void deleteStockInPortfolio(long seller, long stock) throws SQLException;
 
 	public void rerank();
 	

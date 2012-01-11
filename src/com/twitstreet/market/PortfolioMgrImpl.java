@@ -172,7 +172,12 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		UserStock userStock = getStockInPortfolio(seller, stock);
 
 		if (userStock != null) {
-			updateStockInPortfolio(seller, stock, -sold);
+			int soldAmount = (int)(userStock.getPercent() * stockObj.getTotal());
+			if(amount >= soldAmount){
+				deleteStockInPortfolio(seller,stock);
+			}else{
+				updateStockInPortfolio(seller, stock, -sold);
+			}
 		}
 
 		stockMgr.updateSold(stock, -sold);
@@ -181,8 +186,26 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		user.setCash(user.getCash() + amount2Buy);
 		user.setPortfolio(user.getPortfolio() - amount2Buy);
 		UserStock updateUserStock = getStockInPortfolio(seller, stock);
-		int userStockValue = (int)(updateUserStock.getPercent() * stockObj.getTotal()); 
+		int userStockValue = updateUserStock == null ? 0 : (int)(updateUserStock.getPercent() * stockObj.getTotal()); 
 		return new BuySellResponse(user, stockObj, userStockValue);
+	}
+
+	public void deleteStockInPortfolio(long userId, long stockId) throws SQLException{
+		Connection connection = null;
+		PreparedStatement ps = null;
+		connection = dbMgr.getConnection();
+		ps = connection
+				.prepareStatement("delete from portfolio where user_id = ? and stock = ?");
+		ps.setLong(1, userId);
+		ps.setLong(2, stockId);
+		ps.executeUpdate();
+		
+		if (!ps.isClosed()) {
+			ps.close();
+		}
+		if (!connection.isClosed()) {
+			connection.close();
+		}
 	}
 
 	@Override
