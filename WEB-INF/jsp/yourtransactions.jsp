@@ -4,18 +4,18 @@
 <%@ page import="com.google.inject.Guice"%>
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.db.data.User"%>
-<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.List"%>
 
 <%
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 User sessionUser = (User)request.getSession().getAttribute(User.USER);
 TransactionMgr transactionMgr = inj.getInstance(TransactionMgr.class);
-ArrayList<TransactionRecord> transactionRecordList = transactionMgr.queryTransactionRecord(sessionUser);
+List<TransactionRecord> transactionRecordList = transactionMgr.queryTransactionRecord(sessionUser.getId());
 
 %>
 <div id="yourtransactions">
 	<h3>Your Transactions</h3>
-	<table class="datatbl">
+	<table class="datatbl" id="your-transactions-table">
 		<% 
 		int i = 0;
 		for(TransactionRecord transactionRecord : transactionRecordList){ 

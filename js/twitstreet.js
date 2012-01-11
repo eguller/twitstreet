@@ -12,7 +12,8 @@ $(document).ready(function() {
 
 
 
-setInterval(toprank, 5000);
+setInterval(toprank, 20000);
+setInterval(loadCurrentTransactions, 20000);
 
 function post(action, _data, f) {
 	$.ajax({
@@ -198,11 +199,57 @@ function loadPortfolio(){
 }
 
 function loadCurrentTransactions(){
-	
+	$.post('/transaction', {
+
+	}, function(data){
+		if(data != null){
+			$("#current-transactions-table").empty();
+			for(var i = 0; i < data.length; i++){
+				var transactionRecord = data[i];
+				var tr = $("<tr></tr>");
+				if(i%2==0){
+					$(tr).attr('class','odd');
+				}
+				var td = $('<td></td>');
+				
+				if(transactionRecord.transactionAction == 1){
+					$(td).html("<a href=\"/user/"+transactionRecord.userName+"\">"+transactionRecord.userName+"</a> <span class=\"green\">bought</span> "+transactionRecord.amount+" <a onclick=\"writeAndGetQuote('"+transactionRecord.stockName+"');\" href=\"#\">"+transactionRecord.stockName+"</a>");
+				}
+				else{
+					$(td).html("<a href=\"/user/"+transactionRecord.userName+"\">"+transactionRecord.userName+"</a> <span class=\"red\">sold</span> "+transactionRecord.amount+" <a onclick=\"writeAndGetQuote('"+transactionRecord.stockName+"');\" href=\"#\">"+transactionRecord.stockName+"</a>");
+				}
+				$(tr).append(td);
+				$("#current-transactions-table").append(tr);
+			}
+		}
+	});
 }
 
 function loadUserTransactions(){
-	
+	$.post('/transaction', {
+		type: 'user'
+	}, function(data){
+		if(data != null){
+			$("#your-transactions-table").empty();
+			for(var i = 0; i < data.length; i++){
+				var transactionRecord = data[i];
+				var tr = $("<tr></tr>");
+				if(i%2==0){
+					$(tr).attr('class','odd');
+				}
+				var td = $('<td></td>');
+				
+				if(transactionRecord.transactionAction == 1){
+					$(td).html("You <span class=\"green\">bought</span> "+transactionRecord.amount+" <a onclick=\"writeAndGetQuote('"+transactionRecord.stockName+"');\" href=\"#\">"+transactionRecord.stockName+"</a>");
+				}
+				else{
+					$(td).html("You <span class=\"red\">sold</span> "+transactionRecord.amount+" <a onclick=\"writeAndGetQuote('"+transactionRecord.stockName+"');\" href=\"#\">"+transactionRecord.stockName+"</a>");
+				}
+				$(tr).append(td);
+				$("#your-transactions-table").append(tr);
+			}
+		}
+	});
 }
 
 function showQuotePanel(panel){
@@ -239,6 +286,7 @@ function buy(stock, amount){
 		writeBuySellLinks();
 		$("#user-stock").html("You have <b>" + commasep(parseInt(data.userStock)) + "</b> of " + data.stockName);
 		loadPortfolio();
+		loadUserTransactions();
 	});
 }
 
@@ -265,6 +313,7 @@ function sell(stock, amount){
 		writeBuySellLinks();
 		$("#user-stock").html("You have <b>" + commasep(parseInt(data.userStock)) + "</b> of " + data.stockName);
 		loadPortfolio();
+		loadUserTransactions();
 	});
 }
 

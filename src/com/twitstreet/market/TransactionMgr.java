@@ -1,7 +1,6 @@
 package com.twitstreet.market;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.TransactionRecord;
@@ -17,7 +16,7 @@ public interface TransactionMgr {
 
 	public void recordTransaction(User user, Stock stock, int amount, int operation);
 	
-	public ArrayList<TransactionRecord> queryTransactionRecord(User user);
+	public List<TransactionRecord> queryTransactionRecord(long userId);
 	
-	public LinkedList<TransactionRecord> getCurrentTransactions();
+	public List<TransactionRecord> getCurrentTransactions();
 }

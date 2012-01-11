@@ -102,7 +102,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 	}
 
 	@Override
-	public ArrayList<TransactionRecord> queryTransactionRecord(User user) {
+	public ArrayList<TransactionRecord> queryTransactionRecord(long userId) {
 		ArrayList<TransactionRecord> transactionRecordList = new ArrayList<TransactionRecord>();
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -112,7 +112,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 			ps = connection
 					.prepareStatement("select users.id as user_id, users.userName as userName, transactions.id as transaction_id, transactions.amount as amount, transactions.t_action as t_action, stock.name as stock from users, transactions, stock where stock.id = transactions.stock and transactions.user_id = users.id and users.id = ? order by t_date desc limit ?");
 
-			ps.setLong(1, user.getId());
+			ps.setLong(1,userId);
 			ps.setInt(2, TransactionMgr.CURRENT_TRANSACTIONS);
 			rs = ps.executeQuery();
 			while(rs.next()){

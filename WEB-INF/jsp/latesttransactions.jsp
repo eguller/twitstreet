@@ -5,17 +5,17 @@
 <%@ page import="com.google.inject.Guice"%>
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.db.data.User"%>
-<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.List"%>
 
 <%
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 TransactionMgr transactionMgr = inj.getInstance(TransactionMgr.class);
-LinkedList<TransactionRecord> transactionRecordList = transactionMgr.getCurrentTransactions();
+List<TransactionRecord> transactionRecordList = transactionMgr.getCurrentTransactions();
 
 %>
 <div id="currenttransactions">
 	<h3>Current Transactions</h3>
-	<table class="datatbl">
+	<table class="datatbl" id="current-transactions-table">
 		<% 
 		int i = 0;
 		for(TransactionRecord transactionRecord : transactionRecordList){ 
