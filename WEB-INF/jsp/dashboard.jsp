@@ -95,7 +95,7 @@ if(sessionUser != null){
 								<img class="twuser" src="<%=stock == null ? "" : stock.getPictureUrl()%>" id="dashboard-picture">
 							</td>
 							<td style="text-align: left;" id="dashboard-stock-follower-status"><%=stock == null ? "" : stock.getName()%>'s follower status </td>
-							<td style="text-align: right;"><a href="/stock/<%=stock == null ? "" : stock.getName()%>">See All</a></td>
+							<td style="text-align: right;"><a id="see-details-link" href="/stock/<%=stock == null ? "" : stock.getName()%>">See Details</a></td>
 						</tr>
 					</table>
 				</td>

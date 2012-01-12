@@ -57,6 +57,7 @@ function getquote() {
         		$("#available-hidden").val(data.respObj.stock.total - sold);
         		$("#dashboard-stock-follower-status").html(data.respObj.stock.name+"\'s follower status");
         		$("#dashboard-picture").attr("src",data.respObj.stock.pictureUrl);
+        		$("#see-details-link").attr("href","/stock/"+data.respObj.stock.name);
         		if(data.resultCode != 'min-follower-count'){
         			$("#buy-links-row").show();
         			$("#sell-links-row").show();

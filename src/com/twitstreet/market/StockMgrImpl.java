@@ -93,9 +93,10 @@ public class StockMgrImpl implements StockMgr {
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
 		try{
-			ps = connection.prepareStatement("update stock set total = ? where id = ?");
+			ps = connection.prepareStatement("update stock set total = ?, pictureUrl = ? where id = ?");
 			ps.setInt(1, total);
-			ps.setLong(2, id);
+			ps.setString(2, pictureUrl);
+			ps.setLong(3, id);
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		}

@@ -128,6 +128,7 @@ public class StockQuoteServlet extends HttpServlet {
 						}
 						// Update total value with latest one from twitter
 						stock.setTotal(twUser.getFollowersCount());
+						stock.setPictureUrl(twUser.getProfileImageURL().toString());
 					} else if (stock.getTotal() != twUser.getFollowersCount()
 							&& !stock.getName().equals(twUser.getScreenName())) {
 						try {

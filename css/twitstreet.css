@@ -215,29 +215,13 @@ CUSTOM CLASSES
 	color : red;
 }
 
-a.buy {
-	color : green;
-	text-decoration: none;
+
+a:HOVER {
+	text-decoration: underline;
 }
 
-a.buy:hover {
-	color : green;
-	text-decoration: none;
-	font-weight: bold;
-	cursor: pointer;
-}
 
-a.sell {
-	color: red;
-	text-decoration: none;
-}
 
-a.sell:hover {
-	color: red;
-	text-decoration: none;
-	font-weight: bold;
-	cursor: pointer;
-}
 
 
 .right_aligned tr td {
@@ -261,6 +245,8 @@ a.sell:hover {
 
 img.twuser {
 	margin: 0px 5px 2px 0px;
+	width: 48;
+	height: 48;
 }
 
 .field-green {
