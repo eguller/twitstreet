@@ -8,6 +8,8 @@ $(document).ready(function() {
 	
 	$("#dashboard-message-field").corner("round 3px");
 	$("#buy-links div").corner("round 5px");
+	
+	jQuery('#quote').click(function() { selectAllText(jQuery(this)) });
 });
 
 
@@ -55,7 +57,7 @@ function getquote() {
         		
         		$("#available").html(commasep(data.respObj.stock.total - sold));
         		$("#available-hidden").val(data.respObj.stock.total - sold);
-        		$("#dashboard-stock-follower-status").html(data.respObj.stock.name+"\'s follower status");
+        		$("#dashboard-stock-follower-status").html("<a href=\'/stock/"+data.respObj.stock.id+"\'>"+data.respObj.stock.name+"</a>\'s follower status");
         		$("#dashboard-picture").attr("src",data.respObj.stock.pictureUrl);
         		$("#see-details-link").attr("href","/stock/"+data.respObj.stock.name);
         		if(data.resultCode != 'min-follower-count'){
@@ -358,19 +360,23 @@ function setup(){
 function toprank(){
 	$("topranktable").empty();
 	$.getJSON('/toprank', function(data) {
+		$("#topranktable").empty();
 		  for(var i = 0, length = data.length; i < length; i ++){
 			  var rank = data[i];
 			  var tr = $("<tr></tr>");
-			  tr.append($("<td>" + rank.rank + "</td>"));
-			  tr.append($("<td>" + rank.userName +"</td>"));
-			  tr.append($("<td>" + commasep(rank.cash + rank.portfolio)) + "</td>");
+			  if(i%2==0){
+				  tr.attr('class','odd');
+			  }
+			  $(tr).append($("<td class=\'rank-number\'>" + rank.rank + ". </td>"));
+			  $(tr).append($("<td><img class=\'twuser\' src=\'" +rank.pictureUrl+ "\'/></td>"));
+			  $(tr).append($('<td><a href=\'/user/'+rank.id+'\'>'+rank.userName+'</a> <br>'+commasep(rank.cash + rank.portfolio)+'$</td>'));
 			  if(data.direction == 1){
-				  tr.append($("td><img src=\"../images/up.png\" /></td>"));
+				  $(tr).append($("<td><img src=\"../images/up.png\" /></td>"));
 			  }
 			  else{
-				  tr.append($("td><img src=\"../images/down.png\" /></td>"));
+				  $(tr).append($("<td><img src=\"../images/down.png\" /></td>"));
 			  }			  
-			  $("topranktable").append(tr);
+			  $("#topranktable").append(tr);
 		  }
 		});
 }
@@ -386,5 +392,10 @@ function commasep(number){
 		
 	}
 	return newNumber;
+}
+
+function selectAllText(textbox) {
+    textbox.focus();
+    textbox.select();
 }
 

@@ -4,7 +4,6 @@
   <template:put name='header' content='header.jsp' />
   <template:put name='topbar' content='topbar.jsp' />
   <template:put name='stockdetails' content='stockDetails.jsp' />
-  <template:put name='stockdist' content='stockDistribution.jsp' />
   <template:put name='topranks' content='topranks.jsp' />
   <template:put name='latesttransactions' content='latesttransactions.jsp' />
   <template:put name='footer' content='footer.jsp' />

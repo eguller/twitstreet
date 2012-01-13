@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -15,6 +17,7 @@ import com.twitstreet.db.data.StockInPortfolio;
 import com.twitstreet.db.data.User;
 import com.twitstreet.db.data.UserStock;
 import com.twitstreet.db.data.Stock;
+import com.twitstreet.db.data.UserStockDetail;
 import com.twitstreet.servlet.BuySellResponse;
 import com.twitstreet.session.UserMgr;
 
@@ -26,10 +29,9 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	private StockMgr stockMgr;
 	@Inject
 	private UserMgr userMgr;
-	@Inject 
+	@Inject
 	private TransactionMgr transactionMgr;
-	
-	
+
 	@Override
 	public BuySellResponse buy(long buyer, long stock, int amount)
 			throws SQLException {
@@ -42,17 +44,19 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 		if (userStock == null) {
 			addStock2Portfolio(buyer, stock, sold);
-			
+
 		} else {
 			updateStockInPortfolio(buyer, stock, sold);
 		}
 		stockMgr.updateSold(stock, sold);
 		userMgr.updateCashAndPortfolio(buyer, amount2Buy);
-		transactionMgr.recordTransaction(user, stockObj, amount2Buy, TransactionMgr.BUY);
+		transactionMgr.recordTransaction(user, stockObj, amount2Buy,
+				TransactionMgr.BUY);
 		user.setCash(user.getCash() - amount2Buy);
 		user.setPortfolio(user.getPortfolio() + amount2Buy);
 		UserStock updateUserStock = getStockInPortfolio(buyer, stock);
-		int userStockValue = (int)(updateUserStock.getPercent() * stockObj.getTotal()); 
+		int userStockValue = (int) (updateUserStock.getPercent() * stockObj
+				.getTotal());
 		return new BuySellResponse(user, stockObj, userStockValue);
 
 	}
@@ -172,25 +176,29 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		UserStock userStock = getStockInPortfolio(seller, stock);
 
 		if (userStock != null) {
-			int soldAmount = (int)(userStock.getPercent() * stockObj.getTotal());
-			if(amount >= soldAmount){
-				deleteStockInPortfolio(seller,stock);
-			}else{
+			int soldAmount = (int) (userStock.getPercent() * stockObj
+					.getTotal());
+			if (amount >= soldAmount) {
+				deleteStockInPortfolio(seller, stock);
+			} else {
 				updateStockInPortfolio(seller, stock, -sold);
 			}
 		}
 
 		stockMgr.updateSold(stock, -sold);
 		userMgr.updateCashAndPortfolio(seller, -amount2Buy);
-		transactionMgr.recordTransaction(user, stockObj, amount2Buy, TransactionMgr.SELL);
+		transactionMgr.recordTransaction(user, stockObj, amount2Buy,
+				TransactionMgr.SELL);
 		user.setCash(user.getCash() + amount2Buy);
 		user.setPortfolio(user.getPortfolio() - amount2Buy);
 		UserStock updateUserStock = getStockInPortfolio(seller, stock);
-		int userStockValue = updateUserStock == null ? 0 : (int)(updateUserStock.getPercent() * stockObj.getTotal()); 
+		int userStockValue = updateUserStock == null ? 0
+				: (int) (updateUserStock.getPercent() * stockObj.getTotal());
 		return new BuySellResponse(user, stockObj, userStockValue);
 	}
 
-	public void deleteStockInPortfolio(long userId, long stockId) throws SQLException{
+	public void deleteStockInPortfolio(long userId, long stockId)
+			throws SQLException {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		connection = dbMgr.getConnection();
@@ -199,7 +207,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		ps.setLong(1, userId);
 		ps.setLong(2, stockId);
 		ps.executeUpdate();
-		
+
 		if (!ps.isClosed()) {
 			ps.close();
 		}
@@ -240,9 +248,10 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		try {
 			user = userMgr.getUserById(userId);
 		} catch (SQLException e1) {
-			logger.error("DB: Query user failed while retrieving user portfolio", e1);
+			logger.error(
+					"DB: Query user failed while retrieving user portfolio", e1);
 		}
-		
+
 		if (user != null) {
 			portfolio = new Portfolio(user);
 			Connection connection = null;
@@ -256,11 +265,15 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				rs = ps.executeQuery();
 
 				while (rs.next()) {
-					StockInPortfolio stockInPortfolio = new StockInPortfolio(rs.getLong("stockId"), rs.getString("stockName"), (int) Math.rint(rs.getDouble("amount")), rs.getString("pictureUrl"));
+					StockInPortfolio stockInPortfolio = new StockInPortfolio(
+							rs.getLong("stockId"), rs.getString("stockName"),
+							(int) Math.rint(rs.getDouble("amount")),
+							rs.getString("pictureUrl"));
 					portfolio.add(stockInPortfolio);
 				}
-				
-				logger.debug("DB: Query executed successfully - " + ps.toString());
+
+				logger.debug("DB: Query executed successfully - "
+						+ ps.toString());
 			} catch (SQLException ex) {
 				logger.error("DB: Query failed - " + ps.toString(), ex);
 			} finally {
@@ -277,9 +290,61 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				} catch (SQLException e) {
 					logger.error("DB: Releasing resources failed.", e);
 				}
-			
+
 			}
 		}
 		return portfolio;
+	}
+
+	@Override
+	public List<UserStockDetail> getStockDistribution(long stock) {
+		ArrayList<UserStockDetail> userStockList = new ArrayList<UserStockDetail>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select portfolio.id as portfolio_id, users.id as user_id, "
+							+ "users.pictureUrl as userPictureUrl, users.userName as user_name, "
+							+ "portfolio.percentage as portfolio_percentage, "
+							+ "stock.total as stock_total from portfolio, stock, "
+							+ "users where portfolio.user_id = users.id and "
+							+ "portfolio.stock = stock.id and stock = ?");
+			ps.setLong(1, stock);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				UserStockDetail userStockDetail = new UserStockDetail();
+				userStockDetail.setId(rs.getLong("portfolio_id"));
+				userStockDetail.setUserId(rs.getLong("user_id"));
+				userStockDetail.setUserPictureUrl(rs
+						.getString("userPictureUrl"));
+				userStockDetail
+						.setPercent(rs.getDouble("portfolio_percentage"));
+				userStockDetail.setStockTotal(rs
+						.getInt("stock_total"));
+				userStockDetail.setUserName(rs.getString("user_name"));
+				userStockList.add(userStockDetail);
+			}
+			logger.debug("DB: Query executed successfully - "
+					+ ps.toString());
+		}catch(SQLException e){
+			logger.error("DB: Query failed - " + ps.toString(), e);
+		}
+		try{
+			if (!rs.isClosed()) {
+				rs.close();
+			}
+			if (!ps.isClosed()) {
+				ps.close();
+			}
+			if (!connection.isClosed()) {
+				connection.close();
+			}
+		} catch (SQLException e) {
+			logger.error("DB: Releasing resources failed.", e);
+		}
+		return userStockList;
 	}
 }

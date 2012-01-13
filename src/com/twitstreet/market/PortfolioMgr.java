@@ -1,10 +1,12 @@
 package com.twitstreet.market;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.twitstreet.db.data.Portfolio;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.UserStock;
+import com.twitstreet.db.data.UserStockDetail;
 import com.twitstreet.servlet.BuySellResponse;
 
 /**
@@ -59,6 +61,8 @@ public interface PortfolioMgr {
 	public UserStock getStockInPortfolio(long buyer, long stock) throws SQLException;
 	
 	public void deleteStockInPortfolio(long seller, long stock) throws SQLException;
+	
+	public List<UserStockDetail> getStockDistribution(long stock);
 
 	public void rerank();
 	
