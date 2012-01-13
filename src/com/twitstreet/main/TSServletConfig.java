@@ -51,8 +51,6 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/toprank").with(TopRankServlet.class);
 				serve("/portfolio").with(PortfolioServlet.class);
 				serve("/transaction").with(TransactionServlet.class);
-				serve("/stock/*").with(StockDetailsServlet.class);
-				serve("/user/*").with(UserProfileServlet.class);
 			}
 		});
 	}

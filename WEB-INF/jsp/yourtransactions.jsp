@@ -34,8 +34,6 @@ List<TransactionRecord> transactionRecordList = transactionMgr.queryTransactionR
 						out.write("You <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " <a href='#' onClick=\"writeAndGetQuote('" + transactionRecord.getStockName() + "');\">"+transactionRecord.getStockName()+"</a>");
 					}
 					%>
-						
-					
 				</td>
 			</tr>
 		<% } %>

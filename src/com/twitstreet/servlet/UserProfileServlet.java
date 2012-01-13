@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.inject.Singleton;
 import com.twitstreet.db.data.User;
 
-@Singleton
+@SuppressWarnings("serial")
 public class UserProfileServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {

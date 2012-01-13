@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.inject.Singleton;
 import com.twitstreet.db.data.User;
 
-@Singleton
 public class StockDetailsServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
