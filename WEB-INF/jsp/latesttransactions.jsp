@@ -27,11 +27,23 @@ List<TransactionRecord> transactionRecordList = transactionMgr.getCurrentTransac
 	    		<tr class="odd">
 	    	<% } %>
 				<td>
-					<% if(transactionRecord.getTransactionAction() == TransactionRecord.BUY){  
-						out.write("<a href=\"/user/" + transactionRecord.getUserName() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " <a href='#' onClick=\"writeAndGetQuote('" + transactionRecord.getStockName() + "');\">"+ transactionRecord.getStockName() +"</a>");
+					<% 
+					String requestUrl = request.getRequestURL().toString();
+					
+					if(transactionRecord.getTransactionAction() == TransactionRecord.BUY){  
+						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
+							out.write("<a href=\"/user/" + transactionRecord.getUserId() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " <a href='#' onClick=\"writeAndGetQuote('" + transactionRecord.getStockName() + "');\">"+ transactionRecord.getStockName() +"</a>");
+						}
+						else{
+							out.write("<a href=\"/user/" + transactionRecord.getUserId() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " <a href='/stock/"+transactionRecord.getStockId()+"'>" + transactionRecord.getStockName() +"</a>");
+						}
 					}
 					else{
-						out.write("<a href=\"/user/" + transactionRecord.getUserName() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " <a href='#' onClick=\"writeAndGetQuote('" + transactionRecord.getStockName() + "');\">"+ transactionRecord.getStockName() +"</a>");
+						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
+							out.write("<a href=\"/user/" + transactionRecord.getUserId() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " <a href='#' onClick=\"writeAndGetQuote('" + transactionRecord.getStockName() + "');\">"+ transactionRecord.getStockName() +"</a>");
+						}else{
+							out.write("<a href=\"/user/" + transactionRecord.getUserId() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " <a href='/stock/"+transactionRecord.getStockId()+"'>" + transactionRecord.getStockName() +"</a>");
+						}
 					}
 					%>
 						

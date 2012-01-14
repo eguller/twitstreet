@@ -1,14 +1,11 @@
-<%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.db.data.UserStock"%>
 <%@page import="java.sql.SQLException"%>
-<%@page import="com.twitstreet.servlet.StockQuoteServlet"%>
 <%@page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
 <%@ page import="com.twitstreet.util.Util"%>
 <%@ page import="com.twitstreet.db.data.Portfolio"%>
 <%@ page import="com.twitstreet.market.PortfolioMgr"%>
-<%@ page import="com.twitstreet.config.ConfigMgr"%>
 <%@ page import="com.twitstreet.db.data.UserStockDetail"%>
 <%@ page import="java.util.List"%>
 <%@ page import="com.twitstreet.util.Util"%>
@@ -57,10 +54,11 @@
 					</tr>
 				</table></td>
 		</tr>
-		<tr>
-			<td style="width: 33%; text-align: center;">Available</td>
-			<td style="width: 33%; text-align: center;">Sold</td>
-			<td style="width: 33%; text-align: center;">Total</td>
+		<tr><td colspan="3">&nbsp;</td></tr>
+		<tr class="thead">
+			<td style="width: 33%; text-align: center; font-weight: bolder;">Available</td>
+			<td style="width: 33%; text-align: center; font-weight: bolder;">Sold</td>
+			<td style="width: 33%; text-align: center; font-weight: bolder;">Total</td>
 		</tr>
 		<tr>
 			<td id="available" style="width: 33%; text-align: center;">
@@ -93,7 +91,7 @@
 		</div>
 	<table class="datatbl" style="margin-top: 10px;">
 		<thead>
-			<tr>
+			<tr class="thead">
 				<td style="width: 120px"><b>Stock Distribution</b>
 				</td>
 				<td>User Name</td>
@@ -115,7 +113,7 @@
 			<%
 				}
 			%>
-			<td><img class='twuser'
+			<td><img class='twuser' style="margin-top: 2px; margin-bottom: 2px;"
 				src="<%=stockDetail.getUserPictureUrl()%>" />
 			</td>
 			<td><a href="/user/<%=stockDetail.getUserId()%>"><%=stockDetail.getUserName()%></a>

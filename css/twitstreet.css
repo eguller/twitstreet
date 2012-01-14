@@ -200,17 +200,15 @@ CUSTOM CLASSES
 	width: 100%;
 }
 
-.datatbl thead {
-	margin-bottom: 5px;
-}
-
-.datatbl thead tr {
+.thead {
     border-bottom: 2px solid #6678B1;
     color: #003399;
     padding: 10px 8px;
+    margin-bottom: 5px;
+    border-spacing: 41px;
 }
 
-.datatbl thead tr td {
+.thead td {
 	padding-bottom: 4px;
 	padding-left: 2px;
 }

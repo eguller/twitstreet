@@ -110,7 +110,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select users.id as user_id, users.userName as userName, transactions.id as transaction_id, transactions.amount as amount, transactions.t_action as t_action, stock.name as stock from users, transactions, stock where stock.id = transactions.stock and transactions.user_id = users.id and users.id = ? order by t_date desc limit ?");
+					.prepareStatement("select users.id as user_id, users.userName as userName, transactions.id as transaction_id, transactions.amount as amount, transactions.t_action as t_action, stock.name as stock, stock.id as stock_id from users, transactions, stock where stock.id = transactions.stock and transactions.user_id = users.id and users.id = ? order by t_date desc limit ?");
 
 			ps.setLong(1,userId);
 			ps.setInt(2, TransactionMgr.CURRENT_TRANSACTIONS);
@@ -123,6 +123,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 				transactionRecord.setAmount(rs.getInt("amount"));
 				transactionRecord.setTransactionAction(rs.getInt("t_action"));
 				transactionRecord.setStockName(rs.getString("stock"));
+				transactionRecord.setStockId(rs.getLong("stock_id"));
 				transactionRecordList.add(transactionRecord);
 			}
 			logger.debug("DB: Query executed successfully - " + ps.toString());
