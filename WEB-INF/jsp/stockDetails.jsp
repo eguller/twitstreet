@@ -21,7 +21,7 @@
 			.getAttribute(Injector.class.getName());
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
-	DecimalFormat f = new DecimalFormat("##.000");
+	DecimalFormat f = new DecimalFormat("##.00");
 	String stockId = request.getParameter("stock");
 	long id = -1;
 	List<UserStockDetail> stockDetailList = null;
@@ -89,7 +89,7 @@
 	</table>
 		<div id="dashboard-message-field"
 		style="margin-top: 42px;" class="field-white">
-			Stock distribution table shows who owns how much share of <a><%=stock.getName()%></a>.
+			Stock distribution table shows who owns how much share of <br><a><%=stock.getName()%></a>.
 		</div>
 	<table class="datatbl" style="margin-top: 10px;">
 		<thead>
@@ -122,7 +122,7 @@
 			</td>
 			<td>$<%=Util.commaSep((int) (stockDetail.getPercent() * stockDetail
 								.getStockTotal()))%></td>
-			<td><%=f.format(stockDetail.getPercent() * 100)%>%</td>
+			<td><%=f.format(stockDetail.getPercent() * 100 > 100 ? 100 : stockDetail.getPercent() * 100)%>%</td>
 		</tr>
 		<%
 			i++;
