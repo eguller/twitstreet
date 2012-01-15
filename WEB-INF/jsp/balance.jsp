@@ -16,30 +16,30 @@ User user = userMgr.getUserById(sessionUser.getId());
 	<h3>Balance</h3>
 	<table class="right_aligned">
 		<tr>
-			<td>Rank</td>
+			<td><b>Rank</b></td>
 			<td>:</td>
-			<td><%=user.getRank()%>.</td>
+			<td id="balance_rank"><%=user.getRank()%>.</td>
 			<% if (user.getDirection() == 1) { %>
-				<td><img src="../images/up.png" /></td>
+				<td id="balance_direction"><img src="/images/up.png" /></td>
 			<% } else { %>
-				<td><img src="../images/down.png" /></td>
+				<td id="balance_direction"><img src="/images/down.png" /></td>
 			<% } %>
 		</tr>
 		<tr>
-			<td>Cash</td>
+			<td><b>Cash</b></td>
 			<td>:</td>
-			<td colspan="2" id="cash_value"><%=Util.commaSep(user.getCash())%>$</td>
+			<td colspan="2" id="cash_value">$<%=Util.commaSep(user.getCash())%></td>
 			
 		</tr>
 		<tr>
-			<td>Portfolio</td>
+			<td><b>Portfolio</b></td>
 			<td>:</td>
-			<td colspan="2" id="portfolio_value"><%=Util.commaSep(user.getPortfolio())%>$</td>
+			<td colspan="2" id="portfolio_value">$<%=Util.commaSep(user.getPortfolio())%></td>
 		</tr>
 		<tr>
-			<td>Total</td>
+			<td><b>Total</b></td>
 			<td>:</td>
-			<td colspan="2" id="total_value"><%=Util.commaSep(user.getCash() + user.getPortfolio())%>$</td>
+			<td colspan="2" id="total_value">$<%=Util.commaSep(user.getCash() + user.getPortfolio())%></td>
 		</tr>
 	</table>
 </div>

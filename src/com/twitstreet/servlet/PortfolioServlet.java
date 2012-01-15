@@ -1,7 +1,6 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +13,7 @@ import com.twitstreet.db.data.Portfolio;
 import com.twitstreet.db.data.User;
 import com.twitstreet.market.PortfolioMgr;
 
+@SuppressWarnings("serial")
 @Singleton
 public class PortfolioServlet extends HttpServlet {
 	@Inject private final Gson gson = null;

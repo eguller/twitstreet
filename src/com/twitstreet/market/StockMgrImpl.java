@@ -25,13 +25,14 @@ public class StockMgrImpl implements StockMgr {
 		return null;
 	}
 
-	public Stock getStock(String name) throws SQLException {
+	public Stock getStock(String name){
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		Stock stockDO = null;
-		connection = dbMgr.getConnection();
 		try {
+		connection = dbMgr.getConnection();
+		
 			ps = connection
 					.prepareStatement("select id, name, total, sold, pictureUrl from stock where name = ?");
 			ps.setString(1, name);
@@ -49,32 +50,36 @@ public class StockMgrImpl implements StockMgr {
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
 			logger.debug("DB: Query failed - " + ps.toString(), ex);
-			throw ex;
 
 		} finally {
-			if (!rs.isClosed()) {
-				rs.close();
-			}
-			if (!ps.isClosed()) {
-				ps.close();
-			}
-			if (!connection.isClosed()) {
-				connection.close();
+			try {
+				if (!rs.isClosed()) {
+					rs.close();
+				}
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("DB: Resources could not be closed properly", e);
 			}
 		}
 		return stockDO;
 	}
 
-	public Stock getStockById(long id) throws SQLException {
+	public Stock getStockById(long id){
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		Stock stockDO = null;
+		try {
 		connection = dbMgr.getConnection();
 		ps = connection
 				.prepareStatement("select id, name, total, sold, pictureUrl, lastUpdate from stock where id = ?");
 		ps.setLong(1, id);
-		try {
+		
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				stockDO = new Stock();
@@ -88,16 +93,19 @@ public class StockMgrImpl implements StockMgr {
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
-			throw ex;
 		} finally {
-			if (!rs.isClosed()) {
-				rs.close();
-			}
-			if (!ps.isClosed()) {
-				ps.close();
-			}
-			if (!connection.isClosed()) {
-				connection.close();
+			try {
+				if (!rs.isClosed()) {
+					rs.close();
+				}
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("DB: Resources could not be closed properly", e);
 			}
 		}
 		return stockDO;
@@ -129,19 +137,14 @@ public class StockMgrImpl implements StockMgr {
 			} catch (SQLException e) {
 				logger.error("DB: Resources could not be closed properly", e);
 			}
-
 		}
 	}
 
 	@Override
-	public double getPercentSold(String stockName) {
-		return 0.0;
-	}
-
-	@Override
-	public void saveStock(Stock stock) throws SQLException {
+	public void saveStock(Stock stock){
 		Connection connection = null;
 		PreparedStatement ps = null;
+		try {
 		connection = dbMgr.getConnection();
 		ps = connection
 				.prepareStatement("insert into stock(id, name, total, sold, pictureUrl, lastUpdate) values(?, ?, ?, ?, ?, now())");
@@ -150,7 +153,7 @@ public class StockMgrImpl implements StockMgr {
 		ps.setInt(3, stock.getTotal());
 		ps.setDouble(4, stock.getSold());
 		ps.setString(5, stock.getPictureUrl());
-		try {
+		
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (MySQLIntegrityConstraintViolationException e) {
@@ -158,23 +161,27 @@ public class StockMgrImpl implements StockMgr {
 					+ " User Name: " + stock.getName() + " - " + e.getMessage());
 		} catch (SQLException ex) {
 			logger.error("DB: Query failed = " + ps.toString(), ex);
-			throw ex;
 		} finally {
-			if (!ps.isClosed()) {
-				ps.close();
-			}
-			if (!ps.isClosed()) {
-				connection.close();
+			try {
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("DB: Resources could not be closed properly", e);
 			}
 		}
 	}
 
 	@Override
-	public void updateSold(long stock, double sold) throws SQLException {
+	public void updateSold(long stock, double sold){
 		Connection connection = null;
 		PreparedStatement ps = null;
-		connection = dbMgr.getConnection();
 		try {
+		connection = dbMgr.getConnection();
+		
 			ps = connection
 					.prepareStatement("update stock set sold = (sold + ?) where id = ?");
 			ps.setDouble(1, sold);
@@ -183,13 +190,16 @@ public class StockMgrImpl implements StockMgr {
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
 			logger.error("DB: Query failed = " + ps.toString(), ex);
-			throw ex;
 		} finally {
-			if (!ps.isClosed()) {
-				ps.close();
-			}
-			if (!connection.isClosed()) {
-				connection.close();
+			try {
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("DB: Resources could not be closed properly", e);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-var latest
+
 $(document).ready(function() {
 	$("#quote").keyup(function(event){
 	    if(event.keyCode == 13){
@@ -10,22 +10,16 @@ $(document).ready(function() {
 	$("#buy-links div").corner("round 5px");
 	
 	jQuery('#quote').click(function() { selectAllText(jQuery(this)) });
+	
+	setInterval(toprank, 20000);
+	setInterval(loadCurrentTransactions, 20000);
+	
+	if($("#balance").length > 0 ){
+		setInterval(loadBalance, 20000);
+	}
+	
 });
 
-
-
-setInterval(toprank, 20000);
-setInterval(loadCurrentTransactions, 20000);
-
-function post(action, _data, f) {
-	$.ajax({
-		  type: 'POST',
-		  url: action,
-		  data: _data,
-		  success: f,
-		  dataType: 'json'
-		});
-}
 
 function writeAndGetQuote(quote){
 	$("#quote").val(quote);
@@ -380,6 +374,27 @@ function toprank(){
 		  }
 		});
 }
+
+function loadBalance(){
+	$.post('/balance', {
+
+	}, function(data){
+		if(data != null){
+			$("#balance_rank").html(data.rank + ".");
+			if(data.direction == 1){
+				$("#balance_direction").html("<img src=\"/images/up.png\" />");
+			}
+			else{
+				$("#balance_direction").html("<img src=\"/images/down.png\" />");
+			}
+			
+			$("#cash_value").html("$"+commasep(data.cash));
+			$("#portfolio_value").html("$"+commasep(data.portfolio));
+			$("#total_value").html("$"+commasep(data.total));
+		}
+	});
+}
+
 
 function commasep(number){
 	var numberStr = number + '';

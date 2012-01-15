@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.twitstreet.db.data.Portfolio;
-import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.UserStock;
 import com.twitstreet.db.data.UserStockDetail;
 import com.twitstreet.servlet.BuySellResponse;
@@ -25,7 +24,7 @@ public interface PortfolioMgr {
 	 * @param amount - Amount bought
 	 * @return
 	 */
-	public BuySellResponse buy(long userId,long stock, int amount) throws SQLException;
+	public BuySellResponse buy(long userId,long stock, int amount);
 	
 	/**
 	 * @param userId is the twitter id of Seller
@@ -34,7 +33,7 @@ public interface PortfolioMgr {
 	 * @return
 	 * @throws SQLException
 	 */
-	public BuySellResponse sell(long userId, long stock, int amount) throws SQLException;
+	public BuySellResponse sell(long userId, long stock, int amount);
 	
 	/**
 	 * Returns user portfolio
@@ -49,7 +48,7 @@ public interface PortfolioMgr {
 	 * @param stockId - Stock Id
 	 * @return
 	 */
-	public double getStockSoldPercentage(long userId, long stockId) throws SQLException;
+	public double getStockSoldPercentage(long userId, long stockId);
 	
 	
 	/**
@@ -58,9 +57,9 @@ public interface PortfolioMgr {
 	 * @param stock
 	 * @return
 	 */
-	public UserStock getStockInPortfolio(long buyer, long stock) throws SQLException;
+	public UserStock getStockInPortfolio(long buyer, long stock);
 	
-	public void deleteStockInPortfolio(long seller, long stock) throws SQLException;
+	public void deleteStockInPortfolio(long seller, long stock);
 	
 	public List<UserStockDetail> getStockDistribution(long stock);
 

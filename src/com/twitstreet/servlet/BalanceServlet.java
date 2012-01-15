@@ -1,7 +1,6 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,15 +14,21 @@ import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
 @Singleton
-public class TopRankServlet extends HttpServlet{
+public class BalanceServlet extends HttpServlet {
 	@Inject UserMgr userMgr;
-	@Inject
-	private final Gson gson = null;
-	@Override
+	@Inject private final Gson gson = null;
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	throws IOException {
+		doPost(request, response);
+	}
+	
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+	throws IOException {
 		response.setContentType("application/json;charset=utf-8");
-		ArrayList<User> userList = userMgr.getTopRank();
-		response.getWriter().write(gson.toJson(userList));
+		User user = request.getSession(false) == null ? null : (User) request.getSession(false).getAttribute(User.USER);
+		if(user != null){
+			User userFromDB = userMgr.getUserById(user.getId());
+			response.getWriter().write(gson.toJson(new BalanceResponse(userFromDB)));
+		}
 	}
 }

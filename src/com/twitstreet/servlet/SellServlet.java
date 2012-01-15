@@ -1,7 +1,6 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,6 @@ import com.twitstreet.db.data.User;
 import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
-import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
@@ -40,27 +38,15 @@ public class SellServlet extends HttpServlet {
 			throws IOException {
 		response.setContentType("application/json;charset=utf-8");
 		User user = (User) request.getSession(false).getAttribute(User.USER);
-		if(user == null){
-			//uses someone else account to get quote for unauthenticated users.
-			user = userMgr.random();
-			if(user != null){
-				TwitterProxy twitterProxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
-			}
-		}
-		else{
+		if(user != null){
 			String stock = request.getParameter("stock");
 			String amount = request.getParameter("amount");
-			TwitterProxy proxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 			
 			try {
 				BuySellResponse buySellResponse = portfolioMgr.sell(user.getId(), Long.parseLong(stock), Integer.parseInt(amount));
 				response.getWriter().write(gson.toJson(buySellResponse));
 			} catch (NumberFormatException e) {
-				// TODO Wrong stock amount inform user
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Database operation failed inform user
-				e.printStackTrace();
+				logger.error("Servlet: Parsin stock id or amount failed", e);
 			}
 		}
 	}

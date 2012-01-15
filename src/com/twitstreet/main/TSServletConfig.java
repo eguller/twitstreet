@@ -9,8 +9,18 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.twitstreet.filter.AuthenticationFilter;
-import com.twitstreet.servlet.*;
+import com.twitstreet.servlet.BalanceServlet;
+import com.twitstreet.servlet.BuyServlet;
+import com.twitstreet.servlet.CallBackServlet;
+import com.twitstreet.servlet.HomePageServlet;
+import com.twitstreet.servlet.PortfolioServlet;
+import com.twitstreet.servlet.SellServlet;
+import com.twitstreet.servlet.SetupServlet;
+import com.twitstreet.servlet.SigninServlet;
+import com.twitstreet.servlet.SignoutServlet;
+import com.twitstreet.servlet.StockQuoteServlet;
+import com.twitstreet.servlet.TopRankServlet;
+import com.twitstreet.servlet.TransactionServlet;
 
 
 public class TSServletConfig extends GuiceServletContextListener {
@@ -40,8 +50,6 @@ public class TSServletConfig extends GuiceServletContextListener {
 		return Guice.createInjector(new TSModule(), new ServletModule() {
 			@Override
 			protected void configureServlets() {
-				filter("/a/*").through(AuthenticationFilter.class);
-
 				serve("/").with(HomePageServlet.class);
 				serve("/signin").with(SigninServlet.class);
 				serve("/signout").with(SignoutServlet.class);
@@ -54,6 +62,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/toprank").with(TopRankServlet.class);
 				serve("/portfolio").with(PortfolioServlet.class);
 				serve("/transaction").with(TransactionServlet.class);
+				serve("/balance").with(BalanceServlet.class);
 			}
 		});
 	}

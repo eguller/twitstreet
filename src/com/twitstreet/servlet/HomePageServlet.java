@@ -1,7 +1,6 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -9,11 +8,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
 
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
@@ -63,11 +57,13 @@ public class HomePageServlet extends HttpServlet {
 		String oAuth = "";
 		boolean valid = false;
 		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(CallBackServlet.COOKIE_ID) && cookie.getMaxAge() > 0) {
+			if (cookie.getName().equals(CallBackServlet.COOKIE_ID)
+					&& cookie.getMaxAge() > 0) {
 				idStr = cookie.getValue();
 				idFound = true;
 			}
-			if (cookie.getName().equals(CallBackServlet.COOKIE_OAUTHTOKEN) && cookie.getMaxAge() > 0) {
+			if (cookie.getName().equals(CallBackServlet.COOKIE_OAUTHTOKEN)
+					&& cookie.getMaxAge() > 0) {
 				oAuth = cookie.getValue();
 				oAuthFound = true;
 			}
@@ -76,12 +72,7 @@ public class HomePageServlet extends HttpServlet {
 				try {
 					long id = Long.parseLong(idStr);
 					User user = null;
-					try {
-						user = userMgr.getUserById(id);
-					} catch (SQLException e) {
-						e.printStackTrace();
-						// TODO -- log here
-					}
+					user = userMgr.getUserById(id);
 					if (user != null && oAuth.equals(user.getOauthToken())) {
 						request.getSession().setAttribute(User.USER, user);
 						valid = true;

@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import twitter4j.TwitterException;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 @SuppressWarnings("serial")
 @Singleton
@@ -85,14 +84,7 @@ public class StockQuoteServlet extends HttpServlet {
 			// Get user info from database
 			Stock stock = null;
 			if (twUser != null) {
-				try {
-					stock = stockMgr.getStockById(twUser.getId());
-				} catch (SQLException e) {
-					resp.fail()
-							.reason("Something wrong, we could not retrieved quote info. Working on it");
-					response.getWriter().write(gson.toJson(resp));
-					return;
-				}
+				stock = stockMgr.getStockById(twUser.getId());
 
 				// User info retrieved both from twitter and database.
 				if (stock == null) {
@@ -105,16 +97,8 @@ public class StockQuoteServlet extends HttpServlet {
 					stock.setTotal(twUser.getFollowersCount());
 					stock.setPictureUrl(twUser.getProfileImageURL().toString());
 					stock.setSold(0.0D);
-					try {
-						stockMgr.saveStock(stock);
-					} catch (SQLException e) {
-						// Save failed but give same response. We could not
-						// go further without saving stock info.
-						resp.fail()
-								.reason("Something wrong, we could not retrieved quote info. Working on it");
-						response.getWriter().write(gson.toJson(resp));
-						return;
-					}
+					stockMgr.saveStock(stock);
+
 				} else {
 					stockMgr.updateTwitterData(stock.getId(), twUser
 							.getFollowersCount(), twUser.getProfileImageURL()
@@ -124,12 +108,9 @@ public class StockQuoteServlet extends HttpServlet {
 				logger.debug("Servlet: Stock queried successfully. Stock name:"
 						+ stock.getName());
 				double percentage = 0.0;
-				try {
-					percentage = portfolioMgr.getStockSoldPercentage(
-							user.getId(), stock.getId());
-				} catch (SQLException ex) {
-					logger.warn("Servlet: Query percentage failed", ex);
-				}
+				percentage = portfolioMgr.getStockSoldPercentage(user.getId(),
+						stock.getId());
+
 				if (stock.getTotal() < configMgr.getMinFollower()) {
 					resp.success()
 							.resultCode("min-follower-count")

@@ -15,7 +15,6 @@ import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.servlet.HomePageServlet;
 
 
-@SuppressWarnings("serial")
 @Singleton
 public class TwitstreetImpl implements Twitstreet {
 	private boolean initialized = false;

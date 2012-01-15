@@ -3,11 +3,7 @@ package com.twitstreet.db.data;
 import java.util.Date;
 
 import com.google.inject.Inject;
-import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.twitter.TwitterProxy;
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
 
 public class User{
 	public static final String USER = "user";

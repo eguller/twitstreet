@@ -4,6 +4,7 @@ import java.util.Stack;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
+@SuppressWarnings("serial")
 public class InsertTag extends TagSupport {
    private String template;
    private Stack stack;

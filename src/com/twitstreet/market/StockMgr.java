@@ -1,6 +1,5 @@
 package com.twitstreet.market;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.twitstreet.db.data.Stock;
@@ -26,14 +25,14 @@ public interface StockMgr {
 	 * @param stock - Twitter user screen name
 	 * @return - Returns current stock state of twitter user.
 	 */
-	Stock getStock(String stock) throws SQLException;
+	Stock getStock(String stock);
 	
 	/**
 	 * Returns stock information by given id
 	 * @param id - Stock id
 	 * @return - Stock
 	 */
-	public Stock getStockById(long id) throws SQLException;
+	public Stock getStockById(long id);
 	
 	/**
 	 * Update total follower count.
@@ -51,11 +50,10 @@ public interface StockMgr {
 	 * @param stockName
 	 * @return
 	 */
-	public double getPercentSold(String stockName) throws SQLException;
 
-	public void saveStock(Stock stock) throws SQLException;
+	public void saveStock(Stock stock);
 
-	public void updateSold(long stock, double sold) throws SQLException;
+	public void updateSold(long stock, double sold);
 
 	public List<Stock> getUpdateRequiredStocks();
 }

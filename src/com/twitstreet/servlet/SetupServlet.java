@@ -18,6 +18,7 @@ import com.twitstreet.db.init.DBSetup;
 import com.twitstreet.main.Twitstreet;
 import com.twitstreet.util.Util;
 
+@SuppressWarnings("serial")
 @Singleton
 public class SetupServlet extends HttpServlet {
 	@Inject

@@ -21,19 +21,19 @@ public class UserMgrImpl implements UserMgr {
 	DBMgr dbMgr;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 
-	public User getUserById(long id) throws SQLException {
+	public User getUserById(long id) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		User userDO = null;
-		connection = dbMgr.getConnection();
-		ps = connection
-				.prepareStatement("select id, userName, "
-						+ "lastLogin, firstLogin, cash, "
-						+ "portfolio, lastIp, oauthToken, oauthTokenSecret, rank, direction, pictureUrl from users where id = ?");
-		ps.setLong(1, id);
-
 		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select id, userName, "
+							+ "lastLogin, firstLogin, cash, "
+							+ "portfolio, lastIp, oauthToken, oauthTokenSecret, rank, direction, pictureUrl from users where id = ?");
+			ps.setLong(1, id);
+
 			rs = ps.executeQuery();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 			while (rs.next()) {
@@ -54,40 +54,45 @@ public class UserMgrImpl implements UserMgr {
 			}
 		} catch (SQLException ex) {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
-			throw ex;
 		} finally {
-			if (!rs.isClosed()) {
-				rs.close();
-			}
-			if (!ps.isClosed()) {
-				ps.close();
-			}
-			if (!connection.isClosed()) {
-				connection.close();
+			try {
+				if (!rs.isClosed()) {
+					rs.close();
+				}
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException ex) {
+				logger.error("DB: Releasing resources failed.", ex);
 			}
 		}
 		return userDO;
 	}
 
-	public void saveUser(User userDO) throws SQLException {
+	public void saveUser(User userDO) {
 		Connection connection = null;
 		PreparedStatement ps = null;
-		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("insert into users(id, userName, "
-				+ "lastLogin, firstLogin, "
-				+ "cash, portfolio, lastIp, oauthToken, oauthTokenSecret, pictureUrl) "
-				+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		ps.setLong(1, userDO.getId());
-		ps.setString(2, userDO.getUserName());
-		ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));
-		ps.setDate(4, Util.toSqlDate(userDO.getFirstLogin()));
-		ps.setInt(5, userDO.getCash());
-		ps.setInt(6, userDO.getPortfolio());
-		ps.setString(7, userDO.getLastIp());
-		ps.setString(8, userDO.getOauthToken());
-		ps.setString(9, userDO.getOauthTokenSecret());
-		ps.setString(10, userDO.getPictureUrl());
 		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("insert into users(id, userName, "
+							+ "lastLogin, firstLogin, "
+							+ "cash, portfolio, lastIp, oauthToken, oauthTokenSecret, pictureUrl) "
+							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			ps.setLong(1, userDO.getId());
+			ps.setString(2, userDO.getUserName());
+			ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));
+			ps.setDate(4, Util.toSqlDate(userDO.getFirstLogin()));
+			ps.setInt(5, userDO.getCash());
+			ps.setInt(6, userDO.getPortfolio());
+			ps.setString(7, userDO.getLastIp());
+			ps.setString(8, userDO.getOauthToken());
+			ps.setString(9, userDO.getOauthTokenSecret());
+			ps.setString(10, userDO.getPictureUrl());
+
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (MySQLIntegrityConstraintViolationException e) {
@@ -96,29 +101,34 @@ public class UserMgrImpl implements UserMgr {
 					+ e.getMessage());
 		} catch (SQLException ex) {
 			logger.error("DB: Query failed = " + ps.toString(), ex);
-			throw ex;
 		} finally {
-			if (!ps.isClosed()) {
-				ps.close();
-			}
-			if (!ps.isClosed()) {
-				connection.close();
+			try {
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException ex) {
+				logger.error("DB: Releasing resources failed.", ex);
 			}
 		}
 	}
 
-	public User getUserByName(String userName) throws SQLException {
+	public User getUserByName(String userName) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		User userDO = null;
-		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("select id, userName, "
-				+ "lastLogin, firstLogin, cash, "
-				+ "portfolio, lastIp, oauthToken, "
-				+ "oauthTokenSecret, rank, direction, pictureUrl from users where userName = ?");
-		ps.setString(1, userName);
 		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select id, userName, "
+							+ "lastLogin, firstLogin, cash, "
+							+ "portfolio, lastIp, oauthToken, "
+							+ "oauthTokenSecret, rank, direction, pictureUrl from users where userName = ?");
+			ps.setString(1, userName);
+
 			rs = ps.executeQuery();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 			while (rs.next()) {
@@ -138,42 +148,54 @@ public class UserMgrImpl implements UserMgr {
 				break;
 			}
 		} catch (SQLException ex) {
-			throw ex;
+			logger.error("DB: Query failed = " + ps.toString(), ex);
 		} finally {
-			rs.close();
-			ps.close();
-			connection.close();
+			try {
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!ps.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException ex) {
+				logger.error("DB: Releasing resources failed.", ex);
+			}
 		}
 		return userDO;
 	}
 
 	@Override
-	public void updateUser(User user) throws SQLException {
+	public void updateUser(User user) {
 		Connection connection = null;
 		PreparedStatement ps = null;
-		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update users set userName = ?, "
-				+ "lastLogin = ?, "
-				+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ?, pictureUrl = ? where id = ?");
-		ps.setString(1, user.getUserName());
-		ps.setDate(2, Util.toSqlDate(user.getLastLogin()));
-		ps.setString(3, user.getLastIp());
-		ps.setString(4, user.getOauthToken());
-		ps.setString(5, user.getOauthTokenSecret());
-		ps.setLong(6, user.getId());
-		ps.setString(7, user.getPictureUrl());
 		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set userName = ?, "
+							+ "lastLogin = ?, "
+							+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ?, pictureUrl = ? where id = ?");
+			ps.setString(1, user.getUserName());
+			ps.setDate(2, Util.toSqlDate(user.getLastLogin()));
+			ps.setString(3, user.getLastIp());
+			ps.setString(4, user.getOauthToken());
+			ps.setString(5, user.getOauthTokenSecret());
+			ps.setLong(6, user.getId());
+			ps.setString(7, user.getPictureUrl());
+
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
 			logger.error("DB: Query failed = " + ps.toString(), ex);
-			throw ex;
 		} finally {
-			if (!ps.isClosed()) {
-				ps.close();
-			}
-			if (!ps.isClosed()) {
-				connection.close();
+			try {
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!ps.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException ex) {
+				logger.error("DB: Releasing resources failed.", ex);
 			}
 		}
 	}
@@ -230,51 +252,60 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	@Override
-	public void increaseCash(long userId, int cash) throws SQLException{
+	public void increaseCash(long userId, int cash) {
 		Connection connection = null;
 		PreparedStatement ps = null;
-		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update users set cash = (cash + ?) where id = ?");
-		ps.setInt(1, cash);
-		ps.setLong(2, userId);
-
 		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set cash = (cash + ?) where id = ?");
+			ps.setInt(1, cash);
+			ps.setLong(2, userId);
+
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
 			logger.error("DB: Query failed = " + ps.toString(), ex);
-			throw ex;
 		} finally {
-			if (!ps.isClosed()) {
-				ps.close();
-			}
-			if (!connection.isClosed()) {
-				connection.close();
+			try {
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!ps.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException ex) {
+				logger.error("DB: Releasing resources failed.", ex);
 			}
 		}
 	}
 
 	@Override
-	public void updateCashAndPortfolio(long userId, int amount) throws SQLException{
+	public void updateCashAndPortfolio(long userId, int amount) {
 		Connection connection = null;
 		PreparedStatement ps = null;
+		try {
 		connection = dbMgr.getConnection();
-		ps = connection.prepareStatement("update users set cash = (cash - ?), portfolio = (portfolio + ?)  where id = ?");
+		ps = connection
+				.prepareStatement("update users set cash = (cash - ?), portfolio = (portfolio + ?)  where id = ?");
 		ps.setInt(1, amount);
 		ps.setInt(2, amount);
 		ps.setLong(3, userId);
-		try {
+		
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
 			logger.error("DB: Query failed = " + ps.toString(), ex);
-			throw ex;
 		} finally {
-			if (!ps.isClosed()) {
-				ps.close();
-			}
-			if (!connection.isClosed()) {
-				connection.close();
+			try {
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!ps.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException ex) {
+				logger.error("DB: Releasing resources failed.", ex);
 			}
 		}
 	}
@@ -288,10 +319,12 @@ public class UserMgrImpl implements UserMgr {
 		User userDO = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("select id, userName, "
-					+ "lastLogin, firstLogin, cash, "
-					+ "portfolio, lastIp, oauthToken, "
-					+ "oauthTokenSecret, rank, direction, pictureUrl from users order by rank asc limit " + TOP);
+			ps = connection
+					.prepareStatement("select id, userName, "
+							+ "lastLogin, firstLogin, cash, "
+							+ "portfolio, lastIp, oauthToken, "
+							+ "oauthTokenSecret, rank, direction, pictureUrl from users order by rank asc limit "
+							+ TOP);
 			rs = ps.executeQuery();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 			while (rs.next()) {

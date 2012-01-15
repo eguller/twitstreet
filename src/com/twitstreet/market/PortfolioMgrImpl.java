@@ -33,8 +33,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	private TransactionMgr transactionMgr;
 
 	@Override
-	public BuySellResponse buy(long buyer, long stock, int amount)
-			throws SQLException {
+	public BuySellResponse buy(long buyer, long stock, int amount) {
 		User user = userMgr.getUserById(buyer);
 		int amount2Buy = user.getCash() < amount ? user.getCash() : amount;
 		Stock stockObj = stockMgr.getStockById(stock);
@@ -61,97 +60,84 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 	}
 
-	private void updateStockInPortfolio(long buyer, long stock, double sold)
-			throws SQLException {
+	private void updateStockInPortfolio(long buyer, long stock, double sold) {
 		Connection connection = null;
 		PreparedStatement ps = null;
-		connection = dbMgr.getConnection();
-		ps = connection
-				.prepareStatement("update portfolio set percentage = (percentage + ?) where user_id = ? and stock = ?");
-		ps.setDouble(1, sold);
-		ps.setLong(2, buyer);
-		ps.setLong(3, stock);
-		ps.execute();
-		if (!ps.isClosed()) {
-			ps.close();
-		}
-		if (!connection.isClosed()) {
-			connection.close();
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update portfolio set percentage = (percentage + ?) where user_id = ? and stock = ?");
+			ps.setDouble(1, sold);
+			ps.setLong(2, buyer);
+			ps.setLong(3, stock);
+			ps.execute();
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		} catch (SQLException ex) {
+			logger.error("DB: Query failed - " + ps.toString(), ex);
+		} finally {
+			try {
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("DB: Resources could not be closed properly", e);
+			}
 		}
 	}
 
-	private void addStock2Portfolio(long buyer, long stock, double sold)
-			throws SQLException {
+	private void addStock2Portfolio(long buyer, long stock, double sold) {
 		Connection connection = null;
 		PreparedStatement ps = null;
-		connection = dbMgr.getConnection();
-		ps = connection
-				.prepareStatement("insert into portfolio(user_id, stock, percentage) values(?, ?, ?)");
-		ps.setLong(1, buyer);
-		ps.setLong(2, stock);
-		ps.setDouble(3, sold);
-		ps.execute();
-		if (!ps.isClosed()) {
-			ps.close();
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("insert into portfolio(user_id, stock, percentage) values(?, ?, ?)");
+			ps.setLong(1, buyer);
+			ps.setLong(2, stock);
+			ps.setDouble(3, sold);
+			ps.execute();
+		} catch (SQLException ex) {
+			logger.error("DB: Adding stock to portfolio failed", ex);
 		}
-		if (!connection.isClosed()) {
-			connection.close();
+		try {
+			if (!ps.isClosed()) {
+				ps.close();
+			}
+			if (!connection.isClosed()) {
+				connection.close();
+			}
+		} catch (Exception e) {
+			logger.error("DB: Resources could not be closed properly", e);
 		}
 	}
 
 	@Override
-	public UserStock getStockInPortfolio(long userId, long stockId)
-			throws SQLException {
+	public UserStock getStockInPortfolio(long userId, long stockId) {
 		UserStock userStock = null;
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		connection = dbMgr.getConnection();
-		ps = connection
-				.prepareStatement("select id, percentage from portfolio where user_id = ? and stock = ?");
-		ps.setLong(1, userId);
-		ps.setLong(2, stockId);
-		rs = ps.executeQuery();
-
-		if (rs.next()) {
-			userStock = new UserStock();
-			userStock.setId(rs.getLong("id"));
-			userStock.setPercent(rs.getDouble("percentage"));
-		}
-		if (!rs.isClosed()) {
-			rs.close();
-		}
-		if (!ps.isClosed()) {
-			ps.close();
-		}
-		if (!connection.isClosed()) {
-			connection.close();
-		}
-		return userStock;
-	}
-
-	@Override
-	public double getStockSoldPercentage(long userId, long stockId)
-			throws SQLException {
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		connection = dbMgr.getConnection();
-		ps = connection
-				.prepareStatement("select percentage from portfolio where user_id = ? and stock = ?");
-		ps.setLong(1, userId);
-		ps.setLong(2, stockId);
 		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select id, percentage from portfolio where user_id = ? and stock = ?");
+			ps.setLong(1, userId);
+			ps.setLong(2, stockId);
 			rs = ps.executeQuery();
-			if (rs.next()) {
-				return rs.getDouble("percentage");
 
+			if (rs.next()) {
+				userStock = new UserStock();
+				userStock.setId(rs.getLong("id"));
+				userStock.setPercent(rs.getDouble("percentage"));
 			}
-			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
-			logger.debug("DB: Query failed - " + ps.toString(), ex);
-			throw ex;
-		} finally {
+			logger.error("DB: Retrieving stock from portfolio failed. User: "
+					+ userId + " ,Stock: " + stockId, ex);
+		}
+		try {
 			if (!rs.isClosed()) {
 				rs.close();
 			}
@@ -161,13 +147,52 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			if (!connection.isClosed()) {
 				connection.close();
 			}
+		} catch (SQLException ex) {
+			logger.error("DB: Resources could not be closed properly", ex);
+		}
+		return userStock;
+	}
+
+	@Override
+	public double getStockSoldPercentage(long userId, long stockId) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select percentage from portfolio where user_id = ? and stock = ?");
+			ps.setLong(1, userId);
+			ps.setLong(2, stockId);
+
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				return rs.getDouble("percentage");
+
+			}
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		} catch (SQLException ex) {
+			logger.debug("DB: Query failed - " + ps.toString(), ex);
+		} finally {
+			try {
+				if (!rs.isClosed()) {
+					rs.close();
+				}
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("DB: Resources could not be closed properly", e);
+			}
 		}
 		return 0.0;
 	}
 
 	@Override
-	public BuySellResponse sell(long seller, long stock, int amount)
-			throws SQLException {
+	public BuySellResponse sell(long seller, long stock, int amount) {
 		User user = userMgr.getUserById(seller);
 		int amount2Buy = user.getCash() < amount ? user.getCash() : amount;
 		Stock stockObj = stockMgr.getStockById(stock);
@@ -195,24 +220,33 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		int userStockValue = updateUserStock == null ? 0
 				: (int) (updateUserStock.getPercent() * stockObj.getTotal());
 		return new BuySellResponse(user, stockObj, userStockValue);
+
 	}
 
-	public void deleteStockInPortfolio(long userId, long stockId)
-			throws SQLException {
+	public void deleteStockInPortfolio(long userId, long stockId) {
 		Connection connection = null;
 		PreparedStatement ps = null;
-		connection = dbMgr.getConnection();
-		ps = connection
-				.prepareStatement("delete from portfolio where user_id = ? and stock = ?");
-		ps.setLong(1, userId);
-		ps.setLong(2, stockId);
-		ps.executeUpdate();
-
-		if (!ps.isClosed()) {
-			ps.close();
-		}
-		if (!connection.isClosed()) {
-			connection.close();
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("delete from portfolio where user_id = ? and stock = ?");
+			ps.setLong(1, userId);
+			ps.setLong(2, stockId);
+			ps.executeUpdate();
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		} catch (SQLException ex) {
+			logger.error("DB: Query failed - " + ps.toString(), ex);
+		} finally {
+			try {
+				if (!ps.isClosed()) {
+					ps.close();
+				}
+				if (!connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("DB: Resources could not be closed properly", e);
+			}
 		}
 	}
 
@@ -245,12 +279,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	public Portfolio getUserPortfolio(long userId) {
 		User user = null;
 		Portfolio portfolio = null;
-		try {
-			user = userMgr.getUserById(userId);
-		} catch (SQLException e1) {
-			logger.error(
-					"DB: Query user failed while retrieving user portfolio", e1);
-		}
+		user = userMgr.getUserById(userId);
 
 		if (user != null) {
 			portfolio = new Portfolio(user);
@@ -322,17 +351,15 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 						.getString("userPictureUrl"));
 				userStockDetail
 						.setPercent(rs.getDouble("portfolio_percentage"));
-				userStockDetail.setStockTotal(rs
-						.getInt("stock_total"));
+				userStockDetail.setStockTotal(rs.getInt("stock_total"));
 				userStockDetail.setUserName(rs.getString("user_name"));
 				userStockList.add(userStockDetail);
 			}
-			logger.debug("DB: Query executed successfully - "
-					+ ps.toString());
-		}catch(SQLException e){
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		} catch (SQLException e) {
 			logger.error("DB: Query failed - " + ps.toString(), e);
 		}
-		try{
+		try {
 			if (!rs.isClosed()) {
 				rs.close();
 			}

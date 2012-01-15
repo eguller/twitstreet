@@ -1,7 +1,6 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServlet;
@@ -15,6 +14,7 @@ import com.twitstreet.db.data.TransactionRecord;
 import com.twitstreet.db.data.User;
 import com.twitstreet.market.TransactionMgr;
 
+@SuppressWarnings("serial")
 @Singleton
 public class TransactionServlet extends HttpServlet {
 	private static String USER_TRANSACTIONS = "user";

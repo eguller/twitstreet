@@ -3,6 +3,8 @@ import java.util.Hashtable;
 import java.util.Stack;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+
+@SuppressWarnings("serial")
 public class PutTag extends TagSupport {
    private String name, content, direct="false";
    // setter methods for Put tag attributes

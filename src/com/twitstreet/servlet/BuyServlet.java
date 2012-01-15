@@ -1,7 +1,6 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,21 +11,14 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.twitstreet.config.ConfigMgr;
-import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
 import com.twitstreet.market.PortfolioMgr;
-import com.twitstreet.session.UserMgr;
-import com.twitstreet.session.UserMgrImpl;
-import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
 @Singleton
 public class BuyServlet extends HttpServlet {
-	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
-	@Inject UserMgr sessionMgr;
-	@Inject UserMgr userMgr;
+	private static Logger logger = Logger.getLogger(BuyServlet.class);
 	@Inject TwitterProxyFactory twitterProxyFactory = null;
 	@Inject PortfolioMgr portfolioMgr = null;
 	@Inject private final Gson gson = null;
@@ -48,11 +40,7 @@ public class BuyServlet extends HttpServlet {
 				BuySellResponse buySellResponse = portfolioMgr.buy(user.getId(), Long.parseLong(stock), Integer.parseInt(amount));
 				response.getWriter().write(gson.toJson(buySellResponse));
 			} catch (NumberFormatException e) {
-				// TODO Wrong stock amount inform user
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Database operation failed inform user
-				e.printStackTrace();
+				logger.error("Servlet: Parsin stock, amount failed. Stock: " + stock + ", amount: " + amount, e);
 			}
 		}
 
