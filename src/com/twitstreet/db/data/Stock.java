@@ -1,11 +1,15 @@
 package com.twitstreet.db.data;
 
+import java.util.Date;
+
 public class Stock {
 	long id;
 	String name;
 	int total;
 	double sold;
 	String pictureUrl;
+	Date lastUpdate;
+	
 	public long getId() {
 		return id;
 	}
@@ -38,5 +42,11 @@ public class Stock {
 	}
 	public void setPictureUrl(String pictureUrl) {
 		this.pictureUrl = pictureUrl;
+	}
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
 	}
 }

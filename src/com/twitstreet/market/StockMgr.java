@@ -1,6 +1,7 @@
 package com.twitstreet.market;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.twitstreet.db.data.Stock;
 
@@ -43,7 +44,7 @@ public interface StockMgr {
      * @param total - total
 	 * @return 
 	 */
-	public void updateTotalAndPicture(long stockId, int total, String pictureUrl) throws SQLException;
+	public void updateTwitterData(long stockId, int total, String pictureUrl);
 	
 	/**
 	 * Returns stock sold percentage by name
@@ -54,9 +55,7 @@ public interface StockMgr {
 
 	public void saveStock(Stock stock) throws SQLException;
 
-	public void updateTotalAndName(long id, int total, String name) throws SQLException;
-
-	public void updateName(long id, String name) throws SQLException;
-
 	public void updateSold(long stock, double sold) throws SQLException;
+
+	public List<Stock> getUpdateRequiredStocks();
 }

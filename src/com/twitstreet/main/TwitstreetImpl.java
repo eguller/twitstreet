@@ -34,13 +34,10 @@ public class TwitstreetImpl implements Twitstreet {
 		try {
 			properties.load(new FileReader(new File(Twitstreet.TWITSTREET_PROPERTIES)));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//String consumerKey = properties.get(Twitstreet.)
 		String dbHost = properties.getProperty(Twitstreet.DB_HOST);
 		String dbAdmin = properties.getProperty(Twitstreet.DB_ADMIN);
 		String dbPassword = properties.getProperty(Twitstreet.DB_PASSWORD);

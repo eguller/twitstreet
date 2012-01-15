@@ -35,13 +35,15 @@ public class StockQuoteServlet extends HttpServlet {
 	private final UserMgr userMgr = null;
 	@Inject
 	private final Gson gson = null;
-	@Inject TwitterProxyFactory twitterProxyFactory = null;
+	@Inject
+	TwitterProxyFactory twitterProxyFactory = null;
 
-	@Inject 
+	@Inject
 	private final PortfolioMgr portfolioMgr = null;
-	
-	@Inject ConfigMgr configMgr;
-	
+
+	@Inject
+	ConfigMgr configMgr;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -54,7 +56,8 @@ public class StockQuoteServlet extends HttpServlet {
 		response.setContentType("application/json;charset=utf-8");
 		String twUserName = (String) request.getParameter(QUOTE);
 
-		User user =  request.getSession(false) == null ? null : (User)request.getSession(false).getAttribute(User.USER);
+		User user = request.getSession(false) == null ? null : (User) request
+				.getSession(false).getAttribute(User.USER);
 		request.getSession().setAttribute(QUOTE, twUserName);
 		TwitterProxy twitterProxy = null;
 		Response resp = Response.create();
@@ -63,7 +66,8 @@ public class StockQuoteServlet extends HttpServlet {
 			user = userMgr.random();
 		}
 
-		twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
+		twitterProxy = user == null ? null : twitterProxyFactory.create(
+				user.getOauthToken(), user.getOauthTokenSecret());
 
 		if (twitterProxy != null) {
 
@@ -112,62 +116,29 @@ public class StockQuoteServlet extends HttpServlet {
 						return;
 					}
 				} else {
-					// User queried before. Check that follower count
-					// changed or not.
-					if (stock.getTotal() != twUser.getFollowersCount()
-							&& stock.getName().equals(twUser.getScreenName())) {
-						// if follower count changed update database.
-						try {
-							stockMgr.updateTotalAndPicture(stock.getId(),
-									twUser.getFollowersCount(), twUser.getProfileImageURL().toString());
-						} catch (SQLException e) {
-							resp.fail()
-									.reason("Something wrong, we could not retrieved quote info. Working on it");
-							response.getWriter().write(gson.toJson(resp));
-							return;
-						}
-						// Update total value with latest one from twitter
-						stock.setTotal(twUser.getFollowersCount());
-						stock.setPictureUrl(twUser.getProfileImageURL().toString());
-					} else if (stock.getTotal() != twUser.getFollowersCount()
-							&& !stock.getName().equals(twUser.getScreenName())) {
-						try {
-							stockMgr.updateTotalAndName(stock.getId(),
-									twUser.getFollowersCount(),
-									twUser.getScreenName());
-						} catch (SQLException e) {
-							resp.fail()
-									.reason("Something wrong, we could not retrieved quote info. Working on it");
-							response.getWriter().write(gson.toJson(resp));
-							return;
-						}
-					} else if (stock.getTotal() == twUser.getFollowersCount()
-							&& !stock.getName().equals(twUser.getScreenName())) {
-						try {
-							stockMgr.updateName(stock.getId(),
-									twUser.getScreenName());
-						} catch (SQLException e) {
-							resp.fail()
-									.reason("Something wrong, we could not retrieved quote info. Working on it");
-							response.getWriter().write(gson.toJson(resp));
-							return;
-						}
-					}
+					stockMgr.updateTwitterData(stock.getId(), twUser
+							.getFollowersCount(), twUser.getProfileImageURL()
+							.toString());
+
 				}
 				logger.debug("Servlet: Stock queried successfully. Stock name:"
 						+ stock.getName());
 				double percentage = 0.0;
-				try{
-					percentage = portfolioMgr.getStockSoldPercentage(user.getId(), stock.getId());
-				}
-				catch(SQLException ex){
+				try {
+					percentage = portfolioMgr.getStockSoldPercentage(
+							user.getId(), stock.getId());
+				} catch (SQLException ex) {
 					logger.warn("Servlet: Query percentage failed", ex);
 				}
-				if(stock.getTotal() < configMgr.getMinFollower()){
-					resp.success().resultCode("min-follower-count").setRespOjb(new MinFollowerCountResponse(stock, configMgr.getMinFollower()));
-				}
-				else{
-					resp.success().setRespOjb(new QuoteResponse(stock, percentage));
+				if (stock.getTotal() < configMgr.getMinFollower()) {
+					resp.success()
+							.resultCode("min-follower-count")
+							.setRespOjb(
+									new MinFollowerCountResponse(stock,
+											configMgr.getMinFollower()));
+				} else {
+					resp.success().setRespOjb(
+							new QuoteResponse(stock, percentage));
 				}
 				response.getWriter().write(gson.toJson(resp));
 				return;
@@ -175,8 +146,13 @@ public class StockQuoteServlet extends HttpServlet {
 				logger.debug("Servlet: User name does not exist. Making twitter search. Query: "
 						+ twUserName);
 				try {
-					SimpleTwitterUser[] searchResult = twitterProxy.searchUsers(twUserName);
-					resp.success().resultCode("user-notfound").reason("We could not find \""+twUserName+"\" but following ones close.").setRespOjb(searchResult);
+					SimpleTwitterUser[] searchResult = twitterProxy
+							.searchUsers(twUserName);
+					resp.success()
+							.resultCode("user-notfound")
+							.reason("We could not find \"" + twUserName
+									+ "\" but following ones close.")
+							.setRespOjb(searchResult);
 					return;
 				} catch (TwitterException e) {
 					resp.fail()
