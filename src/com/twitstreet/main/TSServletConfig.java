@@ -42,8 +42,13 @@ public class TSServletConfig extends GuiceServletContextListener {
 		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
 		
-		new Thread(reRankTask).start();
-		new Thread(updateFollowerCountTask).start();
+		Thread reRankThread = new Thread(reRankTask);
+		reRankThread.setName("Re-Rank");
+		reRankThread.start();
+		
+		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
+		updateFollowerCountThread.setName("Update Follower Count");
+		updateFollowerCountThread.start();
     }   
 	@Override
 	protected Injector getInjector() {
