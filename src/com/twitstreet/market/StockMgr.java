@@ -43,7 +43,7 @@ public interface StockMgr {
      * @param total - total
 	 * @return 
 	 */
-	public void updateTwitterData(long stockId, int total, String pictureUrl);
+	public void updateTwitterData(long stockId, int total, String pictureUrl, String screenName);
 	
 	/**
 	 * Returns stock sold percentage by name

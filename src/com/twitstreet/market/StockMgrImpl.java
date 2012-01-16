@@ -111,17 +111,18 @@ public class StockMgrImpl implements StockMgr {
 		return stockDO;
 	}
 
-	public void updateTwitterData(long id, int total, String pictureUrl) {
+	public void updateTwitterData(long id, int total, String pictureUrl, String screenName) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now() where id = ?");
+					.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ? where id = ?");
 			ps.setInt(1, total);
 			ps.setString(2, pictureUrl);
-			ps.setLong(3, id);
+			ps.setString(3, screenName);
+			ps.setLong(4, id);
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {

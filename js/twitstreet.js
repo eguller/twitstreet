@@ -181,7 +181,7 @@ function loadPortfolio(){
 				if(stockInPortfolio != null){
 					var tdA = $('<a>'+stockInPortfolio.stockName+'</a>');
 					tdA.attr('onclick', 'writeAndGetQuote(\''+stockInPortfolio.stockName+'\');').attr('href','#');
-					tableTd2.append(tdA).append('<br>' + stockInPortfolio.amount + '$');
+					tableTd2.append(tdA).append('<br>$' + stockInPortfolio.amount);
 				}
 				$(tableTr).append(tableTd1);
 				$(tableTr).append(tableTd2);			
