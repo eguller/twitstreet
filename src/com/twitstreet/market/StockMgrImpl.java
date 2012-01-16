@@ -213,7 +213,7 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, name, total, sold, pictureUrl, lastUpdate from stock where (now() - lastUpdate) > ? or lastUpdate is null");
+					.prepareStatement("select id, name, total, sold, pictureUrl, lastUpdate from stock where ((now() - lastUpdate) > ? or lastUpdate is null) and stock.id in (select distinct stock from portfolio)");
 		
 			ps.setLong(1, LAST_UPDATE_DIFF);
 			rs = ps.executeQuery();
