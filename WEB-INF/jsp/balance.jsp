@@ -20,9 +20,9 @@ User user = userMgr.getUserById(sessionUser.getId());
 			<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
 			<td id="balance_rank"><%=user.getRank()%>. &nbsp;
 				<% if (user.getDirection() == 1) { %>
-				<td id="balance_direction"><img src="/images/up.png" /></td>
+				<td id="balance_direction"><img src="/images/up_small.png" /></td>
 			<% } else { %>
-				<td id="balance_direction" style="text-align: left"><img src="/images/down.png" /></td>
+				<td id="balance_direction" style="text-align: left"><img src="/images/down_small.png" /></td>
 			<% } %>
 			</td>
 

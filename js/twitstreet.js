@@ -18,6 +18,10 @@ $(document).ready(function() {
 		setInterval(loadBalance, 20000);
 	}
 	
+	if($("#portfolio").length > 0){
+		setInterval(loadPortfolio, 20000);
+	}
+	
 });
 
 
@@ -382,10 +386,10 @@ function loadBalance(){
 		if(data != null){
 			$("#balance_rank").html(data.rank + ".");
 			if(data.direction == 1){
-				$("#balance_direction").html("<img src=\"/images/up.png\" />");
+				$("#balance_direction").html("<img src=\"/images/up_small.png\" />");
 			}
 			else{
-				$("#balance_direction").html("<img src=\"/images/down.png\" />");
+				$("#balance_direction").html("<img src=\"/images/down_small.png\" />");
 			}
 			
 			$("#cash_value").html("$"+commasep(data.cash));

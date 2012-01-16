@@ -34,7 +34,7 @@ public class StockMgrImpl implements StockMgr {
 		connection = dbMgr.getConnection();
 		
 			ps = connection
-					.prepareStatement("select id, name, total, sold, pictureUrl from stock where name = ?");
+					.prepareStatement("select id, name, total, sold, lastUpdate, pictureUrl from stock where name = ?");
 			ps.setString(1, name);
 			rs = ps.executeQuery();
 			while (rs.next()) {
