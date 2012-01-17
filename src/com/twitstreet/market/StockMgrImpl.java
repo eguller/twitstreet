@@ -49,7 +49,7 @@ public class StockMgrImpl implements StockMgr {
 			}
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
-			logger.debug("DB: Query failed - " + ps.toString(), ex);
+			logger.error("DB: Query failed - " + ps.toString(), ex);
 
 		} finally {
 			try {

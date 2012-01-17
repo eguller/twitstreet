@@ -6,13 +6,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Config;
+import com.twitstreet.market.StockMgrImpl;
 
 @Singleton
 public class ConfigMgrImpl implements ConfigMgr{
+	private static Logger logger = Logger.getLogger(ConfigMgrImpl.class);
 	@Inject DBMgr dbMgr;
 	private HashMap<String, Config> configMap = new HashMap<String, Config>();
 	
@@ -36,11 +40,25 @@ public class ConfigMgrImpl implements ConfigMgr{
 				config.setVal(rs.getString(Config.VAL));
 				configMap.put(config.getParm(), config);
 			}
-			rs.close();
-			stmt.close();
-			connection.close();
+			logger.debug("DB: Query executed successfully - " + stmt.toString());
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("DB: Query failed - " + stmt.toString(), e);
+		}
+		finally{
+			try {
+				if (!rs.isClosed()) {
+					rs.close();
+				}
+				if (!stmt.isClosed()) {
+					stmt.close();
+				}
+				if (!connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("DB: Resources could not be closed properly", e);
+			}
 		}
 		
 	}

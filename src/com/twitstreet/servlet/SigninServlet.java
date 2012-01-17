@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -16,10 +18,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.User;
+import com.twitstreet.session.UserMgrImpl;
 
 @SuppressWarnings("serial")
 @Singleton
 public class SigninServlet extends HttpServlet {
+	private static Logger logger = Logger.getLogger(SigninServlet.class);
 	@Inject
 	ConfigMgr configMgr;
 
@@ -36,12 +40,15 @@ public class SigninServlet extends HttpServlet {
 				int index = callbackURL.lastIndexOf("/");
 				callbackURL.replace(index, callbackURL.length(), "").append(
 						"/callback");
+				logger.debug("Callback url is: " + callbackURL.toString());
 				twitter.setOAuthConsumer(configMgr.getConsumerKey(),
 						configMgr.getConsumerSecret());
+				logger.debug("Consumer Key: " + configMgr.getConsumerKey() + ", Consumer Secret: " + configMgr.getConsumerSecret());
 				RequestToken requestToken = twitter
 						.getOAuthRequestToken(callbackURL.toString());
 				request.getSession().setAttribute("requestToken", requestToken);
 				response.sendRedirect(requestToken.getAuthenticationURL());
+				logger.debug("Redirect sent to authentication URL: " + requestToken.getAuthenticationURL());
 
 			} catch (TwitterException e) {
 				throw new ServletException(e);

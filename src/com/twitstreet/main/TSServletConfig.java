@@ -27,7 +27,7 @@ import com.twitstreet.servlet.TransactionServlet;
 
 
 public class TSServletConfig extends GuiceServletContextListener {
-	private static Logger logger = Logger.getLogger(StockMgrImpl.class);
+	private static Logger logger = Logger.getLogger(TSServletConfig.class);
 	public void contextInitialized(ServletContextEvent servletContextEvent)  
     {  
 		//turnoff twitter4j logging
