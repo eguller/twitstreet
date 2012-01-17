@@ -9,6 +9,7 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
@@ -22,6 +23,7 @@ public class TwitstreetImpl implements Twitstreet {
 	DBMgr dbMgr;
 	ConfigMgr configMgr;
 	ServletContext servletContext;
+	Injector injector;
 	@Inject public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr){
 		this.dbMgr = dbMgr;
 		this.configMgr = configMgr;
@@ -51,6 +53,17 @@ public class TwitstreetImpl implements Twitstreet {
 		dbMgr.setDbPort(dbPort);
 		dbMgr.init();
 		configMgr.load();
+		
+		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
+		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
+		
+		Thread reRankThread = new Thread(reRankTask);
+		reRankThread.setName("Re-Rank");
+		reRankThread.start();
+		
+		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
+		updateFollowerCountThread.setName("Update Follower Count");
+		updateFollowerCountThread.start();
 
 		initialized = true;
 	}
@@ -66,5 +79,10 @@ public class TwitstreetImpl implements Twitstreet {
 	@Override
 	public void setServletContext(ServletContext applicationPath) {
 		this.servletContext = applicationPath;
+	}
+
+	@Override
+	public void setInjector(Injector injector) {
+		this.injector = injector;
 	}
 }

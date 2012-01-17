@@ -1,23 +1,33 @@
 <project default="build">
 	<property name="build.dir" value="build" />
-	<property name="tomcat.home" value=""
+	<property name="tomcat.home" value="" />
 	<path id="lib.path.ref">
 		<fileset dir="WEB-INF/lib" includes="*.jar" />
+		<fileset dir="${tomcat.home}/lib" includes="*.jar" />
 	</path>
 	<target name="build">
 		<delete file="${user.home}/Desktop/ROOT.war"></delete>
 		<delete dir="${build.dir}" />
 		<mkdir dir="${build.dir}/bin" />
 		<javac srcdir="src" destdir="${build.dir}/bin" classpathref="lib.path.ref" debug="true" debuglevel="lines, vars, source" />
+		<copy todir="${build.dir}/bin">
+		    <fileset dir="resources" includes="**/*"/>
+		</copy>
+		<replace file="${build.dir}/bin/log4j.xml" token="${catalina.home}/logs/twitstreet.txt" value="/var/log/tomcat7/twitstreet.txt"/>
 		<war destfile="${user.home}/Desktop/ROOT.war" webxml="WEB-INF/web.xml">
+			<fileset dir=".">
+				<include name="css/*"/>
+				<include name="images/*"/>
+				<include name="js/*"/>
+				<exclude name="images/Thumbs.db"/>
+			</fileset>
 			<lib dir="WEB-INF/lib" />
 			<classes dir="build/bin" />
 			<webinf dir="WEB-INF">
 				<include name="db/**" />
 				<include name="jsp/**" />
 				<include name="lib/**" />
-				<include name="tld/**" />
-				<include name="server-config.wsdd" />
+				<include name="tlds/**" />
 			</webinf>
 		</war>
 		<delete dir="build"/>

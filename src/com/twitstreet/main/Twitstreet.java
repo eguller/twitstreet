@@ -2,6 +2,8 @@ package com.twitstreet.main;
 
 import javax.servlet.ServletContext;
 
+import com.google.inject.Injector;
+
 public interface Twitstreet {
 	public static final String PROPERTIES_COMMENT = "Twitstreet properties";
 	public static final String DB_HOST = "dbhost";
@@ -15,4 +17,5 @@ public interface Twitstreet {
 	public boolean isInitialized();
 	public ServletContext getServletContext();
 	public void setServletContext(ServletContext servletContext);
+	public void setInjector(Injector injector);
 }

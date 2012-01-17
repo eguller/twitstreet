@@ -62,6 +62,7 @@ public class DBMgrImpl implements DBMgr {
           "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
         dataSource = new DataSource();
         dataSource.setPoolProperties(p); 
+        
 	}
 	
 	private String getConnectionURL(){

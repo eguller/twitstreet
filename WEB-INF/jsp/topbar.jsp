@@ -7,7 +7,7 @@ User sessionUser = (User)request.getSession().getAttribute(User.USER);
 	<h1>TwitStreet</h1>
 	<% if(sessionUser == null){ %>
 	<div id="loginbox">
-		<a href="/signin"><img src="../images/twitter-small.png"></img>
+		<a href="/signin"><img src="/images/twitter-small.png"></img>
 		</a>
 	</div>
 	<% } else { %>

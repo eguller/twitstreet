@@ -11,8 +11,13 @@ $(document).ready(function() {
 	
 	jQuery('#quote').click(function() { selectAllText(jQuery(this)) });
 	
-	setInterval(toprank, 20000);
-	setInterval(loadCurrentTransactions, 20000);
+	if( $("#topranks").length > 0 ){
+		setInterval(toprank, 20000);
+	}
+	
+	if($("#currenttransactions").length){
+		setInterval(loadCurrentTransactions, 20000);
+	}
 	
 	if($("#balance").length > 0 ){
 		setInterval(loadBalance, 20000);
@@ -369,10 +374,10 @@ function toprank(){
 			  $(tr).append($("<td><img class=\'twuser\' src=\'" +rank.pictureUrl+ "\'/></td>"));
 			  $(tr).append($('<td><a href=\'/user/'+rank.id+'\'>'+rank.userName+'</a> <br>'+commasep(rank.cash + rank.portfolio)+'$</td>'));
 			  if(data.direction == 1){
-				  $(tr).append($("<td><img src=\"../images/up.png\" /></td>"));
+				  $(tr).append($("<td><img src=\"/images/up.png\" /></td>"));
 			  }
 			  else{
-				  $(tr).append($("<td><img src=\"../images/down.png\" /></td>"));
+				  $(tr).append($("<td><img src=\"/images/down.png\" /></td>"));
 			  }			  
 			  $("#topranktable").append(tr);
 		  }

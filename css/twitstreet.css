@@ -149,7 +149,7 @@ CUSTOM CLASSES
 }
 
 .button {
-	background: url("../images/login-button.gif") repeat-x scroll 0 0
+	background: url("/images/login-button.gif") repeat-x scroll 0 0
 		#DDDDDD;
 	border-color: #BBBBBB #BBBBBB #999999;
 	border-radius: 4px 4px 4px 4px;

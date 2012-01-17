@@ -5,10 +5,13 @@ import java.io.File;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
+import org.apache.log4j.Logger;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
+import com.twitstreet.market.StockMgrImpl;
 import com.twitstreet.servlet.BalanceServlet;
 import com.twitstreet.servlet.BuyServlet;
 import com.twitstreet.servlet.CallBackServlet;
@@ -24,6 +27,7 @@ import com.twitstreet.servlet.TransactionServlet;
 
 
 public class TSServletConfig extends GuiceServletContextListener {
+	private static Logger logger = Logger.getLogger(StockMgrImpl.class);
 	public void contextInitialized(ServletContextEvent servletContextEvent)  
     {  
 		//turnoff twitter4j logging
@@ -33,22 +37,20 @@ public class TSServletConfig extends GuiceServletContextListener {
 		Twitstreet twitStreet = injector.getInstance(Twitstreet.class);
 		ServletContext servletContext = servletContextEvent.getServletContext();
 		twitStreet.setServletContext(servletContext);
+		twitStreet.setInjector(injector);
 		servletContext.setAttribute(Injector.class.getName(), injector);
-		File f = new File(System.getProperty("user.home") + "/.twitstreet/twitstreet.properties");
+		String fileLocation = System.getProperty("user.home") + "/.twitstreet/twitstreet.properties";
+		File f = new File(fileLocation);
+		logger.debug("Checking config file at: " + fileLocation);
 		if (f.exists()) {
 			twitStreet.initialize();
+			logger.info(" Config file exist. Twitstreet initialization completed.");
+		}
+		else{
+			logger.info(" Config does not exist at " + fileLocation);
 		}
 		
-		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
-		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
-		
-		Thread reRankThread = new Thread(reRankTask);
-		reRankThread.setName("Re-Rank");
-		reRankThread.start();
-		
-		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
-		updateFollowerCountThread.setName("Update Follower Count");
-		updateFollowerCountThread.start();
+
     }   
 	@Override
 	protected Injector getInjector() {
