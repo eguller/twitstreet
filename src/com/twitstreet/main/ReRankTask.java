@@ -16,7 +16,6 @@ public class ReRankTask implements Runnable {
 			try {
 				Thread.sleep(interval);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

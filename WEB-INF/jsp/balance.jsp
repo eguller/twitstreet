@@ -14,32 +14,34 @@ User user = userMgr.getUserById(sessionUser.getId());
 <div id="balance">
 	<input id="cash-hidden" type="hidden" value="<%=user.getCash()%>" />
 	<h3>Balance</h3>
-	<table class="right_aligned">
+	<table class="right_aligned datatbl">
 		<tr>
 			<td><b>Rank</b></td>
-			<td>:</td>
-			<td id="balance_rank"><%=user.getRank()%>.</td>
-			<% if (user.getDirection() == 1) { %>
-				<td id="balance_direction"><img src="/images/up.png" /></td>
+			<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
+			<td id="balance_rank"><%=user.getRank()%>.
+				<% if (user.getDirection() == 1) { %>
+				<td id="balance_direction"><img src="/images/up_small.png" /></td>
 			<% } else { %>
-				<td id="balance_direction"><img src="/images/down.png" /></td>
+				<td id="balance_direction" style="text-align: left"><img src="/images/down_small.png" /></td>
 			<% } %>
+			</td>
+
 		</tr>
 		<tr>
 			<td><b>Cash</b></td>
-			<td>:</td>
-			<td colspan="2" id="cash_value">$<%=Util.commaSep(user.getCash())%></td>
+			<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
+			<td colspan="2" id="cash_value" style="text-align: left">$<%=Util.commaSep(user.getCash())%></td>
 			
 		</tr>
 		<tr>
 			<td><b>Portfolio</b></td>
-			<td>:</td>
-			<td colspan="2" id="portfolio_value">$<%=Util.commaSep(user.getPortfolio())%></td>
+			<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
+			<td colspan="2" id="portfolio_value" style="text-align: left">$<%=Util.commaSep(user.getPortfolio())%></td>
 		</tr>
 		<tr>
 			<td><b>Total</b></td>
-			<td>:</td>
-			<td colspan="2" id="total_value">$<%=Util.commaSep(user.getCash() + user.getPortfolio())%></td>
+			<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
+			<td colspan="2" id="total_value" style="text-align: left">$<%=Util.commaSep(user.getCash() + user.getPortfolio())%></td>
 		</tr>
 	</table>
 </div>

@@ -102,7 +102,7 @@ public class StockQuoteServlet extends HttpServlet {
 				} else {
 					stockMgr.updateTwitterData(stock.getId(), twUser
 							.getFollowersCount(), twUser.getProfileImageURL()
-							.toString());
+							.toString(), twUser.getScreenName());
 
 				}
 				logger.debug("Servlet: Stock queried successfully. Stock name:"

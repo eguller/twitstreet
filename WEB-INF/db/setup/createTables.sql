@@ -35,6 +35,7 @@ create table `stock`(
 	`total` int not null,
 	`sold` double not null,
 	`pictureUrl` varchar(255),
+	`lastUpdate` timestamp,
 	 primary key (`id`)
 )  engine=innodb default charset=`utf8`;
 

@@ -33,7 +33,7 @@ Portfolio portfolio = portfolioMgr.getUserPortfolio(sessionUser.getId());
 							<td>
 								<a href='#' onClick="writeAndGetQuote('<% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %>');"><% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %></a>
 								<br>
-								<% out.write(Util.commaSep(portfolio.getStockInPortfolioList().get(i).getAmount())); %>$
+								$<% out.write(Util.commaSep(portfolio.getStockInPortfolioList().get(i).getAmount())); %>
 							</td>
 						</tr>
 					</table>

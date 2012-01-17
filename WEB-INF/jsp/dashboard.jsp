@@ -32,14 +32,8 @@ if(sessionUser != null){
 	    <%
 	    	String quote = request.getSession().getAttribute(StockQuoteServlet.QUOTE) == null ? "" : (String)request.getSession().getAttribute(StockQuoteServlet.QUOTE); 
 	    	Stock stock = null;
-	    	boolean exceptionOccured = false;
 	    	if(quote.length() > 0){
-	    		try{
 	    			stock = stockMgr.getStock(quote);
-	    		}
-	    		catch(SQLException ex){
-	    			exceptionOccured = true;
-	    		}
 	    	}
 	    %>
 		<input type="text" class="textbox" id="quote" value="<%=quote%>" />
@@ -49,7 +43,7 @@ if(sessionUser != null){
 	</div>
 	<div id="userfound" 
 		<% 
-			if(stock != null && quote.length() > 0 && !exceptionOccured && stock.getTotal() > 0){
+			if(stock != null && quote.length() > 0 && stock.getTotal() > 0){
 				out.write(" style=\"visibility: visible;\"");
 			} 
 			else{
@@ -191,7 +185,7 @@ if(sessionUser != null){
 	</div>
 	<div id="searchnoresult"
 	<%
-		if(quote.length() > 0 && stock == null && !exceptionOccured){
+		if(quote.length() > 0 && stock == null){
 			out.write(" style=\"visibility: visible\"");
 		}
 		else {
@@ -205,7 +199,7 @@ if(sessionUser != null){
 	
 	<div id="hasnofollowers"
 	<%
-		if(quote.length() > 0 && stock != null && stock.getTotal() == 0 && !exceptionOccured){
+		if(quote.length() > 0 && stock != null && stock.getTotal() == 0){
 			out.write(" style=\"visibility: visible\"");
 		}
 		else {
@@ -220,19 +214,5 @@ if(sessionUser != null){
 		}
 		%> 
 	</div>
-	
-	<div id="searchfailed"
-	<%
-	    if(exceptionOccured){
-			out.write(" style=\"visibility: visible\"");
-		}
-		else {
-			out.write(" style=\"display: none\"");
-		}
-	%>
-	>
-		Search failed.
-	</div>
-	
 </div>
 
