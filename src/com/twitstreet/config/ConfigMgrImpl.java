@@ -28,11 +28,11 @@ public class ConfigMgrImpl implements ConfigMgr{
 		Connection connection = null;
 		Statement stmt = null;
 		ResultSet rs = null;
-		
 		try {
 			connection = dbMgr.getConnection();
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery("select id, parm, val from config");
+			
 			while(rs.next()){
 				Config config = new Config();
 				config.setId(rs.getLong(Config.ID));
@@ -44,29 +44,22 @@ public class ConfigMgrImpl implements ConfigMgr{
 			logger.debug("Config manager initialized successfully.");
 
 		} catch (SQLException e) {
-			logger.error("DB: Query failed - " + stmt.toString(), e);
-			logger.debug("Config manager initialization failed.");
+			logger.error("DB: Query failed - " + stmt == null ? "Query is null" : stmt.toString(), e);
+			logger.error("Config manager initialization failed.");
 		}
-		catch (Exception e) {
-			logger.error("DB: Exception occured while loading configuration.", e);
-		}
-		
 		finally{
 			try {
-				if (rs != null && !rs.isClosed()) {
+				if (rs.isClosed()) {
 					rs.close();
 				}
-				if (stmt != null && !stmt.isClosed()) {
+				if (stmt.isClosed()) {
 					stmt.close();
 				}
-				if (connection != null && !connection.isClosed()) {
+				if (connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
 				logger.error("DB: Resources could not be closed properly", e);
-			}
-			catch(Exception ex){
-				logger.debug("Config manager initialization failed.", ex);
 			}
 		}
 		
