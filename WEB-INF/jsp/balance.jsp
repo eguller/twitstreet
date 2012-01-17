@@ -18,7 +18,7 @@ User user = userMgr.getUserById(sessionUser.getId());
 		<tr>
 			<td><b>Rank</b></td>
 			<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
-			<td id="balance_rank"><%=user.getRank()%>. &nbsp;
+			<td id="balance_rank"><%=user.getRank()%>.
 				<% if (user.getDirection() == 1) { %>
 				<td id="balance_direction"><img src="/images/up_small.png" /></td>
 			<% } else { %>
