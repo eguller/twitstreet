@@ -3,6 +3,7 @@ package com.twitstreet.db.base;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 
@@ -10,6 +11,7 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class DBMgrImpl implements DBMgr {
+	private static Logger logger = Logger.getLogger(DBMgrImpl.class);
 	private static final String DRIVER = "com.mysql.jdbc.Driver";
 	private static final int VALIDATION_INTERVAL = 30000;
 	private static final int EVICTION_RUN_MILLIS = 30000;
@@ -35,6 +37,7 @@ public class DBMgrImpl implements DBMgr {
 	@Override
 	public void init() {
 		setupDataSource();
+		logger.debug("Database Manager initialized.");
 	}
 
 	private void setupDataSource() {
@@ -62,7 +65,6 @@ public class DBMgrImpl implements DBMgr {
           "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
         dataSource = new DataSource();
         dataSource.setPoolProperties(p); 
-        
 	}
 	
 	private String getConnectionURL(){

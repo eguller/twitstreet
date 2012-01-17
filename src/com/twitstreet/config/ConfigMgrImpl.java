@@ -41,25 +41,35 @@ public class ConfigMgrImpl implements ConfigMgr{
 				configMap.put(config.getParm(), config);
 			}
 			logger.debug("DB: Query executed successfully - " + stmt.toString());
+			logger.debug("Config manager initialized successfully.");
 
 		} catch (SQLException e) {
 			logger.error("DB: Query failed - " + stmt.toString(), e);
+			logger.debug("Config manager initialization failed.");
 		}
+		catch (Exception e) {
+			logger.error("DB: Exception occured while loading configuration.", e);
+		}
+		
 		finally{
 			try {
-				if (!rs.isClosed()) {
+				if (rs != null && !rs.isClosed()) {
 					rs.close();
 				}
-				if (!stmt.isClosed()) {
+				if (stmt != null && !stmt.isClosed()) {
 					stmt.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
 				logger.error("DB: Resources could not be closed properly", e);
 			}
+			catch(Exception ex){
+				logger.debug("Config manager initialization failed.", ex);
+			}
 		}
+		
 		
 	}
 	public String get(String parm){
