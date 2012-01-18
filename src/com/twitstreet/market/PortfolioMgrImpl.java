@@ -194,11 +194,11 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	@Override
 	public BuySellResponse sell(long seller, long stock, int amount) {
 		User user = userMgr.getUserById(seller);
-		int amount2Buy = user.getCash() < amount ? user.getCash() : amount;
-		Stock stockObj = stockMgr.getStockById(stock);
-		double sold = (double) amount2Buy / (double) stockObj.getTotal();
-		stockObj.setSold(stockObj.getSold() - sold);
 		UserStock userStock = getStockInPortfolio(seller, stock);
+		Stock stockObj = stockMgr.getStockById(stock);
+		
+		double sold = (double) amount / (double) stockObj.getTotal();
+		stockObj.setSold(stockObj.getSold() - sold);
 
 		if (userStock != null) {
 			int soldAmount = (int) (userStock.getPercent() * stockObj
@@ -211,11 +211,11 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		}
 
 		stockMgr.updateSold(stock, -sold);
-		userMgr.updateCashAndPortfolio(seller, -amount2Buy);
-		transactionMgr.recordTransaction(user, stockObj, amount2Buy,
+		userMgr.updateCashAndPortfolio(seller, -amount);
+		transactionMgr.recordTransaction(user, stockObj, amount,
 				TransactionMgr.SELL);
-		user.setCash(user.getCash() + amount2Buy);
-		user.setPortfolio(user.getPortfolio() - amount2Buy);
+		user.setCash(user.getCash() + amount);
+		user.setPortfolio(user.getPortfolio() - amount);
 		UserStock updateUserStock = getStockInPortfolio(seller, stock);
 		int userStockValue = updateUserStock == null ? 0
 				: (int) (updateUserStock.getPercent() * stockObj.getTotal());
