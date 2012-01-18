@@ -9,4 +9,5 @@ public interface DBSetup {
 	public void createTables() throws IOException, SQLException;
 	public void dataFill(String admin,String password, String consumerKey, String consumerSecret) throws SQLException, IOException;
 	public void closeConnection() throws SQLException;
+	public void executeScriptFiles() throws IOException, SQLException;
 }
