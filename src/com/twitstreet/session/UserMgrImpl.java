@@ -29,14 +29,24 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, userName, "
-							+ "lastLogin, firstLogin, cash, "
-							+ "portfolio, lastIp, oauthToken, oauthTokenSecret, rank, direction, pictureUrl from users where id = ?");
+					.prepareStatement("select " + 
+							"users.id as id, " + 
+							"users.userName as userName, " + 
+							"users.lastLogin as lastLogin, " + 
+							"users.firstLogin as firstLogin, " + 
+							"users.cash as cash, " + 
+							"users.lastIp as lastIp, " + 
+							"users.oauthToken as oauthToken, " +
+							"users.oauthTokenSecret oauthTokenSecret, " + 
+							"users.rank as rank, " + 
+							"users.direction as direction, " + 
+							"users.pictureUrl as pictureUrl, " + 
+							"sum(stock.total * portfolio.percentage) as portfolio " + 
+							"from users, stock, portfolio where users.id = ? " +
+							"and stock.id = portfolio.stock and portfolio.user_id = users.id");
 			ps.setLong(1, id);
-
 			rs = ps.executeQuery();
-			logger.debug("DB: Query executed successfully - " + ps.toString());
-			while (rs.next()) {
+			if (rs.next()) {
 				userDO = new User();
 				userDO.setId(rs.getLong("id"));
 				userDO.setRank(rs.getInt("rank"));
@@ -50,8 +60,9 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setOauthToken(rs.getString("oauthToken"));
 				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
 				userDO.setPictureUrl(rs.getString("pictureUrl"));
-				break;
 			}
+			
+			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
 		} finally {
