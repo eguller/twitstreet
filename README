@@ -1,0 +1,9 @@
+eclipse icin:
+	- servlet-api.jar jsp.api.jar ve tomcat-jdbc.jar'i tomcatin lib i altindan projeye external jar olarak import et
+	- eclipse in server ayarlarindan tomat in kontrolu almasina izin ver
+	- tomcat altinda conf\Catalina\localhost un altina ROOT.xml at
+	- ROOT.xml: 	<?xml version="1.0" encoding="UTF-8"?>
+			<Context docBase="D:/Profiles/mpaltun/Desktop/twitstreet">
+			</Context>
+	- user home altinda .twitstreet varsa sil
+	- mysql de twitstreet dbsi varsa sil
