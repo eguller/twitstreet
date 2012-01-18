@@ -9,13 +9,12 @@ begin
 	declare cur1 cursor for select id, rank from users order by (portfolio + cash) desc;
 	declare continue handler for not found set done = true;
 	open cur1;
-  set @new_rank := 1;
+    set @new_rank := 1;
 	read_loop: LOOP
     fetch cur1 into user_id, userRank;   
     	if done then
       		leave read_loop;
-    	end if;
-    
+    	end if;   
     	if @new_rank > userRank then
 			update users set rank = @new_rank, direction = 1 where id = user_id;
 		else
