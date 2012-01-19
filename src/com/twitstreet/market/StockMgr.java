@@ -53,7 +53,5 @@ public interface StockMgr {
 
 	public void saveStock(Stock stock);
 
-	public void updateSold(long stock, double sold);
-
 	public List<Stock> getUpdateRequiredStocks();
 }

@@ -47,7 +47,6 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		} else {
 			updateStockInPortfolio(buyer, stock, sold);
 		}
-		stockMgr.updateSold(stock, sold);
 		userMgr.updateCash(buyer, amount2Buy);
 		transactionMgr.recordTransaction(user, stockObj, amount2Buy,
 				TransactionMgr.BUY);
@@ -197,25 +196,27 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		UserStock userStock = getStockInPortfolio(seller, stock);
 		Stock stockObj = stockMgr.getStockById(stock);
 		
-		double sold = (double) amount / (double) stockObj.getTotal();
+		int available = (int)(stockObj.getTotal() * stockObj.getAvailable());
+		int amount2Sell = amount > available ? available : amount;
+		
+		double sold = (double) amount2Sell / (double) stockObj.getTotal();
 		stockObj.setSold(stockObj.getSold() - sold);
 
 		if (userStock != null) {
 			int soldAmount = (int) (userStock.getPercent() * stockObj
 					.getTotal());
-			if (amount >= soldAmount) {
+			if (amount2Sell >= soldAmount) {
 				deleteStockInPortfolio(seller, stock);
 			} else {
 				updateStockInPortfolio(seller, stock, -sold);
 			}
 		}
 
-		stockMgr.updateSold(stock, -sold);
-		userMgr.updateCash(seller, -amount);
-		transactionMgr.recordTransaction(user, stockObj, amount,
+		userMgr.updateCash(seller, -amount2Sell);
+		transactionMgr.recordTransaction(user, stockObj, amount2Sell,
 				TransactionMgr.SELL);
-		user.setCash(user.getCash() + amount);
-		user.setPortfolio(user.getPortfolio() - amount);
+		user.setCash(user.getCash() + amount2Sell);
+		user.setPortfolio(user.getPortfolio() - amount2Sell);
 		UserStock updateUserStock = getStockInPortfolio(seller, stock);
 		int userStockValue = updateUserStock == null ? 0
 				: (int) (updateUserStock.getPercent() * stockObj.getTotal());
