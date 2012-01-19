@@ -107,6 +107,15 @@ public class SetupServlet extends HttpServlet {
 					resp.fail().reason(e.getMessage());
 				}
 			}
+			
+			if (resp.isSuccess()) {
+				try {
+					dbSetup.executeScriptFiles();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					resp.fail().reason(e.getMessage());
+				}
+			}
 
 			if (resp.isSuccess()) {
 				try {

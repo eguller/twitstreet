@@ -4,7 +4,7 @@
 User sessionUser = (User)request.getSession().getAttribute(User.USER);
 %>
 <div id="topbar">
-	<h1>TwitStreet</h1>
+	<a id="home" href="/">TwitStreet</a>
 	<% if(sessionUser == null){ %>
 	<div id="loginbox">
 		<a href="/signin"><img src="/images/twitter-small.png"></img>

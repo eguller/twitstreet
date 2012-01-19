@@ -293,3 +293,7 @@ img.twuser {
 .buy-sell-table td div:HOVER {
 	cursor: pointer;
 }
+
+#topbar #home {
+	font-size: 16px;
+}
