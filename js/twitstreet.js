@@ -103,7 +103,7 @@ function writeBuySellLinks(){
 	
 	var buyValues = new Array();
 	var sellValues = new Array();
-	if(min > 0){
+	if(min > 1){
 		buyValues.push(min);
 	}
 	var i = min == 0 ? 0 : min.toString().length;

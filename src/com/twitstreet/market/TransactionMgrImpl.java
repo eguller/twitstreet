@@ -85,14 +85,14 @@ public class TransactionMgrImpl implements TransactionMgr {
 			logger.error("DB: Query failed - " + ps.toString(), e);
 		} finally {
 			try {
-				if (!generatedKeys.isClosed()) {
+				if (generatedKeys != null && !generatedKeys.isClosed()) {
 					generatedKeys.close();
 				}
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
 
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -132,14 +132,14 @@ public class TransactionMgrImpl implements TransactionMgr {
 			logger.error("DB: Query failed - " + ps.toString(), e);
 		} finally {
 			try {
-				if (!rs.isClosed()) {
+				if (rs != null && !rs.isClosed()) {
 					rs.close();
 				}
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
 
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {

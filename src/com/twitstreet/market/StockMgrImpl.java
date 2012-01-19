@@ -53,13 +53,13 @@ public class StockMgrImpl implements StockMgr {
 
 		} finally {
 			try {
-				if (!rs.isClosed()) {
+				if (rs != null && !rs.isClosed()) {
 					rs.close();
 				}
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -95,13 +95,13 @@ public class StockMgrImpl implements StockMgr {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!rs.isClosed()) {
+				if (rs != null && !rs.isClosed()) {
 					rs.close();
 				}
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -130,10 +130,10 @@ public class StockMgrImpl implements StockMgr {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -164,10 +164,10 @@ public class StockMgrImpl implements StockMgr {
 			logger.error("DB: Query failed = " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -204,13 +204,13 @@ public class StockMgrImpl implements StockMgr {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!rs.isClosed()) {
+				if (rs != null && !rs.isClosed()) {
 					rs.close();
 				}
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {

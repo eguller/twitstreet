@@ -66,13 +66,13 @@ public class UserMgrImpl implements UserMgr {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!rs.isClosed()) {
+				if (rs != null && !rs.isClosed()) {
 					rs.close();
 				}
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException ex) {
@@ -112,10 +112,10 @@ public class UserMgrImpl implements UserMgr {
 			logger.error("DB: Query failed = " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException ex) {
@@ -149,10 +149,10 @@ public class UserMgrImpl implements UserMgr {
 			logger.error("DB: Query failed = " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!ps.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException ex) {
@@ -207,13 +207,13 @@ public class UserMgrImpl implements UserMgr {
 			logger.error("DB: Query failed = " + stmt.toString(), e);
 		} finally {
 			try {
-				if (!rs.isClosed()) {
+				if (rs != null && !rs.isClosed()) {
 					rs.close();
 				}
-				if (!stmt.isClosed()) {
+				if (stmt != null && !stmt.isClosed()) {
 					stmt.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -241,10 +241,10 @@ public class UserMgrImpl implements UserMgr {
 			logger.error("DB: Query failed = " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!ps.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException ex) {
@@ -273,7 +273,7 @@ public class UserMgrImpl implements UserMgr {
 				if (!ps.isClosed()) {
 					ps.close();
 				}
-				if (!ps.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException ex) {

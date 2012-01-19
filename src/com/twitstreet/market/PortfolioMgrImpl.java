@@ -33,63 +33,74 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	private TransactionMgr transactionMgr;
 
 	@Override
-	public BuySellResponse buy(long buyer, long stock, int amount) {
-		User user = userMgr.getUserById(buyer);
-		int amount2Buy = user.getCash() < amount ? user.getCash() : amount;
-		Stock stockObj = stockMgr.getStockById(stock);
-		double sold = (double) amount2Buy / (double) stockObj.getTotal();
-		stockObj.setSold(stockObj.getSold() + sold);
-		UserStock userStock = getStockInPortfolio(buyer, stock);
+	public BuySellResponse buy(User buyer, Stock stock, int amount) {
+
+		int amount2Buy = buyer.getCash() < amount ? buyer.getCash() : amount;
+
+		double sold = (double) amount2Buy / (double) stock.getTotal();
+		stock.setSold(stock.getSold() + sold);
+		UserStock userStock = getStockInPortfolio(buyer.getId(), stock.getId());
 
 		if (userStock == null) {
-			addStock2Portfolio(buyer, stock, sold);
+			addStock2Portfolio(buyer.getId(), stock.getId(), sold);
 
 		} else {
-			updateStockInPortfolio(buyer, stock, sold);
+			updateStockInPortfolio(buyer.getId(), stock.getId(), sold);
 		}
-		userMgr.updateCash(buyer, amount2Buy);
-		transactionMgr.recordTransaction(user, stockObj, amount2Buy,
+		userMgr.updateCash(buyer.getId(), amount2Buy);
+		transactionMgr.recordTransaction(buyer, stock, amount2Buy,
 				TransactionMgr.BUY);
-		user.setCash(user.getCash() - amount2Buy);
-		user.setPortfolio(user.getPortfolio() + amount2Buy);
-		UserStock updateUserStock = getStockInPortfolio(buyer, stock);
-		int userStockValue = (int) (updateUserStock.getPercent() * stockObj
+		buyer.setCash(buyer.getCash() - amount2Buy);
+		buyer.setPortfolio(buyer.getPortfolio() + amount2Buy);
+		UserStock updateUserStock = getStockInPortfolio(buyer.getId(),
+				stock.getId());
+		int userStockValue = (int) (updateUserStock.getPercent() * stock
 				.getTotal());
-		return new BuySellResponse(user, stockObj, userStockValue);
+		return new BuySellResponse(buyer, stock, userStockValue);
 
 	}
-	
 
 	@Override
-	public BuySellResponse sell(long seller, long stock, int amount) {
-		User user = userMgr.getUserById(seller);
-		UserStock userStock = getStockInPortfolio(seller, stock);
-		Stock stockObj = stockMgr.getStockById(stock);
-		
-		int amount2Sell = amount > stockObj.getAvailable() ? stockObj.getAvailable() : amount;
-		
-		double sold = (double) amount2Sell / (double) stockObj.getTotal();
-		stockObj.setSold(stockObj.getSold() - sold);
+	public BuySellResponse sell(User seller, Stock stock, int amount) {
+
+		UserStock userStock = getStockInPortfolio(seller.getId(), stock.getId());
 
 		if (userStock != null) {
-			int soldAmount = (int) (userStock.getPercent() * stockObj
+			int stockValueInPortfolio = (int) (userStock.getPercent() * stock
 					.getTotal());
-			if (amount2Sell >= soldAmount) {
-				deleteStockInPortfolio(seller, stock);
-			} else {
-				updateStockInPortfolio(seller, stock, -sold);
-			}
-		}
 
-		userMgr.updateCash(seller, -amount2Sell);
-		transactionMgr.recordTransaction(user, stockObj, amount2Sell,
-				TransactionMgr.SELL);
-		user.setCash(user.getCash() + amount2Sell);
-		user.setPortfolio(user.getPortfolio() - amount2Sell);
-		UserStock updateUserStock = getStockInPortfolio(seller, stock);
-		int userStockValue = updateUserStock == null ? 0
-				: (int) (updateUserStock.getPercent() * stockObj.getTotal());
-		return new BuySellResponse(user, stockObj, userStockValue);
+			// if someone is trying to sell more than he has, let him sell what
+			// he has.
+			int amount2Sell = amount > stockValueInPortfolio ? stockValueInPortfolio
+					: amount;
+
+			double sold = (double) amount2Sell / (double) stock.getTotal();
+			stock.setSold(stock.getSold() - sold);
+
+			if (amount2Sell >= stockValueInPortfolio) {
+				// if user sold all he has, delete stock from his portfolio.
+				// we do not want to show $0 value stock in portfolio.
+				deleteStockInPortfolio(seller.getId(), stock.getId());
+			} else {
+				// if user did not sell all he has, just update stock in
+				// portfolio.
+				updateStockInPortfolio(seller.getId(), stock.getId(), -sold);
+			}
+
+			userMgr.updateCash(seller.getId(), -amount2Sell);
+			transactionMgr.recordTransaction(seller, stock, amount2Sell,
+					TransactionMgr.SELL);
+			seller.setCash(seller.getCash() + amount2Sell);
+			seller.setPortfolio(seller.getPortfolio() - amount2Sell);
+			UserStock updateUserStock = getStockInPortfolio(seller.getId(),
+					stock.getId());
+			int userStockValue = updateUserStock == null ? 0
+					: (int) (updateUserStock.getPercent() * stock.getTotal());
+
+			return new BuySellResponse(seller, stock, userStockValue);
+		} else {
+			return new BuySellResponse(seller, stock, 0);
+		}
 
 	}
 
@@ -109,10 +120,10 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -136,10 +147,10 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			logger.error("DB: Adding stock to portfolio failed", ex);
 		}
 		try {
-			if (!ps.isClosed()) {
+			if (ps != null && !ps.isClosed()) {
 				ps.close();
 			}
-			if (!connection.isClosed()) {
+			if (connection != null && !connection.isClosed()) {
 				connection.close();
 			}
 		} catch (Exception e) {
@@ -171,13 +182,13 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 					+ userId + " ,Stock: " + stockId, ex);
 		}
 		try {
-			if (!rs.isClosed()) {
+			if (rs != null && !rs.isClosed()) {
 				rs.close();
 			}
-			if (!ps.isClosed()) {
+			if (ps != null && !ps.isClosed()) {
 				ps.close();
 			}
-			if (!connection.isClosed()) {
+			if (connection != null && !connection.isClosed()) {
 				connection.close();
 			}
 		} catch (SQLException ex) {
@@ -208,13 +219,13 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			logger.debug("DB: Query failed - " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!rs.isClosed()) {
+				if (rs != null && !rs.isClosed()) {
 					rs.close();
 				}
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -239,10 +250,10 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
 		} finally {
 			try {
-				if (!ps.isClosed()) {
+				if (ps != null && !ps.isClosed()) {
 					ps.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -264,10 +275,10 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			logger.error("DB: Query failed - " + cs.toString(), ex);
 		} finally {
 			try {
-				if (!cs.isClosed()) {
+				if (cs != null && !cs.isClosed()) {
 					cs.close();
 				}
-				if (!connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {
@@ -277,10 +288,8 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	}
 
 	@Override
-	public Portfolio getUserPortfolio(long userId) {
-		User user = null;
+	public Portfolio getUserPortfolio(User user) {
 		Portfolio portfolio = null;
-		user = userMgr.getUserById(userId);
 
 		if (user != null) {
 			portfolio = new Portfolio(user);
@@ -291,7 +300,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				connection = dbMgr.getConnection();
 				ps = connection
 						.prepareStatement("select stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount, stock.pictureUrl as pictureUrl from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ?");
-				ps.setLong(1, userId);
+				ps.setLong(1, user.getId());
 				rs = ps.executeQuery();
 
 				while (rs.next()) {
@@ -308,13 +317,13 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				logger.error("DB: Query failed - " + ps.toString(), ex);
 			} finally {
 				try {
-					if (!rs.isClosed()) {
+					if (rs != null && !rs.isClosed()) {
 						rs.close();
 					}
-					if (!ps.isClosed()) {
+					if (ps != null && !ps.isClosed()) {
 						ps.close();
 					}
-					if (!connection.isClosed()) {
+					if (connection != null && !connection.isClosed()) {
 						connection.close();
 					}
 				} catch (SQLException e) {
@@ -361,13 +370,13 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			logger.error("DB: Query failed - " + ps.toString(), e);
 		}
 		try {
-			if (!rs.isClosed()) {
+			if (rs != null && !rs.isClosed()) {
 				rs.close();
 			}
-			if (!ps.isClosed()) {
+			if (ps != null && !ps.isClosed()) {
 				ps.close();
 			}
-			if (!connection.isClosed()) {
+			if (connection != null && !connection.isClosed()) {
 				connection.close();
 			}
 		} catch (SQLException e) {

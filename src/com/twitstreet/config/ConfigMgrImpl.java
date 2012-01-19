@@ -49,13 +49,13 @@ public class ConfigMgrImpl implements ConfigMgr{
 		}
 		finally{
 			try {
-				if (rs.isClosed()) {
+				if (rs != null && !rs.isClosed()) {
 					rs.close();
 				}
-				if (stmt.isClosed()) {
+				if (stmt != null && !stmt.isClosed()) {
 					stmt.close();
 				}
-				if (connection.isClosed()) {
+				if (connection != null && !connection.isClosed()) {
 					connection.close();
 				}
 			} catch (SQLException e) {

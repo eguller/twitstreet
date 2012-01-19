@@ -11,39 +11,55 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
 import com.twitstreet.market.PortfolioMgr;
+import com.twitstreet.market.StockMgr;
+import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
 @Singleton
 public class BuyServlet extends HttpServlet {
 	private static Logger logger = Logger.getLogger(BuyServlet.class);
-	@Inject TwitterProxyFactory twitterProxyFactory = null;
-	@Inject PortfolioMgr portfolioMgr = null;
-	@Inject private final Gson gson = null;
+	@Inject
+	TwitterProxyFactory twitterProxyFactory = null;
+	@Inject
+	PortfolioMgr portfolioMgr = null;
+	@Inject
+	private final Gson gson = null;
+	@Inject StockMgr stockMgr;
+	@Inject UserMgr userMgr;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		doPost(request, response);
 	}
-	
+
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		response.setContentType("application/json;charset=utf-8");
 		User user = (User) request.getSession(false).getAttribute(User.USER);
-		if(user != null){
+		if (user != null) {
 			String stock = request.getParameter("stock");
 			String amount = request.getParameter("amount");
 			try {
 				long start = System.currentTimeMillis();
-				BuySellResponse buySellResponse = portfolioMgr.buy(user.getId(), Long.parseLong(stock), Integer.parseInt(amount));
-				long end = System.currentTimeMillis();
-				System.out.println("Buy: " + (end - start) + " milisec");
-				response.getWriter().write(gson.toJson(buySellResponse));
+				User buyer = userMgr.getUserById(user.getId());
+				Stock stockObj = stockMgr.getStockById(Long.parseLong(stock));
+				if (buyer != null && stockObj != null) {
+					BuySellResponse buySellResponse = portfolioMgr.buy(
+							buyer, stockObj,
+							Integer.parseInt(amount));
+					long end = System.currentTimeMillis();
+					System.out.println("Buy: " + (end - start) + " milisec");
+					response.getWriter().write(gson.toJson(buySellResponse));
+				}
 			} catch (NumberFormatException e) {
-				logger.error("Servlet: Parsin stock, amount failed. Stock: " + stock + ", amount: " + amount, e);
+				logger.error("Servlet: Parsin stock, amount failed. Stock: "
+						+ stock + ", amount: " + amount, e);
 			}
 		}
 
