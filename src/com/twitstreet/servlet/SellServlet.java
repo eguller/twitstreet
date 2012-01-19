@@ -45,13 +45,10 @@ public class SellServlet extends HttpServlet {
 			String amount = request.getParameter("amount");
 			
 			try {
-				long start = System.currentTimeMillis();
 				User seller = userMgr.getUserById(user.getId());
 				Stock stockObj = stockMgr.getStockById(Long.parseLong(stock));
 				if(seller != null && stockObj != null){
 					BuySellResponse buySellResponse = portfolioMgr.sell(seller, stockObj, Integer.parseInt(amount));
-					long end = System.currentTimeMillis();
-					System.out.println("Sell: " + (end - start) + " milisec");
 					response.getWriter().write(gson.toJson(buySellResponse));
 				}
 			} catch (NumberFormatException e) {
