@@ -18,6 +18,7 @@ public class DBSetupImpl implements DBSetup {
 	private static final String CREATE_TABLES_FILE = "WEB-INF/db/setup/createTables.sql";
 	private static final String DATA_FILL_FILE = "WEB-INF/db/setup/dataFill.sql";
 	private static final String PROC_RERANK = "WEB-INF/db/setup/proc/rerank.sql";
+	private static final String FUNC_PORTFOLIO_VALUE = "WEB-INF/db/setup/proc/portfolio_value.sql";
 	
 	private static final String DATABASENAME_KEY = "databasename";
 	private static final String USERNAME = "username";
@@ -60,6 +61,7 @@ public class DBSetupImpl implements DBSetup {
 	public void executeScriptFiles() throws IOException, SQLException {
 		ArrayList<String> scripts = new ArrayList<String>();
 		scripts.add(PROC_RERANK);
+		scripts.add(FUNC_PORTFOLIO_VALUE);
 		executeScripts(scripts);
 	}
 	
