@@ -7,7 +7,6 @@ create table `users`(
 	`firstLogin` datetime not null,
 	`lastLogin` datetime not null,
 	`cash` int not null default 10000,
-	`portfolio` int not null default 0,
 	`lastIp` varchar(45) not null,
 	`oauthToken` varchar(100) not null,
 	`oauthTokenSecret` varchar(100) not null,

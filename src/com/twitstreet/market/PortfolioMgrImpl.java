@@ -48,7 +48,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			updateStockInPortfolio(buyer, stock, sold);
 		}
 		stockMgr.updateSold(stock, sold);
-		userMgr.updateCashAndPortfolio(buyer, amount2Buy);
+		userMgr.updateCash(buyer, amount2Buy);
 		transactionMgr.recordTransaction(user, stockObj, amount2Buy,
 				TransactionMgr.BUY);
 		user.setCash(user.getCash() - amount2Buy);
@@ -211,7 +211,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		}
 
 		stockMgr.updateSold(stock, -sold);
-		userMgr.updateCashAndPortfolio(seller, -amount);
+		userMgr.updateCash(seller, -amount);
 		transactionMgr.recordTransaction(user, stockObj, amount,
 				TransactionMgr.SELL);
 		user.setCash(user.getCash() + amount);

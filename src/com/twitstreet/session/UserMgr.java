@@ -23,7 +23,7 @@ public interface UserMgr{
 	
 	public void increaseCash(long userId, int cash);
 	
-	public void updateCashAndPortfolio(long userId, int amount);
+	public void updateCash(long userId, int amount);
 	
 	public ArrayList<User> getTopRank();
 
