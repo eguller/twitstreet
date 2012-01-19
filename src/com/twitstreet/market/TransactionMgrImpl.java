@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
@@ -60,12 +62,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 					transactionRecord.setUserId(user.getId());
 					transactionRecord.setUserName(user.getUserName());
 
-					synchronized (transactionRecord) {
-						currentTransactions.addFirst(transactionRecord);
-						if (currentTransactions.size() > TransactionMgr.CURRENT_TRANSACTIONS) {
-							currentTransactions.pollLast();
-						}
-					}
+					addTransactionRecord(transactionRecord);
 
 					/***/
 
@@ -112,10 +109,10 @@ public class TransactionMgrImpl implements TransactionMgr {
 			ps = connection
 					.prepareStatement("select users.id as user_id, users.userName as userName, transactions.id as transaction_id, transactions.amount as amount, transactions.t_action as t_action, stock.name as stock, stock.id as stock_id from users, transactions, stock where stock.id = transactions.stock and transactions.user_id = users.id and users.id = ? order by t_date desc limit ?");
 
-			ps.setLong(1,userId);
+			ps.setLong(1, userId);
 			ps.setInt(2, TransactionMgr.CURRENT_TRANSACTIONS);
 			rs = ps.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				TransactionRecord transactionRecord = new TransactionRecord();
 				transactionRecord.setUserId(rs.getLong("user_id"));
 				transactionRecord.setUserName(rs.getString("userName"));
@@ -147,6 +144,16 @@ public class TransactionMgrImpl implements TransactionMgr {
 			}
 		}
 		return transactionRecordList;
+	}
+
+	public synchronized void addTransactionRecord(
+			TransactionRecord transactionRecord) {
+		if (transactionRecord != null) {
+			currentTransactions.addFirst(transactionRecord);
+			if (currentTransactions.size() > TransactionMgr.CURRENT_TRANSACTIONS) {
+				currentTransactions.pollLast();
+			}
+		}
 	}
 
 	@Override
