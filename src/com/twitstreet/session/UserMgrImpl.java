@@ -91,7 +91,7 @@ public class UserMgrImpl implements UserMgr {
 					.prepareStatement("insert into users(id, userName, "
 							+ "lastLogin, firstLogin, "
 							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl) "
-							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setLong(1, userDO.getId());
 			ps.setString(2, userDO.getUserName());
 			ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));

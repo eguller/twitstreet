@@ -58,6 +58,40 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		return new BuySellResponse(user, stockObj, userStockValue);
 
 	}
+	
+
+	@Override
+	public BuySellResponse sell(long seller, long stock, int amount) {
+		User user = userMgr.getUserById(seller);
+		UserStock userStock = getStockInPortfolio(seller, stock);
+		Stock stockObj = stockMgr.getStockById(stock);
+		
+		int amount2Sell = amount > stockObj.getAvailable() ? stockObj.getAvailable() : amount;
+		
+		double sold = (double) amount2Sell / (double) stockObj.getTotal();
+		stockObj.setSold(stockObj.getSold() - sold);
+
+		if (userStock != null) {
+			int soldAmount = (int) (userStock.getPercent() * stockObj
+					.getTotal());
+			if (amount2Sell >= soldAmount) {
+				deleteStockInPortfolio(seller, stock);
+			} else {
+				updateStockInPortfolio(seller, stock, -sold);
+			}
+		}
+
+		userMgr.updateCash(seller, -amount2Sell);
+		transactionMgr.recordTransaction(user, stockObj, amount2Sell,
+				TransactionMgr.SELL);
+		user.setCash(user.getCash() + amount2Sell);
+		user.setPortfolio(user.getPortfolio() - amount2Sell);
+		UserStock updateUserStock = getStockInPortfolio(seller, stock);
+		int userStockValue = updateUserStock == null ? 0
+				: (int) (updateUserStock.getPercent() * stockObj.getTotal());
+		return new BuySellResponse(user, stockObj, userStockValue);
+
+	}
 
 	private void updateStockInPortfolio(long buyer, long stock, double sold) {
 		Connection connection = null;
@@ -188,40 +222,6 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			}
 		}
 		return 0.0;
-	}
-
-	@Override
-	public BuySellResponse sell(long seller, long stock, int amount) {
-		User user = userMgr.getUserById(seller);
-		UserStock userStock = getStockInPortfolio(seller, stock);
-		Stock stockObj = stockMgr.getStockById(stock);
-		
-		int available = (int)(stockObj.getTotal() * stockObj.getAvailable());
-		int amount2Sell = amount > available ? available : amount;
-		
-		double sold = (double) amount2Sell / (double) stockObj.getTotal();
-		stockObj.setSold(stockObj.getSold() - sold);
-
-		if (userStock != null) {
-			int soldAmount = (int) (userStock.getPercent() * stockObj
-					.getTotal());
-			if (amount2Sell >= soldAmount) {
-				deleteStockInPortfolio(seller, stock);
-			} else {
-				updateStockInPortfolio(seller, stock, -sold);
-			}
-		}
-
-		userMgr.updateCash(seller, -amount2Sell);
-		transactionMgr.recordTransaction(user, stockObj, amount2Sell,
-				TransactionMgr.SELL);
-		user.setCash(user.getCash() + amount2Sell);
-		user.setPortfolio(user.getPortfolio() - amount2Sell);
-		UserStock updateUserStock = getStockInPortfolio(seller, stock);
-		int userStockValue = updateUserStock == null ? 0
-				: (int) (updateUserStock.getPercent() * stockObj.getTotal());
-		return new BuySellResponse(user, stockObj, userStockValue);
-
 	}
 
 	public void deleteStockInPortfolio(long userId, long stockId) {

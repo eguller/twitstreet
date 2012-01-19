@@ -43,7 +43,10 @@ public class SellServlet extends HttpServlet {
 			String amount = request.getParameter("amount");
 			
 			try {
+				long start = System.currentTimeMillis();
 				BuySellResponse buySellResponse = portfolioMgr.sell(user.getId(), Long.parseLong(stock), Integer.parseInt(amount));
+				long end = System.currentTimeMillis();
+				System.out.println("Sell: " + (end - start) + " milisec");
 				response.getWriter().write(gson.toJson(buySellResponse));
 			} catch (NumberFormatException e) {
 				logger.error("Servlet: Parsin stock id or amount failed", e);
