@@ -123,62 +123,64 @@ if(sessionUser != null){
 			</tr>
 			<tr id="buy-links-row">
 				<td colspan="3" id="buy-links">
-					<table class="buy-sell-table">
-					<% 
-						if(user != null && stock != null){
-							ArrayList<Integer> buyValues = new ArrayList<Integer>();
-							ArrayList<Integer> sellValues = new ArrayList<Integer>();
-							int totalCash = user.getCash();
-							int available = stock.getAvailable();
-							int min = Math.min(totalCash, available);
-						
-							int i = min == 0 ? 0 : String.valueOf(min).length();
-							if((int)Math.pow(10,i - 1) != min && min > 0){
-								buyValues.add(min);
-							}
+					<div id="buy-sell-div">
+						<table class="buy-sell-table">
+						<% 
+							if(user != null && stock != null){
+								ArrayList<Integer> buyValues = new ArrayList<Integer>();
+								ArrayList<Integer> sellValues = new ArrayList<Integer>();
+								int totalCash = user.getCash();
+								int available = stock.getAvailable();
+								int min = Math.min(totalCash, available);
 							
-							for(; i > 0; i--){
-								buyValues.add((int)Math.pow(10,i - 1));
-							}
-							
-							if(userStock != null){
-								int userTotalStock = (int) (userStock.getPercent() * stock.getTotal());
-								i = userTotalStock == 0 ? 0 : String.valueOf(userTotalStock).length(); 
-								if(userTotalStock != (int)Math.pow(10,i - 1)){
-									sellValues.add(userTotalStock);
+								int i = min == 0 ? 0 : String.valueOf(min).length();
+								if((int)Math.pow(10,i - 1) != min && min > 0){
+									buyValues.add(min);
 								}
+								
 								for(; i > 0; i--){
-									sellValues.add((int)Math.pow(10,i - 1));
+									buyValues.add((int)Math.pow(10,i - 1));
+								}
+								
+								if(userStock != null){
+									int userTotalStock = (int) (userStock.getPercent() * stock.getTotal());
+									i = userTotalStock == 0 ? 0 : String.valueOf(userTotalStock).length(); 
+									if(userTotalStock != (int)Math.pow(10,i - 1)){
+										sellValues.add(userTotalStock);
+									}
+									for(; i > 0; i--){
+										sellValues.add((int)Math.pow(10,i - 1));
+									}
+								}
+								i = 0;
+								while(true){
+									out.write("<tr>");
+									out.write("<td>");
+									if(i < buyValues.size() && stock.getTotal() > configMgr.getMinFollower()){
+										out.write("<div class=\"field-green\" onclick=\"buy("+stock.getId()+","+buyValues.get(i)+");\">");
+										out.write("Buy<br>");
+										out.write( Util.commaSep(buyValues.get(i)));
+										out.write("</div>");
+									}
+									out.write("</td>");
+									out.write("<td>");
+									if(i < sellValues.size()){
+										out.write("<div class=\"field-red\" onclick=\"sell("+stock.getId()+","+sellValues.get(i)+");\">");
+										out.write("Sell<br>");
+										out.write(Util.commaSep(sellValues.get(i)));
+										out.write("</div>");
+									}
+									out.write("</td>");
+									out.write("</tr>");
+									i++;
+									if(i > buyValues.size() && i > sellValues.size()){
+										break;
+									}
 								}
 							}
-							i = 0;
-							while(true){
-								out.write("<tr>");
-								out.write("<td>");
-								if(i < buyValues.size() && stock.getTotal() > configMgr.getMinFollower()){
-									out.write("<div class=\"field-green\" onclick=\"buy("+stock.getId()+","+buyValues.get(i)+");\">");
-									out.write("Buy<br>");
-									out.write( Util.commaSep(buyValues.get(i)));
-									out.write("</div>");
-								}
-								out.write("</td>");
-								out.write("<td>");
-								if(i < sellValues.size()){
-									out.write("<div class=\"field-red\" onclick=\"sell("+stock.getId()+","+sellValues.get(i)+");\">");
-									out.write("Sell<br>");
-									out.write(Util.commaSep(sellValues.get(i)));
-									out.write("</div>");
-								}
-								out.write("</td>");
-								out.write("</tr>");
-								i++;
-								if(i > buyValues.size() && i > sellValues.size()){
-									break;
-								}
-							}
-						}
-					%>
-					</table>
+						%>
+						</table>
+					</div>
 				</td>
 			</tr>
 		</table>

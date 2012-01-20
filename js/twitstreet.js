@@ -272,16 +272,16 @@ function showQuotePanel(panel){
 
 function buy(stock, amount){
 	// if already clicked do nothing
-	if ($('.buy-sell-table').hasClass('blockUI')) return;
+	if ($('#buy-sell-div').hasClass('blockUI')) return;
 	// block element
-	$('.buy-sell-table').block({message : 'Processing'});
+	$('#buy-sell-div').block({message : 'Processing'});
 	
 	$.post('/a/buy', {
 		stock : stock,
 		amount : amount
 	}, function(data){
 		// unblock when data arrives
-		$('.buy-sell-table').unblock();
+		$('#buy-sell-div').unblock();
 		
 		$("#total").html(commasep(data.stockTotal));
 		$("#total-hidden").val(data.stockTotal);
@@ -306,16 +306,16 @@ function buy(stock, amount){
 
 function sell(stock, amount){
 	// if already clicked do nothing
-	if ($('.buy-sell-table').hasClass('blockUI')) return;
+	if ($('#buy-sell-div').hasClass('blockUI')) return;
 	// block element
-	$('.buy-sell-table').block({message : 'Processing'});
+	$('#buy-sell-div').block({message : 'Processing'});
 	
 	$.post('/a/sell', {
 		stock : stock,
 		amount : amount
 	}, function(data){
 		// unblock when data arrives
-		$('.buy-sell-table').unblock();
+		$('#buy-sell-div').unblock();
 		
 		$("#total").html(commasep(data.stockTotal));
 		$("#total-hidden").val(data.stockTotal);
