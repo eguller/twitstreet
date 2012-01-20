@@ -135,7 +135,7 @@ function writeBuySellLinks(){
 			var div = $('<div></div>');
 			$(div).html('Buy <br>' + commasep(buyValues[i]));
 			$(div).attr('class', 'field-green');
-			$(div).attr('onclick','buy($(this), '+quote+', '+buyValues[i]+');');
+			$(div).attr('onclick','buy('+quote+', '+buyValues[i]+');');
 			$(div).corner("round 5px");
 			$(buyTd).append($(div));
 			
@@ -145,7 +145,7 @@ function writeBuySellLinks(){
 			var div = $('<div></div>');
 			$(div).html( 'Sell <br>' + commasep(sellValues[i]));
 			$(div).attr('class', 'field-red');
-			$(div).attr('onclick','sell($(this), '+quote+', '+sellValues[i]+');');
+			$(div).attr('onclick','sell('+quote+', '+sellValues[i]+');');
 			$(div).corner("round 5px");
 			$(sellTd).append($(div));
 		}
@@ -270,18 +270,18 @@ function showQuotePanel(panel){
 	}	
 }
 
-function buy(element, stock, amount){
+function buy(stock, amount){
 	// if already clicked do nothing
-	if (element.children().hasClass('blockUI')) return;
+	if ($('.buy-sell-table').hasClass('blockUI')) return;
 	// block element
-	element.block({message : 'Processing'});
+	$('.buy-sell-table').block({message : 'Processing'});
 	
 	$.post('/a/buy', {
 		stock : stock,
 		amount : amount
 	}, function(data){
 		// unblock when data arrives
-		element.unblock();
+		$('.buy-sell-table').unblock();
 		
 		$("#total").html(commasep(data.stockTotal));
 		$("#total-hidden").val(data.stockTotal);
@@ -304,18 +304,18 @@ function buy(element, stock, amount){
 	});
 }
 
-function sell(element, stock, amount){
+function sell(stock, amount){
 	// if already clicked do nothing
-	if (element.children().hasClass('blockUI')) return;
+	if ($('.buy-sell-table').hasClass('blockUI')) return;
 	// block element
-	element.block({message : 'Processing'});
+	$('.buy-sell-table').block({message : 'Processing'});
 	
 	$.post('/a/sell', {
 		stock : stock,
 		amount : amount
 	}, function(data){
 		// unblock when data arrives
-		element.unblock();
+		$('.buy-sell-table').unblock();
 		
 		$("#total").html(commasep(data.stockTotal));
 		$("#total-hidden").val(data.stockTotal);
