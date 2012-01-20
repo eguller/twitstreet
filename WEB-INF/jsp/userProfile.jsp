@@ -19,7 +19,7 @@
 	try {
 		id = Long.parseLong(userId);
 		user = userMgr.getUserById(id);
-		portfolio = portfolioMgr.getUserPortfolio(id);
+		portfolio = portfolioMgr.getUserPortfolio(user);
 	} catch (NumberFormatException nfe) {
 	}
 %>
