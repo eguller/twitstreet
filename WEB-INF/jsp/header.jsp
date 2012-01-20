@@ -9,6 +9,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 
 <script src="/js/jquery-1.6.4.min.js"></script>
 <script src="/js/jquery-corner.js"></script>
+<script src="/js/jquery.blockUI.js"></script>
 <script src="/js/twitstreet.js"></script>
 <script language="javascript" type="text/javascript">
 
