@@ -39,7 +39,7 @@ public class CallBackServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
+		response.setContentType("text/html");
 		Twitter twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer(configMgr.getConsumerKey(),
 				configMgr.getConsumerSecret());

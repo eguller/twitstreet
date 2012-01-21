@@ -1,6 +1,8 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -28,10 +30,19 @@ public class HomePageServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
+		response.setContentType("text/html");
 		if (!twitstreet.isInitialized()) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp")
 					.forward(request, response);
+			return;
+		}
+		
+		if(request.getParameter("signout") != null) {
+			request.getSession(false).invalidate();
+			invalidateCookies(new String[] { CallBackServlet.COOKIE_ID,
+					CallBackServlet.COOKIE_OAUTHTOKEN}, request, response);
+			getServletContext().getRequestDispatcher(
+			"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
 			return;
 		}
 
@@ -83,5 +94,19 @@ public class HomePageServlet extends HttpServlet {
 			}
 		}
 		return valid;
+	}
+	
+	private void invalidateCookies(String[] cookieNames,
+			HttpServletRequest request, HttpServletResponse response) {
+		List<String> cookieNameList = Arrays.asList(cookieNames);
+		for (Cookie cookie : request.getCookies()) {
+			if (cookieNameList.contains(cookie.getName())) {
+				cookie.setMaxAge(0);
+				cookie.setValue("");
+				cookie.setPath("/");
+				cookie.setDomain(request.getHeader("host"));
+				response.addCookie(cookie);
+			}
+		}
 	}
 }

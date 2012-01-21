@@ -18,7 +18,7 @@ User sessionUser = (User)request.getSession().getAttribute(User.USER);
 					<td>@<%= sessionUser.getUserName() %></td>
 				</tr>
 				<tr>
-					<td><a href="/signout">Sign out >></a></td>
+					<td><a href="/?signout=1">Sign out >></a></td>
 				</tr>
 			</table>
 		</div>

@@ -30,7 +30,7 @@ public class SigninServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
+		response.setContentType("text/html");
 		User user = (User) request.getSession().getAttribute(
 				User.USER);
 		if (user == null) {
