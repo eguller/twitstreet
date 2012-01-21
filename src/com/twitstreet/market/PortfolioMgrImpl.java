@@ -34,24 +34,28 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 	@Override
 	public BuySellResponse buy(User buyer, Stock stock, int amount) {
-
 		int amount2Buy = buyer.getCash() < amount ? buyer.getCash() : amount;
+		if (stock.getAvailable() > 0) {
+			amount2Buy = amount2Buy < stock.getAvailable() ? amount2Buy : stock.getAvailable();
+			double sold = (double) amount2Buy / (double) stock.getTotal();
+			stock.setSold(stock.getSold() + sold);
+			UserStock userStock = getStockInPortfolio(buyer.getId(),
+					stock.getId());
 
-		double sold = (double) amount2Buy / (double) stock.getTotal();
-		stock.setSold(stock.getSold() + sold);
-		UserStock userStock = getStockInPortfolio(buyer.getId(), stock.getId());
+			if (userStock == null) {
+				addStock2Portfolio(buyer.getId(), stock.getId(), sold);
 
-		if (userStock == null) {
-			addStock2Portfolio(buyer.getId(), stock.getId(), sold);
-
-		} else {
-			updateStockInPortfolio(buyer.getId(), stock.getId(), sold);
+			} else {
+				updateStockInPortfolio(buyer.getId(), stock.getId(), sold);
+			}
+			userMgr.updateCash(buyer.getId(), amount2Buy);
+			transactionMgr.recordTransaction(buyer, stock, amount2Buy,
+					TransactionMgr.BUY);
+			buyer.setCash(buyer.getCash() - amount2Buy);
+			buyer.setPortfolio(buyer.getPortfolio() + amount2Buy);
+			
 		}
-		userMgr.updateCash(buyer.getId(), amount2Buy);
-		transactionMgr.recordTransaction(buyer, stock, amount2Buy,
-				TransactionMgr.BUY);
-		buyer.setCash(buyer.getCash() - amount2Buy);
-		buyer.setPortfolio(buyer.getPortfolio() + amount2Buy);
+		
 		UserStock updateUserStock = getStockInPortfolio(buyer.getId(),
 				stock.getId());
 		int userStockValue = (int) (updateUserStock.getPercent() * stock
