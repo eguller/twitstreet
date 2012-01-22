@@ -49,7 +49,7 @@
 							id="dashboard-picture"></td>
 						<td style="text-align: left;" id="dashboard-stock-follower-status"><a
 							id="see-details-link"
-							href="/stock/<%=stock == null ? "" : stock.getId()%>"><%=stock == null ? "" : stock.getName()%></a>'s
+							href="javascript:void(0);" onclick="forwardStockToMain($(this))"><%=stock == null ? "" : stock.getName()%></a>'s
 							follower status <a href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>" style="float: right" target="_blank">Twitter Page &gt;&gt;</a></td>
 					</tr>
 				</table></td>

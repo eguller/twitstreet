@@ -439,3 +439,12 @@ function selectAllText(textbox) {
     textbox.select();
 }
 
+function forwardStockToMain(element) {
+	var quote = element.text();
+	$.post('/getquote', {
+		quote : quote
+	}, function(data) {
+		window.location = "/";
+	});
+}
+
