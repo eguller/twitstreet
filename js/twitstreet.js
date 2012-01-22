@@ -336,6 +336,9 @@ function sell(stock, amount){
 		$("#user-stock").html("You have <b>" + commasep(parseInt(data.userStock)) + "</b> of " + data.stockName);
 		loadPortfolio();
 		loadUserTransactions();
+		
+		//update cash on top rank list
+		$('#userOnTopRank').text($("#total_value").text());
 	});
 }
 
@@ -380,6 +383,8 @@ function toprank(){
 	$("topranktable").empty();
 	$.getJSON('/toprank', function(data) {
 		$("#topranktable").empty();
+		// get username
+		var username = $('#username').text();
 		  for(var i = 0, length = data.length; i < length; i ++){
 			  var rank = data[i];
 			  var tr = $("<tr></tr>");
@@ -388,7 +393,14 @@ function toprank(){
 			  }
 			  $(tr).append($("<td class=\'rank-number\'>" + rank.rank + ". </td>"));
 			  $(tr).append($("<td><img class=\'twuser\' src=\'" +rank.pictureUrl+ "\'/></td>"));
-			  $(tr).append($('<td><a href=\'/user/'+rank.id+'\'>'+rank.userName+'</a> <br>'+commasep(rank.cash + rank.portfolio)+'$</td>'));
+			  
+			  var cash = commasep(rank.cash + rank.portfolio);
+			  
+			  if (rank.userName == username) {
+				  cash = '<span id="userOnTopRank">' + cash + '$</span>';
+			  }
+			  
+			  $(tr).append($('<td><a href=\'/user/'+rank.id+'\'>'+rank.userName+'</a> <br>'+ cash +'</td>'));
 			  if(data.direction == 1){
 				  $(tr).append($("<td><img src=\"/images/up.png\" /></td>"));
 			  }

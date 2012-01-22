@@ -22,6 +22,10 @@ import com.twitstreet.servlet.BuySellResponse;
 import com.twitstreet.session.UserMgr;
 
 public class PortfolioMgrImpl implements PortfolioMgr {
+	
+	// commission rate 1%
+	private static final double COMMISSION_RATE = 0.01;
+	
 	private static Logger logger = Logger.getLogger(PortfolioMgrImpl.class);
 	@Inject
 	DBMgr dbMgr;
@@ -66,7 +70,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 	@Override
 	public BuySellResponse sell(User seller, Stock stock, int amount) {
-
+		
 		UserStock userStock = getStockInPortfolio(seller.getId(), stock.getId());
 
 		if (userStock != null) {
@@ -90,11 +94,17 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				// portfolio.
 				updateStockInPortfolio(seller.getId(), stock.getId(), -sold);
 			}
+			
+			// calculate commission
+			int commission = (int) (amount2Sell * COMMISSION_RATE);
 
-			userMgr.updateCash(seller.getId(), -amount2Sell);
+			// subtract commission
+			int cash = amount2Sell - commission;
+			
+			userMgr.updateCash(seller.getId(), -cash);
 			transactionMgr.recordTransaction(seller, stock, amount2Sell,
 					TransactionMgr.SELL);
-			seller.setCash(seller.getCash() + amount2Sell);
+			seller.setCash(seller.getCash() + cash);
 			seller.setPortfolio(seller.getPortfolio() - amount2Sell);
 			UserStock updateUserStock = getStockInPortfolio(seller.getId(),
 					stock.getId());
