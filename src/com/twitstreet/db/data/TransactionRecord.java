@@ -7,7 +7,7 @@ public class TransactionRecord {
 	public static final int SELL = 0;
 	long id;
 	long stockId;
-	int amount;
+	double amount;
 	int transactionAction;
 	Date date;
 	long userId;
@@ -25,10 +25,10 @@ public class TransactionRecord {
 	public void setStockId(long stockId) {
 		this.stockId = stockId;
 	}
-	public int getAmount() {
+	public double getAmount() {
 		return amount;
 	}
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 	public int getTransactionAction() {

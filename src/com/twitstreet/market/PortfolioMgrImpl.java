@@ -34,7 +34,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 	@Override
 	public BuySellResponse buy(User buyer, Stock stock, int amount) {
-		int amount2Buy = buyer.getCash() < amount ? buyer.getCash() : amount;
+		double amount2Buy = buyer.getCash() < amount ? buyer.getCash() : amount;
 		if (stock.getAvailable() > 0) {
 			amount2Buy = amount2Buy < stock.getAvailable() ? amount2Buy : stock.getAvailable();
 			double sold = (double) amount2Buy / (double) stock.getTotal();

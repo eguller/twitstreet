@@ -96,7 +96,7 @@ public class UserMgrImpl implements UserMgr {
 			ps.setString(2, userDO.getUserName());
 			ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));
 			ps.setDate(4, Util.toSqlDate(userDO.getFirstLogin()));
-			ps.setInt(5, userDO.getCash());
+			ps.setDouble(5, userDO.getCash());
 			ps.setString(6, userDO.getLastIp());
 			ps.setString(7, userDO.getOauthToken());
 			ps.setString(8, userDO.getOauthTokenSecret());
@@ -194,7 +194,7 @@ public class UserMgrImpl implements UserMgr {
 				user.setUserName(rs.getString("userName"));
 				user.setLastLogin(rs.getDate("lastLogin"));
 				user.setFirstLogin(rs.getDate("firstLogin"));
-				user.setCash(rs.getInt("cash"));
+				user.setCash(rs.getDouble("cash"));
 				user.setPortfolio((int)rs.getDouble("portfolio"));
 				user.setLastIp(rs.getString("lastIp"));
 				user.setOauthToken(rs.getString("oauthToken"));
@@ -225,14 +225,14 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	@Override
-	public void increaseCash(long userId, int cash) {
+	public void increaseCash(long userId, double cash) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement("update users set cash = (cash + ?) where id = ?");
-			ps.setInt(1, cash);
+			ps.setDouble(1, cash);
 			ps.setLong(2, userId);
 
 			ps.executeUpdate();
@@ -254,14 +254,14 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	@Override
-	public void updateCash(long userId, int amount) {
+	public void updateCash(long userId, double amount) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 		connection = dbMgr.getConnection();
 		ps = connection
 				.prepareStatement("update users set cash = (cash - ?) where id = ?");
-		ps.setInt(1, amount);
+		ps.setDouble(1, amount);
 		ps.setLong(2, userId);
 		
 			ps.executeUpdate();

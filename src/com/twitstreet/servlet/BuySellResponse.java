@@ -6,12 +6,12 @@ import com.twitstreet.db.data.User;
 public class BuySellResponse {
 	long stockId;
 	String stockName;
-	int stockTotal;
+	double stockTotal;
 	double stockSold;
 	long userId;
-	int userCash;
-	int userPortfolio;
-	int userStock;
+	double userCash;
+	double userPortfolio;
+	double userStock;
 	
 	public BuySellResponse(User user, Stock stock, int userStockValue){
 		this.stockId = stock.getId();
@@ -34,11 +34,11 @@ public class BuySellResponse {
 		this.stockId = stockId;
 	}
 
-	public int getStockTotal() {
+	public double getStockTotal() {
 		return stockTotal;
 	}
 
-	public void setStockTotal(int stockTotal) {
+	public void setStockTotal(double stockTotal) {
 		this.stockTotal = stockTotal;
 	}
 
@@ -58,15 +58,15 @@ public class BuySellResponse {
 		this.userId = userId;
 	}
 
-	public int getUserCash() {
+	public double getUserCash() {
 		return userCash;
 	}
 
-	public void setUserCash(int userCash) {
+	public void setUserCash(double userCash) {
 		this.userCash = userCash;
 	}
 
-	public int getUserPortfolio() {
+	public double getUserPortfolio() {
 		return userPortfolio;
 	}
 

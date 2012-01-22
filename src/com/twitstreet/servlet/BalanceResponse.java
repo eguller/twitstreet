@@ -3,9 +3,9 @@ package com.twitstreet.servlet;
 import com.twitstreet.db.data.User;
 
 public class BalanceResponse {
-	private int cash;
-	private int portfolio;
-	private int total;
+	private double cash;
+	private double portfolio;
+	private double total;
 	private int direction;
 	private String userName;
 	private long userId;
@@ -21,15 +21,15 @@ public class BalanceResponse {
 		this.rank = user.getRank();
 	}
 
-	public int getCash() {
+	public double getCash() {
 		return cash;
 	}
 
-	public int getPortfolio() {
+	public double getPortfolio() {
 		return portfolio;
 	}
 
-	public int getTotal() {
+	public double getTotal() {
 		return total;
 	}
 

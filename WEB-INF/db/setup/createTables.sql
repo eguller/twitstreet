@@ -6,7 +6,7 @@ create table `users`(
 	`userName` varchar(45) not null,
 	`firstLogin` datetime not null,
 	`lastLogin` datetime not null,
-	`cash` int not null default 10000,
+	`cash` double not null default 10000,
 	`lastIp` varchar(45) not null,
 	`oauthToken` varchar(100) not null,
 	`oauthTokenSecret` varchar(100) not null,
@@ -31,7 +31,7 @@ create table `admin`(
 create table `stock`(
 	`id` bigint not null auto_increment,
 	`name` varchar(45) not null,
-	`total` int not null,
+	`total` double not null,
 	`pictureUrl` varchar(255),
 	`lastUpdate` timestamp,
 	 primary key (`id`)
@@ -64,7 +64,7 @@ create  table `transactions` (
   `id` bigint not null auto_increment,
   `user_id` bigint null,
   `stock` bigint null,
-  `amount` int null,
+  `amount` double null,
   `t_action` tinyint null,
   `t_date` timestamp,
   primary key (`id`) );

@@ -21,9 +21,9 @@ public interface UserMgr{
 	
 	public User random();
 	
-	public void increaseCash(long userId, int cash);
+	public void increaseCash(long userId, double cash);
 	
-	public void updateCash(long userId, int amount);
+	public void updateCash(long userId, double amount);
 	
 	public ArrayList<User> getTopRank();
 

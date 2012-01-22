@@ -11,8 +11,8 @@ public class User{
     String userName;
     Date firstLogin;
     Date lastLogin;
-    int cash;
-    int portfolio;
+    double cash;
+    double portfolio;
     String lastIp;
     String oauthToken;
     String oauthTokenSecret;
@@ -52,19 +52,19 @@ public class User{
         this.lastLogin = lastLogin;
     }
 
-    public int getCash() {
+    public double getCash() {
         return cash;
     }
 
-    public void setCash(int cash) {
+    public void setCash(double cash) {
         this.cash = cash;
     }
 
-    public int getPortfolio() {
+    public double getPortfolio() {
         return portfolio;
     }
 
-    public void setPortfolio(int portfolio) {
+    public void setPortfolio(double portfolio) {
         this.portfolio = portfolio;
     }
 

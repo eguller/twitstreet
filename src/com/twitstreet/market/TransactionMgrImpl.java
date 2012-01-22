@@ -29,7 +29,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 	LinkedList<TransactionRecord> currentTransactions = new LinkedList<TransactionRecord>();
 
 	@Override
-	public void recordTransaction(User user, Stock stock, int amount,
+	public void recordTransaction(User user, Stock stock, double amount,
 			int operation) {
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -43,7 +43,7 @@ public class TransactionMgrImpl implements TransactionMgr {
 							Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, user.getId());
 			ps.setLong(2, stock.getId());
-			ps.setInt(3, amount);
+			ps.setDouble(3, amount);
 			ps.setInt(4, operation);
 			ps.setTimestamp(5, new Timestamp(currentDate));
 			int affectedRows = ps.executeUpdate();
