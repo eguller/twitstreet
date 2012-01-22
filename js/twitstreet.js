@@ -219,10 +219,10 @@ function loadCurrentTransactions(){
 				var td = $('<td></td>');
 				
 				if(transactionRecord.transactionAction == 1){
-					$(td).html("<a href=\"/user/"+transactionRecord.userName+"\">"+transactionRecord.userName+"</a> <span class=\"green\">bought</span> "+transactionRecord.amount+" <a onclick=\"writeAndGetQuote('"+transactionRecord.stockName+"');\" href=\"#\">"+transactionRecord.stockName+"</a>");
+					$(td).html("<a href=\"/user/"+transactionRecord.userId+"\">"+transactionRecord.userName+"</a> <span class=\"green\">bought</span> "+transactionRecord.amount+" <a onclick=\"writeAndGetQuote('"+transactionRecord.stockName+"');\" href=\"#\">"+transactionRecord.stockName+"</a>");
 				}
 				else{
-					$(td).html("<a href=\"/user/"+transactionRecord.userName+"\">"+transactionRecord.userName+"</a> <span class=\"red\">sold</span> "+transactionRecord.amount+" <a onclick=\"writeAndGetQuote('"+transactionRecord.stockName+"');\" href=\"#\">"+transactionRecord.stockName+"</a>");
+					$(td).html("<a href=\"/user/"+transactionRecord.userId+"\">"+transactionRecord.userName+"</a> <span class=\"red\">sold</span> "+transactionRecord.amount+" <a onclick=\"writeAndGetQuote('"+transactionRecord.stockName+"');\" href=\"#\">"+transactionRecord.stockName+"</a>");
 				}
 				$(tr).append(td);
 				$("#current-transactions-table").append(tr);
