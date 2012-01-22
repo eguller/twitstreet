@@ -31,7 +31,7 @@ create table `admin`(
 create table `stock`(
 	`id` bigint not null auto_increment,
 	`name` varchar(45) not null,
-	`total` double not null,
+	`total` int not null,
 	`pictureUrl` varchar(255),
 	`lastUpdate` timestamp,
 	 primary key (`id`)
