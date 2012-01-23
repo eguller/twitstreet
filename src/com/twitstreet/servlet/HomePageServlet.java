@@ -31,6 +31,11 @@ public class HomePageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
+		response.setContentType("application/json;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
 		if (!twitstreet.isInitialized()) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp")
 					.forward(request, response);

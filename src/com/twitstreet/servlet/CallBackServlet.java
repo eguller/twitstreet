@@ -28,6 +28,7 @@ public class CallBackServlet extends HttpServlet {
 	public static final String COOKIE_OAUTHTOKEN = "oauthtoken";
 	private static final String REQUEST_TOKEN = "requestToken";
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
+	public static final double INITIAL_MONEY = 10000;
 	/*
 	 * I will be dead when this cookie is expired. Wed, 08 Nov 2079 04:24:42 GMT
 	 */
@@ -39,7 +40,13 @@ public class CallBackServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
 		response.setContentType("text/html");
+		response.setContentType("application/json;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
 		Twitter twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer(configMgr.getConsumerKey(),
 				configMgr.getConsumerSecret());
@@ -66,7 +73,7 @@ public class CallBackServlet extends HttpServlet {
 				user.setLastLogin(Calendar.getInstance().getTime());
 				user.setOauthToken(oauthToken);
 				user.setOauthTokenSecret(oauthTokenSecret);
-				user.setCash(10000);
+				user.setCash(configMgr.getInitialMoney());
 				user.setPictureUrl(twUser.getProfileImageURL().toString());
 				userMgr.saveUser(user);
 				request.getSession().setAttribute(User.USER, user);

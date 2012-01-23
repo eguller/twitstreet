@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.User;
 import com.twitstreet.util.Util;
@@ -19,6 +20,7 @@ public class UserMgrImpl implements UserMgr {
 	private static final int TOP = 100;
 	@Inject
 	DBMgr dbMgr;
+	@Inject ConfigMgr configMgr;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 
 	public User getUserById(long id) {
@@ -85,13 +87,25 @@ public class UserMgrImpl implements UserMgr {
 	public void saveUser(User userDO) {
 		Connection connection = null;
 		PreparedStatement ps = null;
+		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
+			
+			ps = connection.prepareStatement("(select (count(*)+1) as newrank from users where (portfolio_value(id) + cash) > "+configMgr.getInitialMoney()+")");
+			rs = ps.executeQuery();
+			int newRank = 9999;
+			if(rs.next()){
+			  newRank = rs.getInt("newrank");
+			}
+			
+			rs.close();
+			ps.close();
+			
 			ps = connection
 					.prepareStatement("insert into users(id, userName, "
 							+ "lastLogin, firstLogin, "
-							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl) "
-							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl, rank) "
+							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setLong(1, userDO.getId());
 			ps.setString(2, userDO.getUserName());
 			ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));
@@ -101,6 +115,9 @@ public class UserMgrImpl implements UserMgr {
 			ps.setString(7, userDO.getOauthToken());
 			ps.setString(8, userDO.getOauthTokenSecret());
 			ps.setString(9, userDO.getPictureUrl());
+			ps.setInt(10, newRank);
+			
+			
 
 			ps.executeUpdate();
 			logger.debug("DB: Query executed successfully - " + ps.toString());

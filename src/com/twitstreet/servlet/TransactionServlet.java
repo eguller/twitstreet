@@ -31,6 +31,10 @@ public class TransactionServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws IOException {
 		response.setContentType("application/json;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
 		List<TransactionRecord> transactionRecordList = null;
 		String type = request.getParameter("type");
 		if(USER_TRANSACTIONS.equals(type)){

@@ -84,10 +84,12 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 			double sold = (double) amount2Sell / (double) stock.getTotal();
 			stock.setSold(stock.getSold() - sold);
-
-			if (amount2Sell >= stockValueInPortfolio) {
+            
+			if (amount2Sell >= stockValueInPortfolio && Math.abs(amount2Sell - stockValueInPortfolio) < 1) {
 				// if user sold all he has, delete stock from his portfolio.
 				// we do not want to show $0 value stock in portfolio.
+				//if remainin portfolio value is less than 1 again delete 
+				//portfolio
 				deleteStockInPortfolio(seller.getId(), stock.getId());
 			} else {
 				// if user did not sell all he has, just update stock in
@@ -96,10 +98,10 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			}
 			
 			// calculate commission
-			int commission = (int) (amount2Sell * COMMISSION_RATE);
+			double commission = (amount2Sell * COMMISSION_RATE);
 
 			// subtract commission
-			int cash = amount2Sell - commission;
+			double cash = amount2Sell - commission;
 			
 			userMgr.updateCash(seller.getId(), -cash);
 			transactionMgr.recordTransaction(seller, stock, amount2Sell,

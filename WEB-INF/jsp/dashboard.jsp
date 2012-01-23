@@ -75,7 +75,7 @@ if(sessionUser != null){
 		</span></p>
 		</div>
 		
-		<input type="hidden" id="user-stock-val"/>
+		<input type="hidden" id="user-stock-val" value="<%=userStock == null ? "" : (int)(userStock.getPercent() * stock.getTotal())%>"/>
 		<input type="hidden" id="available-hidden" value="<%=stock == null ? "" : stock.getAvailable()%>"/>
 		<input type="hidden" id="sold-hidden" value="<%=stock == null ? "" : stock.getSold() %>" />
 		<input type="hidden" id="total-hidden" value="<%=stock == null ? "" : stock.getTotal() %>" />
@@ -121,6 +121,11 @@ if(sessionUser != null){
 					%>
 				</td>
 			</tr>
+			<tr>
+			<td colspan="3" style="text-align: center; padding-top: 10px;">
+				Twitstreet gets 1% commission on every sale!
+			</td>
+			</tr>
 			<tr id="buy-links-row">
 				<td colspan="3" id="buy-links">
 					<div id="buy-sell-div">
@@ -131,7 +136,7 @@ if(sessionUser != null){
 								ArrayList<Double> sellValues = new ArrayList<Double>();
 								double totalCash = user.getCash();
 								int available = stock.getAvailable();
-								double min = Math.min(totalCash, available);
+								int min = (int)Math.min(totalCash, available);
 							
 								int i = min == 0 ? 0 : String.valueOf((int)min).length();
 								if((int)Math.pow(10,i - 1) != min && min > 0){
@@ -144,7 +149,7 @@ if(sessionUser != null){
 								
 								if(userStock != null){
 									double userTotalStock = (userStock.getPercent() * stock.getTotal());
-									i = userTotalStock == 0 ? 0 : String.valueOf((int)userTotalStock).length(); 
+									i = userTotalStock < 1 ? 0 : String.valueOf((int)userTotalStock).length(); 
 									if(userTotalStock != Math.pow(10,i - 1)){
 										sellValues.add(Math.floor(userTotalStock));
 									}
@@ -159,7 +164,7 @@ if(sessionUser != null){
 									if(i < buyValues.size() && stock.getTotal() > configMgr.getMinFollower()){
 										out.write("<div class=\"field-green\" onclick=\"buy("+stock.getId()+","+buyValues.get(i)+");\">");
 										out.write("Buy<br>");
-										out.write( Util.commaSep(buyValues.get(i)));
+										out.write( Util.commaSep( buyValues.get(i).intValue() ));
 										out.write("</div>");
 									}
 									out.write("</td>");
@@ -167,7 +172,7 @@ if(sessionUser != null){
 									if(i < sellValues.size()){
 										out.write("<div class=\"field-red\" onclick=\"sell("+stock.getId()+","+sellValues.get(i)+");\">");
 										out.write("Sell<br>");
-										out.write(Util.commaSep(sellValues.get(i)));
+										out.write(Util.commaSep( sellValues.get(i).intValue()) );
 										out.write("</div>");
 									}
 									out.write("</td>");

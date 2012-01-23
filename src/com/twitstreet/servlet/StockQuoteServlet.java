@@ -53,6 +53,10 @@ public class StockQuoteServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		response.setContentType("application/json;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
 		String twUserName = (String) request.getParameter(QUOTE);
 
 		User user = request.getSession(false) == null ? null : (User) request

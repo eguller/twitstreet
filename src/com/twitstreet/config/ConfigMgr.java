@@ -11,4 +11,5 @@ public interface ConfigMgr {
 	public String getConsumerSecret();
 	public int getMinFollower();
 	public String getGaAccount();
+	public double getInitialMoney();
 }

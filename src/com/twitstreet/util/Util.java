@@ -63,7 +63,7 @@ public class Util {
 	}
 	
 	public static String commaSep(double amount) {
-		DecimalFormat decimalFormatter = new DecimalFormat("#,###,###.##");
+		DecimalFormat decimalFormatter = new DecimalFormat("#,###,###.00");
 		return decimalFormatter.format(amount);
 	}
 	
