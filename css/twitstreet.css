@@ -43,10 +43,6 @@ a {
     font-weight: bolder;
 }
 
-a:hover {
-	text-decoration: none;
-}
-
 /* ------------------------------
 PAGE STRUCTURE
 ------------------------------ */
@@ -225,13 +221,9 @@ CUSTOM CLASSES
 }
 
 
-a:HOVER {
+a:hover {
 	text-decoration: underline;
 }
-
-
-
-
 
 .right_aligned tr td {
 	text-align: right;
@@ -296,4 +288,8 @@ img.twuser {
 
 #topbar #home {
 	font-size: 16px;
+}
+
+.twtr-hd h3 {
+	border-style: none;
 }
