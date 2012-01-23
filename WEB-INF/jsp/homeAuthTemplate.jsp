@@ -24,6 +24,7 @@
 				<template:get name="balance"></template:get>
 				<template:get name="yourtransactions"></template:get>
 				<template:get name="latesttransactions"></template:get>
+				<template:get name="recentTweets"></template:get>
 			</div>
 			<div id="column_right">
 				<template:get name="topranks"></template:get>

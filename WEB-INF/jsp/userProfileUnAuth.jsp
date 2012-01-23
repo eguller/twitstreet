@@ -6,5 +6,6 @@
   <template:put name='userprofile' content='userProfile.jsp' />
   <template:put name='topranks' content='topranks.jsp' />
   <template:put name='latesttransactions' content='latesttransactions.jsp' />
+  <template:put name='recentTweets' content='recentTweets.jsp' />
   <template:put name='footer' content='footer.jsp' />
 </template:insert>
