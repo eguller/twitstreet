@@ -19,7 +19,7 @@ ArrayList<User> userList = userMgr.getTopRank();
 		<% for(int i = 0; i < userList.size(); i++){ 
 				int rank = i + 1;
 				User user = userList.get(i);
-				int total = user.getCash() + user.getPortfolio();
+				double total = user.getCash() + user.getPortfolio();
 				if( i%2 == 0){ %>
 					<tr>
 	    		<% }else{ %>
@@ -27,7 +27,7 @@ ArrayList<User> userList = userMgr.getTopRank();
 	    		<% } %>
 						<td class="rank-number"><%=rank%>.</td>
 						<td><img class="twuser" src="<%=user.getPictureUrl()%>"/></td>
-						<td><a href="/user/<%=user.getId() %>"><%=user.getUserName() %></a> <br> <%=Util.commaSep(total)%>$</td>
+						<td><a href="/user/<%=user.getId() %>"><%=user.getUserName() %></a> <br> $<%=Util.commaSep(total)%></td>
 						<% if (user.getDirection() == 1) { %>
 							<td><img src="/images/up.png" /></td>
 						<% } else { %>

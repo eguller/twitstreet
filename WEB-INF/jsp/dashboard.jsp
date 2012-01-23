@@ -127,29 +127,29 @@ if(sessionUser != null){
 						<table class="buy-sell-table">
 						<% 
 							if(user != null && stock != null){
-								ArrayList<Integer> buyValues = new ArrayList<Integer>();
-								ArrayList<Integer> sellValues = new ArrayList<Integer>();
-								int totalCash = user.getCash();
+								ArrayList<Double> buyValues = new ArrayList<Double>();
+								ArrayList<Double> sellValues = new ArrayList<Double>();
+								double totalCash = user.getCash();
 								int available = stock.getAvailable();
-								int min = Math.min(totalCash, available);
+								double min = Math.min(totalCash, available);
 							
-								int i = min == 0 ? 0 : String.valueOf(min).length();
+								int i = min == 0 ? 0 : String.valueOf((int)min).length();
 								if((int)Math.pow(10,i - 1) != min && min > 0){
-									buyValues.add(min);
+									buyValues.add(Math.floor(min));
 								}
 								
 								for(; i > 0; i--){
-									buyValues.add((int)Math.pow(10,i - 1));
+									buyValues.add(Math.pow(10,i - 1));
 								}
 								
 								if(userStock != null){
-									int userTotalStock = (int) (userStock.getPercent() * stock.getTotal());
-									i = userTotalStock == 0 ? 0 : String.valueOf(userTotalStock).length(); 
-									if(userTotalStock != (int)Math.pow(10,i - 1)){
-										sellValues.add(userTotalStock);
+									double userTotalStock = (userStock.getPercent() * stock.getTotal());
+									i = userTotalStock == 0 ? 0 : String.valueOf((int)userTotalStock).length(); 
+									if(userTotalStock != Math.pow(10,i - 1)){
+										sellValues.add(Math.floor(userTotalStock));
 									}
 									for(; i > 0; i--){
-										sellValues.add((int)Math.pow(10,i - 1));
+										sellValues.add(Math.pow(10,i - 1));
 									}
 								}
 								i = 0;

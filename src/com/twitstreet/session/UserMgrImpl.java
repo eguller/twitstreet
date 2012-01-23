@@ -53,8 +53,8 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setUserName(rs.getString("userName"));
 				userDO.setLastLogin(rs.getDate("lastLogin"));
 				userDO.setFirstLogin(rs.getDate("firstLogin"));
-				userDO.setCash(rs.getInt("cash"));
-				userDO.setPortfolio(rs.getInt("portfolio"));
+				userDO.setCash(rs.getDouble("cash"));
+				userDO.setPortfolio(rs.getDouble("portfolio"));
 				userDO.setLastIp(rs.getString("lastIp"));
 				userDO.setOauthToken(rs.getString("oauthToken"));
 				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
@@ -307,8 +307,8 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setUserName(rs.getString("userName"));
 				userDO.setLastLogin(rs.getDate("lastLogin"));
 				userDO.setFirstLogin(rs.getDate("firstLogin"));
-				userDO.setCash(rs.getInt("cash"));
-				userDO.setPortfolio((int)rs.getDouble("portfolio"));
+				userDO.setCash(rs.getDouble("cash"));
+				userDO.setPortfolio(rs.getDouble("portfolio"));
 				userDO.setLastIp(rs.getString("lastIp"));
 				userDO.setOauthToken(rs.getString("oauthToken"));
 				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
