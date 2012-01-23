@@ -15,7 +15,7 @@ User sessionUser = (User)request.getSession().getAttribute(User.USER);
 			<table>
 				<tr>
 					<td rowspan="2"><img class="twuser" src="<%= sessionUser.getPictureUrl() %>" /></td>
-					<td>@<%= sessionUser.getUserName() %></td>
+					<td>@<span id="username"><%= sessionUser.getUserName() %></span></td>
 				</tr>
 				<tr>
 					<td><a href="/?signout=1">Sign out >></a></td>

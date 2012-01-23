@@ -51,8 +51,9 @@ function getquote() {
 							if (data.resultCode == 'user-notfound') {
 
 							} else {
-								$("#total").html(
-										commasep( parseInt(data.respObj.stock.total) ));
+								$("#total")
+										.html(
+												commasep(parseInt(data.respObj.stock.total)));
 								$("#total-hidden")
 										.val(data.respObj.stock.total);
 
@@ -66,12 +67,13 @@ function getquote() {
 								$("#sold").html(commasep(parseInt(sold)));
 								$("#sold-hidden").val(parseInt(sold));
 
-								$("#available").html(
-										commasep( parseInt(data.respObj.stock.total
-												- sold) 
-												));
+								$("#available")
+										.html(
+												commasep(parseInt(data.respObj.stock.total
+														- sold)));
 								$("#available-hidden").val(
-										parseInt(data.respObj.stock.total - sold));
+										parseInt(data.respObj.stock.total
+												- sold));
 								$("#dashboard-stock-follower-status").html(
 										"<a href=\'/stock/"
 												+ data.respObj.stock.id + "\'>"
@@ -93,7 +95,7 @@ function getquote() {
 												.html(
 														"You have "
 																+ commasep(parseInt(data.respObj.stock.total
-																* data.respObj.percentage))
+																		* data.respObj.percentage))
 																+ " of "
 																+ quote);
 									}
@@ -161,9 +163,10 @@ function writeBuySellLinks() {
 		var sellTd = $('<td></td>');
 		if (i < buyValues.length) {
 			var div = $('<div></div>');
-			$(div).html('Buy <br>' + commasep( parseInt(buyValues[i]) ));
+			$(div).html('Buy <br>' + commasep(parseInt(buyValues[i])));
 			$(div).attr('class', 'field-green');
-			$(div).attr('onclick', 'buy(' + quote + ', ' + parseInt(buyValues[i]) + ');');
+			$(div).attr('onclick',
+					'buy(' + quote + ', ' + parseInt(buyValues[i]) + ');');
 			$(div).corner("round 5px");
 			$(buyTd).append($(div));
 
@@ -171,7 +174,7 @@ function writeBuySellLinks() {
 
 		if (i < sellValues.length) {
 			var div = $('<div></div>');
-			$(div).html('Sell <br>' + commasep( parseInt(sellValues[i]) ));
+			$(div).html('Sell <br>' + commasep(parseInt(sellValues[i])));
 			$(div).attr('class', 'field-red');
 			$(div).attr('onclick',
 					'sell(' + quote + ', ' + parseInt(sellValues[i]) + ');');
@@ -358,26 +361,29 @@ function buy(stock, amount) {
 		// unblock when data arrives
 		$('#buy-sell-div').unblock();
 
-		$("#total").html(commasep( parseInt(data.stockTotal) ));
-		$("#total-hidden").val( parseInt(data.stockTotal));
+		$("#total").html(commasep(parseInt(data.stockTotal)));
+		$("#total-hidden").val(parseInt(data.stockTotal));
 
 		var sold = parseInt(data.stockTotal * data.stockSold);
-		$("#sold").html(commasep( sold));
+		$("#sold").html(commasep(sold));
 		$("#sold-hidden").val(sold);
 
-		$("#available").html(commasep( parseInt(data.stockTotal - sold) ));
-		$("#available-hidden").val( parseInt(data.stockTotal - sold));
+		$("#available").html(commasep(parseInt(data.stockTotal - sold)));
+		$("#available-hidden").val(parseInt(data.stockTotal - sold));
 
 		$("#cash_value").html("$" + commasep(data.userCash.toFixed(2)));
 		$("#cash-hidden").val(data.userCash);
-		$("#portfolio_value").html("$" + commasep(data.userPortfolio.toFixed(2)) );
-		$("#total_value").html(
-				commasep("$" + (data.userCash + data.userPortfolio).toFixed(2))
-				);
+		$("#portfolio_value").html(
+				"$" + commasep(data.userPortfolio.toFixed(2)));
+		$("#total_value")
+				.html(
+						commasep("$"
+								+ (data.userCash + data.userPortfolio)
+										.toFixed(2)));
 		writeBuySellLinks();
 		$("#user-stock").html(
-				"You have <b>" + commasep(data.userStock.toFixed(2)) + "</b> of "
-						+ data.stockName);
+				"You have <b>" + commasep(data.userStock.toFixed(2))
+						+ "</b> of " + data.stockName);
 		loadPortfolio();
 		loadUserTransactions();
 	});
@@ -406,20 +412,27 @@ function sell(stock, amount) {
 		$("#sold").html(commasep(sold.toFixed(2)));
 		$("#sold-hidden").val(sold);
 
-		$("#available").html(commasep( (data.stockTotal - sold).toFixed(2) ));
+		$("#available").html(commasep((data.stockTotal - sold).toFixed(2)));
 		$("#available-hidden").val(data.stockTotal - sold);
 
-		$("#cash_value").html("$" + commasep( data.userCash.toFixed(2)));
+		$("#cash_value").html("$" + commasep(data.userCash.toFixed(2)));
 		$("#cash-hidden").val(data.userCash);
-		$("#portfolio_value").html("$" + commasep(data.userPortfolio.toFixed(2)));
-		$("#total_value").html(
-				"$" + commasep( (data.userCash + data.userPortfolio).toFixed(2) ) );
+		$("#portfolio_value").html(
+				"$" + commasep(data.userPortfolio.toFixed(2)));
+		$("#total_value")
+				.html(
+						"$"
+								+ commasep((data.userCash + data.userPortfolio)
+										.toFixed(2)));
 		writeBuySellLinks();
 		$("#user-stock").html(
 				"You have <b>" + commasep(data.userStock) + "</b> of "
 						+ data.stockName);
 		loadPortfolio();
 		loadUserTransactions();
+
+		// update cash on top rank list
+		$('#userOnTopRank').text($("#total_value").text());
 	});
 }
 
@@ -462,43 +475,33 @@ function setup() {
 
 function toprank() {
 	$("topranktable").empty();
-	$
-			.getJSON(
-					'/toprank',
-					function(data) {
-						$("#topranktable").empty();
-						for ( var i = 0, length = data.length; i < length; i++) {
-							var rank = data[i];
-							var tr = $("<tr></tr>");
-							if (i % 2 == 0) {
-								tr.attr('class', 'odd');
-							}
-							$(tr).append(
-									$("<td class=\'rank-number\'>" + rank.rank
-											+ ". </td>"));
-							$(tr).append(
-									$("<td><img class=\'twuser\' src=\'"
-											+ rank.pictureUrl + "\'/></td>"));
-							$(tr).append(
-									$('<td><a href=\'/user/'
-											+ rank.id
-											+ '\'>'
-											+ rank.userName
-											+ '</a> <br>$'
-											+ commasep( (rank.cash + rank.portfolio).toFixed(2) )
-											+ '</td>'));
-							if (data.direction == 1) {
-								$(tr)
-										.append(
-												$("<td><img src=\"/images/up.png\" /></td>"));
-							} else {
-								$(tr)
-										.append(
-												$("<td><img src=\"/images/down.png\" /></td>"));
-							}
-							$("#topranktable").append(tr);
-						}
-					});
+	$.getJSON('/toprank', function(data) {
+		$("#topranktable").empty();
+		for ( var i = 0, length = data.length; i < length; i++) {
+			var rank = data[i];
+			var tr = $("<tr></tr>");
+			if (i % 2 == 0) {
+				tr.attr('class', 'odd');
+			}
+			$(tr).append(
+					$("<td class=\'rank-number\'>" + rank.rank + ". </td>"));
+			$(tr).append(
+					$("<td><img class=\'twuser\' src=\'" + rank.pictureUrl
+							+ "\'/></td>"));
+			$(tr).append(
+					$('<td><a href=\'/user/' + rank.id + '\'>' + rank.userName
+							+ '</a> <br>$'
+							+ commasep((rank.cash + rank.portfolio).toFixed(2))
+							+ '</td>'));
+			if (data.direction == 1) {
+				$(tr).append($("<td><img src=\"/images/up.png\" /></td>"));
+			} else {
+				$(tr).append($("<td><img src=\"/images/down.png\" /></td>"));
+			}
+			$("#topranktable").append(tr);
+		}
+	});
+
 }
 
 function loadBalance() {
@@ -516,7 +519,8 @@ function loadBalance() {
 			}
 
 			$("#cash_value").html("$" + commasep(data.cash.toFixed(2)));
-			$("#portfolio_value").html("$" + commasep(data.portfolio.toFixed(2)));
+			$("#portfolio_value").html(
+					"$" + commasep(data.portfolio.toFixed(2)));
 			$("#total_value").html("$" + commasep(data.total.toFixed(2)));
 		}
 	});
@@ -537,4 +541,13 @@ function commasep(nStr) {
 function selectAllText(textbox) {
 	textbox.focus();
 	textbox.select();
+}
+
+function forwardStockToMain(element) {
+	var quote = element.text();
+	$.post('/getquote', {
+		quote : quote
+	}, function(data) {
+		window.location = "/";
+	});
 }
