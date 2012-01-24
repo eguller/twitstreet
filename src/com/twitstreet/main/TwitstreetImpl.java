@@ -56,6 +56,7 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
+		StockHistoryUpdateTask stockHistoryUpdateTask = injector.getInstance(StockHistoryUpdateTask.class);
 		
 		Thread reRankThread = new Thread(reRankTask);
 		reRankThread.setName("Re-Rank");
@@ -64,6 +65,11 @@ public class TwitstreetImpl implements Twitstreet {
 		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
 		updateFollowerCountThread.setName("Update Follower Count");
 		updateFollowerCountThread.start();
+		
+		Thread stockHistoryUpdateThread = new Thread (stockHistoryUpdateTask);
+		stockHistoryUpdateThread.setName("Update Stock History");
+		stockHistoryUpdateThread.start();
+		
 
 		initialized = true;
 	}
