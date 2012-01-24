@@ -2,7 +2,7 @@
 HTML Redefine Tags
 ------------------------------ */
 body {
-	font-family: Georgia, serif;
+	font-family: 'Trebuchet MS', sans-serif;
 	font-size: 12px;
 	margin: 20px;
 	padding: 0;
@@ -44,15 +44,15 @@ a {
 }
 
 .twtr-bd {
-	font-family: Georgia, serif; 
+	font-family: 'Trebuchet MS', sans-serif; 
 }
 
 .twtr-hd {
-	font-family: Georgia, serif; 
+	font-family: 'Trebuchet MS', sans-serif; 
 }
 
 .twtr-ft{
-	font-family: Georgia, serif; 
+	font-family: 'Trebuchet MS', sans-serif; 
 }
 
 /* ------------------------------
