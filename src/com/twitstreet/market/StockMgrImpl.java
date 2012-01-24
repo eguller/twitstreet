@@ -111,6 +111,39 @@ public class StockMgrImpl implements StockMgr {
 		return stockDO;
 	}
 
+	public void updateStockHistory(){
+		Connection connection = null;
+		PreparedStatement ps = null;
+
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("insert into stock_history(stock, total, name, day, stockLastUpdate) select distinct id, total, name, DATE(NOW()), lastUpdate from stock order by lastUpdate desc ");
+		
+			ps.executeUpdate();
+			
+				
+			logger.debug("DB: Query executed successfully - " + ps.toString());
+		} catch (SQLException ex) {
+			logger.error("DB: Query failed - " + ps.toString(), ex);
+		} finally {
+			try {
+				if (ps != null && !ps.isClosed()) {
+					ps.close();
+				}
+				if (connection != null && !connection.isClosed()) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				logger.error("DB: Resources could not be closed properly", e);
+			}
+		}
+		
+		
+	}
+	
+	
+	
 	public void updateTwitterData(long id, int total, String pictureUrl,
 			String screenName) {
 		Connection connection = null;
