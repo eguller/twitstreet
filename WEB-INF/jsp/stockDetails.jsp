@@ -26,7 +26,7 @@
 	try {
 		id = Long.parseLong(stockId);
 		stockDetailList = portfolioMgr.getStockDistribution(id);
-		stock = stockMgr.getStockById(id);
+		stock = (Stock)request.getAttribute("stock");
 
 	} catch (NumberFormatException nfe) {
 	}
@@ -47,9 +47,7 @@
 						<td width="36px;"><img class="twuser"
 							src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 							id="dashboard-picture"></td>
-						<td style="text-align: left;" id="dashboard-stock-follower-status"><a
-							id="see-details-link"
-							href="javascript:void(0);" onclick="forwardStockToMain($(this))"><%=stock == null ? "" : stock.getName()%></a>'s
+						<td style="text-align: left;" id="dashboard-stock-follower-status"><a href="/?stock=<%=stock == null ? "" : stock.getId()%>" title="Goes to main page and loads <%=stock == null ? "" : stock.getName()%>'s stock details"><%=stock == null ? "" : stock.getName()%></a>'s
 							follower status <a href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>" style="float: right" target="_blank">Twitter Page &gt;&gt;</a></td>
 					</tr>
 				</table></td>
@@ -116,7 +114,7 @@
 			<td><img class='twuser' style="margin-top: 2px; margin-bottom: 2px;"
 				src="<%=stockDetail.getUserPictureUrl()%>" />
 			</td>
-			<td><a href="/user/<%=stockDetail.getUserId()%>"><%=stockDetail.getUserName()%></a>
+			<td><a href="/user?user=<%=stockDetail.getUserId()%>" title="Goes to <%=stockDetail.getUserName()%>'s user profile page"><%=stockDetail.getUserName()%></a>
 			</td>
 			<td>$<%=Util.commaSep((int) (stockDetail.getPercent() * stockDetail
 								.getStockTotal()))%></td>

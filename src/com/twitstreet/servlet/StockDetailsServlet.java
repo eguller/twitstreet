@@ -7,10 +7,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
-
+import com.twitstreet.market.StockMgr;
 @SuppressWarnings("serial")
+@Singleton
 public class StockDetailsServlet extends HttpServlet {
+	@Inject StockMgr stockMgr;
+	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
 		response.setContentType("application/json;charset=utf-8");
@@ -19,13 +25,15 @@ public class StockDetailsServlet extends HttpServlet {
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
 		User user = (User) request.getSession().getAttribute(User.USER);
-		String pathInfo = request.getPathInfo();
-		String stockIdStr = pathInfo == null || "/".equals(pathInfo) ? null : pathInfo.substring(1);
+		String stockIdStr = request.getParameter("stock");
 				
 		if(stockIdStr == null){
 			response.sendRedirect(response.encodeRedirectURL("/"));
 			return;
 		}
+		Stock stock = stockMgr.getStockById(Long.parseLong(stockIdStr));
+		request.setAttribute("stock", stock);
+		request.setAttribute("title", "Stock Details");
 		
 		if (user != null) {
 			getServletContext().getRequestDispatcher(

@@ -27,7 +27,7 @@ ArrayList<User> userList = userMgr.getTopRank();
 	    		<% } %>
 						<td class="rank-number"><%=rank%>.</td>
 						<td><img class="twuser" src="<%=user.getPictureUrl()%>"/></td>
-						<td><a href="/user/<%=user.getId() %>"><%=user.getUserName() %></a> <br> $<%=Util.commaSep(total)%></td>
+						<td><a href="/user?user=<%=user.getId() %>" title="Goes to <%=user.getUserName() %>'s profile page."><%=user.getUserName() %></a> <br> $<%=Util.commaSep(total)%></td>
 						<% if (user.getDirection() == 1) { %>
 							<td><img src="/images/up.png" /></td>
 						<% } else { %>

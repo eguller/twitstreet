@@ -32,17 +32,17 @@ List<TransactionRecord> transactionRecordList = transactionMgr.getCurrentTransac
 					
 					if(transactionRecord.getTransactionAction() == TransactionRecord.BUY){  
 						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-							out.write("<a href=\"/user/" + transactionRecord.getUserId() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " <a href='#' onClick=\"writeAndGetQuote('" + transactionRecord.getStockName() + "');\">"+ transactionRecord.getStockName() +"</a>");
+							out.write("<a href=\"/user?user=" + transactionRecord.getUserId() + "\" title=\"Goes to "+transactionRecord.getUserName()+"'s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " <a href='/?stock="+transactionRecord.getStockId()+"' title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 						}
 						else{
-							out.write("<a href=\"/user/" + transactionRecord.getUserId() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " <a href='/stock/"+transactionRecord.getStockId()+"'>" + transactionRecord.getStockName() +"</a>");
+							out.write("<a href=\"/user?user=" + transactionRecord.getUserId() + "\" title=\"Goes to "+transactionRecord.getUserName()+"'s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " <a href='/?stock="+transactionRecord.getStockId()+"' title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">" + transactionRecord.getStockName() +"</a>");
 						}
 					}
 					else{
 						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-							out.write("<a href=\"/user/" + transactionRecord.getUserId() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " <a href='#' onClick=\"writeAndGetQuote('" + transactionRecord.getStockName() + "');\">"+ transactionRecord.getStockName() +"</a>");
+							out.write("<a href=\"/user?user=" + transactionRecord.getUserId() + "\" title=\"Goes to "+transactionRecord.getUserName()+"'s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " <a href='/?stock="+transactionRecord.getStockId()+"' title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 						}else{
-							out.write("<a href=\"/user/" + transactionRecord.getUserId() + "\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " <a href='/stock/"+transactionRecord.getStockId()+"'>" + transactionRecord.getStockName() +"</a>");
+							out.write("<a href=\"/user?user=" + transactionRecord.getUserId() + "\" title=\"Goes to "+transactionRecord.getUserName()+"'s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + transactionRecord.getAmount() + " <a href='/stock/"+transactionRecord.getStockId()+"' title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">" + transactionRecord.getStockName() +"</a>");
 						}
 					}
 					%>
