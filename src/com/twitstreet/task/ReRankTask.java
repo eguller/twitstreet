@@ -1,4 +1,4 @@
-package com.twitstreet.main;
+package com.twitstreet.task;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

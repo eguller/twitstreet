@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.log4j.Logger;
 
@@ -20,17 +19,26 @@ import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.TransactionRecord;
 import com.twitstreet.db.data.User;
+import com.twitstreet.task.AsyncQueryTask;
 
 @Singleton
 public class TransactionMgrImpl implements TransactionMgr {
+	
 	@Inject
 	private DBMgr dbMgr;
+	
+	/*@Inject
+	private AsyncQueryTask asyncQueryTask;*/
+	
 	private static Logger logger = Logger.getLogger(StockMgrImpl.class);
 	LinkedList<TransactionRecord> currentTransactions = new LinkedList<TransactionRecord>();
 
 	@Override
 	public void recordTransaction(User user, Stock stock, int amount,
 			int operation) {
+		
+		// asyncQueryTask.addTransactionStatement(user.getId(), stock.getId(), amount, operation);
+		
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet generatedKeys = null;

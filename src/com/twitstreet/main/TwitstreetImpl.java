@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.util.Properties;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.servlet.ServletContext;
 
@@ -14,6 +17,9 @@ import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.servlet.HomePageServlet;
+import com.twitstreet.task.AsyncQueryTask;
+import com.twitstreet.task.ReRankTask;
+import com.twitstreet.task.StockUpdateTask;
 
 
 @Singleton
@@ -56,6 +62,7 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
+		//AsyncQueryTask asyncQueryTask = injector.getInstance(AsyncQueryTask.class);
 		
 		Thread reRankThread = new Thread(reRankTask);
 		reRankThread.setName("Re-Rank");
@@ -64,6 +71,10 @@ public class TwitstreetImpl implements Twitstreet {
 		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
 		updateFollowerCountThread.setName("Update Follower Count");
 		updateFollowerCountThread.start();
+		
+		/*Thread asyncQueryTaskThread = new Thread(asyncQueryTask);
+		asyncQueryTaskThread.setName("Async query task");
+		asyncQueryTaskThread.start();*/
 
 		initialized = true;
 	}
