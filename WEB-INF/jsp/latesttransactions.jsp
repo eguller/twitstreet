@@ -30,7 +30,7 @@ List<TransactionRecord> transactionRecordList = transactionMgr.getCurrentTransac
 					<% 
 					String requestUrl = request.getRequestURL().toString();
 					
-					if(transactionRecord.getTransactionAction() == TransactionRecord.BUY){  
+					if(transactionRecord.getOperation() == TransactionRecord.BUY){  
 						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
 							out.write("<a href=\"/user?user=" + transactionRecord.getUserId() + "\" title=\"Goes to "+transactionRecord.getUserName()+"'s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + transactionRecord.getAmount() + " <a href='/?stock="+transactionRecord.getStockId()+"' title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 						}

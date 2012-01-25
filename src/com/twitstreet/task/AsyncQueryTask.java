@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -18,22 +19,22 @@ import com.twitstreet.db.data.TransactionRecord;
 import com.twitstreet.task.asyncquery.TransactionParams;
 
 @Singleton
-public class AsyncQueryTask implements Runnable {
+public class AsyncQueryTask implements AsyncQuery {
 	
 	@Inject
 	private DBMgr dbMgr;
 	
-	private BlockingQueue<TransactionParams> paramsQ;
+	private BlockingQueue<TransactionParams> paramsQ = new LinkedBlockingQueue<TransactionParams>();
 	
 	private final String TRANSACTION_QUERY = "INSERT INTO transactions(user_id,stock, amount, t_action,t_date) values(?, ?, ?, ?, ?)";
 	private static Logger logger = Logger.getLogger(AsyncQueryTask.class);
-	
-	public AsyncQueryTask() {
-		this.paramsQ = new LinkedBlockingQueue<TransactionParams>();
-	}
-	
-	public void addTransactionStatement(long userId, long stockId, int amount, int operation) {
-		this.paramsQ.add(new TransactionParams(userId, stockId, amount, operation));
+
+	/* (non-Javadoc)
+	 * @see com.twitstreet.task.AsyncQuery#addTransactionStatement(long, long, int, int)
+	 */
+	@Override
+	public void addTransaction(TransactionParams transactionParams) {
+		this.paramsQ.add(transactionParams);
 	}
 	
 	@Override
@@ -47,7 +48,7 @@ public class AsyncQueryTask implements Runnable {
 				PreparedStatement ps = null;
 				try {
 					conn = dbMgr.getConnection();
-					ps = conn.prepareStatement(TRANSACTION_QUERY, Statement.RETURN_GENERATED_KEYS);
+					ps = conn.prepareStatement(TRANSACTION_QUERY);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -58,11 +59,11 @@ public class AsyncQueryTask implements Runnable {
 						TransactionParams params = paramsQ.poll();
 						try {
 							// set params
-							ps.setLong(1, params.userId);
-							ps.setLong(2, params.stockId);
-							ps.setInt(3, params.amount);
-							ps.setInt(4, params.operation);
-							ps.setTimestamp(5, params.timestamp);
+							ps.setLong(1, params.getUserId());
+							ps.setLong(2, params.getStockId());
+							ps.setInt(3, params.getAmount());
+							ps.setInt(4, params.getOperation());
+							ps.setTimestamp(5, new Timestamp(params.getDate().getTime()));
 							
 							// add batch (no db transaction yet)
 							ps.addBatch();
@@ -76,7 +77,7 @@ public class AsyncQueryTask implements Runnable {
 					// now write all to db at once
 					try {
 						affectedRows = ps.executeBatch();
-						System.out.println("10 transaction query sent to db successfully");
+						logger.debug("10 transaction query sent to db successfully");
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -84,34 +85,15 @@ public class AsyncQueryTask implements Runnable {
 					// check all affected rows
 					for (int i : affectedRows) {
 						if (i <= 0) {
-							logger.error("DB: Transaction record insert failed no generated keys affected - "
+							logger.error("DB: Transaction record insert failed no rows affected - "
 									+ ps.toString() + " - query no:" + i);
 						}
 					}
-					
-					// get generated keys
-					ResultSet generatedKeys = null;
-					try {
-						generatedKeys = ps.getGeneratedKeys();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-					
-					// TODO :  implement related stuff with generated keys
-					try {
-						while(generatedKeys.next()) {
-							TransactionRecord transactionRecord = new TransactionRecord();
-						}
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
+
 					
 					
 					// close everything
 					try {
-						if (generatedKeys != null && !generatedKeys.isClosed()) {
-							generatedKeys.close();
-						}
 						if (ps != null && !ps.isClosed()) {
 							ps.close();
 						}

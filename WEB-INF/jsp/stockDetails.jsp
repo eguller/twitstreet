@@ -85,7 +85,7 @@
 	</table>
 		<div id="dashboard-message-field"
 		style="margin-top: 42px;" class="field-white">
-			Stock distribution table shows who owns how much share of <br><a><%=stock.getName()%></a>.
+			Stock distribution table shows who owns how much share of <br><a href="/?stock=<%=stock == null ? "" : stock.getId()%>"><%=stock == null ? "" : stock.getName()%></a>.
 		</div>
 	<table class="datatbl" style="margin-top: 10px;">
 		<thead>

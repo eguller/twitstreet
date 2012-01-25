@@ -254,7 +254,7 @@ function loadCurrentTransactions() {
 								}
 								var td = $('<td></td>');
 
-								if (transactionRecord.transactionAction == 1) {
+								if (transactionRecord.operation == 1) {
 									$(td)
 											.html(
 													"<a href=\"/user?user="
@@ -262,7 +262,7 @@ function loadCurrentTransactions() {
 															+ "\" title=\"Goes to "+transactionRecord.userName+"'s profile page.\">"
 															+ transactionRecord.userName
 															+ "</a> <span class=\"green\">bought</span> "
-															+ transactionRecord.amount
+															+ commasep(transactionRecord.amount)
 															+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\"Goes to "+transactionRecord.stockName+"'s stock details page.\">"
 															+ transactionRecord.stockName
 															+ "</a>");
@@ -274,7 +274,7 @@ function loadCurrentTransactions() {
 															+ "\" title=\"Goes to "+transactionRecord.userName+"'s profile page.\">"
 															+ transactionRecord.userName
 															+ "</a> <span class=\"red\">sold</span> "
-															+ transactionRecord.amount
+															+ commasep(transactionRecord.amount)
 															+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\"Goes to "+transactionRecord.stockName+"'s stock details page.\">"
 															+ transactionRecord.stockName
 															+ "</a>");
@@ -300,17 +300,17 @@ function loadUserTransactions() {
 				}
 				var td = $('<td></td>');
 
-				if (transactionRecord.transactionAction == 1) {
+				if (transactionRecord.operation == 1) {
 					$(td).html(
 							"You <span class=\"green\">bought</span> "
-									+ transactionRecord.amount
+									+ commasep(transactionRecord.amount)
 									+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\"Goes to "+transactionRecord.stockName+"'s stock details page.\">"
 									+ transactionRecord.stockName + "</a>");
 				} else {
 					$(td).html(
 							"You <span class=\"red\">sold</span> "
-									+ transactionRecord.amount
-									+ "<a href=\"/?stock="+transactionRecord.stockId+"\" title=\"Goes to "+transactionRecord.stockName+"'s stock details page.\">"
+									+ commasep(transactionRecord.amount)
+									+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\"Goes to "+transactionRecord.stockName+"'s stock details page.\">"
 									+ transactionRecord.stockName + "</a>");
 				}
 				$(tr).append(td);

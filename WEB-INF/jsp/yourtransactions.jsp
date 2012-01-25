@@ -30,7 +30,7 @@ List<TransactionRecord> transactionRecordList = transactionMgr.queryTransactionR
 				<td>
 					<% 
 						String requestUrl = request.getRequestURL().toString();
-						if(transactionRecord.getTransactionAction() == TransactionRecord.BUY){  
+						if(transactionRecord.getOperation() == TransactionRecord.BUY){  
 						
 						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
 							out.write("You <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='/?stock="+transactionRecord.getStockId()+"' title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+transactionRecord.getStockName()+"</a>");
