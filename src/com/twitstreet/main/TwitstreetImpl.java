@@ -15,6 +15,7 @@ import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.servlet.HomePageServlet;
 import com.twitstreet.task.ReRankTask;
+import com.twitstreet.task.StockHistoryUpdateTask;
 import com.twitstreet.task.StockUpdateTask;
 
 
