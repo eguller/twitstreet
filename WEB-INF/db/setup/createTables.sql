@@ -27,7 +27,7 @@ create table `admin`(
 	 primary key (`id`)
 )  engine=innodb default charset=`utf8`;
 
--- admin table
+-- stock table
 create table `stock`(
 	`id` bigint not null auto_increment,
 	`name` varchar(45) not null,
@@ -59,7 +59,7 @@ create table `config`(
 	 primary key (`id`)
 )  engine=innodb default charset=`utf8`;
 
--- saves transaction log
+-- transactions table
 create  table `transactions` (
   `id` bigint not null auto_increment,
   `user_id` bigint null,
@@ -69,6 +69,17 @@ create  table `transactions` (
   `t_date` timestamp,
   primary key (`id`) );
 
+-- stock_history table
+create  table `stock_history` (
+	`id` bigint not null auto_increment,
+	`stock` bigint not null,
+	`name` varchar(45) not null,
+	`total` int not null,
+	`day` varchar(10),
+	`stockLastUpdate` timestamp,
+	 primary key (`id`),
+	 unique key `unique_daily_stock` (`stock`, `day`)
+)  engine=innodb default charset=`utf8`;
 
 
 

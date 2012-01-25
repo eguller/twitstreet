@@ -54,4 +54,12 @@ public interface StockMgr {
 	public void saveStock(Stock stock);
 
 	public List<Stock> getUpdateRequiredStocks();
+	
+	/**
+	 * Update stock history table if the daily update has
+	 * not been performed. 
+	 * @return 
+	 */
+	public void updateStockHistory();
+	
 }
