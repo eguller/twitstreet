@@ -118,10 +118,10 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert into stock_history(stock, total, name, day, stockLastUpdate) select distinct id, total, name, DATE(NOW()), lastUpdate from stock order by lastUpdate desc ");
+					.prepareStatement("insert into stock_history(stock, total, name, day, stockLastUpdate) select id, total, name, DATE(NOW()), lastUpdate from stock " +
+							" where id not in (select stock from stock_history where day = DATE(NOW()) ) ");
 		
 			ps.executeUpdate();
-			
 				
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
