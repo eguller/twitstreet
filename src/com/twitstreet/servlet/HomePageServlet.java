@@ -47,6 +47,9 @@ public class HomePageServlet extends HttpServlet {
 			request.setAttribute("stock", stock);
 		}
 		
+		request.setAttribute("title", "twitstreet - Twitter stock market game");
+		request.setAttribute("meta-desc", "Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
+		
 		if (!twitstreet.isInitialized()) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp")
 					.forward(request, response);

@@ -32,9 +32,13 @@ public class UserProfileServlet extends HttpServlet {
 			return;
 		}
 		
+		
+		
 		User userObj = userMgr.getUserById(Long.parseLong(userIdStr));
 		request.setAttribute("user", userObj);
 		
+		request.setAttribute("title", "User profile of " + userObj.getUserName());
+		request.setAttribute("meta-desc", "This page shows profile of a "+userObj.getUserName()+". You can find details of "+userObj.getUserName()+" like rank, portfolio, cash and portfolio details.");
 		if (user != null) {
 			getServletContext().getRequestDispatcher(
 			"/WEB-INF/jsp/userProfileAuth.jsp").forward(request, response);

@@ -33,7 +33,8 @@ public class StockDetailsServlet extends HttpServlet {
 		}
 		Stock stock = stockMgr.getStockById(Long.parseLong(stockIdStr));
 		request.setAttribute("stock", stock);
-		request.setAttribute("title", "Stock Details");
+		request.setAttribute("title", "Stock details of " + stock.getName());
+		request.setAttribute("meta-desc", "This page show details of a "+stock.getName()+" like available, sold and total number of a followers. Stock distribution shows who has how much "+stock.getName()+".");
 		
 		if (user != null) {
 			getServletContext().getRequestDispatcher(

@@ -3,8 +3,6 @@
 <%@ taglib uri='/WEB-INF/tlds/template.tld' prefix='template'%>
 <html>
 <head>
-<title><template:get name="title" />
-</title>
 <template:get name="header"></template:get>
 </head>
 <body>
