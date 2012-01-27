@@ -74,12 +74,12 @@ create  table `transactions` (
 create  table `stock_history` (
     `id` bigint not null auto_increment,
     `stock` bigint not null,
-    `name` varchar(45) not null,
     `total` int not null,
-    `day` varchar(10),
-    `stockLastUpdate` timestamp,
+    `day` date DEFAULT NULL,
      primary key (`id`),
-     unique key `unique_daily_stock` (`stock`, `day`)
+     unique key `unique_daily_stock` (`stock`, `day`),
+     unique key `day_unique` (`day`),
+     constraint `stock` foreign key (`id`) references `stock` (`id`) on delete no action on update no action
 )  engine=innodb default charset=`utf8`;
 
 

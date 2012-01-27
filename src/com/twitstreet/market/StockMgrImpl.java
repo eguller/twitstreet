@@ -40,9 +40,7 @@ public class StockMgrImpl implements StockMgr {
 			while (rs.next()) {
 				stockDO = new Stock();
 				stockDO.setId(rs.getLong("id"));
-				stockDO.setName(rs.getString("name"));
 				stockDO.setTotal(rs.getInt("total"));
-				stockDO.setSold(rs.getDouble("sold"));
 				stockDO.setPictureUrl(rs.getString("pictureUrl"));
 				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
 				break;
@@ -118,7 +116,7 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert into stock_history(stock, total, name, day, stockLastUpdate) select distinct id, total, name, DATE(NOW()), lastUpdate from stock order by lastUpdate desc ");
+					.prepareStatement("insert into stock_history(stock, total, day) select distinct id, total, name, date(now( )) from stock order by lastUpdate desc ");
 		
 			ps.executeUpdate();
 			

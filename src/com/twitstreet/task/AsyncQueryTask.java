@@ -2,9 +2,7 @@ package com.twitstreet.task;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -13,9 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.xml.internal.bind.v2.TODO;
 import com.twitstreet.db.base.DBMgr;
-import com.twitstreet.db.data.TransactionRecord;
 import com.twitstreet.task.asyncquery.TransactionParams;
 
 @Singleton
