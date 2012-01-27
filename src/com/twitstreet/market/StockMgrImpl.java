@@ -116,13 +116,17 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert into stock_history(stock, total, day) select distinct id, total, name, date(now( )) from stock order by lastUpdate desc ");
+					.prepareStatement("insert into stock_history(stock, total, day) select distinct id, total, date(now( )) from stock order by lastUpdate desc ");
 		
 			ps.executeUpdate();
 			
 				
 			logger.debug("DB: Query executed successfully - " + ps.toString());
-		} catch (SQLException ex) {
+		}
+		catch(MySQLIntegrityConstraintViolationException uniqueKeyException){
+			//omit this exception
+		}
+		catch (SQLException ex) {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
 		} finally {
 			try {

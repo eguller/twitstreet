@@ -71,16 +71,16 @@ create  table `transactions` (
 ) engine=innodb default charset=`utf8`;
 
 -- stock_history table
-create  table `stock_history` (
-    `id` bigint not null auto_increment,
-    `stock` bigint not null,
-    `total` int not null,
-    `day` date DEFAULT NULL,
-     primary key (`id`),
-     unique key `unique_daily_stock` (`stock`, `day`),
-     unique key `day_unique` (`day`),
-     constraint `stock` foreign key (`id`) references `stock` (`id`) on delete no action on update no action
-)  engine=innodb default charset=`utf8`;
+create table `stock_history` (
+  `id` bigint(20) not null auto_increment,
+  `stock` bigint(20) not null,
+  `total` int(11) not null,
+  `day` date default null,
+  primary key (`id`),
+  unique key `unique_daily_stock` (`stock`,`day`),
+  unique key `day_unique` (`day`),
+  constraint `fk_stock_history_stock` foreign key (`stock`) references `stock` (`id`)
+) engine=innodb default charset=`utf8`;
 
 
 

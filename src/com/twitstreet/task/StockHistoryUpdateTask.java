@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import twitter4j.Twitter;
 
 import com.google.inject.Inject;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.twitstreet.market.StockMgr;
 
 public class StockHistoryUpdateTask implements Runnable {
@@ -24,7 +25,9 @@ public class StockHistoryUpdateTask implements Runnable {
 
 			try {
 				stockMgr.updateStockHistory();
-			} catch (Exception ex) {
+			} 
+			
+			catch (Exception ex) {
 				logger.error("Error in stockMgr.updateStockHistory", ex);
 			}
 
