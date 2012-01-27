@@ -29,7 +29,7 @@ public class HomePageServlet extends HttpServlet {
 	@Inject
 	ConfigMgr configMgr;
 	@Inject StockMgr stockMgr;
-
+	public static final String STOCK = "stock";
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -44,7 +44,7 @@ public class HomePageServlet extends HttpServlet {
 		if(stockId != null && stockId.length() > 0){
 			stock = stockMgr.getStockById(Long.parseLong(stockId));
 			request.getSession().setAttribute(StockQuoteServlet.QUOTE, stock.getName());
-			request.setAttribute("stock", stock);
+			request.setAttribute(STOCK, stock);
 		}
 		
 		request.setAttribute("title", "twitstreet - Twitter stock market game");

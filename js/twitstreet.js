@@ -259,11 +259,11 @@ function loadCurrentTransactions() {
 											.html(
 													"<a href=\"/user?user="
 															+ transactionRecord.userId
-															+ "\" title=\"Goes to "+transactionRecord.userName+"'s profile page.\">"
+															+ "\" title=\""+transactionRecord.userName+"&#39;s profile page.\">"
 															+ transactionRecord.userName
 															+ "</a> <span class=\"green\">bought</span> "
 															+ commasep(transactionRecord.amount)
-															+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\"Goes to "+transactionRecord.stockName+"'s stock details page.\">"
+															+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
 															+ transactionRecord.stockName
 															+ "</a>");
 								} else {
@@ -271,11 +271,11 @@ function loadCurrentTransactions() {
 											.html(
 													"<a href=\"/user?user="
 															+ transactionRecord.userId
-															+ "\" title=\"Goes to "+transactionRecord.userName+"'s profile page.\">"
+															+ "\" title=\""+transactionRecord.userName+"&#39;s profile page.\">"
 															+ transactionRecord.userName
 															+ "</a> <span class=\"red\">sold</span> "
 															+ commasep(transactionRecord.amount)
-															+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\"Goes to "+transactionRecord.stockName+"'s stock details page.\">"
+															+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
 															+ transactionRecord.stockName
 															+ "</a>");
 								}
@@ -304,13 +304,13 @@ function loadUserTransactions() {
 					$(td).html(
 							"You <span class=\"green\">bought</span> "
 									+ commasep(transactionRecord.amount)
-									+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\"Goes to "+transactionRecord.stockName+"'s stock details page.\">"
+									+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
 									+ transactionRecord.stockName + "</a>");
 				} else {
 					$(td).html(
 							"You <span class=\"red\">sold</span> "
 									+ commasep(transactionRecord.amount)
-									+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\"Goes to "+transactionRecord.stockName+"'s stock details page.\">"
+									+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
 									+ transactionRecord.stockName + "</a>");
 				}
 				$(tr).append(td);
@@ -489,7 +489,7 @@ function toprank() {
 					$("<td><img class=\'twuser\' src=\'" + rank.pictureUrl
 							+ "\'/></td>"));
 			$(tr).append(
-					$("<td><a href=\"/user?user=" + rank.id + "\" title=\"Goes to "+rank.userName+"\'s profile page.\">" + rank.userName
+					$("<td><a href=\"/user?user=" + rank.id + "\" title=\""+rank.userName+"&#39;s profile page.\">" + rank.userName
 							+ "</a> <br>$"
 							+ commasep((rank.cash + rank.portfolio).toFixed(2))
 							+ '</td>'));

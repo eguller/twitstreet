@@ -78,7 +78,6 @@ create table `stock_history` (
   `day` date default null,
   primary key (`id`),
   unique key `unique_daily_stock` (`stock`,`day`),
-  unique key `day_unique` (`day`),
   constraint `fk_stock_history_stock` foreign key (`stock`) references `stock` (`id`)
 ) engine=innodb default charset=`utf8`;
 

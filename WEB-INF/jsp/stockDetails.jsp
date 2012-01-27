@@ -47,7 +47,7 @@
 						<td width="36px;"><img class="twuser"
 							src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 							id="dashboard-picture"></td>
-						<td style="text-align: left;" id="dashboard-stock-follower-status"><a href="/?stock=<%=stock == null ? "" : stock.getId()%>" title="Goes to main page and loads <%=stock == null ? "" : stock.getName()%>'s stock details"><%=stock == null ? "" : stock.getName()%></a>'s
+						<td style="text-align: left;" id="dashboard-stock-follower-status"><a href="/?stock=<%=stock == null ? "" : stock.getId()%>" title="Goes to main page and loads <%=stock == null ? "" : stock.getName()%>&#39;s stock details"><%=stock == null ? "" : stock.getName()%></a>'s
 							follower status <a href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>" style="float: right" target="_blank">Twitter Page &gt;&gt;</a></td>
 					</tr>
 				</table></td>
@@ -85,7 +85,7 @@
 	</table>
 		<div id="dashboard-message-field"
 		style="margin-top: 42px;" class="field-white">
-			Stock distribution table shows who owns how much share of <br><a href="/?stock=<%=stock == null ? "" : stock.getId()%>"><%=stock == null ? "" : stock.getName()%></a>.
+			Stock distribution table shows who owns how much share of <br><a href="/?stock=<%=stock == null ? "" : stock.getId()%>" title="Goes to main page and loads <%=stock == null ? "" : stock.getName()%>&#39;s stock details"><%=stock == null ? "" : stock.getName()%></a>.
 		</div>
 	<table class="datatbl" style="margin-top: 10px;">
 		<thead>
@@ -114,7 +114,7 @@
 			<td><img class='twuser' style="margin-top: 2px; margin-bottom: 2px;"
 				src="<%=stockDetail.getUserPictureUrl()%>" />
 			</td>
-			<td><a href="/user?user=<%=stockDetail.getUserId()%>" title="Goes to <%=stockDetail.getUserName()%>'s user profile page"><%=stockDetail.getUserName()%></a>
+			<td><a href="/user?user=<%=stockDetail.getUserId()%>" title="<%=stockDetail.getUserName()%>&#39;s user profile page"><%=stockDetail.getUserName()%></a>
 			</td>
 			<td>$<%=Util.commaSep((int) (stockDetail.getPercent() * stockDetail
 								.getStockTotal()))%></td>

@@ -35,7 +35,7 @@
 							id="dashboard-picture">
 						</td>
 						<td style="text-align: left;" id="dashboard-stock-follower-status"><a
-							href="http://twitter.com/#!/<%=user == null ? "" : user.getUserName()%>" title="Goes to <%=user == null ? "" : user.getUserName()%>'s twitter page"
+							href="http://twitter.com/#!/<%=user == null ? "" : user.getUserName()%>" title="<%=user == null ? "" : user.getUserName()%>&#39;s twitter page"
 							target="_blank"><%=user == null ? "" : user.getUserName()%></a>'s
 							follower status
 						</td>
@@ -99,7 +99,7 @@
 						</td>
 						<td><a
 							href='/stock?stock=<%=portfolio.getStockInPortfolioList()
-									.get(i).getStockId()%>' title="Goes to <%=portfolio.getStockInPortfolioList().get(i).getStockName()%>'s stock detail page">
+									.get(i).getStockId()%>' title="<%=portfolio.getStockInPortfolioList().get(i).getStockName()%>&#39;s stock detail page">
 								<%
 									out.write(portfolio.getStockInPortfolioList()
 															.get(i).getStockName());

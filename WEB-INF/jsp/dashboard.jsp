@@ -12,6 +12,7 @@
 <%@page import="com.twitstreet.market.PortfolioMgr"%>
 <%@page import="com.twitstreet.config.ConfigMgr"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
+<%@ page  import="com.twitstreet.servlet.HomePageServlet" %>
 
 <%
 	User sessionUser = (User) request.getSession().getAttribute(
@@ -37,7 +38,7 @@
 					.getSession().getAttribute(StockQuoteServlet.QUOTE);
 			Stock stock = null;
 			if (quote.length() > 0) {
-				stock = (Stock) request.getAttribute(StockQuoteServlet.QUOTE);
+				stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
 				if (stock == null) {
 					stock = stockMgr.getStock(quote);
 				}
@@ -113,7 +114,7 @@
 							<td style="text-align: left;"
 								id="dashboard-stock-follower-status"><a
 								href="/stock?stock=<%=stock == null ? "" : stock.getId()%>"
-								title="Goes to <%=stock == null ? "" : stock.getName()%>'s stock details page."><%=stock == null ? "" : stock.getName()%></a>'s
+								title="<%=stock == null ? "" : stock.getName()%>&#39;s stock details page."><%=stock == null ? "" : stock.getName()%></a>'s
 								follower status</td>
 						</tr>
 					</table>
