@@ -42,7 +42,6 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.setId(rs.getLong("id"));
 				stockDO.setName(rs.getString("name"));
 				stockDO.setTotal(rs.getInt("total"));
-				stockDO.setSold(rs.getDouble("sold"));
 				stockDO.setPictureUrl(rs.getString("pictureUrl"));
 				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
 				break;
@@ -118,13 +117,17 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert into stock_history(stock, total, name, day, stockLastUpdate) select id, total, name, DATE(NOW()), lastUpdate from stock " +
-							" where id not in (select stock from stock_history where day = DATE(NOW()) ) ");
+					.prepareStatement("insert into stock_history(stock, total, day) select distinct id, total, date(now( )) from stock order by lastUpdate desc ");
 		
 			ps.executeUpdate();
+			
 				
 			logger.debug("DB: Query executed successfully - " + ps.toString());
-		} catch (SQLException ex) {
+		}
+		catch(MySQLIntegrityConstraintViolationException uniqueKeyException){
+			//omit this exception
+		}
+		catch (SQLException ex) {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
 		} finally {
 			try {
