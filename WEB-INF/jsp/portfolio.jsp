@@ -41,6 +41,9 @@ if(user != null){
 								<br>
 								$<% out.write(Util.commaSep(portfolio.getStockInPortfolioList().get(i).getAmount())); %>
 							</td>
+							<td>
+								$<% out.write(portfolio.getStockInPortfolioList().get(i).getCapital()); %>
+							</td>
 						</tr>
 					</table>
 				</td>
