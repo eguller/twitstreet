@@ -30,21 +30,21 @@ List<TransactionRecord> transactionRecordList = transactionMgr.queryTransactionR
 				<td>
 					<% 
 						String requestUrl = request.getRequestURL().toString();
-						if(transactionRecord.getTransactionAction() == TransactionRecord.BUY){  
+						if(transactionRecord.getOperation() == TransactionRecord.BUY){  
 						
 						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-							out.write("You <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#' onClick=\"writeAndGetQuote('" + transactionRecord.getStockName() + "');\">"+transactionRecord.getStockName()+"</a>");
+							out.write("You <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='/?stock="+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
 						}
 						else{
-							out.write("You <span class=\"green\">bought</span> " + Util.commaSep( transactionRecord.getAmount()) + " <a href='/stock/"+transactionRecord.getStockId()+"'>"+transactionRecord.getStockName()+"</a>");
+							out.write("You <span class=\"green\">bought</span> " + Util.commaSep( transactionRecord.getAmount()) + " <a href='/?stock="+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
 						}
 					}
 					else{
 						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-							out.write("You <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#' onClick=\"writeAndGetQuote('" + transactionRecord.getStockName() + "');\">"+transactionRecord.getStockName()+"</a>");
+							out.write("You <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='/?stock="+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
 						}
 						else{
-							out.write("You <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='/stock/"+transactionRecord.getStockId()+"'>"+transactionRecord.getStockName()+"</a>");
+							out.write("You <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='/?stock="+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
 						}
 					}
 					%>

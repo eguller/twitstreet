@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
 import com.twitstreet.main.Twitstreet;
+import com.twitstreet.market.StockMgr;
 import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
@@ -26,7 +28,8 @@ public class HomePageServlet extends HttpServlet {
 	Twitstreet twitstreet;
 	@Inject
 	ConfigMgr configMgr;
-
+	@Inject StockMgr stockMgr;
+	public static final String STOCK = "stock";
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -35,6 +38,17 @@ public class HomePageServlet extends HttpServlet {
 		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
+		String stockId = request.getParameter("stock");
+		Stock stock = null;
+		if(stockId != null && stockId.length() > 0){
+			stock = stockMgr.getStockById(Long.parseLong(stockId));
+			request.getSession().setAttribute(StockQuoteServlet.QUOTE, stock.getName());
+			request.setAttribute(STOCK, stock);
+		}
+		
+		request.setAttribute("title", "twitstreet - Twitter stock market game");
+		request.setAttribute("meta-desc", "Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
 		
 		if (!twitstreet.isInitialized()) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp")

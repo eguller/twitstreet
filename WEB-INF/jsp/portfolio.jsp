@@ -37,7 +37,7 @@ if(user != null){
 								<img class="twuser" src="<%=portfolio.getStockInPortfolioList().get(i).getPictureUrl()%>"/>
 							</td>
 							<td>
-								<a href='#' onClick="writeAndGetQuote('<% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %>');"><% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %></a>
+								<a href='/?stock=<%=portfolio.getStockInPortfolioList().get(i).getStockId() %>' title="Loads <%=portfolio.getStockInPortfolioList().get(i).getStockName() %>'s stock details"><% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %></a>
 								<br>
 								$<% out.write(Util.commaSep(portfolio.getStockInPortfolioList().get(i).getAmount())); %>
 							</td>

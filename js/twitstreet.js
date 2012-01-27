@@ -30,12 +30,6 @@ $(document).ready(function() {
 
 });
 
-function writeAndGetQuote(quote) {
-	$("#quote").val(quote);
-	$("#quote-hidden").val(quote);
-	getquote();
-}
-
 function getquote() {
 	// see dashboard.jsp
 	var quote = $('#quote').val();
@@ -77,14 +71,14 @@ function getquote() {
 										parseInt(data.respObj.stock.total
 												- sold));
 								$("#dashboard-stock-follower-status").html(
-										"<a href=\'/stock/"
+										"<a href=\'/stock?stock="
 												+ data.respObj.stock.id + "\'>"
 												+ data.respObj.stock.name
 												+ "</a>\'s follower status");
 								$("#dashboard-picture").attr("src",
 										data.respObj.stock.pictureUrl);
 								$("#see-details-link").attr("href",
-										"/stock/" + data.respObj.stock.name);
+										"/stock?stock=" + data.respObj.stock.id);
 								if (data.resultCode != 'min-follower-count') {
 									$("#buy-links-row").show();
 									$("#sell-links-row").show();
@@ -224,10 +218,8 @@ function loadPortfolio() {
 				var tableTd2 = $('<td></td>');
 				if (stockInPortfolio != null) {
 					var tdA = $('<a>' + stockInPortfolio.stockName + '</a>');
-					tdA.attr(
-							'onclick',
-							'writeAndGetQuote(\'' + stockInPortfolio.stockName
-									+ '\');').attr('href', '#');
+					tdA.attr('href', '/?stock='+stockInPortfolio.stockId);
+					tdA.attr('title', 'Loads ' + stockInPortfolio.stockName + '\'s stock details.');
 					tableTd2.append(tdA).append(
 							'<br>$' + commasep( stockInPortfolio.amount.toFixed(2) ) 
 							);
@@ -262,32 +254,28 @@ function loadCurrentTransactions() {
 								}
 								var td = $('<td></td>');
 
-								if (transactionRecord.transactionAction == 1) {
+								if (transactionRecord.operation == 1) {
 									$(td)
 											.html(
-													"<a href=\"/user/"
+													"<a href=\"/user?user="
 															+ transactionRecord.userId
-															+ "\">"
+															+ "\" title=\""+transactionRecord.userName+"&#39;s profile page.\">"
 															+ transactionRecord.userName
 															+ "</a> <span class=\"green\">bought</span> "
-															+ transactionRecord.amount
-															+ " <a onclick=\"writeAndGetQuote('"
-															+ transactionRecord.stockName
-															+ "');\" href=\"#\">"
+															+ commasep(transactionRecord.amount)
+															+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
 															+ transactionRecord.stockName
 															+ "</a>");
 								} else {
 									$(td)
 											.html(
-													"<a href=\"/user/"
+													"<a href=\"/user?user="
 															+ transactionRecord.userId
-															+ "\">"
+															+ "\" title=\""+transactionRecord.userName+"&#39;s profile page.\">"
 															+ transactionRecord.userName
 															+ "</a> <span class=\"red\">sold</span> "
-															+ transactionRecord.amount
-															+ " <a onclick=\"writeAndGetQuote('"
-															+ transactionRecord.stockName
-															+ "');\" href=\"#\">"
+															+ commasep(transactionRecord.amount)
+															+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
 															+ transactionRecord.stockName
 															+ "</a>");
 								}
@@ -312,21 +300,17 @@ function loadUserTransactions() {
 				}
 				var td = $('<td></td>');
 
-				if (transactionRecord.transactionAction == 1) {
+				if (transactionRecord.operation == 1) {
 					$(td).html(
 							"You <span class=\"green\">bought</span> "
-									+ transactionRecord.amount
-									+ " <a onclick=\"writeAndGetQuote('"
-									+ transactionRecord.stockName
-									+ "');\" href=\"#\">"
+									+ commasep(transactionRecord.amount)
+									+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
 									+ transactionRecord.stockName + "</a>");
 				} else {
 					$(td).html(
 							"You <span class=\"red\">sold</span> "
-									+ transactionRecord.amount
-									+ " <a onclick=\"writeAndGetQuote('"
-									+ transactionRecord.stockName
-									+ "');\" href=\"#\">"
+									+ commasep(transactionRecord.amount)
+									+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
 									+ transactionRecord.stockName + "</a>");
 				}
 				$(tr).append(td);
@@ -505,8 +489,8 @@ function toprank() {
 					$("<td><img class=\'twuser\' src=\'" + rank.pictureUrl
 							+ "\'/></td>"));
 			$(tr).append(
-					$('<td><a href=\'/user/' + rank.id + '\'>' + rank.userName
-							+ '</a> <br>$'
+					$("<td><a href=\"/user?user=" + rank.id + "\" title=\""+rank.userName+"&#39;s profile page.\">" + rank.userName
+							+ "</a> <br>$"
 							+ commasep((rank.cash + rank.portfolio).toFixed(2))
 							+ '</td>'));
 			if (data.direction == 1) {
@@ -557,13 +541,4 @@ function commasep(nStr) {
 function selectAllText(textbox) {
 	textbox.focus();
 	textbox.select();
-}
-
-function forwardStockToMain(element) {
-	var quote = element.text();
-	$.post('/getquote', {
-		quote : quote
-	}, function(data) {
-		window.location = "/";
-	});
 }

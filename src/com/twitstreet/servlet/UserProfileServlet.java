@@ -6,10 +6,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.twitstreet.db.data.User;
+import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
+@Singleton
 public class UserProfileServlet extends HttpServlet {
+	@Inject UserMgr userMgr;
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
 		response.setContentType("application/json;charset=utf-8");
@@ -19,21 +25,27 @@ public class UserProfileServlet extends HttpServlet {
 		
 		User user = (User) request.getSession().getAttribute(User.USER);
 		
-		String pathInfo = request.getPathInfo();
-		String userIdStr = pathInfo == null || "/".equals(pathInfo) ? null : pathInfo.substring(1);
+		String userIdStr = request.getParameter("user");
 				
-		if(userIdStr == null){
+		if(userIdStr == null || userIdStr.length() == 0){
 			response.sendRedirect(response.encodeRedirectURL("/"));
 			return;
 		}
 		
+		
+		
+		User userObj = userMgr.getUserById(Long.parseLong(userIdStr));
+		request.setAttribute("user", userObj);
+		
+		request.setAttribute("title", "User profile of " + userObj.getUserName());
+		request.setAttribute("meta-desc", "This page shows profile of a "+userObj.getUserName()+". You can find details of "+userObj.getUserName()+" like rank, portfolio, cash and portfolio details.");
 		if (user != null) {
 			getServletContext().getRequestDispatcher(
-			"/WEB-INF/jsp/userProfileAuth.jsp?user="+userIdStr).forward(request, response);
+			"/WEB-INF/jsp/userProfileAuth.jsp").forward(request, response);
 		}
 		else{
 			getServletContext().getRequestDispatcher(
-			"/WEB-INF/jsp/userProfileUnAuth.jsp?user="+userIdStr).forward(request, response);
+			"/WEB-INF/jsp/userProfileUnAuth.jsp").forward(request, response);
 		}
 	}
 	public void doPost(HttpServletRequest request, HttpServletResponse response)

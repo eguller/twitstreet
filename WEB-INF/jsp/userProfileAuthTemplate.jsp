@@ -5,8 +5,6 @@
 
 <html>
 <head>
-<title><template:get name="title" />
-</title>
 <template:get name="header"></template:get>
 </head>
 <body>

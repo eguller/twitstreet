@@ -30,8 +30,6 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	@Inject
 	DBMgr dbMgr;
 	@Inject
-	private StockMgr stockMgr;
-	@Inject
 	private UserMgr userMgr;
 	@Inject
 	private TransactionMgr transactionMgr;
