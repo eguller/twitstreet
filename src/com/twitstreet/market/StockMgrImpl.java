@@ -40,6 +40,7 @@ public class StockMgrImpl implements StockMgr {
 			while (rs.next()) {
 				stockDO = new Stock();
 				stockDO.setId(rs.getLong("id"));
+				stockDO.setName(rs.getString("name"));
 				stockDO.setTotal(rs.getInt("total"));
 				stockDO.setPictureUrl(rs.getString("pictureUrl"));
 				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
