@@ -27,7 +27,7 @@ if(sessionUser != null){
 %>
 
 <div id="dashboard">
-	<h3>Dasboard</h3>
+	<h3>Dashboard</h3>
 	<div id="quoteholder">
 	    <%
 	    	String quote = request.getSession().getAttribute(StockQuoteServlet.QUOTE) == null ? "" : (String)request.getSession().getAttribute(StockQuoteServlet.QUOTE); 

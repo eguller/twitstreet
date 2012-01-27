@@ -5,8 +5,8 @@ public class StockInPortfolio {
 	String stockName;
 	double amount;
 	String pictureUrl;
-	
-	public StockInPortfolio(long stockId, String stockName, double amount, String pictureUrl){
+	int capital;
+	public StockInPortfolio(long stockId, String stockName, double amount, String pictureUrl, int capital){
 		this.stockId = stockId;
 		this.stockName = stockName;
 		this.amount = amount;
@@ -38,5 +38,13 @@ public class StockInPortfolio {
 
 	public void setPictureUrl(String pictureUrl) {
 		this.pictureUrl = pictureUrl;
+	}
+
+	public int getCapital() {
+		return capital;
+	}
+
+	public void setCapital(int capital) {
+		this.capital = capital;
 	}
 }

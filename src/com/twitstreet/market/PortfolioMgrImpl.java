@@ -50,7 +50,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				addStock2Portfolio(buyer.getId(), stock.getId(), sold);
 
 			} else {
-				updateStockInPortfolio(buyer.getId(), stock.getId(), sold);
+				updateStockInPortfolio(buyer.getId(), stock.getId(), sold, userStock.getCapital()+amount2Buy);
 			}
 			userMgr.updateCash(buyer.getId(), amount2Buy);
 			transactionMgr.recordTransaction(buyer, stock, amount2Buy,
@@ -67,13 +67,16 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		return new BuySellResponse(buyer, stock, userStockValue);
 
 	}
-
+	
 	@Override
 	public BuySellResponse sell(User seller, Stock stock, int amount) {
 		
 		UserStock userStock = getStockInPortfolio(seller.getId(), stock.getId());
-
+		
 		if (userStock != null) {
+			
+			double stockPercentInPortfolio = userStock.getPercent();
+			int stockCapitalInPortfolio = userStock.getCapital();
 			int stockValueInPortfolio = (int) (userStock.getPercent() * stock
 					.getTotal());
 
@@ -85,6 +88,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			double sold = (double) amount2Sell / (double) stock.getTotal();
 			stock.setSold(stock.getSold() - sold);
             
+			
 			if (amount2Sell >= stockValueInPortfolio && Math.abs(amount2Sell - stockValueInPortfolio) < 1) {
 				// if user sold all he has, delete stock from his portfolio.
 				// we do not want to show $0 value stock in portfolio.
@@ -94,7 +98,8 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			} else {
 				// if user did not sell all he has, just update stock in
 				// portfolio.
-				updateStockInPortfolio(seller.getId(), stock.getId(), -sold);
+				 int newCapital = stockCapitalInPortfolio - (int) (stockCapitalInPortfolio*sold);
+				updateStockInPortfolio(seller.getId(), stock.getId(), -sold, newCapital);
 			}
 			
 			// calculate commission
@@ -120,16 +125,19 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 	}
 
-	private void updateStockInPortfolio(long buyer, long stock, double sold) {
+	private void updateStockInPortfolio(long buyer, long stock, double sold, int newCapital) {
+		
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("update portfolio set percentage = (percentage + ?) where user_id = ? and stock = ?");
+					.prepareStatement("update portfolio set percentage = (percentage + ?), capital = ? " +
+							" where user_id = ? and stock = ?");
 			ps.setDouble(1, sold);
-			ps.setLong(2, buyer);
-			ps.setLong(3, stock);
+			ps.setLong(2, newCapital);
+			ps.setLong(3, buyer);
+			ps.setLong(4, stock);
 			ps.execute();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
 		} catch (SQLException ex) {
@@ -154,10 +162,12 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert into portfolio(user_id, stock, percentage) values(?, ?, ?)");
+					.prepareStatement("insert into portfolio(user_id, stock, percentage, capital) values(?, ?, ?,?*(select total from stock where id = ?))");
 			ps.setLong(1, buyer);
 			ps.setLong(2, stock);
 			ps.setDouble(3, sold);
+			ps.setDouble(4, sold);
+     		ps.setLong(5, stock);
 			ps.execute();
 		} catch (SQLException ex) {
 			logger.error("DB: Adding stock to portfolio failed", ex);
@@ -315,15 +325,14 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			try {
 				connection = dbMgr.getConnection();
 				ps = connection
-						.prepareStatement("select stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount, stock.pictureUrl as pictureUrl from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ?");
+						.prepareStatement("select portfolio.capital as capital, stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount, stock.pictureUrl as pictureUrl from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ?");
 				ps.setLong(1, user.getId());
 				rs = ps.executeQuery();
 
 				while (rs.next()) {
-					StockInPortfolio stockInPortfolio = new StockInPortfolio(
-							rs.getLong("stockId"), rs.getString("stockName"),
+					StockInPortfolio stockInPortfolio = new StockInPortfolio(rs.getLong("stockId"), rs.getString("stockName"),
 							rs.getDouble("amount"),
-							rs.getString("pictureUrl"));
+							rs.getString("pictureUrl"),rs.getInt("capital"));
 					portfolio.add(stockInPortfolio);
 				}
 
@@ -400,4 +409,5 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		}
 		return userStockList;
 	}
+	
 }
