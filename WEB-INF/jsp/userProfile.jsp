@@ -18,7 +18,10 @@
 %>
 <%
 	if (user != null) {
+
+		String userIdStr = String.valueOf(user.getId());
 %>
+<input id="userProfileUserId" type="hidden" value="<%=userIdStr%>"></input>
 <div id="userprofile">
 	<h3><%=user.getUserName()%>'s Profile <a
 			style="float: right; vertical-align: bottom;" href="/">Go to Home
@@ -47,32 +50,36 @@
 			<td colspan="4">&nbsp;</td>
 		</tr>
 		<tr class="thead">
+			<td style="width: 20%; text-align: center; font-weight: bolder;"></td>
 			<td style="width: 20%; text-align: center; font-weight: bolder;">Rank</td>
 			<td style="width: 20%; text-align: center; font-weight: bolder;">Cash</td>
 			<td style="width: 20%; text-align: center; font-weight: bolder;">Portfolio</td>
 			<td style="width: 20%; text-align: center; font-weight: bolder;">Total</td>
-			<td style="width: 20%; text-align: center; font-weight: bolder;">Moves</td>
 		</tr>
 		<tr>
-			<td style="width: 25%; text-align: center;"><%=user.getRank()%>.
+			<td id="userProfileDirection" style="width: 25%; text-align: center;">
+			<%
+				if (user.getDirection() > 0) {
+			%> <img alt=""
+			style="margin-top: 1px;" src="/images/up_small.png" /> <%
+					}  else if  (user.getDirection() < 0) {
+		 		%> <img
+			alt="" style="margin-top: 1px;" src="/images/down_small.png" /> <%
+				}else {
+				%> <img
+			alt="" style="margin-top: 1px;" src="/images/nochange_small.png" /> <%
+				}
+			 %>
 			</td>
-			<td style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getCash())%>
+			<td id="userProfileRank" style="width: 25%; text-align: center;"><%=user.getRank()%>.
 			</td>
-			<td style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getPortfolio())%>
+			<td id="userProfileCash" style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getCash())%>
 			</td>
-			<td style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getPortfolio() + user.getCash())%>
+			<td id="userProfilePortfolio" style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getPortfolio())%>
 			</td>
-			<td style="width: 25%; text-align: center;">
-				<%
-					if (user.getDirection() == 1) {
-				%> <img alt=""
-				style="margin-top: 1px;" src="/images/up.png" /> <%
- 	} else {
- %> <img
-				alt="" style="margin-top: 1px;" src="/images/down.png" /> <%
- 	}
- %>
+			<td id="userProfileTotal" style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getPortfolio() + user.getCash())%>
 			</td>
+	
 		</tr>
 	</table>
 
@@ -86,7 +93,7 @@
 		%>
 		<tr>
 			<%
-				for (int j = 0; j < 4; j++) {
+				for (int j = 0; j < 3; j++) {
 							if (i < portfolio.getStockInPortfolioList().size()) {
 			%>
 

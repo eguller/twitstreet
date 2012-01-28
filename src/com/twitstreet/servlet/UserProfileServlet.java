@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.data.User;
@@ -16,6 +17,9 @@ import com.twitstreet.session.UserMgr;
 @Singleton
 public class UserProfileServlet extends HttpServlet {
 	@Inject UserMgr userMgr;
+
+	@Inject
+	private final Gson gson = null;
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
 		response.setContentType("application/json;charset=utf-8");
@@ -26,6 +30,13 @@ public class UserProfileServlet extends HttpServlet {
 		User user = (User) request.getSession().getAttribute(User.USER);
 		
 		String userIdStr = request.getParameter("user");
+		boolean isAjaxRequest = false;
+		try{
+			isAjaxRequest = "true".equalsIgnoreCase(request.getParameter("isAjaxRequest"));
+		}catch(Exception ex){
+			
+		}
+		
 				
 		if(userIdStr == null || userIdStr.length() == 0){
 			response.sendRedirect(response.encodeRedirectURL("/"));
@@ -39,13 +50,16 @@ public class UserProfileServlet extends HttpServlet {
 		
 		request.setAttribute("title", "User profile of " + userObj.getUserName());
 		request.setAttribute("meta-desc", "This page shows profile of a "+userObj.getUserName()+". You can find details of "+userObj.getUserName()+" like rank, portfolio, cash and portfolio details.");
-		if (user != null) {
-			getServletContext().getRequestDispatcher(
-			"/WEB-INF/jsp/userProfileAuth.jsp").forward(request, response);
-		}
-		else{
-			getServletContext().getRequestDispatcher(
-			"/WEB-INF/jsp/userProfileUnAuth.jsp").forward(request, response);
+		
+		if (isAjaxRequest) {
+			
+			response.getWriter().write(gson.toJson(userObj));
+		} else {
+			if (user != null) {
+				getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfileAuth.jsp").forward(request, response);
+			} else {
+				getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfileUnAuth.jsp").forward(request, response);
+			}
 		}
 	}
 	public void doPost(HttpServletRequest request, HttpServletResponse response)

@@ -5,7 +5,7 @@ public class UserStock {
 	long userId;
 	long stockId;
 	double  percent;
-	private int capital;
+	private double capital;
 	
 	public long getId() {
 		return id;
@@ -31,10 +31,10 @@ public class UserStock {
 	public void setPercent(double percent) {
 		this.percent = percent;
 	}
-	public int getCapital() {
+	public double getCapital() {
 		return capital;
 	}
-	public void setCapital(int capital) {
+	public void setCapital(double capital) {
 		this.capital = capital;
 	}
 }

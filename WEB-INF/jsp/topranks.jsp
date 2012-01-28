@@ -28,11 +28,13 @@ ArrayList<User> userList = userMgr.getTopRank();
 						<td class="rank-number"><%=rank%>.</td>
 						<td><img class="twuser" src="<%=user.getPictureUrl()%>"/></td>
 						<td><a href="/user?user=<%=user.getId() %>" title="<%=user.getUserName() %>&#39;s profile page."><%=user.getUserName() %></a> <br> $<%=Util.commaSep(total)%></td>
-						<% if (user.getDirection() == 1) { %>
+						<% if (user.getDirection() > 0) { %>
 							<td><img src="/images/up.png" /></td>
-						<% } else { %>
+						<% } else if(user.getDirection() < 0)  { %>
 							<td><img src="/images/down.png" /></td>
-						<% } %>
+						<% } else   { %>
+							<td><img src="/images/nochange2.png" /></td>
+						<% }%>
 					</tr>
 		<% } %>
 	</table>

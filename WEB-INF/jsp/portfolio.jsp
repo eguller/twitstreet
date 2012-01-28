@@ -26,7 +26,7 @@ if(user != null){
 	<table class="datatbl" id="portfolio-table">
 	<% for(int i = 0; i < portfolio.getStockInPortfolioList().size();){ %>
 		<tr>
-			<% for(int j = 0; j < 4; j ++) { 
+			<% for(int j = 0; j < 3; j ++) { 
 				if( i < portfolio.getStockInPortfolioList().size()){
 			%>
 			
@@ -40,10 +40,17 @@ if(user != null){
 								<a href='/?stock=<%=portfolio.getStockInPortfolioList().get(i).getStockId() %>' title="Loads <%=portfolio.getStockInPortfolioList().get(i).getStockName() %>'s stock details"><% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %></a>
 								<br>
 								$<% out.write(Util.commaSep(portfolio.getStockInPortfolioList().get(i).getAmount())); %>
+								<br>Gain: <%
+								
+								double balance = 0;
+								
+								double amount = portfolio.getStockInPortfolioList().get(i).getAmount();
+								double capital = portfolio.getStockInPortfolioList().get(i).getCapital();
+								
+								balance = amount - capital;
+								out.write("$"+Util.commaSep(balance)); %>
 							</td>
-							<td>
-								$<% out.write(portfolio.getStockInPortfolioList().get(i).getCapital()); %>
-							</td>
+							
 						</tr>
 					</table>
 				</td>

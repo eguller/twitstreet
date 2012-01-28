@@ -74,7 +74,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		if (userStock != null) {
 			
 			double stockPercentInPortfolio = userStock.getPercent();
-			int stockCapitalInPortfolio = userStock.getCapital();
+			double stockCapitalInPortfolio = userStock.getCapital();
 			int stockValueInPortfolio = (int) (userStock.getPercent() * stock
 					.getTotal());
 
@@ -96,7 +96,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			} else {
 				// if user did not sell all he has, just update stock in
 				// portfolio.
-				 int newCapital = stockCapitalInPortfolio - (int) (stockCapitalInPortfolio*sold);
+				 double newCapital =   ( (stockCapitalInPortfolio / stockPercentInPortfolio)*(stockPercentInPortfolio-sold));
 				updateStockInPortfolio(seller.getId(), stock.getId(), -sold, newCapital);
 			}
 			
@@ -123,7 +123,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 	}
 
-	private void updateStockInPortfolio(long buyer, long stock, double sold, int newCapital) {
+	private void updateStockInPortfolio(long buyer, long stock, double sold, double newCapital) {
 		
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -133,7 +133,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 					.prepareStatement("update portfolio set percentage = (percentage + ?), capital = ? " +
 							" where user_id = ? and stock = ?");
 			ps.setDouble(1, sold);
-			ps.setLong(2, newCapital);
+			ps.setDouble(2, newCapital);
 			ps.setLong(3, buyer);
 			ps.setLong(4, stock);
 			ps.execute();
@@ -191,7 +191,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, percentage from portfolio where user_id = ? and stock = ?");
+					.prepareStatement("select id, percentage, capital from portfolio where user_id = ? and stock = ?");
 			ps.setLong(1, userId);
 			ps.setLong(2, stockId);
 			rs = ps.executeQuery();
@@ -200,6 +200,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				userStock = new UserStock();
 				userStock.setId(rs.getLong("id"));
 				userStock.setPercent(rs.getDouble("percentage"));
+				userStock.setCapital(rs.getDouble("capital"));
 			}
 		} catch (SQLException ex) {
 			logger.error("DB: Retrieving stock from portfolio failed. User: "
@@ -330,7 +331,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				while (rs.next()) {
 					StockInPortfolio stockInPortfolio = new StockInPortfolio(rs.getLong("stockId"), rs.getString("stockName"),
 							rs.getDouble("amount"),
-							rs.getString("pictureUrl"),rs.getInt("capital"));
+							rs.getString("pictureUrl"),rs.getDouble("capital"));
 					portfolio.add(stockInPortfolio);
 				}
 

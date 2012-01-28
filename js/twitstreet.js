@@ -27,6 +27,9 @@ $(document).ready(function() {
 	if ($("#portfolio").length > 0) {
 		setInterval(loadPortfolio, 20000);
 	}
+	if ($("#userprofile").length > 0) {
+		setInterval(loadUserProfile, 20000);
+	}
 
 });
 
@@ -220,9 +223,14 @@ function loadPortfolio() {
 					var tdA = $('<a>' + stockInPortfolio.stockName + '</a>');
 					tdA.attr('href', '/?stock='+stockInPortfolio.stockId);
 					tdA.attr('title', 'Loads ' + stockInPortfolio.stockName + '\'s stock details.');
+					
+					var balance = stockInPortfolio.amount-stockInPortfolio.capital;
+					var balanceStr = '<br>Gain: $'+commasep( balance.toFixed(2) );
+					
+					balance = (balance>0)?'+'+balance:balance;
 					tableTd2.append(tdA).append(
 							'<br>$' + commasep( stockInPortfolio.amount.toFixed(2) ) 
-							);
+							).append(balanceStr);
 				}
 				$(tableTr).append(tableTd1);
 				$(tableTr).append(tableTd2);
@@ -235,13 +243,38 @@ function loadPortfolio() {
 		}
 	});
 }
+function loadUserProfile() {
+	var userId = $('#userProfileUserId').val();
+	$.post('/user', {
+		isAjaxRequest: true,
+		user:userId
+	}, function(data) {
+		var user = data;
+		var directionImage;
+		$("#userProfileRank").html(user.rank+".");
+		$("#userProfileCash").html('$'+commasep(user.cash.toFixed(2)));
+		$("#userProfilePortfolio").html('$'+commasep(user.portfolio.toFixed(2)));
+		$("#userProfileTotal").html('$'+commasep((user.cash+user.portfolio).toFixed(2)));
+		
+		if (user.direction > 0) {
+			$("#userProfileDirection").html("<img src=\"/images/up_small.png\" />");
+		} else if (user.direction < 0){
+			$("#userProfileDirection").html("<img src=\"/images/down_small.png\" />");
+		}else{
+			$("#userProfileDirection").html("<img src=\"/images/nochange_small.png\" />");
+		}	
+		
+	});
+}
+
+
 
 function loadCurrentTransactions() {
 	$
 			.post(
 					'/transaction',
 					{
-
+							
 					},
 					function(data) {
 						if (data != null) {
@@ -477,26 +510,29 @@ function toprank() {
 	$("topranktable").empty();
 	$.getJSON('/toprank', function(data) {
 		$("#topranktable").empty();
+		
 		for ( var i = 0, length = data.length; i < length; i++) {
-			var rank = data[i];
+			var user = data[i];
 			var tr = $("<tr></tr>");
 			if (i % 2 == 0) {
 				tr.attr('class', 'odd');
 			}
 			$(tr).append(
-					$("<td class=\'rank-number\'>" + rank.rank + ". </td>"));
+					$("<td class=\'rank-number\'>" + user.rank + ". </td>"));
 			$(tr).append(
-					$("<td><img class=\'twuser\' src=\'" + rank.pictureUrl
+					$("<td><img class=\'twuser\' src=\'" + user.pictureUrl
 							+ "\'/></td>"));
 			$(tr).append(
-					$("<td><a href=\"/user?user=" + rank.id + "\" title=\""+rank.userName+"&#39;s profile page.\">" + rank.userName
+					$("<td><a href=\"/user?user=" + user.id + "\" title=\""+user.userName+"&#39;s profile page.\">" + user.userName
 							+ "</a> <br>$"
-							+ commasep((rank.cash + rank.portfolio).toFixed(2))
+							+ commasep((user.cash + user.portfolio).toFixed(2))
 							+ '</td>'));
-			if (data.direction == 1) {
+			if (user.direction > 0) {
 				$(tr).append($("<td><img src=\"/images/up.png\" /></td>"));
-			} else {
+			} else if (user.direction < 0){
 				$(tr).append($("<td><img src=\"/images/down.png\" /></td>"));
+			}else{
+				$(tr).append($("<td><img src=\"/images/nochange2.png\" /></td>"));
 			}
 			$("#topranktable").append(tr);
 		}
@@ -509,13 +545,16 @@ function loadBalance() {
 
 	}, function(data) {
 		if (data != null) {
-			$("#balance_rank").html(data.rank + ".");
-			if (data.direction == 1) {
+			//$("#balance_rank").html(data.rank + ".");
+			if (data.direction > 0) {
 				$("#balance_direction").html(
-						"<img src=\"/images/up_small.png\" />");
-			} else {
+						"<img src=\"/images/up_small.png\" />"+data.rank + ".");
+			} else if (data.direction < 0){
 				$("#balance_direction").html(
-						"<img src=\"/images/down_small.png\" />");
+						"<img src=\"/images/down_small.png\" />"+data.rank + ".");
+			}else {
+				$("#balance_direction").html(
+						"<img src=\"/images/nochange_small.png\" />"+data.rank + ".");
 			}
 
 			$("#cash_value").html("$" + commasep(data.cash.toFixed(2)));

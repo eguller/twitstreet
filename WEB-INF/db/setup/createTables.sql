@@ -10,8 +10,6 @@ create table `users`(
     `lastIp` varchar(45) not null,
     `oauthToken` varchar(100) not null,
     `oauthTokenSecret` varchar(100) not null,
-    `rank` int,
-    `direction` tinyint,
     `pictureUrl` varchar(255),
      primary key (`id`),
      unique key `username_unique` (`username`)
@@ -43,6 +41,7 @@ create table `portfolio`(
     `user_id` bigint not null,
     `stock` bigint not null,
     `percentage` double not null,
+    `capital` double not null,
      primary key (`id`),
      unique key `unique_portfolio` (`user_id` , `stock`),
      key `fk_users` (`user_id`),
@@ -74,12 +73,25 @@ create  table `transactions` (
 create table `stock_history` (
   `id` bigint(20) not null auto_increment,
   `stock` bigint(20) not null,
+  `name` varchar(45) not null,
   `total` int(11) not null,
-  `day` date default null,
+  `date` varchar(10) not null,  
+  `lastUpdate` timestamp,
   primary key (`id`),
-  unique key `unique_daily_stock` (`stock`,`day`),
+  unique key `unique_daily_stock` (`stock`,`date`),
   constraint `fk_stock_history_stock` foreign key (`stock`) references `stock` (`id`)
 ) engine=innodb default charset=`utf8`;
 
-
+-- ranking table
+create table `ranking` (
+   
+    `user_id` bigint not null,
+	`cash` double,
+	`portfolio` double,
+    `rank` int,
+    `oldRank` int,
+    `direction` tinyint,
+    `lastUpdate` timestamp,
+     primary key (`user_id`)
+)  engine=innodb default charset=`utf8`;
 

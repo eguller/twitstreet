@@ -36,7 +36,7 @@ public class UserMgrImpl implements UserMgr {
 							"userName, " + 
 							"lastLogin, " + 
 							"firstLogin, " + 
-							"cash, " + 
+							"users.cash, " + 
 							"lastIp, " + 
 							"oauthToken, " +
 							"oauthTokenSecret, " + 
@@ -44,7 +44,7 @@ public class UserMgrImpl implements UserMgr {
 							"direction, " + 
 							"pictureUrl, " + 
 							"portfolio_value(id) as portfolio " + 
-							"from users where users.id = ?");
+							"from users,ranking where ranking.user_id = users.id and users.id = ?");
 			ps.setLong(1, id);
 			rs = ps.executeQuery();
 			if (rs.next()) {
@@ -193,15 +193,15 @@ public class UserMgrImpl implements UserMgr {
 							"userName, " + 
 							"lastLogin, " + 
 							"firstLogin, " + 
-							"cash, " + 
+							"ranking.cash, " + 
 							"lastIp, " + 
 							"oauthToken, " + 
 							"oauthTokenSecret, " + 
 							"rank, " + 
 							"direction, " + 
 							"pictureUrl, " + 
-							"portfolio_value(id) as portfolio " + 
-							"from users where users.id >= (select floor( max(id) * rand()) from users ) " + 
+							"ranking.portfolio " + 
+							"from users,ranking where  ranking.user_id = users.id and users.id >= (select floor( max(id) * rand()) from users ) " + 
 							"order by users.id limit 1");
 			if (rs.next()) {
 				user = new User();
@@ -310,9 +310,10 @@ public class UserMgrImpl implements UserMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement("select id, userName, "
-							+ "lastLogin, firstLogin, cash, "
-							+ "portfolio_value(id) as portfolio, lastIp, oauthToken, "
-							+ "oauthTokenSecret, rank, direction, pictureUrl from users order by rank asc limit "
+							+ "lastLogin, firstLogin, ranking.cash as userCash, "
+							+ "ranking.portfolio, lastIp, oauthToken, "
+							+ "oauthTokenSecret, rank, direction, pictureUrl from users,ranking where ranking.user_id= users.id " 
+							+" order by rank asc limit "
 							+ TOP);
 			rs = ps.executeQuery();
 			logger.debug("DB: Query executed successfully - " + ps.toString());
@@ -324,7 +325,7 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setUserName(rs.getString("userName"));
 				userDO.setLastLogin(rs.getDate("lastLogin"));
 				userDO.setFirstLogin(rs.getDate("firstLogin"));
-				userDO.setCash(rs.getDouble("cash"));
+				userDO.setCash(rs.getDouble("userCash"));
 				userDO.setPortfolio(rs.getDouble("portfolio"));
 				userDO.setLastIp(rs.getString("lastIp"));
 				userDO.setOauthToken(rs.getString("oauthToken"));

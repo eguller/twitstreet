@@ -110,6 +110,7 @@ public class StockMgrImpl implements StockMgr {
 		return stockDO;
 	}
 
+
 	public void updateStockHistory(){
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -117,17 +118,13 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert into stock_history(stock, total, day) select distinct id, total, date(now( )) from stock order by lastUpdate desc ");
+					.prepareStatement("insert into stock_history(stock, total, name, date, lastUpdate) select id, total, name, DATE(NOW()), lastUpdate from stock " +
+							" where id not in (select stock from stock_history where date = DATE(NOW()) ) ");
 		
 			ps.executeUpdate();
-			
 				
 			logger.debug("DB: Query executed successfully - " + ps.toString());
-		}
-		catch(MySQLIntegrityConstraintViolationException uniqueKeyException){
-			//omit this exception
-		}
-		catch (SQLException ex) {
+		} catch (SQLException ex) {
 			logger.error("DB: Query failed - " + ps.toString(), ex);
 		} finally {
 			try {
@@ -144,7 +141,6 @@ public class StockMgrImpl implements StockMgr {
 		
 		
 	}
-	
 	
 	
 	public void updateTwitterData(long id, int total, String pictureUrl,
