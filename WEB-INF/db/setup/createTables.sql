@@ -120,7 +120,6 @@ create table `ranking` (
     `oldRank` int,
     `direction` int,
     `lastUpdate` timestamp,
-     primary key (`user_id`,`group_id`),
-     constraint `fk_ranking_group` foreign key (`group_id`) references `groups` (`id`),
+     primary key (`user_id`),
      constraint `fk_ranking_user` foreign key (`user_id`) references `users` (`id`)
 )  engine=innodb default charset=`utf8`;
