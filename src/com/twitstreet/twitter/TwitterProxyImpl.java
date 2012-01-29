@@ -1,16 +1,9 @@
 package com.twitstreet.twitter;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.twitstreet.config.ConfigMgr;
-import com.twitstreet.util.Util;
 
 import twitter4j.ResponseList;
 import twitter4j.Twitter;
@@ -18,6 +11,11 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.util.Util;
 
 public class TwitterProxyImpl implements TwitterProxy {
 	private static final int NOT_FOUND = 404;
@@ -141,7 +139,14 @@ public class TwitterProxyImpl implements TwitterProxy {
 			throws TwitterException {
 		ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
 		ResponseList<User> userResponseList = null;
-		String query = Util.collapseSpaces(user).replace(' ', '+');
+
+		String query = user;
+		try {
+			query = Util.convertStringToValidURL(query);
+		} catch (UnsupportedEncodingException e1) {
+			logger.error("Error converting \"" + query +"\" to valid URL. ", e1);
+		}
+		//query = Util.collapseSpaces(user).replace(' ', '+');
 		try {
 			userResponseList = twitter.searchUsers(query, 1);
 		} catch (TwitterException e) {

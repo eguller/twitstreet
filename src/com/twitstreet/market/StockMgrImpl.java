@@ -95,8 +95,11 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert into stock_history(stock, total, date, lastUpdate) select id, total, DATE(NOW()), lastUpdate from stock " +
-							" where id not in (select stock from stock_history where date = DATE(NOW()) ) ");
+					.prepareStatement("insert into stock_history(stock, total, date, lastUpdate) " +
+											" select id, total, DATE(NOW()), lastUpdate from stock " +
+											" 	on duplicate key update " +
+											"	stock_history.total=stock.total, " +
+											"	stock_history.lastUpdate=stock.lastUpdate ");
 		
 			ps.executeUpdate();
 				
