@@ -141,12 +141,12 @@ public class TwitterProxyImpl implements TwitterProxy {
 		ResponseList<User> userResponseList = null;
 
 		String query = user;
-		try {
-			query = Util.convertStringToValidURL(query);
-		} catch (UnsupportedEncodingException e1) {
-			logger.error("Error converting \"" + query +"\" to valid URL. ", e1);
-		}
-		//query = Util.collapseSpaces(user).replace(' ', '+');
+//		try {
+//			query = Util.convertStringToValidURL(query);
+//		} catch (UnsupportedEncodingException e1) {
+//			logger.error("Error converting \"" + query +"\" to valid URL. ", e1);
+//		}
+	    query = Util.collapseSpaces(query).replace(' ', '+');
 		try {
 			userResponseList = twitter.searchUsers(query, 1);
 		} catch (TwitterException e) {

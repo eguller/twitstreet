@@ -1,7 +1,7 @@
 package com.twitstreet.util;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -78,7 +78,7 @@ public class Util {
 
 		String newStr = "";
 
-		newStr = URLDecoder.decode(str, "UTF-8");
+		newStr = URLEncoder.encode(str, "UTF-8");
 
 		return newStr;
 	}
