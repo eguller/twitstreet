@@ -1,13 +1,9 @@
 package com.twitstreet.twitter;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.twitstreet.config.ConfigMgr;
-import com.twitstreet.util.Util;
 
 import twitter4j.ResponseList;
 import twitter4j.Twitter;
@@ -15,6 +11,11 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.util.Util;
 
 public class TwitterProxyImpl implements TwitterProxy {
 	private static final int NOT_FOUND = 404;
@@ -134,10 +135,9 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	@Override
-	public User[] searchUsers(String user)
+	public ArrayList<SimpleTwitterUser> searchUsers(String user)
 			throws TwitterException {
-	
-		User[] searchResult = null;
+		ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
 		ResponseList<User> userResponseList = null;
 
 		String query = user;
@@ -156,12 +156,11 @@ public class TwitterProxyImpl implements TwitterProxy {
 		if (userResponseList == null || userResponseList.size() < 1) {
 			logger.error("Twitter: No results found for user search: " + query);
 		} else {
-			searchResult = new User[userResponseList.size()];
 			for (int i = 0; i < userResponseList.size(); i++) {
-				searchResult[i] = userResponseList.get(i);
+				searchResultList.add( new SimpleTwitterUser(userResponseList.get(i)));
 			}
 		}
-		return searchResult;
+		return searchResultList;
 	}
 
 }

@@ -49,7 +49,7 @@ public class StockUpdateTask implements Runnable {
 					int remainingHits = twitter.getRateLimitStatus().getRemainingHits();
 					if (remainingHits > RESERVED_HIT_COUNT) {
 						twitter4j.User twUser = twitter.showUser(stock.getId());
-						stockMgr.updateTwitterData(stock.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toString(), twUser.getScreenName());
+						stockMgr.updateTwitterData(stock.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName());
 					}
 					else{
 						logger.warn("Twitter: " + user.getUserName() + "'s hit count is " + remainingHits);

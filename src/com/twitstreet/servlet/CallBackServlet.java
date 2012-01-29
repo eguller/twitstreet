@@ -74,7 +74,7 @@ public class CallBackServlet extends HttpServlet {
 				user.setOauthToken(oauthToken);
 				user.setOauthTokenSecret(oauthTokenSecret);
 				user.setCash(configMgr.getInitialMoney());
-				user.setPictureUrl(twUser.getProfileImageURL().toString());
+				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 				userMgr.saveUser(user);
 				request.getSession().setAttribute(User.USER, user);
 			} else {
@@ -85,7 +85,7 @@ public class CallBackServlet extends HttpServlet {
 				user.setLastIp(request.getRemoteHost());
 				user.setOauthToken(oauthToken);
 				user.setOauthTokenSecret(oauthTokenSecret);
-				user.setPictureUrl(twUser.getProfileImageURL().toString());
+				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 				userMgr.updateUser(user);
 				request.getSession().setAttribute(User.USER, user);
 			}

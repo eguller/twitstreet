@@ -48,7 +48,6 @@ public class TSModule extends AbstractModule {
 		bind(ConfigMgr.class).toProvider(ConfigMgrProvider.class).in(Scopes.SINGLETON);
 		bind(ReRankTask.class).in(Scopes.SINGLETON);
 		bind(StockUpdateTask.class).in(Scopes.SINGLETON);
-		//bind(AsyncQueryTask.class).in(Scopes.SINGLETON);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class).in(Scopes.SINGLETON);
 		bind(AsyncQuery.class).to(AsyncQueryTask.class).in(Scopes.SINGLETON);
 		bind(TransactionCache.class).to(TransactionCacheImpl.class).in(Scopes.SINGLETON);

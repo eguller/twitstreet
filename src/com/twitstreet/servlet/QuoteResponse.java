@@ -1,14 +1,20 @@
 package com.twitstreet.servlet;
 
+import java.util.ArrayList;
+
 import com.twitstreet.db.data.Stock;
+import com.twitstreet.twitter.SimpleTwitterUser;
 
 public class QuoteResponse {
 	Stock stock;
 	double percentage;
-	public QuoteResponse(Stock stock, double percentage){
+	ArrayList<SimpleTwitterUser> searchResultList;
+	public QuoteResponse(Stock stock, double percentage, ArrayList<SimpleTwitterUser> searchResultList){
 		this.stock = stock;
 		this.percentage = percentage;
+		this.searchResultList = searchResultList;
 	}
+
 	public Stock getStock() {
 		return stock;
 	}
