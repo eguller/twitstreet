@@ -1,6 +1,8 @@
 package com.twitstreet.twitter;
 
 
+import java.util.ArrayList;
+
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -13,5 +15,5 @@ public interface TwitterProxy {
 	public void setTwitter(Twitter twitter);
 	public Twitter getTwitter();
 	User getTwUser(long userId) throws TwitterException;
-	public User[] searchUsers(String query) throws TwitterException;
+	public ArrayList<SimpleTwitterUser> searchUsers(String query) throws TwitterException;
 }

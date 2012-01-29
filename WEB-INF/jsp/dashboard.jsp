@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.db.data.UserStock"%>
 <%@page import="java.sql.SQLException"%>
@@ -12,7 +13,7 @@
 <%@page import="com.twitstreet.market.PortfolioMgr"%>
 <%@page import="com.twitstreet.config.ConfigMgr"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
-<%@ page  import="com.twitstreet.servlet.HomePageServlet" %>
+<%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 
 <%
 	User sessionUser = (User) request.getSession().getAttribute(
@@ -222,6 +223,65 @@
 				</td>
 			</tr>
 		</table>
+
+		<div id="other-search-result">
+			<%
+				ArrayList<SimpleTwitterUser> searchResults = (ArrayList<SimpleTwitterUser>) request.getSession().getAttribute(StockQuoteServlet.OTHER_SEARCH_RESULTS);
+			%>
+			<%
+				if (searchResults != null && searchResults.size() > 0) {
+			%>
+			<table class="datatbl" style="margin-top: 10px;">
+				<tr class="thead">
+					<td style="width: 33%; text-align: left; font-weight: bolder;" colspan="3">Other results for <%=quote %></td>
+				</tr>
+				<%
+					for (int i = 0; i < searchResults.size();) {
+				%>
+				<tr>
+					<%
+						for (int j = 0; j < 3; j++) {
+									if (i < searchResults.size()) {
+					%>
+
+					<td>
+						<table>
+							<tr>
+								<td><img class="twuser"
+									src="<%=searchResults.get(i).getPictureUrl()%>" />
+								</td>
+								<td><a href='/?stock=<%=searchResults.get(i).getId()%>'
+									title="Loads <%=searchResults.get(i).getScreenName()%>'s stock details">
+										<%
+											out.write(searchResults.get(i).getScreenName());
+										%> </a> <br><%
+ 	out.write(Util.commaSep(searchResults.get(i)
+ 							.getFollowerCount()));
+ %>
+								</td>
+
+							</tr>
+						</table>
+					</td>
+					<%
+						} else {
+					%>
+					<td></td>
+					<%
+						}
+									i++;
+								}
+					%>
+				</tr>
+				<%
+					}
+				%>
+			</table>
+			<%
+				}
+			%>
+		</div>
+
 	</div>
 	<div id="searchnoresult"
 		<%if (quote.length() > 0 && stock == null) {

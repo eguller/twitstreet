@@ -1,5 +1,10 @@
 package com.twitstreet.twitter;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
@@ -132,10 +137,9 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	@Override
-	public User[] searchUsers(String user)
+	public ArrayList<SimpleTwitterUser> searchUsers(String user)
 			throws TwitterException {
-	
-		User[] searchResult = null;
+		ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
 		ResponseList<User> userResponseList = null;
 		String query = Util.collapseSpaces(user).replace(' ', '+');
 		try {
@@ -147,12 +151,11 @@ public class TwitterProxyImpl implements TwitterProxy {
 		if (userResponseList == null || userResponseList.size() < 1) {
 			logger.error("Twitter: No results found for user search: " + query);
 		} else {
-			searchResult = new User[userResponseList.size()];
 			for (int i = 0; i < userResponseList.size(); i++) {
-				searchResult[i] = userResponseList.get(i);
+				searchResultList.add( new SimpleTwitterUser(userResponseList.get(i)));
 			}
 		}
-		return searchResult;
+		return searchResultList;
 	}
 
 }

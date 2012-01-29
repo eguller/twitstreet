@@ -6,10 +6,12 @@ public class SimpleTwitterUser {
 	long id;
 	String screenName;
 	String pictureUrl;
+	int followerCount = 0;
 	public SimpleTwitterUser(User user){
 		this.id = user.getId();
 		this.screenName = user.getScreenName();
 		this.pictureUrl = user.getProfileImageURL().toExternalForm();
+		this.followerCount = user.getFollowersCount();
 	}
 	public long getId() {
 		return id;
@@ -28,5 +30,11 @@ public class SimpleTwitterUser {
 	}
 	public void setPictureUrl(String pictureUrl) {
 		this.pictureUrl = pictureUrl;
+	}
+	public int getFollowerCount() {
+		return followerCount;
+	}
+	public void setFollowerCount(int followerCount) {
+		this.followerCount = followerCount;
 	}
 }
