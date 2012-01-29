@@ -4,9 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
-import javax.swing.text.NumberFormatter;
 
 public class Util {
 

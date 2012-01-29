@@ -89,17 +89,7 @@ public class AsyncQueryTask implements AsyncQuery {
 					
 					
 					// close everything
-					try {
-						if (ps != null && !ps.isClosed()) {
-							ps.close();
-						}
-
-						if (conn != null && !conn.isClosed()) {
-							conn.close();
-						}
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
+					dbMgr.closeResources(conn, ps, null);
 					
 				}
 			}

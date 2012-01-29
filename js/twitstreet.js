@@ -532,7 +532,7 @@ function toprank() {
 			} else if (user.direction < 0){
 				$(tr).append($("<td><img src=\"/images/down.png\" /></td>"));
 			}else{
-				$(tr).append($("<td><img src=\"/images/nochange2.png\" /></td>"));
+				$(tr).append($("<td><img src=\"/images/nochange.png\" /></td>"));
 			}
 			$("#topranktable").append(tr);
 		}

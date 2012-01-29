@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -14,9 +15,11 @@ import com.google.inject.Singleton;
 import com.twitstreet.cache.TransactionCache;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
-import com.twitstreet.servlet.HomePageServlet;
+import com.twitstreet.db.data.Group;
+import com.twitstreet.db.data.User;
+import com.twitstreet.session.GroupMgr;
+import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.AsyncQuery;
-import com.twitstreet.task.AsyncQueryTask;
 import com.twitstreet.task.ReRankTask;
 import com.twitstreet.task.StockHistoryUpdateTask;
 import com.twitstreet.task.StockUpdateTask;
@@ -31,7 +34,8 @@ public class TwitstreetImpl implements Twitstreet {
 	Injector injector;
 	@Inject AsyncQuery asyncQueryTask;
 	@Inject TransactionCache transactionCache;
-	
+	@Inject GroupMgr groupMgr;
+	@Inject UserMgr userMgr;
 	@Inject public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr){
 		this.dbMgr = dbMgr;
 		this.configMgr = configMgr;
@@ -85,6 +89,24 @@ public class TwitstreetImpl implements Twitstreet {
 		transactionCache.load();
 		
 		initialized = true;
+		
+		
+		//REMOVE HERE (ADDED FOR DEBUG PURPOSE)
+//		User userDO = userMgr.getUserById(324562459);
+//		userMgr.saveUser(userDO);
+//		groupMgr.addUserToDefaultGroup(userDO);
+//		Group group = groupMgr.getGroup(1);
+//		long id1 = groupMgr.createGroup("grup");
+//	
+//		long id2 = groupMgr.createGroupForUser("user_group", userDO);
+//		ArrayList<Group> groups = groupMgr.getGroupsForUser(userDO);
+//		groupMgr.removeUserFromGroup(userDO,groups.get(1).getId());
+//		
+//		group = groupMgr.getGroup(1);
+//		group.setName("Overall");
+//		groupMgr.updateGroup(group);
+//		groupMgr.deleteGroup(id1);
+//		groupMgr.deleteGroup(id2);
 	}
 	public boolean isInitialized(){
 		return initialized;

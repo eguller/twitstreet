@@ -1,7 +1,9 @@
 package com.twitstreet.db.base;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
@@ -11,18 +13,7 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class DBMgrImpl implements DBMgr {
-	private static Logger logger = Logger.getLogger(DBMgrImpl.class);
-	private static final String DRIVER = "com.mysql.jdbc.Driver";
-	private static final int VALIDATION_INTERVAL = 30000;
-	private static final int EVICTION_RUN_MILLIS = 30000;
-	private static final int MIN_EVICTABLE_IDLE_TIME = 30000;
-	private static final int MIN_IDLE = 10;
-	private static final int MAX_ACTIVE = 100;
-	private static final int INITIAL_SIZE = 10;
-	private static final String VALIDATION_QUERY = "SELECT 1";
-	private static final int MAX_WAIT = 10000;
-	private static final int ABANDONED_TIMEOUT = 60;
-	
+
 	String dbHost;
 	int dbPort;
 	String userName;
@@ -30,7 +21,8 @@ public class DBMgrImpl implements DBMgr {
 	String dbName;
 	String connectURI;
 	private DataSource dataSource;
-
+	private static Logger logger = Logger.getLogger(DBMgrImpl.class);
+	
 	/* (non-Javadoc)
 	 * @see com.twitstreet.db.base.DBMgr#init()
 	 */
@@ -43,22 +35,22 @@ public class DBMgrImpl implements DBMgr {
 	private void setupDataSource() {
 		PoolProperties p = new PoolProperties();
         p.setUrl(getConnectionURL());
-        p.setDriverClassName(DRIVER);
+        p.setDriverClassName(DBConstants.DRIVER);
         p.setUsername(getUserName());
         p.setPassword(getPassword());
         p.setJmxEnabled(true);
         p.setTestWhileIdle(false);
         p.setTestOnBorrow(true);
-        p.setValidationQuery(VALIDATION_QUERY);
+        p.setValidationQuery(DBConstants.VALIDATION_QUERY);
         p.setTestOnReturn(false);
-        p.setValidationInterval(VALIDATION_INTERVAL);
-        p.setTimeBetweenEvictionRunsMillis(EVICTION_RUN_MILLIS);
-        p.setMaxActive(MAX_ACTIVE);
-        p.setInitialSize(INITIAL_SIZE);
-        p.setMaxWait(MAX_WAIT);
-        p.setRemoveAbandonedTimeout(ABANDONED_TIMEOUT);
-        p.setMinEvictableIdleTimeMillis(MIN_EVICTABLE_IDLE_TIME);
-        p.setMinIdle(MIN_IDLE);
+        p.setValidationInterval(DBConstants.VALIDATION_INTERVAL);
+        p.setTimeBetweenEvictionRunsMillis(DBConstants.EVICTION_RUN_MILLIS);
+        p.setMaxActive(DBConstants.MAX_ACTIVE);
+        p.setInitialSize(DBConstants.INITIAL_SIZE);
+        p.setMaxWait(DBConstants.MAX_WAIT);
+        p.setRemoveAbandonedTimeout(DBConstants.ABANDONED_TIMEOUT);
+        p.setMinEvictableIdleTimeMillis(DBConstants.MIN_EVICTABLE_IDLE_TIME);
+        p.setMinIdle(DBConstants.MIN_IDLE);
         p.setLogAbandoned(false);
         p.setRemoveAbandoned(true);
         p.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;"+
@@ -137,5 +129,23 @@ public class DBMgrImpl implements DBMgr {
 	@Override
 	public void setDbName(String dbName) {
 		this.dbName = dbName;
+	}
+	@Override
+	public boolean closeResources(Connection c, Statement stmt, ResultSet rs) {
+		try {
+			if (rs != null && !rs.isClosed()) {
+				rs.close();
+			}
+			if (stmt != null && !stmt.isClosed()) {
+				stmt.close();
+			}
+			if (c != null && !c.isClosed()) {
+				c.close();
+			}
+		} catch (SQLException e) {
+			logger.error(DBConstants.RESOURCES_NOT_CLOSED, e);
+			return false;
+		}
+		return true;
 	}
 }

@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.TransactionRecord;
 
@@ -126,23 +127,11 @@ public class TransactionCacheImpl implements TransactionCache{
 				}
 				
 			}
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed - " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (rs != null && !rs.isClosed()) {
-					rs.close();
-				}
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, rs);
 		}
 	}
 }

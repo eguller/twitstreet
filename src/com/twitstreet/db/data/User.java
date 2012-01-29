@@ -17,6 +17,7 @@ public class User{
     String oauthToken;
     String oauthTokenSecret;
     int rank;
+    int oldRank;
     int direction;
     String pictureUrl;
     @Inject TwitterProxy twitterProxy = null;
@@ -113,5 +114,13 @@ public class User{
 
 	public void setPictureUrl(String pictureUrl) {
 		this.pictureUrl = pictureUrl;
+	}
+
+	public int getOldRank() {
+		return oldRank;
+	}
+
+	public void setOldRank(int oldRank) {
+		this.oldRank = oldRank;
 	}
 }

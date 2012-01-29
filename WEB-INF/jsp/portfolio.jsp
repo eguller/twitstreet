@@ -19,7 +19,11 @@ Portfolio portfolio = null;
 if(user != null){
 	portfolio = portfolioMgr.getUserPortfolio(user);
 }
-
+if(portfolio==null){
+	
+	return;
+	
+}
 %>
 <div id="portfolio" style="margin-top: 10px;">
 	<h3>Portfolio</h3>

@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Config;
 import com.twitstreet.market.StockMgrImpl;
@@ -41,27 +42,15 @@ public class ConfigMgrImpl implements ConfigMgr{
 				config.setVal(rs.getString(Config.VAL));
 				configMap.put(config.getParm(), config);
 			}
-			logger.debug("DB: Query executed successfully - " + stmt.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + stmt.toString());
 			logger.debug("Config manager initialized successfully.");
 
 		} catch (SQLException e) {
-			logger.error("DB: Query failed - " + stmt == null ? "Query is null" : stmt.toString(), e);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + stmt == null ? "Query is null" : stmt.toString(), e);
 			logger.error("Config manager initialization failed.");
 		}
 		finally{
-			try {
-				if (rs != null && !rs.isClosed()) {
-					rs.close();
-				}
-				if (stmt != null && !stmt.isClosed()) {
-					stmt.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, stmt, rs);
 		}
 		
 		

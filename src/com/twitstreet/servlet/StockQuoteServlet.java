@@ -1,17 +1,6 @@
 package com.twitstreet.servlet;
 
-import com.google.gson.Gson;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.twitstreet.config.ConfigMgr;
-import com.twitstreet.db.data.Stock;
-import com.twitstreet.db.data.User;
-import com.twitstreet.market.PortfolioMgr;
-import com.twitstreet.market.StockMgr;
-import com.twitstreet.session.UserMgr;
-import com.twitstreet.twitter.SimpleTwitterUser;
-import com.twitstreet.twitter.TwitterProxy;
-import com.twitstreet.twitter.TwitterProxyFactory;
+import java.io.IOException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +10,17 @@ import org.apache.log4j.Logger;
 
 import twitter4j.TwitterException;
 
-import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.db.data.Stock;
+import com.twitstreet.db.data.User;
+import com.twitstreet.market.PortfolioMgr;
+import com.twitstreet.market.StockMgr;
+import com.twitstreet.session.UserMgr;
+import com.twitstreet.twitter.TwitterProxy;
+import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
 @Singleton
@@ -57,8 +56,8 @@ public class StockQuoteServlet extends HttpServlet {
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
-		String twUserName = (String) request.getParameter(QUOTE);
-
+		String twUserName =  (String) request.getParameter(QUOTE);
+		
 		User user = request.getSession(false) == null ? null : (User) request
 				.getSession(false).getAttribute(User.USER);
 		request.getSession().setAttribute(QUOTE, twUserName);
@@ -76,8 +75,12 @@ public class StockQuoteServlet extends HttpServlet {
 
 			// Get user info from twitter.
 			twitter4j.User twUser = null;
+			twitter4j.User searchResultUsers[] = null;
 			try {
-				twUser = twitterProxy.getTwUser(twUserName);
+				searchResultUsers = twitterProxy.searchUsers(twUserName);
+				if(searchResultUsers!=null && searchResultUsers.length>0){
+					twUser= searchResultUsers[0];					
+				}
 			} catch (TwitterException e1) {
 				resp.fail()
 						.reason("Something wrong, we could not connected to Twitter. Working on it.");
@@ -128,30 +131,18 @@ public class StockQuoteServlet extends HttpServlet {
 				response.getWriter().write(gson.toJson(resp));
 				return;
 			} else {
-				logger.debug("Servlet: User name does not exist. Making twitter search. Query: "
-						+ twUserName);
-				try {
-					SimpleTwitterUser[] searchResult = twitterProxy
-							.searchUsers(twUserName);
-					resp.success()
-							.resultCode("user-notfound")
-							.reason("We could not find \"" + twUserName
-									+ "\" but following ones close.")
-							.setRespOjb(searchResult);
-					return;
-				} catch (TwitterException e) {
-					resp.fail()
-							.reason("Something wrong, we could not retrieved quote info. Working on it");
-					response.getWriter().write(gson.toJson(resp));
-					return;
-				}
+				logger.error("Servlet: User not found. Search string: " + twUserName);
+				resp.fail()
+						.reason("Something wrong, we could not retrieved quote info. Working on it. ");
 			}
 
 		} else {
 			logger.error("Servlet: Twitter proxy could not be created. Username: "
 					+ twUserName);
 			resp.fail()
-					.reason("Something wrong, we could not retrieved quote info. Working on it");
+					.reason("Something wrong, we could not retrieved quote info. Working on it. ");
 		}
 	}
+	
+
 }

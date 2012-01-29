@@ -90,18 +90,16 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	@Override
-	public User getTwUser(String name) throws TwitterException {
+	public User getTwUser(String twUserName) throws TwitterException {
 		User user = null;
 		try {
-			user = twitter.showUser(name);
-			logger.debug("Twitter: User retrieved successfully. Username: "
-					+ name);
+			user = twitter.showUser(twUserName);
+			logger.debug("Twitter: User retrieved successfully. Username: " + twUserName);
 		} catch (TwitterException e) {
 			if (e.getStatusCode() == NOT_FOUND) {
-				logger.debug("Twitter: User not found. Username: " + name);
+				logger.debug("Twitter: User not found. Username: " + twUserName);
 			} else {
-				logger.error(
-						"Twitter: Error while retrieving twitter user:" + name, e);
+				logger.error("Twitter: Error while retrieving twitter user:" + twUserName, e);
 				throw e;
 			}
 		}
@@ -134,24 +132,27 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	@Override
-	public SimpleTwitterUser[] searchUsers(String user)
+	public User[] searchUsers(String user)
 			throws TwitterException {
 	
-		SimpleTwitterUser[] searchResult = null;
+		User[] searchResult = null;
 		ResponseList<User> userResponseList = null;
 		String query = Util.collapseSpaces(user).replace(' ', '+');
 		try {
-			userResponseList = twitter.searchUsers(query, 10);
+			userResponseList = twitter.searchUsers(query, 1);
 		} catch (TwitterException e) {
 			logger.error("Twitter: User search failed for query: " + query, e);
 			throw e;
 		}
-		if (userResponseList != null) {
-			searchResult = new SimpleTwitterUser[userResponseList.size()];
+		if (userResponseList == null || userResponseList.size() < 1) {
+			logger.error("Twitter: No results found for user search: " + query);
+		} else {
+			searchResult = new User[userResponseList.size()];
 			for (int i = 0; i < userResponseList.size(); i++) {
-				searchResult[i] = new SimpleTwitterUser(userResponseList.get(i));
+				searchResult[i] = userResponseList.get(i);
 			}
 		}
 		return searchResult;
 	}
+
 }

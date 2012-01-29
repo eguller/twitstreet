@@ -20,6 +20,8 @@ import com.twitstreet.market.StockMgr;
 import com.twitstreet.market.StockMgrImpl;
 import com.twitstreet.market.TransactionMgr;
 import com.twitstreet.market.TransactionMgrImpl;
+import com.twitstreet.session.GroupMgr;
+import com.twitstreet.session.GroupMgrImpl;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.task.AsyncQuery;
@@ -34,6 +36,8 @@ public class TSModule extends AbstractModule {
 	@Inject Twitstreet twitStreet;
 	@Override
 	protected void configure() {
+
+		bind(GroupMgr.class).to(GroupMgrImpl.class).in(Scopes.SINGLETON);
 		bind(Twitstreet.class).to(TwitstreetImpl.class).in(Scopes.SINGLETON);
 		bind(UserMgr.class).to(UserMgrImpl.class);
 		bind(StockMgr.class).to(StockMgrImpl.class);

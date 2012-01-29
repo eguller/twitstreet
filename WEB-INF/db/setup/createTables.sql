@@ -73,7 +73,6 @@ create  table `transactions` (
 create table `stock_history` (
   `id` bigint(20) not null auto_increment,
   `stock` bigint(20) not null,
-  `name` varchar(45) not null,
   `total` int(11) not null,
   `date` varchar(10) not null,  
   `lastUpdate` timestamp,
@@ -82,16 +81,46 @@ create table `stock_history` (
   constraint `fk_stock_history_stock` foreign key (`stock`) references `stock` (`id`)
 ) engine=innodb default charset=`utf8`;
 
+
+-- groups table
+create table `groups` (
+   
+    `id` bigint not null auto_increment,
+	`name` varchar(45),
+     primary key (`id`),
+     unique key `unique_group_name` (`name`)
+)  engine=innodb default charset=`utf8`;
+
+-- group role table
+create table `group_role` (
+    `id` bigint not null,
+	`name` varchar(45),     
+     primary key (`id`),
+     unique key `unique_role_name` (`name`)
+)  engine=innodb default charset=`utf8`;
+
+-- user group table
+create table `user_group` (
+   
+    `group_id` bigint not null,
+	`user_id` bigint not null,
+	`role_id` bigint not null,
+     primary key (`user_id`,`group_id`),
+     constraint `fk_group_role` foreign key (`role_id`) references `group_role` (`id`),
+     constraint `fk_group_user` foreign key (`user_id`) references `users` (`id`) on delete cascade,
+     constraint `fk_user_group` foreign key (`group_id`) references `groups` (`id`) on delete cascade
+)  engine=innodb default charset=`utf8`;
+
 -- ranking table
 create table `ranking` (
-   
     `user_id` bigint not null,
 	`cash` double,
 	`portfolio` double,
     `rank` int,
     `oldRank` int,
-    `direction` tinyint,
+    `direction` int,
     `lastUpdate` timestamp,
-     primary key (`user_id`)
+     primary key (`user_id`,`group_id`),
+     constraint `fk_ranking_group` foreign key (`group_id`) references `groups` (`id`),
+     constraint `fk_ranking_user` foreign key (`user_id`) references `users` (`id`)
 )  engine=innodb default charset=`utf8`;
-

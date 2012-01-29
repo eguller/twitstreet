@@ -11,12 +11,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
+import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Portfolio;
+import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.StockInPortfolio;
 import com.twitstreet.db.data.User;
 import com.twitstreet.db.data.UserStock;
-import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.UserStockDetail;
 import com.twitstreet.servlet.BuySellResponse;
 import com.twitstreet.session.UserMgr;
@@ -137,20 +138,11 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			ps.setLong(3, buyer);
 			ps.setLong(4, stock);
 			ps.execute();
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed - " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, null);
 		}
 	}
 
@@ -170,15 +162,8 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		} catch (SQLException ex) {
 			logger.error("DB: Adding stock to portfolio failed", ex);
 		}
-		try {
-			if (ps != null && !ps.isClosed()) {
-				ps.close();
-			}
-			if (connection != null && !connection.isClosed()) {
-				connection.close();
-			}
-		} catch (Exception e) {
-			logger.error("DB: Resources could not be closed properly", e);
+		finally{			
+			dbMgr.closeResources(connection, ps, null);
 		}
 	}
 
@@ -205,20 +190,11 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		} catch (SQLException ex) {
 			logger.error("DB: Retrieving stock from portfolio failed. User: "
 					+ userId + " ,Stock: " + stockId, ex);
+		}finally{
+			
+			dbMgr.closeResources(connection, ps, rs);
 		}
-		try {
-			if (rs != null && !rs.isClosed()) {
-				rs.close();
-			}
-			if (ps != null && !ps.isClosed()) {
-				ps.close();
-			}
-			if (connection != null && !connection.isClosed()) {
-				connection.close();
-			}
-		} catch (SQLException ex) {
-			logger.error("DB: Resources could not be closed properly", ex);
-		}
+		
 		return userStock;
 	}
 
@@ -239,23 +215,11 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				return rs.getDouble("percentage");
 
 			}
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.debug("DB: Query failed - " + ps.toString(), ex);
+			logger.debug(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (rs != null && !rs.isClosed()) {
-					rs.close();
-				}
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, rs);
 		}
 		return 0.0;
 	}
@@ -270,20 +234,11 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			ps.setLong(1, userId);
 			ps.setLong(2, stockId);
 			ps.executeUpdate();
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed - " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, null);
 		}
 	}
 
@@ -295,20 +250,11 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			connection = dbMgr.getConnection();
 			cs = connection.prepareCall("{call rerank()}");
 			cs.execute();
-			logger.debug("DB: Query executed successfully - " + cs.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + cs.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed - " + cs.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + cs.toString(), ex);
 		} finally {
-			try {
-				if (cs != null && !cs.isClosed()) {
-					cs.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, cs, null);
 		}
 	}
 
@@ -335,24 +281,12 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 					portfolio.add(stockInPortfolio);
 				}
 
-				logger.debug("DB: Query executed successfully - "
+				logger.debug(DBConstants.QUERY_EXECUTION_SUCC
 						+ ps.toString());
 			} catch (SQLException ex) {
-				logger.error("DB: Query failed - " + ps.toString(), ex);
+				logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 			} finally {
-				try {
-					if (rs != null && !rs.isClosed()) {
-						rs.close();
-					}
-					if (ps != null && !ps.isClosed()) {
-						ps.close();
-					}
-					if (connection != null && !connection.isClosed()) {
-						connection.close();
-					}
-				} catch (SQLException e) {
-					logger.error("DB: Releasing resources failed.", e);
-				}
+				dbMgr.closeResources(connection, ps, rs);
 
 			}
 		}
@@ -389,23 +323,13 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				userStockDetail.setUserName(rs.getString("user_name"));
 				userStockList.add(userStockDetail);
 			}
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException e) {
-			logger.error("DB: Query failed - " + ps.toString(), e);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), e);
+		}finally{
+			dbMgr.closeResources(connection, ps, rs);
 		}
-		try {
-			if (rs != null && !rs.isClosed()) {
-				rs.close();
-			}
-			if (ps != null && !ps.isClosed()) {
-				ps.close();
-			}
-			if (connection != null && !connection.isClosed()) {
-				connection.close();
-			}
-		} catch (SQLException e) {
-			logger.error("DB: Releasing resources failed.", e);
-		}
+		
 		return userStockList;
 	}
 	

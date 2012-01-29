@@ -1,0 +1,1 @@
+update portfolio set capital = (select percentage*stock.total from stock where stock=stock.id ) where capital=0;

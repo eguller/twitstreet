@@ -12,7 +12,9 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
+import com.twitstreet.db.data.Group;
 import com.twitstreet.db.data.User;
 import com.twitstreet.util.Util;
 
@@ -21,6 +23,7 @@ public class UserMgrImpl implements UserMgr {
 	@Inject
 	DBMgr dbMgr;
 	@Inject ConfigMgr configMgr;
+	@Inject GroupMgr groupMgr;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 
 	public User getUserById(long id) {
@@ -40,7 +43,8 @@ public class UserMgrImpl implements UserMgr {
 							"lastIp, " + 
 							"oauthToken, " +
 							"oauthTokenSecret, " + 
-							"rank, " + 
+							"rank, " +
+							"oldRank, " + 
 							"direction, " + 
 							"pictureUrl, " + 
 							"portfolio_value(id) as portfolio " + 
@@ -51,6 +55,7 @@ public class UserMgrImpl implements UserMgr {
 				userDO = new User();
 				userDO.setId(rs.getLong("id"));
 				userDO.setRank(rs.getInt("rank"));
+				userDO.setOldRank(rs.getInt("oldRank"));
 				userDO.setDirection(rs.getInt("direction"));
 				userDO.setUserName(rs.getString("userName"));
 				userDO.setLastLogin(rs.getDate("lastLogin"));
@@ -63,37 +68,89 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setPictureUrl(rs.getString("pictureUrl"));
 			}
 			
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed - " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (rs != null && !rs.isClosed()) {
-					rs.close();
-				}
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException ex) {
-				logger.error("DB: Releasing resources failed.", ex);
-			}
+			dbMgr.closeResources(connection, ps, rs);
 		}
 		return userDO;
 	}
+	public ArrayList<User> getUsersByGroup(Group group) {
+		ArrayList<User> users = new ArrayList<User>();
+		if(group.getId()<1 && group.getName() != null && group.getName().length()>0){
+			group = groupMgr.getGroup(group.getName());		
+		}
+		
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select " + 
+							"id, " + 
+							"userName, " + 
+							"lastLogin, " + 
+							"firstLogin, " + 
+							"users.cash, " + 
+							"lastIp, " + 
+							"oauthToken, " +
+							"oauthTokenSecret, " + 
+							"rank, " +
+							"oldRank, " + 
+							"direction, " + 
+							"pictureUrl, " + 
+							"portfolio_value(id) as portfolio " + 
+							"from users,ranking, user_group where ranking.user_id = users.id and user_group.user_id = users.id and user_group.group_id = ? ");
+			ps.setLong(1, group.getId());
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				userDO = new User();
+				userDO.setId(rs.getLong("id"));
+				userDO.setRank(rs.getInt("rank"));
+				userDO.setOldRank(rs.getInt("oldRank"));
+				userDO.setDirection(rs.getInt("direction"));
+				userDO.setUserName(rs.getString("userName"));
+				userDO.setLastLogin(rs.getDate("lastLogin"));
+				userDO.setFirstLogin(rs.getDate("firstLogin"));
+				userDO.setCash(rs.getDouble("cash"));
+				userDO.setPortfolio(rs.getDouble("portfolio"));
+				userDO.setLastIp(rs.getString("lastIp"));
+				userDO.setOauthToken(rs.getString("oauthToken"));
+				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
+				userDO.setPictureUrl(rs.getString("pictureUrl"));
+				
+				users.add(userDO);
+			}
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return users;
+	}
+	
+	
+	public void assignInitialRankToUser(User userDO){
 
-	public void saveUser(User userDO) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
 			
-			ps = connection.prepareStatement("(select (count(*)+1) as newrank from users where (portfolio_value(id) + cash) > "+configMgr.getInitialMoney()+")");
+			ps = connection.prepareStatement("(select (count(*)+1) as newrank from ranking where (portfolio + cash) > ? " +
+					" or  ? > (select userName from users,ranking where ranking.user_id = users.id and (ranking.portfolio + ranking.cash) = ?)) ");
+			
+			ps.setDouble(1, userDO.getCash());
+			ps.setString(2, userDO.getUserName());
+			ps.setDouble(3, userDO.getCash());
 			rs = ps.executeQuery();
-			int newRank = 9999;
+			int newRank = 999999;
 			if(rs.next()){
 			  newRank = rs.getInt("newrank");
 			}
@@ -101,11 +158,42 @@ public class UserMgrImpl implements UserMgr {
 			rs.close();
 			ps.close();
 			
+			ps = connection.prepareStatement("insert into ranking(user_id, cash,portfolio,rank,oldRank,direction,lastUpdate)" + " values(?,?,?,?,?,?,NOW())");
+			ps.setLong(1, userDO.getId());
+			ps.setDouble(2, userDO.getCash());
+			ps.setDouble(3, 0);
+			ps.setInt(4, newRank);
+			ps.setInt(5, newRank);
+			ps.setInt(6, 0);
+
+			ps.executeUpdate();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (MySQLIntegrityConstraintViolationException e) {
+			logger.warn("DB: User already exists in ranking - UserId:" + userDO.getId()
+					+ " User Name: " + userDO.getUserName() + " - "
+					+ e.getMessage());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+	
+		
+	}
+
+	public void saveUser(User userDO) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			
+		
+			
 			ps = connection
 					.prepareStatement("insert into users(id, userName, "
 							+ "lastLogin, firstLogin, "
-							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl, rank) "
-							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl) "
+							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setLong(1, userDO.getId());
 			ps.setString(2, userDO.getUserName());
 			ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));
@@ -115,30 +203,25 @@ public class UserMgrImpl implements UserMgr {
 			ps.setString(7, userDO.getOauthToken());
 			ps.setString(8, userDO.getOauthTokenSecret());
 			ps.setString(9, userDO.getPictureUrl());
-			ps.setInt(10, newRank);
-			
-			
 
 			ps.executeUpdate();
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			
+			
+			
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			logger.warn("DB: User already exist - UserId:" + userDO.getId()
 					+ " User Name: " + userDO.getUserName() + " - "
 					+ e.getMessage());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed = " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException ex) {
-				logger.error("DB: Releasing resources failed.", ex);
-			}
+			dbMgr.closeResources(connection, ps, null);
 		}
+		
+		assignInitialRankToUser(userDO);
+		groupMgr.addUserToDefaultGroup(userDO);
 	}
 
 
@@ -161,20 +244,11 @@ public class UserMgrImpl implements UserMgr {
 			ps.setString(7, user.getPictureUrl());
 
 			ps.executeUpdate();
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed = " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException ex) {
-				logger.error("DB: Releasing resources failed.", ex);
-			}
+			dbMgr.closeResources(connection, ps, null);
 		}
 	}
 
@@ -197,7 +271,8 @@ public class UserMgrImpl implements UserMgr {
 							"lastIp, " + 
 							"oauthToken, " + 
 							"oauthTokenSecret, " + 
-							"rank, " + 
+							"rank, " +
+							"oldRank, " + 
 							"direction, " + 
 							"pictureUrl, " + 
 							"ranking.portfolio " + 
@@ -207,6 +282,7 @@ public class UserMgrImpl implements UserMgr {
 				user = new User();
 				user.setId(rs.getLong("id"));
 				user.setRank(rs.getInt("rank"));
+				user.setOldRank(rs.getInt("oldRank"));
 				user.setDirection(rs.getInt("direction"));
 				user.setUserName(rs.getString("userName"));
 				user.setLastLogin(rs.getDate("lastLogin"));
@@ -221,21 +297,9 @@ public class UserMgrImpl implements UserMgr {
 				logger.error("DB: Random user selection query is not working properly");
 			}
 		} catch (SQLException e) {
-			logger.error("DB: Query failed = " + stmt.toString(), e);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + stmt.toString(), e);
 		} finally {
-			try {
-				if (rs != null && !rs.isClosed()) {
-					rs.close();
-				}
-				if (stmt != null && !stmt.isClosed()) {
-					stmt.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, stmt, rs);
 
 		}
 		return user;
@@ -253,20 +317,11 @@ public class UserMgrImpl implements UserMgr {
 			ps.setLong(2, userId);
 
 			ps.executeUpdate();
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed = " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException ex) {
-				logger.error("DB: Releasing resources failed.", ex);
-			}
+			dbMgr.closeResources(connection, ps, null);
 		}
 	}
 
@@ -282,20 +337,11 @@ public class UserMgrImpl implements UserMgr {
 		ps.setLong(2, userId);
 		
 			ps.executeUpdate();
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed = " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (!ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException ex) {
-				logger.error("DB: Releasing resources failed.", ex);
-			}
+			dbMgr.closeResources(connection, ps, null);
 		}
 	}
 
@@ -312,15 +358,16 @@ public class UserMgrImpl implements UserMgr {
 					.prepareStatement("select id, userName, "
 							+ "lastLogin, firstLogin, ranking.cash as userCash, "
 							+ "ranking.portfolio, lastIp, oauthToken, "
-							+ "oauthTokenSecret, rank, direction, pictureUrl from users,ranking where ranking.user_id= users.id " 
+							+ "oauthTokenSecret, rank, oldRank, direction, pictureUrl from users,ranking where ranking.user_id= users.id " 
 							+" order by rank asc limit "
 							+ TOP);
 			rs = ps.executeQuery();
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 			while (rs.next()) {
 				userDO = new User();
 				userDO.setId(rs.getLong("id"));
 				userDO.setRank(rs.getInt("rank"));
+				userDO.setOldRank(rs.getInt("oldRank"));
 				userDO.setDirection(rs.getInt("direction"));
 				userDO.setUserName(rs.getString("userName"));
 				userDO.setLastLogin(rs.getDate("lastLogin"));
@@ -334,15 +381,9 @@ public class UserMgrImpl implements UserMgr {
 				userList.add(userDO);
 			}
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed = " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				rs.close();
-				ps.close();
-				connection.close();
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, rs);
 		}
 		return userList;
 	}

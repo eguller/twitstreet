@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Stock;
 
@@ -46,24 +47,12 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
 				break;
 			}
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed - " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 
 		} finally {
-			try {
-				if (rs != null && !rs.isClosed()) {
-					rs.close();
-				}
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, rs);
 		}
 		return stockDO;
 	}
@@ -89,23 +78,11 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.setPictureUrl(rs.getString("pictureUrl"));
 				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
 			}
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed - " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (rs != null && !rs.isClosed()) {
-					rs.close();
-				}
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, rs);
 		}
 		return stockDO;
 	}
@@ -118,25 +95,16 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert into stock_history(stock, total, name, date, lastUpdate) select id, total, name, DATE(NOW()), lastUpdate from stock " +
+					.prepareStatement("insert into stock_history(stock, total, date, lastUpdate) select id, total, DATE(NOW()), lastUpdate from stock " +
 							" where id not in (select stock from stock_history where date = DATE(NOW()) ) ");
 		
 			ps.executeUpdate();
 				
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed - " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, null);
 		}
 		
 		
@@ -157,20 +125,11 @@ public class StockMgrImpl implements StockMgr {
 			ps.setString(3, screenName);
 			ps.setLong(4, id);
 			ps.executeUpdate();
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed - " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, null);
 		}
 	}
 
@@ -188,23 +147,14 @@ public class StockMgrImpl implements StockMgr {
 			ps.setString(4, stock.getPictureUrl());
 
 			ps.executeUpdate();
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			logger.warn("DB: Stock already exist - Stock Id:" + stock.getId()
 					+ " User Name: " + stock.getName() + " - " + e.getMessage());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed = " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, null);
 		}
 	}
 
@@ -231,23 +181,11 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
 				stockList.add(stockDO);
 			}
-			logger.debug("DB: Query executed successfully - " + ps.toString());
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
-			logger.error("DB: Query failed - " + ps.toString(), ex);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			try {
-				if (rs != null && !rs.isClosed()) {
-					rs.close();
-				}
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (connection != null && !connection.isClosed()) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error("DB: Resources could not be closed properly", e);
-			}
+			dbMgr.closeResources(connection, ps, rs);			
 		}
 		return stockList;
 	}

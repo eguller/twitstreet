@@ -33,7 +33,7 @@ ArrayList<User> userList = userMgr.getTopRank();
 						<% } else if(user.getDirection() < 0)  { %>
 							<td><img src="/images/down.png" /></td>
 						<% } else   { %>
-							<td><img src="/images/nochange2.png" /></td>
+							<td><img src="/images/nochange.png" /></td>
 						<% }%>
 					</tr>
 		<% } %>
