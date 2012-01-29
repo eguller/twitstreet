@@ -61,7 +61,11 @@ public class Util {
 	
 	public static String commaSep(double amount) {
 		DecimalFormat decimalFormatter = new DecimalFormat("#,###,###.00");
-		return decimalFormatter.format(amount);
+		String formatted = decimalFormatter.format(amount);
+		if(formatted.startsWith(".")){
+			formatted = "0"+formatted;
+		}
+		return formatted;
 	}
 	
 	public static String commaSep(int amount) {

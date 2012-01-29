@@ -548,13 +548,13 @@ function loadBalance() {
 			//$("#balance_rank").html(data.rank + ".");
 			if (data.direction > 0) {
 				$("#balance_direction").html(
-						"<img src=\"/images/up_small.png\" />"+data.rank + ".");
+						data.rank + "."+"<img src=\"/images/up_small.png\" />");
 			} else if (data.direction < 0){
 				$("#balance_direction").html(
-						"<img src=\"/images/down_small.png\" />"+data.rank + ".");
+						data.rank + "."+"<img src=\"/images/down_small.png\" />");
 			}else {
 				$("#balance_direction").html(
-						"<img src=\"/images/nochange_small.png\" />"+data.rank + ".");
+						data.rank + "."+"<img src=\"/images/nochange_small.png\" />");
 			}
 
 			$("#cash_value").html("$" + commasep(data.cash.toFixed(2)));
@@ -566,6 +566,7 @@ function loadBalance() {
 }
 
 function commasep(nStr) {
+	
 	nStr += '';
 	x = nStr.split('.');
 	x1 = x[0];
