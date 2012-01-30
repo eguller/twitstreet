@@ -1,6 +1,5 @@
 package com.twitstreet.twitter;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
@@ -120,6 +119,9 @@ public class TwitterProxyImpl implements TwitterProxy {
 			logger.error("Twitter: Error while retrieving twitter user:"
 					+ userId, e);
 			throw e;
+		}
+		catch(Exception ex){
+			logger.error(ex);
 		}
 		return user;
 	}

@@ -10,6 +10,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <title>
 <%= request.getAttribute("title")%>
 </title>
+
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="description" content="<%=request.getAttribute("meta-desc") %>" >
 

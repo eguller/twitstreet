@@ -251,6 +251,14 @@ a:hover {
 	color: #4D9900;
 }
 
+.green-light {
+	color: #00AA00;
+}
+
+.red-light {
+	color: #CC0000;
+}
+
 .rank-number {
 	font-size: 18px;
 	font-weight: bolder;

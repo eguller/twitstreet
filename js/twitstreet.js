@@ -1,10 +1,4 @@
 $(document).ready(function() {
-	$("#quote").keyup(function(event) {
-		if (event.keyCode == 13) {
-			$("#getquotebutton").click();
-		}
-	});
-
 	$("#dashboard-message-field").corner("round 3px");
 	$("#buy-links div").corner("round 5px");
 
@@ -32,142 +26,6 @@ $(document).ready(function() {
 	}
 
 });
-
-
-function createOtherSearchResultsTable(searchStr, searchResultList){
-	var table = $("<table class=\"datatbl\" style=\"margin-top: 10px;\"></tr>");
-
-	var tr = $("<tr class=\"thead\"></tr>");
-	var td = $("<td style=\"width: 33%; text-align: left; font-weight: bolder;\" colspan=\"3\">Other results for "
-			+ searchStr + ". </td>");
-	$(tr).append(td);
-	$(table).append(tr);
-
-	for ( var i = 0; i < searchResultList.length;) {
-		
-		var tr2 = $("<tr></tr>");
-		$(table).append(tr2);
-		for ( var j = 0; j < 3; j++) {
-			var td2 = $('<td></td>');
-			if (i < searchResultList.length) {
-				var searchResult = searchResultList[i];
-
-				var table2 = $("<table></table>");
-				var tr3 = $("<tr></tr>");
-				var td3 = $('<td></td>');
-				var img = $("<img class=\"twuser\" src=\""+searchResult.pictureUrl+"\" />");
-				
-
-				var td4 = $('<td></td>');
-				var a =  $("<a href=\"/?stock="+searchResult.id+"\" title=\"Loads "+searchResult.screenName+"'s stock details\">"+searchResult.screenName+"</a>");
-				var br = $('<br>');	
-				
-				
-				$(td2).append(table2).append(tr3).append(td3).append(img);
-				$(tr3).append(td4).append(a);
-				$(td4).append(br).append(searchResult.followerCount);
-				
-				
-				
-			}
-			$(tr2).append(td2);
-			i++;
-		}
-		
-	}
-	
-	return table;
-
-}
-
-
-function getquote() {
-	// see dashboard.jsp
-	var quote = $('#quote').val();
-	$("#quote-hidden").val(quote);
-	$
-			.post(
-					'/getquote',
-					{
-						quote : quote
-					},
-					function(data) {
-						if (data.result) {
-							if (data.resultCode == 'user-notfound') {
-
-							} else {
-								$("#total")
-										.html(
-												commasep(parseInt(data.respObj.stock.total)));
-								$("#total-hidden")
-										.val(data.respObj.stock.total);
-
-								$("#quote-id").val(data.respObj.stock.id);
-								$("#user-stock-val").val(
-										parseInt(data.respObj.stock.total
-												* data.respObj.percentage)
-												);
-
-								var sold = calculateSold(
-										data.respObj.stock.total,
-										data.respObj.stock.sold);
-								$("#sold").html(commasep(parseInt(sold)));
-								$("#sold-hidden").val(parseInt(sold));
-
-								$("#available")
-										.html(
-												commasep(parseInt(data.respObj.stock.total
-														- sold)));
-								$("#available-hidden").val(
-										parseInt(data.respObj.stock.total
-												- sold));
-								$("#dashboard-stock-follower-status").html(
-										"<a href=\'/stock?stock="
-												+ data.respObj.stock.id + "\'>"
-												+ data.respObj.stock.name
-												+ "</a>\'s follower status");
-								$("#dashboard-picture").attr("src",
-										data.respObj.stock.pictureUrl);
-								$("#see-details-link").attr("href",
-										"/stock?stock=" + data.respObj.stock.id);
-								if (data.resultCode != 'min-follower-count') {
-									$("#buy-links-row").show();
-									$("#sell-links-row").show();
-									writeBuySellLinks();
-									if (data.respObj.percentage == 0) {
-										$("#user-stock").html(
-												"You do not have any " + quote);
-									} else {
-										$("#user-stock")
-												.html(
-														"You have "
-																+ commasep(parseInt(data.respObj.stock.total
-																		* data.respObj.percentage))
-																+ " of "
-																+ quote);
-									}
-								} else {
-									$("#buy-links-row").hide();
-									$("#sell-links-row").hide();
-									$("#user-stock")
-											.html(
-													data.respObj.stock.name
-															+ " has <b>"
-															+ data.respObj.stock.total
-															+ "</b> follower. <br>You cannot buy followers if total is less than <b>"
-															+ data.respObj.minFollowerCount
-															+ "</b>");
-								}
-								showQuotePanel("userfound");
-								
-								$("#other-search-result").empty();
-								$("#other-search-result").html(createOtherSearchResultsTable(quote,data.respObj.searchResultList));
-							}
-						} else {
-
-						}
-					});
-}
 
 function calculateSold(total, soldPercentage) {
 	return total * soldPercentage;
@@ -276,7 +134,13 @@ function loadPortfolio() {
 					tdA.attr('title', 'Loads ' + stockInPortfolio.stockName + '\'s stock details.');
 					
 					var balance = stockInPortfolio.amount-stockInPortfolio.capital;
-					var balanceStr = '<br>Gain: $'+commasep( balance.toFixed(2) );
+					var balanceStr = '<br><span>$'+commasep( balance.toFixed(2) )+'</span>';
+					if(balance > 0){
+						balanceStr = '<br><span class=\'green-light\'>$'+commasep( balance.toFixed(2) )  + '&nbsp; &#9650; </span>';
+					}
+					else if(balance < 0){
+						balanceStr = '<br><span  class=\'red-light\'>$'+commasep( balance.toFixed(2) )  + '&nbsp; &#9660;</span>';
+					}
 					
 					balance = (balance>0)?'+'+balance:balance;
 					tableTd2.append(tdA).append(

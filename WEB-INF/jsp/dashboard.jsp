@@ -2,7 +2,6 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.db.data.UserStock"%>
 <%@page import="java.sql.SQLException"%>
-<%@page import="com.twitstreet.servlet.StockQuoteServlet"%>
 <%@page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
@@ -35,8 +34,8 @@
 	<div id="quoteholder">
 		<%
 			String quote = request.getSession().getAttribute(
-					StockQuoteServlet.QUOTE) == null ? "" : (String) request
-					.getSession().getAttribute(StockQuoteServlet.QUOTE);
+					HomePageServlet.QUOTE) == null ? "" : (String) request
+					.getSession().getAttribute(HomePageServlet.QUOTE);
 			Stock stock = null;
 			if (quote.length() > 0) {
 				stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
@@ -45,9 +44,10 @@
 				}
 			}
 		%>
-		<input type="text" class="textbox" id="quote" value="<%=quote%>" />
-		<button class="button" onclick="getquote();" id="getquotebutton">Get
-			quote</button>
+		<form action="/" method="post" accept-charset="UTF-8">
+			<input type="text" class="textbox" id="quote" value="<%=quote%>" name="quote" />
+			<input type="submit" value="Get Quote">
+		</form>
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input
 			type="hidden" id="quote-id"
 			value="<%=stock == null ? "" : stock.getId()%>" />
@@ -226,7 +226,7 @@
 
 		<div id="other-search-result">
 			<%
-				ArrayList<SimpleTwitterUser> searchResults = (ArrayList<SimpleTwitterUser>) request.getSession().getAttribute(StockQuoteServlet.OTHER_SEARCH_RESULTS);
+				ArrayList<SimpleTwitterUser> searchResults = (ArrayList<SimpleTwitterUser>) request.getSession().getAttribute(HomePageServlet.OTHER_SEARCH_RESULTS);
 			%>
 			<%
 				if (searchResults != null && searchResults.size() > 0) {
@@ -300,9 +300,17 @@
 
 		<%
 			if (stock != null) {
+				%>
+				<div id="dashboard-message-field" style="margin-top: 6px;"
+			class="field-white">
+			<p style="margin-top: 10px; margin-bottom: 10px;">
+			<%
 				out.write(stock.getName()
 						+ " has 0 followers. Please try something else.");
-			}
+			%>
+			</p>
+			</div>
+		<%	}
 		%>
 	</div>
 </div>

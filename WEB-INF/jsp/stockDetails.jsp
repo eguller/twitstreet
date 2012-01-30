@@ -34,7 +34,7 @@
 <div id="stockdetails">
 	<h3>
 		Stock Details <a style="float: right; vertical-align: bottom;"
-			href="/">Go to Home &gt;&gt;</a>
+			href="/?stock=<%=stock == null ? "" : stock.getId()%>">Go to Home &gt;&gt;</a>
 	</h3>
 	<%
 		if (id > -1) {

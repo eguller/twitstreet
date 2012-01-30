@@ -46,35 +46,40 @@ public class Util {
 	 * @return String
 	 */
 	public static String collapseSpaces(String argStr) {
-		char last = argStr.charAt(0);
-		StringBuffer argBuf = new StringBuffer();
+		if (argStr != null) {
+			char last = argStr.charAt(0);
+			StringBuffer argBuf = new StringBuffer();
 
-		for (int cIdx = 0; cIdx < argStr.length(); cIdx++) {
-			char ch = argStr.charAt(cIdx);
-			if (ch != ' ' || last != ' ') {
-				argBuf.append(ch);
-				last = ch;
+			for (int cIdx = 0; cIdx < argStr.length(); cIdx++) {
+				char ch = argStr.charAt(cIdx);
+				if (ch != ' ' || last != ' ') {
+					argBuf.append(ch);
+					last = ch;
+				}
 			}
-		}
 
-		return argBuf.toString();
+			return argBuf.toString();
+		} else {
+			return "";
+		}
 	}
-	
+
 	public static String commaSep(double amount) {
 		DecimalFormat decimalFormatter = new DecimalFormat("#,###,###.00");
 		String formatted = decimalFormatter.format(amount);
-		if(formatted.startsWith(".")){
-			formatted = "0"+formatted;
+		if (formatted.startsWith(".")) {
+			formatted = "0" + formatted;
 		}
 		return formatted;
 	}
-	
+
 	public static String commaSep(int amount) {
 		DecimalFormat decimalFormatter = new DecimalFormat("#,###,###");
 		return decimalFormatter.format(amount);
 	}
-	
-	public static String convertStringToValidURL(String str) throws UnsupportedEncodingException {
+
+	public static String convertStringToValidURL(String str)
+			throws UnsupportedEncodingException {
 
 		String newStr = "";
 

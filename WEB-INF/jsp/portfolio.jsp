@@ -44,15 +44,24 @@ if(portfolio==null){
 								<a href='/?stock=<%=portfolio.getStockInPortfolioList().get(i).getStockId() %>' title="Loads <%=portfolio.getStockInPortfolioList().get(i).getStockName() %>'s stock details"><% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %></a>
 								<br>
 								$<% out.write(Util.commaSep(portfolio.getStockInPortfolioList().get(i).getAmount())); %>
-								<br>Gain: <%
+								<br><%
 								
-								double balance = 0;
+								double profit = 0;
 								
 								double amount = portfolio.getStockInPortfolioList().get(i).getAmount();
 								double capital = portfolio.getStockInPortfolioList().get(i).getCapital();
 								
-								balance = amount - capital;
-								out.write("$"+Util.commaSep(balance)); %>
+								profit = amount - capital;
+								if(profit > 0){
+									out.write("<span class=\"green-light\">$"+Util.commaSep(profit) + "&nbsp; &#9650;</span>"); 
+								}
+								else if(profit < 0){
+									out.write("<span class=\"red-light\">$"+Util.commaSep(profit) + "&nbsp; &#9660;</span>"); 
+								}
+								else {
+									out.write("<span>$"+Util.commaSep(profit)+"</span>"); 
+								}
+								%>
 							</td>
 							
 						</tr>

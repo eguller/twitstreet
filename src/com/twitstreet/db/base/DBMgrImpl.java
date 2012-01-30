@@ -60,7 +60,7 @@ public class DBMgrImpl implements DBMgr {
 	}
 	
 	private String getConnectionURL(){
-		return "jdbc:mysql://"+getDbHost()+":"+getDbPort()+ "/"+getDbName();
+		return "jdbc:mysql://"+getDbHost()+":"+getDbPort()+ "/"+getDbName() + "?characterEncoding=utf-8&useUnicode=true";
 	}
 	
 	/* (non-Javadoc)
