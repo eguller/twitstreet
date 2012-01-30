@@ -33,6 +33,54 @@ $(document).ready(function() {
 
 });
 
+
+function createOtherSearchResultsTable(searchStr, searchResultList){
+	var table = $("<table class=\"datatbl\" style=\"margin-top: 10px;\"></tr>");
+
+	var tr = $("<tr class=\"thead\"></tr>");
+	var td = $("<td style=\"width: 33%; text-align: left; font-weight: bolder;\" colspan=\"3\">Other results for "
+			+ searchStr + ". </td>");
+	$(tr).append(td);
+	$(table).append(tr);
+
+	for ( var i = 0; i < searchResultList.length;) {
+		
+		var tr2 = $("<tr></tr>");
+		$(table).append(tr2);
+		for ( var j = 0; j < 3; j++) {
+			var td2 = $('<td></td>');
+			if (i < searchResultList.length) {
+				var searchResult = searchResultList[i];
+
+				var table2 = $("<table></table>");
+				var tr3 = $("<tr></tr>");
+				var td3 = $('<td></td>');
+				var img = $("<img class=\"twuser\" src=\""+searchResult.pictureUrl+"\" />");
+				
+
+				var td4 = $('<td></td>');
+				var a =  $("<a href=\"/?stock="+searchResult.id+"\" title=\"Loads "+searchResult.screenName+"'s stock details\">"+searchResult.screenName+"</a>");
+				var br = $('<br>');	
+				
+				
+				$(td2).append(table2).append(tr3).append(td3).append(img);
+				$(tr3).append(td4).append(a);
+				$(td4).append(br).append(searchResult.followerCount);
+				
+				
+				
+			}
+			$(tr2).append(td2);
+			i++;
+		}
+		
+	}
+	
+	return table;
+
+}
+
+
 function getquote() {
 	// see dashboard.jsp
 	var quote = $('#quote').val();
@@ -111,6 +159,9 @@ function getquote() {
 															+ "</b>");
 								}
 								showQuotePanel("userfound");
+								
+								$("#other-search-result").empty();
+								$("#other-search-result").html(createOtherSearchResultsTable(quote,data.respObj.searchResultList));
 							}
 						} else {
 
@@ -200,7 +251,7 @@ function loadPortfolio() {
 		$("#portfolio-table").empty();
 		for ( var i = 0; i < stockInPortfolioList.length;) {
 			var tr = $('<tr></tr>');
-			for ( var j = 0; j < 4; j++) {
+			for ( var j = 0; j < 3; j++) {
 				var stockInPortfolio = null;
 
 				if (i < stockInPortfolioList.length) {

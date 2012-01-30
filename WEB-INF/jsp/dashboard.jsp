@@ -63,30 +63,30 @@
 			<p
 				style="width: 100%; text-align: center; margin-top: 10px; margin-bottom: 10px; padding-top: 5px; padding-bottom: 5px;">
 				<span id="user-stock"> <%
- 	UserStock userStock = null;
- 	if (user != null && stock != null) {
- 		userStock = portfolioMgr.getStockInPortfolio(user.getId(),
- 				stock.getId());
- 		if (userStock == null) {
- 			out.write("You don't have any " + stock.getName());
- 		} else {
- 			int amount = (int) (userStock.getPercent() * stock
- 					.getTotal());
- 			String commaSep = Util.commaSep(amount);
- 			out.write("You have <b>" + commaSep + "</b> "
- 					+ stock.getName());
- 		}
-
- 		if (stock.getTotal() < configMgr.getMinFollower()) {
- 			out.write("<br>");
- 			out.write(stock.getName()
- 					+ " has <b>"
- 					+ stock.getTotal()
- 					+ "</b> follower. <br>You cannot buy followers if total is less than <b>"
- 					+ configMgr.getMinFollower() + "</b>");
- 		}
- 	}
- %> </span>
+					 	UserStock userStock = null;
+					 	if (user != null && stock != null) {
+					 		userStock = portfolioMgr.getStockInPortfolio(user.getId(),
+					 				stock.getId());
+					 		if (userStock == null) {
+					 			out.write("You don't have any " + stock.getName());
+					 		} else {
+					 			int amount = (int) (userStock.getPercent() * stock
+					 					.getTotal());
+					 			String commaSep = Util.commaSep(amount);
+					 			out.write("You have <b>" + commaSep + "</b> "
+					 					+ stock.getName());
+					 		}
+					
+					 		if (stock.getTotal() < configMgr.getMinFollower()) {
+					 			out.write("<br>");
+					 			out.write(stock.getName()
+					 					+ " has <b>"
+					 					+ stock.getTotal()
+					 					+ "</b> follower. <br>You cannot buy followers if total is less than <b>"
+					 					+ configMgr.getMinFollower() + "</b>");
+					 		}
+					 	}
+ 		    %> </span>
 			</p>
 		</div>
 
