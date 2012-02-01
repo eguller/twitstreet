@@ -19,12 +19,12 @@ User user = userMgr.getUserById(sessionUser.getId());
 			<td><b>Rank</b></td>
 			<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
 			<td colspan="2" id="balance_rank" style="text-align: left">
-		<% if (user.getDirection() >0) { %>
-			<div id="balance_direction" style="text-align: left"><%=user.getRank()%>.<img src="/images/up_small.png" /></div>
-		<% } else if(user.getDirection() <0) { %>
-			<div id="balance_direction" style="text-align: left"><%=user.getRank()%>.<img src="/images/down_small.png" /></div>
+		<% if (user != null && user.getDirection() >0) { %>
+			<div id="balance_direction" style="text-align: left"><%=user == null ? "" : user.getRank()%>.<img src="/images/up_small.png" /></div>
+		<% } else if(user != null && user.getDirection() <0) { %>
+			<div id="balance_direction" style="text-align: left"><%=user == null ? "" : user.getRank()%>.<img src="/images/down_small.png" /></div>
 		<% } else { %>
-			<div id="balance_direction" style="text-align: left"><%=user.getRank()%>.<img src="/images/nochange_small.png" /></div>
+			<div id="balance_direction" style="text-align: left"><%=user == null ? "" : user.getRank()%>.<img src="/images/nochange_small.png" /></div>
 		<% }
 		%>
 			</td>
@@ -33,19 +33,19 @@ User user = userMgr.getUserById(sessionUser.getId());
 		<tr>
 			<td><b>Cash</b></td>
 			<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
-			<td colspan="2" id="cash_value" style="text-align: left">$<%=Util.commaSep(user.getCash())%></td>
+			<td colspan="2" id="cash_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getCash())%></td>
 			<td/>
 		</tr>
 		<tr>
 			<td><b>Portfolio</b></td>
 			<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
-			<td colspan="2" id="portfolio_value" style="text-align: left">$<%=Util.commaSep(user.getPortfolio())%></td>
+			<td colspan="2" id="portfolio_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getPortfolio())%></td>
 			<td/>
 		</tr>
 		<tr>
 			<td><b>Total</b></td>
 			<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
-			<td colspan="2" id="total_value" style="text-align: left">$<%=Util.commaSep(user.getCash() + user.getPortfolio())%></td>
+			<td colspan="2" id="total_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getCash() + user.getPortfolio())%></td>
 			<td/>
 		</tr>
 	</table>
