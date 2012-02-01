@@ -6,7 +6,7 @@ create table `users`(
     `userName` varchar(45) not null,
     `firstLogin` datetime not null,
     `lastLogin` datetime not null,
-    `cash` double not null default 10000,
+    `cash` decimal(11,2) not null default 10000,
     `lastIp` varchar(45) not null,
     `oauthToken` varchar(100) not null,
     `oauthTokenSecret` varchar(100) not null,
@@ -41,7 +41,7 @@ create table `portfolio`(
     `user_id` bigint not null,
     `stock` bigint not null,
     `percentage` double not null,
-    `capital` double not null,
+    `capital` decimal(11,2) not null,
      primary key (`id`),
      unique key `unique_portfolio` (`user_id` , `stock`),
      key `fk_users` (`user_id`),
@@ -63,7 +63,7 @@ create  table `transactions` (
   `id` bigint not null auto_increment,
   `user_id` bigint null,
   `stock` bigint null,
-  `amount` double null,
+  `amount` decimal(11,2) null,
   `t_action` tinyint null,
   `t_date` timestamp,
   primary key (`id`) 
@@ -114,8 +114,8 @@ create table `user_group` (
 -- ranking table
 create table `ranking` (
     `user_id` bigint not null,
-	`cash` double,
-	`portfolio` double,
+	`cash` decimal(11,2),
+	`portfolio` decimal(11,2),
     `rank` int,
     `oldRank` int,
     `direction` int,
