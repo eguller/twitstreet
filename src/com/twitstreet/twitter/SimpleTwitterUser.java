@@ -1,8 +1,12 @@
 package com.twitstreet.twitter;
 
+import java.io.Serializable;
+
 import twitter4j.User;
 
-public class SimpleTwitterUser {
+public class SimpleTwitterUser implements Serializable{
+
+	private static final long serialVersionUID = -6740949353639804140L;
 	long id;
 	String screenName;
 	String pictureUrl;
