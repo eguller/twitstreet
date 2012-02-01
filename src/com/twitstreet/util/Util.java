@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 
 public class Util {
-
+	public static String NO_RECORDS_FOUND_HTML = "<p>No records found.</p>";
 	public static java.sql.Date toSqlDate(java.util.Date date) {
 		return new java.sql.Date(date.getTime());
 	}
@@ -87,5 +87,7 @@ public class Util {
 
 		return newStr;
 	}
+	
+
 
 }

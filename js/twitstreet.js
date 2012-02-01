@@ -107,9 +107,10 @@ function loadPortfolio() {
 	}, function(data) {
 		var stockInPortfolioList = data.stockInPortfolioList;
 		$("#portfolio-table").empty();
-		for ( var i = 0; i < stockInPortfolioList.length;) {
+		var i;
+		for ( i = 0; i < stockInPortfolioList.length;) {
 			var tr = $('<tr></tr>');
-			for ( var j = 0; j < 2; j++) {
+			for ( var j = 0; j < 1; j++) {
 				var stockInPortfolio = null;
 
 				if (i < stockInPortfolioList.length) {
@@ -156,6 +157,12 @@ function loadPortfolio() {
 			}
 			$("#portfolio-table").append(tr);
 		}
+		if(i==0){
+			var tr = $('<tr></tr>');
+			var td = $('<td></td>');
+			$("#portfolio-table").append(tr).append(tr).html(getNoRecordsFound());
+			
+		}
 	});
 }
 function loadUserProfile() {
@@ -176,7 +183,7 @@ function loadUserProfile() {
 		} else if (user.direction < 0){
 			$("#userProfileDirection").html("<img src=\"/images/down_small.png\" />");
 		}else{
-			$("#userProfileDirection").html("<img src=\"/images/nochange_small.png\" />");
+			//$("#userProfileDirection").html("<img src=\"/images/nochange_small.png\" />");
 		}	
 		
 	});
@@ -447,7 +454,7 @@ function toprank() {
 			} else if (user.direction < 0){
 				$(tr).append($("<td><img src=\"/images/down.png\" /></td>"));
 			}else{
-				$(tr).append($("<td><img src=\"/images/nochange.png\" /></td>"));
+				//$(tr).append($("<td><img src=\"/images/nochange.png\" /></td>"));
 			}
 			$("#topranktable").append(tr);
 		}
@@ -468,8 +475,7 @@ function loadBalance() {
 				$("#balance_direction").html(
 						data.rank + "."+"<img src=\"/images/down_small.png\" />");
 			}else {
-				$("#balance_direction").html(
-						data.rank + "."+"<img src=\"/images/nochange_small.png\" />");
+				//$("#balance_direction").html(data.rank + "."+"<img src=\"/images/nochange_small.png\" />");
 			}
 
 			$("#cash_value").html("$" + commasep(data.cash.toFixed(2)));
@@ -491,6 +497,12 @@ function commasep(nStr) {
 		x1 = x1.replace(rgx, '$1' + ',' + '$2');
 	}
 	return x1 + x2;
+}
+
+
+function getNoRecordsFound() {
+	
+	return '<p>No records found.</p>';
 }
 
 function selectAllText(textbox) {

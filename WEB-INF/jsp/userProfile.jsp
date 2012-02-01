@@ -66,8 +66,9 @@
 		 		%> <img
 			alt="" style="margin-top: 1px;" src="/images/down_small.png" /> <%
 				}else {
-				%> <img
-			alt="" style="margin-top: 1px;" src="/images/nochange_small.png" /> <%
+				%>
+<!-- 				 <img alt="" style="margin-top: 1px;" src="/images/nochange_small.png" />  -->
+			<%
 				}
 			 %>
 			</td>
@@ -89,6 +90,7 @@
 	</h3>
 	<table class="datatbl">
 		<%
+		if(portfolio.getStockInPortfolioList().size()>0){
 			for (int i = 0; i < portfolio.getStockInPortfolioList().size();) {
 		%>
 		<tr>
@@ -150,6 +152,9 @@
 		</tr>
 		<%
 			}
+		}else{
+			out.write(Util.NO_RECORDS_FOUND_HTML);
+		}
 		%>
 	</table>
 </div>

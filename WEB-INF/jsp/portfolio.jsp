@@ -28,9 +28,11 @@ if(portfolio==null){
 <div id="portfolio" style="margin-top: 10px;">
 	<h3>Portfolio</h3>
 	<table class="datatbl" id="portfolio-table">
-	<% for(int i = 0; i < portfolio.getStockInPortfolioList().size();){ %>
+	<% 
+	if(portfolio.getStockInPortfolioList().size()>0){
+	for(int i = 0; i < portfolio.getStockInPortfolioList().size();){ %>
 		<tr>
-			<% for(int j = 0; j < 2; j ++) { 
+			<% for(int j = 0; j < 1; j ++) { 
 				if( i < portfolio.getStockInPortfolioList().size()){
 			%>
 			
@@ -74,6 +76,12 @@ if(portfolio==null){
 				i++;
 			} %>
 		</tr>
-	<% } %>
+	<% } 
+	} else{
+		
+		out.write("<tr><td>"+Util.NO_RECORDS_FOUND_HTML+"</td></tr>");
+		
+	}
+	%>
 	</table>
 </div>
