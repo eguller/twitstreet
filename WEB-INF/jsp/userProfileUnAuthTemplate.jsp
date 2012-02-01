@@ -9,15 +9,15 @@
 
 	<div id="container">
 		<template:get name="topbar"></template:get>
-		<div id="main">
+			<div id="main">
 			<div id="column_left">
-				<template:get name="userprofile"></template:get>
-				<template:get name="userportfolio"></template:get>
+				<template:get name="latesttransactions"></template:get>
+				<template:get name="recentTweets"></template:get>
 			</div>
 			<div id="column_center">
-				<template:get name="balance"></template:get>
-				<template:get name="yourtransactions"></template:get>
-				<template:get name="latesttransactions"></template:get>
+			
+				<template:get name="userprofile"></template:get>
+				<template:get name="userportfolio"></template:get>
 			</div>
 			<div id="column_right">
 				<template:get name="topranks"></template:get>

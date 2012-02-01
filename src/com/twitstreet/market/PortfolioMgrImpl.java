@@ -270,7 +270,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			try {
 				connection = dbMgr.getConnection();
 				ps = connection
-						.prepareStatement("select portfolio.capital as capital, stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount, stock.pictureUrl as pictureUrl from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ?");
+						.prepareStatement("select portfolio.capital as capital, stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount, stock.pictureUrl as pictureUrl from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ? order by (amount-capital) desc ");
 				ps.setLong(1, user.getId());
 				rs = ps.executeQuery();
 

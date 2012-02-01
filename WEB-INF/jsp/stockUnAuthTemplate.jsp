@@ -13,14 +13,12 @@
 		<template:get name="topbar"></template:get>
 		<div id="main">
 			<div id="column_left">
-				<template:get name="stockdetails"></template:get>
-				<template:get name="stockdist"></template:get>
+				<template:get name="latesttransactions"></template:get>
+				<template:get name="recentTweets"></template:get>			
 			</div>
 			<div id="column_center">
-				<template:get name="balance"></template:get>
-				<template:get name="yourtransactions"></template:get>
-				<template:get name="latesttransactions"></template:get>
-				<template:get name="recentTweets"></template:get>
+				<template:get name="stockdetails"></template:get>
+				<template:get name="stockdist"></template:get>
 			</div>
 			<div id="column_right">
 				<template:get name="topranks"></template:get>

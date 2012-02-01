@@ -109,7 +109,7 @@ function loadPortfolio() {
 		$("#portfolio-table").empty();
 		for ( var i = 0; i < stockInPortfolioList.length;) {
 			var tr = $('<tr></tr>');
-			for ( var j = 0; j < 3; j++) {
+			for ( var j = 0; j < 2; j++) {
 				var stockInPortfolio = null;
 
 				if (i < stockInPortfolioList.length) {

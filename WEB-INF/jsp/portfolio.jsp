@@ -30,7 +30,7 @@ if(portfolio==null){
 	<table class="datatbl" id="portfolio-table">
 	<% for(int i = 0; i < portfolio.getStockInPortfolioList().size();){ %>
 		<tr>
-			<% for(int j = 0; j < 3; j ++) { 
+			<% for(int j = 0; j < 2; j ++) { 
 				if( i < portfolio.getStockInPortfolioList().size()){
 			%>
 			

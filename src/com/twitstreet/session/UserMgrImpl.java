@@ -143,12 +143,16 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			
-			ps = connection.prepareStatement("(select (count(*)+1) as newrank from ranking where (portfolio + cash) > ? " +
-					" or  ? > (select userName from users,ranking where ranking.user_id = users.id and (ranking.portfolio + ranking.cash) = ?)) ");
+			ps = connection.prepareStatement(" select (count(*)+1) as newrank from ranking,users " +
+					" where ranking.user_id = users.id and " +
+					" ( " +
+					" (portfolio + ranking.cash) > ? or " +
+					" (ranking.portfolio + ranking.cash = ? and username <?) " +
+					" ) ");
 			
 			ps.setDouble(1, userDO.getCash());
-			ps.setString(2, userDO.getUserName());
-			ps.setDouble(3, userDO.getCash());
+			ps.setDouble(2, userDO.getCash());
+			ps.setString(3, userDO.getUserName());
 			rs = ps.executeQuery();
 			int newRank = 999999;
 			if(rs.next()){
