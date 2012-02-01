@@ -76,7 +76,7 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
 		updateFollowerCountThread.setName("Update Follower Count");
-		//updateFollowerCountThread.start();
+		updateFollowerCountThread.start();
 		
 		Thread asyncQueryTaskThread = new Thread(asyncQueryTask);
 		asyncQueryTaskThread.setName("Async query task");
@@ -84,7 +84,7 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		Thread stockHistoryUpdateThread = new Thread (stockHistoryUpdateTask);
 		stockHistoryUpdateThread.setName("Update Stock History");
-		//stockHistoryUpdateThread.start();
+		stockHistoryUpdateThread.start();
 		
 		transactionCache.load();
 		
