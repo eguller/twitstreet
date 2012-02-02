@@ -430,7 +430,8 @@ function setup() {
 
 function toprank() {
 	$("topranktable").empty();
-	$.getJSON('/toprank', function(data) {
+	var pageParam = $('.active_tnt_link').text();
+	$.getJSON('/toprank?page=' + pageParam , function(data) {
 		$("#topranktable").empty();
 		
 		for ( var i = 0, length = data.length; i < length; i++) {
@@ -484,6 +485,25 @@ function loadBalance() {
 			$("#total_value").html("$" + commasep(data.total.toFixed(2)));
 		}
 	});
+}
+
+function retrievePage(pageElement) {
+	// is this clicked one ?
+	if (pageElement.attr("class") != 'active_tnt_link') {
+		// make previous page number clickable
+		var clicked = $('.active_tnt_link');
+		clicked.removeClass();
+		// and add href to it
+		clicked.attr("href", "javascript:void(0)");
+		
+		// then add make new link disabled
+		pageElement.attr('class','active_tnt_link');
+		// remove href
+		pageElement.removeAttr("href");
+		
+		// finally load data
+		toprank();
+	}
 }
 
 function commasep(nStr) {
