@@ -476,7 +476,7 @@ function loadBalance() {
 				$("#balance_direction").html(
 						data.rank + "."+"<img src=\"/images/down_small.png\" />");
 			}else {
-				//$("#balance_direction").html(data.rank + "."+"<img src=\"/images/nochange_small.png\" />");
+				$("#balance_direction").html(data.rank + ".");//"<img src=\"/images/nochange_small.png\" />"
 			}
 
 			$("#cash_value").html("$" + commasep(data.cash.toFixed(2)));
