@@ -24,7 +24,7 @@ User user = userMgr.getUserById(sessionUser.getId());
 		<% } else if(user != null && user.getDirection() <0) { %>
 			<div id="balance_direction" style="text-align: left"><%=user == null ? "" : user.getRank()%>.<img src="/images/down_small.png" /></div>
 		<% } else { %>
-<%-- 			<div id="balance_direction" style="text-align: left"><%=user == null ? "" : user.getRank()%>.<img src="/images/nochange_small.png" /></div> --%>
+			<div id="balance_direction" style="text-align: left"><%=user == null ? "" : user.getRank()%>.</div><%-- <img src="/images/nochange_small.png" /></div> --%>
 		<% }
 		%>
 			</td>
