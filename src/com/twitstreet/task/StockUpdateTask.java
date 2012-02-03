@@ -72,7 +72,7 @@ public class StockUpdateTask implements Runnable {
 				try {
 					Thread.sleep(INTERVAL - diff);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 			}
