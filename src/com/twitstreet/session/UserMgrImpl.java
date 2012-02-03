@@ -357,7 +357,11 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	@Override
-	public ArrayList<User> getTopRank() {
+	public ArrayList<User> getTopRank(int pageNumber) {
+		
+		// i.e limit : 17, 17
+		String limit = ((pageNumber - 1) * UserMgr.MAX_RANK ) + ", " + UserMgr.MAX_RANK;
+		
 		ArrayList<User> userList = new ArrayList<User>(100);
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -371,7 +375,7 @@ public class UserMgrImpl implements UserMgr {
 							+ "ranking.portfolio, lastIp, oauthToken, "
 							+ "oauthTokenSecret, rank, oldRank, direction, pictureUrl from users,ranking where ranking.user_id= users.id " 
 							+" order by rank asc limit "
-							+ TOP);
+							+ limit);
 			rs = ps.executeQuery();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 			while (rs.next()) {
@@ -399,5 +403,27 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 		return userList;
+	}
+	
+	@Override
+	public int count() {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int count = 0;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement("SELECT count(*) FROM users");
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException exception) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), exception);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return count;
 	}
 }

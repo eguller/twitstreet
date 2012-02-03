@@ -3,9 +3,9 @@ package com.twitstreet.session;
 import java.util.ArrayList;
 import com.twitstreet.db.data.User;
 
-public interface UserMgr{
+public interface UserMgr {
 	
-	
+	public static final int MAX_RANK = 16;
 
     /**
      * Return user by given twitter id
@@ -25,6 +25,8 @@ public interface UserMgr{
 	
 	public void updateCash(long userId, double amount);
 	
-	public ArrayList<User> getTopRank();
+	public ArrayList<User> getTopRank(int pageNumber);
+	
+	public int count();
 
 }
