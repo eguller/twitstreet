@@ -444,17 +444,44 @@ function toprank() {
 			$(tr).append(
 					$("<td><img class=\'twuser\' src=\'" + user.pictureUrl
 							+ "\'/></td>"));
+			
+		
+			var profitStr = '';
+			var profitDiff = 0;
+			if (i > 0) {
+
+				profitDiff = user.profit - data[i - 1].profit;
+			}
+							
+			var className = null;
+			var profitPerHour = "$" + parseInt(user.profitPerHour+1) ;
+
+			if (user.profitPerHour > 0) {
+
+				profitPerHour = profitPerHour + "/h &#9650;"
+				if (profitDiff > 0) {
+					className = "green-profit";
+				} else {
+					className = "gray-profit";
+				}
+				
+				profitStr = "<br><div class=\"" + className + "\">" + profitPerHour + "</div>";
+			}else if (user.profitPerHour < 0){
+				profitPerHour = profitPerHour + "/h &#9660;"
+				profitStr = "<br><div class=\"red-profit\">" + profitPerHour + "</div>";	
+			}
+			
 			$(tr).append(
 					$("<td><a href=\"/user?user=" + user.id + "\" title=\""+user.userName+"&#39;s profile page.\">" + user.userName
 							+ "</a> <br>$"
 							+ commasep((user.cash + user.portfolio).toFixed(2))
-							+ '</td>'));
+							+ profitStr + '</td>'));
 			if (user.direction > 0) {
 				$(tr).append($("<td><img src=\"/images/up.png\" /></td>"));
 			} else if (user.direction < 0){
 				$(tr).append($("<td><img src=\"/images/down.png\" /></td>"));
 			}else{
-				//$(tr).append($("<td><img src=\"/images/nochange.png\" /></td>"));
+				$(tr).append($("<td></td>"));
 			}
 			$("#topranktable").append(tr);
 		}

@@ -258,7 +258,29 @@ a:hover {
 .red-light {
 	color: #CC0000;
 }
-
+.gray {
+	color: #444444;
+}
+.green-profit {
+	
+	text-align: right;
+	width:100%;
+	color: #00AA00;
+	
+}
+.gray-profit {
+	font-size: 90%;
+	text-align: right;
+	width:100%;
+	color: #444444;
+}
+.red-profit {
+	
+	text-align: right;
+	width:100%;
+	color: #CC0000;
+	
+}
 .rank-number {
 	font-size: 18px;
 	font-weight: bolder;

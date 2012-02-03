@@ -3,6 +3,8 @@ package com.twitstreet.db.data;
 import java.util.Date;
 
 import com.google.inject.Inject;
+import com.twitstreet.task.ReRankTask;
+import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.twitter.TwitterProxy;
 
 public class User{
@@ -13,6 +15,8 @@ public class User{
     Date lastLogin;
     double cash;
     double portfolio;
+    double profit;
+    double profitPerHour;
     String lastIp;
     String oauthToken;
     String oauthTokenSecret;
@@ -123,4 +127,26 @@ public class User{
 	public void setOldRank(int oldRank) {
 		this.oldRank = oldRank;
 	}
+
+	public double getProfit() {
+		return profit;
+	}
+
+	public void setProfit(double profit) {
+		this.profit = profit;
+	}
+
+	public void setProfitPerHour(double profitPerHour){
+		this.profitPerHour = profitPerHour;		
+	}
+	
+	public double getProfitPerHour() {	
+		return profitPerHour;
+	}
+	public void setProfitPerHour(){
+		 setProfitPerHour(profit);
+		
+	}
+
+	
 }

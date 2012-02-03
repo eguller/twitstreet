@@ -66,6 +66,7 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setOauthToken(rs.getString("oauthToken"));
 				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
 				userDO.setPictureUrl(rs.getString("pictureUrl"));
+				userDO.setProfitPerHour();
 			}
 			
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -94,7 +95,8 @@ public class UserMgrImpl implements UserMgr {
 							"userName, " + 
 							"lastLogin, " + 
 							"firstLogin, " + 
-							"users.cash, " + 
+							"users.cash, " +
+							"profit, " + 
 							"lastIp, " + 
 							"oauthToken, " +
 							"oauthTokenSecret, " + 
@@ -117,11 +119,12 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setFirstLogin(rs.getDate("firstLogin"));
 				userDO.setCash(rs.getDouble("cash"));
 				userDO.setPortfolio(rs.getDouble("portfolio"));
+				userDO.setProfit(rs.getDouble("profit"));
 				userDO.setLastIp(rs.getString("lastIp"));
 				userDO.setOauthToken(rs.getString("oauthToken"));
 				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
 				userDO.setPictureUrl(rs.getString("pictureUrl"));
-				
+				userDO.setProfitPerHour();
 				users.add(userDO);
 			}
 			
@@ -276,6 +279,7 @@ public class UserMgrImpl implements UserMgr {
 							"oauthToken, " + 
 							"oauthTokenSecret, " + 
 							"rank, " +
+							"profit, " +
 							"oldRank, " + 
 							"direction, " + 
 							"pictureUrl, " + 
@@ -293,10 +297,13 @@ public class UserMgrImpl implements UserMgr {
 				user.setFirstLogin(rs.getDate("firstLogin"));
 				user.setCash(rs.getDouble("cash"));
 				user.setPortfolio((int)rs.getDouble("portfolio"));
+				user.setProfit(rs.getDouble("profit"));
 				user.setLastIp(rs.getString("lastIp"));
 				user.setOauthToken(rs.getString("oauthToken"));
 				user.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
 				user.setPictureUrl(rs.getString("pictureUrl"));
+				user.setProfitPerHour();
+
 			} else {
 				logger.error("DB: Random user selection query is not working properly");
 			}
@@ -360,7 +367,7 @@ public class UserMgrImpl implements UserMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement("select id, userName, "
-							+ "lastLogin, firstLogin, ranking.cash as userCash, "
+							+ "lastLogin, firstLogin, ranking.cash as userCash, profit, "
 							+ "ranking.portfolio, lastIp, oauthToken, "
 							+ "oauthTokenSecret, rank, oldRank, direction, pictureUrl from users,ranking where ranking.user_id= users.id " 
 							+" order by rank asc limit "
@@ -378,10 +385,12 @@ public class UserMgrImpl implements UserMgr {
 				userDO.setFirstLogin(rs.getDate("firstLogin"));
 				userDO.setCash(rs.getDouble("userCash"));
 				userDO.setPortfolio(rs.getDouble("portfolio"));
+				userDO.setProfit(rs.getDouble("profit"));
 				userDO.setLastIp(rs.getString("lastIp"));
 				userDO.setOauthToken(rs.getString("oauthToken"));
 				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
 				userDO.setPictureUrl(rs.getString("pictureUrl"));
+				userDO.setProfitPerHour();
 				userList.add(userDO);
 			}
 		} catch (SQLException ex) {

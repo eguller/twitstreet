@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -15,12 +14,9 @@ import com.google.inject.Singleton;
 import com.twitstreet.cache.TransactionCache;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
-import com.twitstreet.db.data.Group;
-import com.twitstreet.db.data.User;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.AsyncQuery;
-import com.twitstreet.task.ReRankTask;
 import com.twitstreet.task.StockHistoryUpdateTask;
 import com.twitstreet.task.StockUpdateTask;
 
@@ -66,13 +62,13 @@ public class TwitstreetImpl implements Twitstreet {
 		dbMgr.init();
 		configMgr.load();
 		
-		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
+//		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
 		StockHistoryUpdateTask stockHistoryUpdateTask = injector.getInstance(StockHistoryUpdateTask.class);
 		
-		Thread reRankThread = new Thread(reRankTask);
-		reRankThread.setName("Re-Rank");
-		reRankThread.start();
+//		Thread reRankThread = new Thread(reRankTask);
+//		reRankThread.setName("Re-Rank");
+//		reRankThread.start();
 		
 		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
 		updateFollowerCountThread.setName("Update Follower Count");

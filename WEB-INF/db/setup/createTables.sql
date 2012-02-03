@@ -119,6 +119,7 @@ create table `ranking` (
     `rank` int,
     `oldRank` int,
     `direction` int,
+    `profit` decimal(11,2),
     `lastUpdate` timestamp,
      primary key (`user_id`),
      constraint `fk_ranking_user` foreign key (`user_id`) references `users` (`id`)
