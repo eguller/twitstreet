@@ -19,7 +19,6 @@ import com.twitstreet.db.data.User;
 import com.twitstreet.util.Util;
 
 public class UserMgrImpl implements UserMgr {
-	private static final int TOP = 100;
 	@Inject
 	DBMgr dbMgr;
 	@Inject ConfigMgr configMgr;

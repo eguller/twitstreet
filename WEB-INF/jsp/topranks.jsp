@@ -22,32 +22,6 @@ if (userCount > UserMgr.MAX_RANK) {
 %>
 <div id="topranks">
 	<h3>Ranking</h3>
-		<div id="tnt_pagination">
-		<!-- <span class="disabled_tnt_pagination">Prev</span> -->
-		<%
-			for(int i = 1; i <= pageCount; i++) {
-				
-				int start = i*UserMgr.MAX_RANK+1;
-				int stop = (i+1)*UserMgr.MAX_RANK;
-				
-				if(stop>userCount){
-					
-					stop = userCount;
-				}
-				
-				if (i == 1) {
-					%>
-					<a class="active_tnt_link" onclick="retrievePage($(this))"><%=i%></a>
-					<%
-				} else {
-					%>
-					<a href="javascript:void(0)" onclick="retrievePage($(this))"><%=i%></a>
-					<%
-				}
-			}
-		%>
-			<!--<a href="#forward">Next</a>-->
-	</div>
 	<table class="datatbl" id="topranktable">
 		<%
 		
@@ -109,5 +83,32 @@ if (userCount > UserMgr.MAX_RANK) {
 			}
 		%>
 	</table>
+	
+			<div id="tnt_pagination">
+		<!-- <span class="disabled_tnt_pagination">Prev</span> -->
+		<%
+			for(int i = 1; i <= pageCount; i++) {
+				
+				int start = i*UserMgr.MAX_RANK+1;
+				int stop = (i+1)*UserMgr.MAX_RANK;
+				
+				if(stop>userCount){
+					
+					stop = userCount;
+				}
+				
+				if (i == 1) {
+					%>
+					<a class="active_tnt_link" onclick="retrievePage($(this))"><%=i%></a>
+					<%
+				} else {
+					%>
+					<a href="javascript:void(0)" onclick="retrievePage($(this))"><%=i%></a>
+					<%
+				}
+			}
+		%>
+			<!--<a href="#forward">Next</a>-->
+	</div>
 
 </div>
