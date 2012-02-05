@@ -17,9 +17,9 @@ import com.twitstreet.twitter.TwitterProxyFactory;
 
 @Singleton
 public class StockUpdateTask implements Runnable {
-	private static final long TEN_MINUTES = 10 * 60 * 1000;
-	public static long INTERVAL = TEN_MINUTES;
-	@Inject PortfolioMgr portfolioMgr;
+
+	@Inject
+	PortfolioMgr portfolioMgr;
 	@Inject
 	StockMgr stockMgr;
 	@Inject
@@ -29,20 +29,18 @@ public class StockUpdateTask implements Runnable {
 	@Inject
 	TwitterProxyFactory twitterProxyFactory = null;
 	private static Logger logger = Logger.getLogger(StockUpdateTask.class);
+	public static final int LAST_UPDATE_DIFF = 10 * 60 * 1000;
 
 	@Override
 	public void run() {
 
-		int i = 0;
 		while (true) {
 			long startTime = System.currentTimeMillis();
 			List<Stock> stockList = stockMgr.getUpdateRequiredStocks();
 
 			for (Stock stock : stockList) {
 				User user = userMgr.random();
-				TwitterProxy twitterProxy = user == null ? null
-						: twitterProxyFactory.create(user.getOauthToken(),
-								user.getOauthTokenSecret());
+				TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 				twitter4j.User twUser = null;
 
 				try {
@@ -50,29 +48,32 @@ public class StockUpdateTask implements Runnable {
 				} catch (Exception ex) {
 				}
 				if (twUser != null) {
-					stockMgr.updateTwitterData(stock.getId(), twUser
-							.getFollowersCount(), twUser.getProfileImageURL()
-							.toExternalForm(), twUser.getScreenName());
+					stockMgr.updateTwitterData(stock.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName());
 				}
 
-			}
+			}		
+			logger.debug("Stock list updated. Number of stocks: "+ stockList.size());
 
-			i=i%2;
 			
-			if(i==1){
-				portfolioMgr.rerank();	
-			}
+		
+			logger.debug("Stock history update - begin.");
+			stockMgr.updateStockHistory();
+			logger.debug("Stock history update - end.");
 			
-			i++;
+			logger.debug("Re-rank begin.");
+			portfolioMgr.rerank();			
+			logger.debug("Re-rank end.");
+			
+			
 			
 			long endTime = System.currentTimeMillis();
 			long diff = endTime - startTime;
 
-			if (diff < INTERVAL) {
+			if (diff < LAST_UPDATE_DIFF) {
 				try {
-					Thread.sleep(INTERVAL - diff);
+					Thread.sleep(LAST_UPDATE_DIFF - diff);
 				} catch (InterruptedException e) {
-					
+
 					e.printStackTrace();
 				}
 			}

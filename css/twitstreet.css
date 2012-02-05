@@ -203,7 +203,12 @@ CUSTOM CLASSES
 	border-collapse:collapse;
 	width: 100%;
 }
-
+.portfolio-stock-tbl {
+	border-width: 2px;
+	border-spacing: 1px;
+	border-collapse:collapse;
+	width: 160px;
+}
 .thead {
     border-bottom: 2px solid #6678B1;
     color: #003399;

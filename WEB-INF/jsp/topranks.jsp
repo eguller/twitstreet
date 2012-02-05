@@ -12,19 +12,45 @@ UserMgr userMgr = inj.getInstance(UserMgr.class);
 ArrayList<User> userList = userMgr.getTopRank(1);
 //TODO : count will be cached
 int userCount = userMgr.count();
+int pageCount = 1;
 
+// if our users more than one page
+if (userCount > UserMgr.MAX_RANK) {
+	// we should add 1 because of integer conversion
+	pageCount = (userCount / UserMgr.MAX_RANK) + 1;
+}
 %>
 <div id="topranks">
 	<h3>Ranking</h3>
+		<div id="tnt_pagination">
+		<!-- <span class="disabled_tnt_pagination">Prev</span> -->
+		<%
+			for(int i = 1; i <= pageCount; i++) {
+				
+				int start = i*UserMgr.MAX_RANK+1;
+				int stop = (i+1)*UserMgr.MAX_RANK;
+				
+				if(stop>userCount){
+					
+					stop = userCount;
+				}
+				
+				if (i == 1) {
+					%>
+					<a class="active_tnt_link" onclick="retrievePage($(this))"><%=i%></a>
+					<%
+				} else {
+					%>
+					<a href="javascript:void(0)" onclick="retrievePage($(this))"><%=i%></a>
+					<%
+				}
+			}
+		%>
+			<!--<a href="#forward">Next</a>-->
+	</div>
 	<table class="datatbl" id="topranktable">
 		<%
-			int pageCount = 1;
 		
-		// if our users more than one page
-		if (userCount > UserMgr.MAX_RANK) {
-			// we should add 1 because of integer conversion
-			pageCount = (userCount / UserMgr.MAX_RANK) + 1;
-		}
 		
 		for(int i = 0; i < userList.size(); i++) {
 				int rank = i + 1;
@@ -55,11 +81,11 @@ int userCount = userMgr.count();
 						
 						<%
 							String className = null; 
-								String profitPerHour = "$" + (int) (user.getProfitPerHour()+1);
+								String profitPerHour = "$" ;
 
 								if (user.getProfitPerHour() > 0) {
 
-									profitPerHour = profitPerHour + "/h &#9650;";
+									profitPerHour = profitPerHour + (int) (user.getProfitPerHour()+1)+"/h &#9650;";
 									if (profitDiff > 0) {
 										className= "green-profit";
 										
@@ -72,7 +98,7 @@ int userCount = userMgr.count();
 									out.write("<br><div class=\""+className+"\">" + profitPerHour + "</div>");
 								}
 								else if (user.getProfitPerHour() < 0){
-									profitPerHour = profitPerHour + "/h &#9660;";
+									profitPerHour = profitPerHour + (int) (user.getProfitPerHour()-1)+"/h &#9660;";
 									out.write("<br><div class=\"red-profit\">" + profitPerHour + "</div>");
 									
 								}
@@ -100,21 +126,5 @@ int userCount = userMgr.count();
 			}
 		%>
 	</table>
-	<div id="tnt_pagination">
-		<!-- <span class="disabled_tnt_pagination">Prev</span> -->
-		<%
-			for(int i = 1; i <= pageCount; i++) {
-				if (i == 1) {
-					%>
-					<a class="active_tnt_link" onclick="retrievePage($(this))">1</a>
-					<%
-				} else {
-					%>
-					<a href="javascript:void(0)" onclick="retrievePage($(this))"><%=i%></a>
-					<%
-				}
-			}
-		%>
-			<!--<a href="#forward">Next</a>-->
-	</div>
+
 </div>

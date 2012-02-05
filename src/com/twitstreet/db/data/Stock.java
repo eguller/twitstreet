@@ -9,7 +9,7 @@ public class Stock {
 	double sold;
 	String pictureUrl;
 	Date lastUpdate;
-	
+	int changePerHour;
 	public long getId() {
 		return id;
 	}
@@ -48,5 +48,11 @@ public class Stock {
 	}
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
+	}
+	public int getChangePerHour() {
+		return changePerHour;
+	}
+	public void setChangePerHour(int changePerHour) {
+		this.changePerHour = changePerHour;
 	}
 }

@@ -17,7 +17,6 @@ import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.AsyncQuery;
-import com.twitstreet.task.StockHistoryUpdateTask;
 import com.twitstreet.task.StockUpdateTask;
 
 
@@ -64,7 +63,7 @@ public class TwitstreetImpl implements Twitstreet {
 		
 //		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
-		StockHistoryUpdateTask stockHistoryUpdateTask = injector.getInstance(StockHistoryUpdateTask.class);
+		//StockHistoryUpdateTask stockHistoryUpdateTask = injector.getInstance(StockHistoryUpdateTask.class);
 		
 //		Thread reRankThread = new Thread(reRankTask);
 //		reRankThread.setName("Re-Rank");
@@ -78,9 +77,9 @@ public class TwitstreetImpl implements Twitstreet {
 		asyncQueryTaskThread.setName("Async query task");
 		asyncQueryTaskThread.start();
 		
-		Thread stockHistoryUpdateThread = new Thread (stockHistoryUpdateTask);
-		stockHistoryUpdateThread.setName("Update Stock History");
-		stockHistoryUpdateThread.start();
+		//Thread stockHistoryUpdateThread = new Thread (stockHistoryUpdateTask);
+		///stockHistoryUpdateThread.setName("Update Stock History");
+		//stockHistoryUpdateThread.start();
 		
 		transactionCache.load();
 		

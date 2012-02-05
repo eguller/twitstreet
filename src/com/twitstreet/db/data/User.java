@@ -1,5 +1,7 @@
 package com.twitstreet.db.data;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 import com.google.inject.Inject;
@@ -7,7 +9,7 @@ import com.twitstreet.task.ReRankTask;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.twitter.TwitterProxy;
 
-public class User{
+public class User implements DataObjectIF{
 	public static final String USER = "user";
     long id;
     String userName;
@@ -145,6 +147,27 @@ public class User{
 	}
 	public void setProfitPerHour(){
 		 setProfitPerHour(profit);
+		
+	}
+
+	@Override
+	public void getDataFromResultSet(ResultSet rs) throws SQLException {
+		this.setId(rs.getLong("id"));
+		this.setRank(rs.getInt("rank"));
+		this.setOldRank(rs.getInt("oldRank"));
+		this.setDirection(rs.getInt("direction"));
+		this.setUserName(rs.getString("userName"));
+		this.setLastLogin(rs.getDate("lastLogin"));
+		this.setFirstLogin(rs.getDate("firstLogin"));
+		this.setCash(rs.getDouble("cash"));
+		this.setPortfolio(rs.getDouble("portfolio"));
+		//this.setProfit(rs.getDouble("profit"));
+		this.setProfit(rs.getDouble("changePerHour"));
+		this.setLastIp(rs.getString("lastIp"));
+		this.setOauthToken(rs.getString("oauthToken"));
+		this.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
+		this.setPictureUrl(rs.getString("pictureUrl"));
+		this.setProfitPerHour();
 		
 	}
 

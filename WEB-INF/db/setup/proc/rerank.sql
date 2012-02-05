@@ -17,7 +17,7 @@ begin
             leave read_loop;
         end if;   
         insert into ranking(user_id,rank,oldRank,direction,cash,portfolio,lastUpdate) values (user_id,@new_rank,101,101-@new_rank,user_cash,user_portfolio,NOW())
- 		ON DUPLICATE KEY UPDATE profit=(user_cash+user_portfolio-cash-portfolio)*60*60 / (TIMESTAMPDIFF(SECOND,lastUpdate,NOW())), oldRank = rank, rank = @new_rank, direction = oldRank - rank, cash = user_cash, portfolio = user_portfolio,lastUpdate=NOW();      
+ 		ON DUPLICATE KEY UPDATE profit= user_profit(user_id), oldRank = rank, rank = @new_rank, direction = oldRank - rank, cash = user_cash, portfolio = user_portfolio,lastUpdate=NOW();      
  		
         set @new_rank := @new_rank + 1;
     end loop read_loop;    

@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.db.data.StockInPortfolio"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@page import="com.twitstreet.db.data.User"%>
 <%@ page import="com.google.inject.Injector"%>
@@ -95,8 +96,9 @@
 		%>
 		<tr>
 			<%
-				for (int j = 0; j < 3; j++) {
+				for (int j = 0; j < 2; j++) {
 							if (i < portfolio.getStockInPortfolioList().size()) {
+								StockInPortfolio stock = portfolio.getStockInPortfolioList().get(i);
 			%>
 
 			<td>
@@ -114,12 +116,20 @@
 															.get(i).getStockName());
 								%>
 						</a> <br> $<%
- 	out.write(Util.commaSep(portfolio
- 							.getStockInPortfolioList().get(i)
- 							.getAmount()));
-						
- %>
- <br><%
+ 							out.write(Util.commaSep(portfolio
+			 							.getStockInPortfolioList().get(i)
+			 							.getAmount()) + "&nbsp;("+													
+										Util.commaSep(
+												(100*(Util.roundDouble(stock.getPercentage(),4))
+														))
+							+"%)"); %>
+
+ <br>
+								
+									<table class="portfolio-stock-tbl">
+									<tr>
+										<td align="left">
+											<%
 								
 								double profit = 0;
 								
@@ -137,6 +147,27 @@
 									out.write("<span>$"+Util.commaSep(profit)+"</span>"); 
 								}
 								%>
+										</td>
+										<td align="right">
+												<%
+												String profitPerHour = "$";
+												profitPerHour = profitPerHour +  Util.roundDouble(stock.getChangePerHour(),2);
+												
+												if (stock.getChangePerHour() > 0) {
+				
+													profitPerHour = profitPerHour + "/h &#9650;";
+													
+													out.write("<span class=\"green-profit\">" + profitPerHour + "</span>");
+												}
+												else if (user.getProfitPerHour() < 0){
+													profitPerHour = profitPerHour + "/h &#9660;";
+													out.write("<span class=\"red-profit\">" +  profitPerHour  + "</span>");
+													
+												}
+												%>
+										</td>
+									</tr>
+								</table>
 						</td>
 					</tr>
 				</table></td>

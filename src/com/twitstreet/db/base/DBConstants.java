@@ -15,6 +15,7 @@ public class DBConstants {
 	static final int MAX_WAIT = 10000;
 	static final int ABANDONED_TIMEOUT = 60;
 	
+	public static String RECORD_ALREADY_EXISTS = "DB: Record already exists. - ";
 	public static String QUERY_EXECUTION_SUCC = "DB: Query executed successfully - ";
 	public static String QUERY_EXECUTION_FAIL ="DB: Query failed - ";
 	public static String RESOURCES_NOT_CLOSED ="DB: Resources could not be closed properly";

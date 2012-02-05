@@ -1,3 +1,5 @@
+<%@page import="com.twitstreet.db.data.StockInPortfolio"%>
+<%@page import="com.twitstreet.db.data.Stock"%>
 <%@page import="com.twitstreet.db.data.Portfolio"%>
 <%@page import="com.twitstreet.market.PortfolioMgr"%>
 <%@ page import="com.google.inject.Injector"%>
@@ -34,36 +36,70 @@ if(portfolio==null){
 		<tr>
 			<% for(int j = 0; j < 1; j ++) { 
 				if( i < portfolio.getStockInPortfolioList().size()){
+					
+					StockInPortfolio stock = portfolio.getStockInPortfolioList().get(i);
 			%>
 			
 				<td>
 					<table>
 						<tr>
 							<td>
-								<img class="twuser" src="<%=portfolio.getStockInPortfolioList().get(i).getPictureUrl()%>"/>
+								<img class="twuser" src="<%=stock.getPictureUrl()%>"/>
 							</td>
 							<td>
-								<a href='/?stock=<%=portfolio.getStockInPortfolioList().get(i).getStockId() %>' title="Loads <%=portfolio.getStockInPortfolioList().get(i).getStockName() %>'s stock details"><% out.write(portfolio.getStockInPortfolioList().get(i).getStockName()); %></a>
+								<a href='/?stock=<%=stock.getStockId() %>' title="Loads <%=stock.getStockName() %>'s stock details"><% out.write(stock.getStockName()); %></a>
 								<br>
-								$<% out.write(Util.commaSep(portfolio.getStockInPortfolioList().get(i).getAmount())); %>
-								<br><%
+								$<% out.write(Util.commaSep(stock.getAmount()) + "&nbsp;("+													
+													Util.commaSep(
+															(100*(Util.roundDouble(stock.getPercentage(),4))
+																	))
+													+"%)"); %>
+								<br>							
+								<table class="portfolio-stock-tbl">
+									<tr>
+										<td align="left">
+													<%
 								
-								double profit = 0;
+											double profit = 0;
+											
+											double amount =stock.getAmount();
+											double capital = stock.getCapital();
+											
+											profit = amount - capital;
+											if(profit > 0){
+												out.write("<span class=\"green-light\">$"+Util.commaSep(profit) + "</span>"); 
+											}
+											else if(profit < 0){
+												out.write("<span class=\"red-light\">$"+Util.commaSep(profit) + "</span>"); 
+											}
+											else {
+												out.write("<span></span>"); 
+											}
+											%>
+										</td>
+										<td align="right">
+												<%
+												String profitPerHour = "$";
+												profitPerHour = profitPerHour + Util.roundDouble(stock.getChangePerHour(),2);
+												
+												if (stock.getChangePerHour() > 0) {
+				
+													profitPerHour = profitPerHour + "/h &#9650;";
+													
+													out.write("<span class=\"green-profit\">" + profitPerHour + "</span>");
+												}
+												else if (user.getProfitPerHour() < 0){
+													profitPerHour = profitPerHour + "/h &#9660;";
+													out.write("<span class=\"red-profit\">" +  profitPerHour  + "</span>");
+													
+												}
+												%>
+										</td>
+									</tr>
+								</table>
 								
-								double amount = portfolio.getStockInPortfolioList().get(i).getAmount();
-								double capital = portfolio.getStockInPortfolioList().get(i).getCapital();
 								
-								profit = amount - capital;
-								if(profit > 0){
-									out.write("<span class=\"green-light\">$"+Util.commaSep(profit) + "&nbsp; &#9650;</span>"); 
-								}
-								else if(profit < 0){
-									out.write("<span class=\"red-light\">$"+Util.commaSep(profit) + "&nbsp; &#9660;</span>"); 
-								}
-								else {
-									out.write("<span>$"+Util.commaSep(profit)+"</span>"); 
-								}
-								%>
+					
 							</td>
 							
 						</tr>
