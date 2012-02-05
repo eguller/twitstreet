@@ -196,6 +196,11 @@ public class HomePageServlet extends HttpServlet {
 							searchResultList.remove(0);
 						}
 					}
+					else if(twUser.getScreenName().equalsIgnoreCase(searchResultList.get(0).getScreenName())){
+						
+						searchResultList.remove(0);
+						
+					}
 
 					request.getSession().setAttribute(OTHER_SEARCH_RESULTS, searchResultList);
 

@@ -80,7 +80,7 @@ if (userCount > UserMgr.MAX_RANK) {
 						<br> $<%=Util.commaSep(total)%>
 						
 						<%
-							String className = null; 
+								String className = null; 
 								String profitPerHour = "$" ;
 
 								if (user.getProfitPerHour() > 0) {
@@ -103,24 +103,7 @@ if (userCount > UserMgr.MAX_RANK) {
 									
 								}
 						%>
-						</td>
-						<%
-							if (user.getDirection() > 0) {
-						%>
-							<td><img src="/images/up.png" /></td>
-						<%
-							} else if (user.getDirection() < 0) {
-						%>
-							<td><img src="/images/down.png" /></td>
-						<%
-							} else {
-						%>
-							<td>
-<!-- 							<img src="/images/nochange.png" /> -->
-							</td>
-						<%
-							}
-						%>
+						</td>			
 					</tr>
 		<%
 			}

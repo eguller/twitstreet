@@ -518,13 +518,7 @@ function toprank() {
 							+ "</a> <br>$"
 							+ commasep((user.cash + user.portfolio).toFixed(2))
 							+ profitStr + '</td>'));
-			if (user.direction > 0) {
-				$(tr).append($("<td><img src=\"/images/up.png\" /></td>"));
-			} else if (user.direction < 0){
-				$(tr).append($("<td><img src=\"/images/down.png\" /></td>"));
-			}else{
-				$(tr).append($("<td></td>"));//<img src=\"/images/nochange.png\" />
-			}
+	
 			$("#topranktable").append(tr);
 		}
 	});
