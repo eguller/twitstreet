@@ -1,3 +1,6 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.util.LinkedHashMap"%>
+<%@page import="com.twitstreet.db.data.StockHistoryData"%>
 <%@page import="com.twitstreet.db.data.UserStock"%>
 <%@page import="java.sql.SQLException"%>
 <%@page import="com.twitstreet.market.StockMgr"%>
@@ -23,12 +26,19 @@
 	long id = -1;
 	List<UserStockDetail> stockDetailList = null;
 	Stock stock = null;
+	StockHistoryData shd = null;
 	try {
 		id = Long.parseLong(stockId);
 		stockDetailList = portfolioMgr.getStockDistribution(id);
 		stock = (Stock)request.getAttribute("stock");
+		
+		
+		shd = stockMgr.getStockHistory(id);
 
-	} catch (NumberFormatException nfe) {
+	} 
+	catch (NumberFormatException nfe) {
+	
+	
 	}
 %>
 <div id="stockdetails">
@@ -86,15 +96,52 @@
 		</tr>
 	</table>
 	
-		<div id="dashboard-message-field"
-		style="margin-top: 42px;" class="field-white">
-			Stock distribution pie shows who owns how much share of <br><a href="/?stock=<%=stock == null ? "" : stock.getId()%>" title="Goes to main page and loads <%=stock == null ? "" : stock.getName()%>&#39;s stock details"><%=stock == null ? "" : stock.getName()%></a>.
-		</div>
-		
-		
-		<div id="stock-shares-chart-div"></div>
+	<%
+	if(shd!=null && shd.getDateValueMap().size()>0){
 	
-		<script type="text/javascript">
+	%>
+	<br> 
+	<br> 
+
+
+	<div id="stock-trend-chart-div" style="height:200px;width:500px;"></div>
+	   <script type="text/javascript">
+		
+		var dateArray = new Array();
+		var valueArray = new Array();
+		var stockName = 
+		
+		<% 
+			out.write("'"+shd.getName()+"';\n");
+		
+			LinkedHashMap<Date,Integer> dvm = shd.getDateValueMap();
+			
+			for (Date date: dvm.keySet()) {
+				out.write("dateArray.push(new Date("+date.getTime()+"));\n");
+				
+				out.write("valueArray.push("+ dvm.get(date) +");\n");		
+			}
+		
+		
+		%>
+	
+		drawStockHistory('stock-trend-chart-div',dateArray,valueArray,stockName);
+		</script>
+
+
+	<%
+	}
+	%>
+		
+<!-- 		<div id="dashboard-message-field" -->
+<!-- 		style="margin-top: 42px;" class="field-white"> -->
+<%-- 			Stock distribution pie shows who owns how much share of <br><a href="/?stock=<%=stock == null ? "" : stock.getId()%>" title="Goes to main page and loads <%=stock == null ? "" : stock.getName()%>&#39;s stock details"><%=stock == null ? "" : stock.getName()%></a>. --%>
+<!-- 		</div> -->
+		
+		
+   <div id="stock-shares-chart-div"></div>
+	
+   <script type="text/javascript">
 	
 	var percentArray = new Array();
 	var nameArray = new Array();
@@ -120,7 +167,7 @@
 	drawStockDistribution('stock-shares-chart-div',nameArray,percentArray,stockName);
 	</script>
 	
-	
+
 	
 	<table class="datatbl" style="margin-top: 10px;">
 		<thead>

@@ -26,6 +26,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script language="javascript" type="text/javascript">
 
 	google.load('visualization', '1.0', {'packages':['corechart']});
+	google.load('visualization', '1', {packages: ['annotatedtimeline']});
 </script>
 
 <link rel="stylesheet" type="text/css" href="/css/cssreset-min.css" />

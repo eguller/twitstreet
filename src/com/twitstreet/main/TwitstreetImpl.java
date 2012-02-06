@@ -14,6 +14,7 @@ import com.google.inject.Singleton;
 import com.twitstreet.cache.TransactionCache;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
+import com.twitstreet.market.StockMgr;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.AsyncQuery;
@@ -31,6 +32,7 @@ public class TwitstreetImpl implements Twitstreet {
 	@Inject TransactionCache transactionCache;
 	@Inject GroupMgr groupMgr;
 	@Inject UserMgr userMgr;
+	@Inject StockMgr stockMgr;
 	@Inject public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr){
 		this.dbMgr = dbMgr;
 		this.configMgr = configMgr;
@@ -87,6 +89,7 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		
 		//REMOVE HERE (ADDED FOR DEBUG PURPOSE)
+		
 //		User userDO = userMgr.getUserById(324562459);
 //		userMgr.saveUser(userDO);
 //		groupMgr.addUserToDefaultGroup(userDO);

@@ -14,6 +14,7 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Stock;
+import com.twitstreet.db.data.StockHistoryData;
 import com.twitstreet.task.StockUpdateTask;
 
 public class StockMgrImpl implements StockMgr {
@@ -90,6 +91,38 @@ public class StockMgrImpl implements StockMgr {
 		return stockDO;
 	}
 
+	public StockHistoryData getStockHistory(long id){
+		
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		StockHistoryData stockHistoryData = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select distinct stock_history.lastUpdate, stock.id, stock.name, stock_history.total " +
+							" from stock_history,stock " +
+							" where stock_history.stock = ? and stock.id =  stock_history.stock " +
+							" order by stock_history.lastUpdate asc ");
+			ps.setLong(1, id);
+
+			rs = ps.executeQuery();
+			stockHistoryData = new StockHistoryData();
+			
+			stockHistoryData.getDataFromResultSet(rs);
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return stockHistoryData;
+		
+		
+		
+		
+	}
 
 	public void updateStockHistory(){
 		Connection connection = null;
