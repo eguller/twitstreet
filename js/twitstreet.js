@@ -219,13 +219,15 @@ function loadUserProfile() {
 		$("#userProfilePortfolio").html('$'+commasep(user.portfolio.toFixed(2)));
 		$("#userProfileTotal").html('$'+commasep((user.cash+user.portfolio).toFixed(2)));
 		
-		if (user.direction > 0) {
-			$("#userProfileDirection").html("<img src=\"/images/up_small.png\" />");
-		} else if (user.direction < 0){
-			$("#userProfileDirection").html("<img src=\"/images/down_small.png\" />");
+		var className = '';
+		if (user.profit > 0) {
+			$("#userProfileProfit").html("<span class=\"green-profit\">$" +commasep(user.profit.toFixed(2)) + "/h &#9650" + "</span>");
+		} else if (user.profit < 0){
+			$("#userProfileProfit").html("<span class=\"red-profit\">$" +commasep(user.profit.toFixed(2)) + "/h &#9660" + "</span>");
 		}else{
-			//$("#userProfileDirection").html("<img src=\"/images/nochange_small.png\" />");
-		}	
+			
+			$("#userProfileProfit").html("");
+		}
 		
 	});
 }

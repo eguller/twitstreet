@@ -51,35 +51,38 @@
 			<td colspan="4">&nbsp;</td>
 		</tr>
 		<tr class="thead">
-			<td style="width: 20%; text-align: center; font-weight: bolder;"></td>
-			<td style="width: 20%; text-align: center; font-weight: bolder;">Rank</td>
+			<td style="width: 10%; text-align: center; font-weight: bolder;">Rank</td>
 			<td style="width: 20%; text-align: center; font-weight: bolder;">Cash</td>
-			<td style="width: 20%; text-align: center; font-weight: bolder;">Portfolio</td>
-			<td style="width: 20%; text-align: center; font-weight: bolder;">Total</td>
+			<td style="width: 25%; text-align: center; font-weight: bolder;">Portfolio</td>
+			<td style="width: 25%; text-align: center; font-weight: bolder;">Total</td>
+			
+			<td style="width: 20%; text-align: center; font-weight: bolder;"></td>
 		</tr>
 		<tr>
-			<td id="userProfileDirection" style="width: 25%; text-align: center;">
-			<%
-				if (user.getDirection() > 0) {
-			%> <img alt=""
-			style="margin-top: 1px;" src="/images/up_small.png" /> <%
-					}  else if  (user.getDirection() < 0) {
-		 		%> <img
-			alt="" style="margin-top: 1px;" src="/images/down_small.png" /> <%
-				}else {
-				%>
-<!-- 				 <img alt="" style="margin-top: 1px;" src="/images/nochange_small.png" />  -->
-			<%
-				}
-			 %>
+	
+			<td id="userProfileRank" style="width: 10%; text-align: center;"><%=user.getRank()%>.
 			</td>
-			<td id="userProfileRank" style="width: 25%; text-align: center;"><%=user.getRank()%>.
-			</td>
-			<td id="userProfileCash" style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getCash())%>
+			<td id="userProfileCash" style="width: 20%; text-align: center;">$<%=Util.commaSep(user.getCash())%>
 			</td>
 			<td id="userProfilePortfolio" style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getPortfolio())%>
+	
 			</td>
 			<td id="userProfileTotal" style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getPortfolio() + user.getCash())%>
+			</td>
+		    <td id="userProfileProfit" style="width: 20%; text-align: center;">
+			
+			<%
+			if(user.getProfitPerHour()>0){
+				out.write("<span class=\"green-profit\">$" + Util.commaSep(user.getProfitPerHour())+"/h &#9650" + "</span>");			
+			}
+			else if(user.getProfitPerHour()<0){
+				
+				out.write("<span class=\"red-profit\">$" + Util.commaSep(user.getProfitPerHour())+"/h &#9660" + "</span>");
+			}
+			
+			%>
+			
+			
 			</td>
 	
 		</tr>

@@ -39,6 +39,7 @@
 	<%
 		if (id > -1) {
 	%>
+
 	<table class="datatbl">
 		<tr>
 			<td colspan="3">
@@ -50,7 +51,8 @@
 						<td style="text-align: left;" id="dashboard-stock-follower-status"><a href="/?stock=<%=stock == null ? "" : stock.getId()%>" title="Goes to main page and loads <%=stock == null ? "" : stock.getName()%>&#39;s stock details"><%=stock == null ? "" : stock.getName()%></a>'s
 							follower status <a href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>" style="float: right" target="_blank">Twitter Page &gt;&gt;</a></td>
 					</tr>
-				</table></td>
+				</table>
+			</td>
 		</tr>
 		<tr><td colspan="3">&nbsp;</td></tr>
 		<tr class="thead">
@@ -83,14 +85,48 @@
 			</td>
 		</tr>
 	</table>
+	
 		<div id="dashboard-message-field"
 		style="margin-top: 42px;" class="field-white">
-			Stock distribution table shows who owns how much share of <br><a href="/?stock=<%=stock == null ? "" : stock.getId()%>" title="Goes to main page and loads <%=stock == null ? "" : stock.getName()%>&#39;s stock details"><%=stock == null ? "" : stock.getName()%></a>.
+			Stock distribution pie shows who owns how much share of <br><a href="/?stock=<%=stock == null ? "" : stock.getId()%>" title="Goes to main page and loads <%=stock == null ? "" : stock.getName()%>&#39;s stock details"><%=stock == null ? "" : stock.getName()%></a>.
 		</div>
+		
+		
+		<div id="stock-shares-chart-div"></div>
+	
+		<script type="text/javascript">
+	
+	var percentArray = new Array();
+	var nameArray = new Array();
+	var stockName = 
+	
+	<% 
+		out.write("'"+stock.getName()+"';");
+	
+	
+		if(stock.getAvailable()>0){
+			out.write("nameArray.push('Available');\n");
+			
+			out.write("percentArray.push("+ stock.getAvailable() +");\n");		
+		}
+		for (UserStockDetail stockDetail : stockDetailList) {
+			out.write("nameArray.push('"+stockDetail.getUserName() +"');\n");
+			
+			out.write("percentArray.push("+ (int)(stockDetail.getStockTotal() * stockDetail.getPercent()) +");\n");		
+		}
+	
+	
+	%>
+	drawStockDistribution('stock-shares-chart-div',nameArray,percentArray,stockName);
+	</script>
+	
+	
+	
 	<table class="datatbl" style="margin-top: 10px;">
 		<thead>
 			<tr class="thead">
-				<td style="width: 120px"><b>Stock Distribution</b>
+			<td style="width: 120px">
+			<!-- 	<b>Stock Distribution</b> -->
 				</td>
 				<td>User Name</td>
 				<td>Value</td>
@@ -126,6 +162,7 @@
 				}
 		%>
 	</table>
+	
 	<%
 		} else {
 	%>
