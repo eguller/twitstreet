@@ -38,21 +38,21 @@ h3 {
 }
 
 a {
-    color: #4183C4;
-    text-decoration: none;
-    font-weight: bolder;
+	color: #4183C4;
+	text-decoration: none;
+	font-weight: bolder;
 }
 
 .twtr-bd {
-	font-family: 'Trebuchet MS', sans-serif; 
+	font-family: 'Trebuchet MS', sans-serif;
 }
 
 .twtr-hd {
-	font-family: 'Trebuchet MS', sans-serif; 
+	font-family: 'Trebuchet MS', sans-serif;
 }
 
-.twtr-ft{
-	font-family: 'Trebuchet MS', sans-serif; 
+.twtr-ft {
+	font-family: 'Trebuchet MS', sans-serif;
 }
 
 /* ------------------------------
@@ -157,8 +157,7 @@ CUSTOM CLASSES
 }
 
 .button {
-	background: url("/images/login-button.gif") repeat-x scroll 0 0
-		#DDDDDD;
+	background: url("/images/login-button.gif") repeat-x scroll 0 0 #DDDDDD;
 	border-color: #BBBBBB #BBBBBB #999999;
 	border-radius: 4px 4px 4px 4px;
 	border-style: solid;
@@ -196,25 +195,26 @@ CUSTOM CLASSES
 	text-shadow: none;
 }
 
-
 .datatbl {
 	border-width: 4px;
 	border-spacing: 1px;
-	border-collapse:collapse;
+	border-collapse: collapse;
 	width: 100%;
 }
+
 .portfolio-stock-tbl {
 	border-width: 2px;
 	border-spacing: 1px;
-	border-collapse:collapse;
+	border-collapse: collapse;
 	width: 160px;
 }
+
 .thead {
-    border-bottom: 2px solid #6678B1;
-    color: #003399;
-    padding: 10px 8px;
-    margin-bottom: 5px;
-    border-spacing: 41px;
+	border-bottom: 2px solid #6678B1;
+	color: #003399;
+	padding: 10px 8px;
+	margin-bottom: 5px;
+	border-spacing: 41px;
 }
 
 .thead td {
@@ -223,6 +223,7 @@ CUSTOM CLASSES
 }
 
 .datatbl tr {
+	
 }
 
 .datatbl tr td {
@@ -234,9 +235,8 @@ CUSTOM CLASSES
 }
 
 .error {
-	color : red;
+	color: red;
 }
-
 
 a:hover {
 	text-decoration: underline;
@@ -263,29 +263,30 @@ a:hover {
 .red-light {
 	color: #CC0000;
 }
+
 .gray {
 	color: #444444;
 }
+
 .green-profit {
-	
 	text-align: right;
-	width:100%;
+	width: 100%;
 	color: #00AA00;
-	
 }
+
 .gray-profit {
 	font-size: 90%;
 	text-align: right;
-	width:100%;
+	width: 100%;
 	color: #444444;
 }
+
 .red-profit {
-	
 	text-align: right;
-	width:100%;
+	width: 100%;
 	color: #CC0000;
-	
 }
+
 .rank-number {
 	font-size: 18px;
 	font-weight: bolder;
@@ -303,7 +304,6 @@ img.twuser {
 	margin: 1px;
 	border-color: #000000;
 	border: 1px solid;
-	
 }
 
 .field-white {
@@ -311,7 +311,6 @@ img.twuser {
 	margin: 1px;
 	border-color: #5f9900;
 	border: 1px solid #D9D9D9;
-	
 }
 
 .field-red {
@@ -327,7 +326,9 @@ img.twuser {
 	margin-top: 15px;
 }
 
-.buy-sell-table td { width: 50%;}
+.buy-sell-table td {
+	width: 50%;
+}
 
 .buy-sell-table td div:HOVER {
 	cursor: pointer;
@@ -342,67 +343,76 @@ img.twuser {
 }
 
 #tnt_pagination {
-	display:block;
-	text-align:left;
-	height:22px;
-	line-height:21px;
-	clear:both;
-	padding-top:3px;
-	font-family:Arial, Helvetica, sans-serif;
-	font-size:12px;
-	font-weight:normal;
+	display: block;
+	text-align: left;
+	height: 22px;
+	line-height: 21px;
+	clear: both;
+	padding-top: 3px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
 	margin: 5px 30px;
 	position: relative;
 }
 
-#tnt_pagination a:link, #tnt_pagination a:visited{
-	padding:7px;
-	padding-top:2px;
-	padding-bottom:2px;
-	border:1px solid #EBEBEB;
-	margin-left:10px;
-	text-decoration:none;
-	background-color:#F5F5F5;
-	color:#0072bc;
-	width:22px;
-	font-weight:normal;
+#tnt_pagination a:link,#tnt_pagination a:visited {
+	padding: 7px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border: 1px solid #EBEBEB;
+	margin-left: 10px;
+	text-decoration: none;
+	background-color: #F5F5F5;
+	color: #0072bc;
+	width: 22px;
+	font-weight: normal;
 }
 
 #tnt_pagination a:hover {
-	background-color:#DDEEFF;
-	border:1px solid #BBDDFF;
-	color:#0072BC;	
+	background-color: #DDEEFF;
+	border: 1px solid #BBDDFF;
+	color: #0072BC;
 }
 
 #tnt_pagination .active_tnt_link {
-	padding:7px;
-	padding-top:2px;
-	padding-bottom:2px;
-	border:1px solid #BBDDFF;
-	margin-left:10px;
-	text-decoration:none;
-	background-color:#DDEEFF;
-	color:#0072BC;
-	cursor:default;
+	padding: 7px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border: 1px solid #BBDDFF;
+	margin-left: 10px;
+	text-decoration: none;
+	background-color: #DDEEFF;
+	color: #0072BC;
+	cursor: default;
 }
 
 #tnt_pagination .disabled_tnt_pagination {
-	padding:7px;
-	padding-top:2px;
-	padding-bottom:2px;
-	border:1px solid #EBEBEB;
-	margin-left:10px;
-	text-decoration:none;
-	background-color:#F5F5F5;
-	color:#D7D7D7;
-	cursor:default;
+	padding: 7px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border: 1px solid #EBEBEB;
+	margin-left: 10px;
+	text-decoration: none;
+	background-color: #F5F5F5;
+	color: #D7D7D7;
+	cursor: default;
+}
+
+.subheader {
+	border-bottom: 1px solid #666666;
+	clear: both;
+	height: 34px;
+	margin-bottom: 15px;
+	width: 100%;
 }
 
 .subheader a {
     color: #000000;
 }
-.subheader h1, .subheader h2 {
-    float: left;
+
+.subheader h1,.subheader h2 {
+	float: left;
 }
 
 #tabs {
@@ -411,39 +421,36 @@ img.twuser {
 }
 
 #tabs a.youarehere {
-    background: none repeat scroll 0 0 #FFFFFF;
-    border-color: #777777 #777777 #FFFFFF;
-    border-style: solid;
-    border-width: 1px;
-    color: black;
-    font-size: 120%;
-    height: 30px;
-    line-height: 28px;
-    margin-top: 3px;
-    padding: 0 11px;
+	background: none repeat scroll 0 0 #FFFFFF;
+	border-color: #777777 #777777 #FFFFFF;
+	border-style: solid;
+	border-width: 1px;
+	color: black;
+	font-size: 120%;
+	height: 30px;
+	line-height: 28px;
+	margin-top: 3px;
+	padding: 0 11px;
 }
 
 #tabs a {
-    background: inherit;
-    border: 1px solid #FFFFFF;
-    color: #777777;
-    display: block;
-    float: left;
-    font-size: 90%;
-    height: 24px;
-    line-height: 22px;
-    margin: 8px 8px 0 0;
-    padding: 0 11px;
-    text-decoration: none;
+	background: inherit;
+	border: 1px solid #FFFFFF;
+	color: #777777;
+	display: block;
+	float: left;
+	font-size: 90%;
+	height: 24px;
+	line-height: 22px;
+	margin: 8px 8px 0 0;
+	padding: 0 11px;
+	text-decoration: none;
 }
 
 #tabs a:hover {
-    background: none repeat scroll 0 0 #FFFFFF;
-    border-color: #777777 #777777 #FFFFFF;
-    border-style: solid;
-    border-width: 1px;
-    line-height: 20px;
-    margin-top: 9px;
+	background: none repeat scroll 0 0 #FFFFFF;
+	border-color: #777777 #777777 #FFFFFF;
+	border-style: solid;
+	border-width: 1px;
+    cursor: pointer;
 }
-
-

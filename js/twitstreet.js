@@ -621,3 +621,19 @@ function getDouble(dbl, minval){
 	}
 	return pctgStr;
 }
+
+function showStockDistribution(){
+	$("#stock-history-tab").removeClass("youarehere");
+	$("#stock-distribution-tab").addClass("youarehere");
+	$("#stock-trend-section").hide();
+	$("#stock-share-section").show();
+
+}
+
+function showStockHistory(){
+	$("#stock-distribution-tab").removeClass("youarehere");
+	$("#stock-history-tab").addClass("youarehere");
+	$("#stock-share-section").hide();
+	$("#stock-trend-section").show();
+	
+}
