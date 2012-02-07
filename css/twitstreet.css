@@ -313,3 +313,51 @@ img.twuser {
 .twtr-hd h3 {
 	border-style: none;
 }
+
+
+.subheader a {
+    color: #000000;
+}
+.subheader h1, .subheader h2 {
+    float: left;
+}
+
+#tabs {
+	float: right;
+	font-weight: bold;
+}
+
+#tabs a.youarehere {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-color: #777777 #777777 #FFFFFF;
+    border-style: solid;
+    border-width: 1px;
+    color: black;
+    font-size: 120%;
+    height: 30px;
+    line-height: 28px;
+    margin-top: 3px;
+    padding: 0 11px;
+}
+
+#tabs a {
+    background: inherit;
+    border: 1px solid #FFFFFF;
+    color: #777777;
+    display: block;
+    float: left;
+    font-size: 90%;
+    height: 24px;
+    line-height: 22px;
+    margin: 8px 8px 0 0;
+    padding: 0 11px;
+    text-decoration: none;
+}
+
+#tabs a:hover {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-color: #777777 #777777 #FFFFFF;
+    border-style: solid;
+    border-width: 1px;
+    line-height: 20px;
+    margin-top: 9px;
