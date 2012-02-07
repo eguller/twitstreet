@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.db.data.StockInPortfolio"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@page import="com.twitstreet.db.data.User"%>
 <%@ page import="com.google.inject.Injector"%>
@@ -50,34 +51,38 @@
 			<td colspan="4">&nbsp;</td>
 		</tr>
 		<tr class="thead">
-			<td style="width: 20%; text-align: center; font-weight: bolder;"></td>
-			<td style="width: 20%; text-align: center; font-weight: bolder;">Rank</td>
+			<td style="width: 10%; text-align: center; font-weight: bolder;">Rank</td>
 			<td style="width: 20%; text-align: center; font-weight: bolder;">Cash</td>
-			<td style="width: 20%; text-align: center; font-weight: bolder;">Portfolio</td>
-			<td style="width: 20%; text-align: center; font-weight: bolder;">Total</td>
+			<td style="width: 25%; text-align: center; font-weight: bolder;">Portfolio</td>
+			<td style="width: 25%; text-align: center; font-weight: bolder;">Total</td>
+			
+			<td style="width: 20%; text-align: center; font-weight: bolder;"></td>
 		</tr>
 		<tr>
-			<td id="userProfileDirection" style="width: 25%; text-align: center;">
-			<%
-				if (user.getDirection() > 0) {
-			%> <img alt=""
-			style="margin-top: 1px;" src="/images/up_small.png" /> <%
-					}  else if  (user.getDirection() < 0) {
-		 		%> <img
-			alt="" style="margin-top: 1px;" src="/images/down_small.png" /> <%
-				}else {
-				%> <img
-			alt="" style="margin-top: 1px;" src="/images/nochange_small.png" /> <%
-				}
-			 %>
+	
+			<td id="userProfileRank" style="width: 10%; text-align: center;"><%=user.getRank()%>.
 			</td>
-			<td id="userProfileRank" style="width: 25%; text-align: center;"><%=user.getRank()%>.
-			</td>
-			<td id="userProfileCash" style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getCash())%>
+			<td id="userProfileCash" style="width: 20%; text-align: center;">$<%=Util.commaSep(user.getCash())%>
 			</td>
 			<td id="userProfilePortfolio" style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getPortfolio())%>
+	
 			</td>
 			<td id="userProfileTotal" style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getPortfolio() + user.getCash())%>
+			</td>
+		    <td id="userProfileProfit" style="width: 20%; text-align: center;">
+			
+			<%
+			if(user.getProfitPerHour()>0){
+				out.write("<span class=\"green-profit\">$" + Util.commaSep(user.getProfitPerHour())+"/h &#9650" + "</span>");			
+			}
+			else if(user.getProfitPerHour()<0){
+				
+				out.write("<span class=\"red-profit\">$" + Util.commaSep(user.getProfitPerHour())+"/h &#9660" + "</span>");
+			}
+			
+			%>
+			
+			
 			</td>
 	
 		</tr>
@@ -89,12 +94,14 @@
 	</h3>
 	<table class="datatbl">
 		<%
+		if(portfolio.getStockInPortfolioList().size()>0){
 			for (int i = 0; i < portfolio.getStockInPortfolioList().size();) {
 		%>
 		<tr>
 			<%
-				for (int j = 0; j < 3; j++) {
+				for (int j = 0; j < 2; j++) {
 							if (i < portfolio.getStockInPortfolioList().size()) {
+								StockInPortfolio stock = portfolio.getStockInPortfolioList().get(i);
 			%>
 
 			<td>
@@ -112,12 +119,20 @@
 															.get(i).getStockName());
 								%>
 						</a> <br> $<%
- 	out.write(Util.commaSep(portfolio
- 							.getStockInPortfolioList().get(i)
- 							.getAmount()));
-						
- %>
- <br><%
+ 							out.write(Util.commaSep(portfolio
+			 							.getStockInPortfolioList().get(i)
+			 							.getAmount()) + "&nbsp;("+													
+										Util.commaSep(
+												(100*(Util.roundDouble(stock.getPercentage(),4))
+														))
+							+"%)"); %>
+
+ <br>
+								
+									<table class="portfolio-stock-tbl">
+									<tr>
+										<td align="left">
+											<%
 								
 								double profit = 0;
 								
@@ -135,6 +150,27 @@
 									out.write("<span>$"+Util.commaSep(profit)+"</span>"); 
 								}
 								%>
+										</td>
+										<td align="right">
+												<%
+												String profitPerHour = "$";
+												profitPerHour = profitPerHour +  Util.roundDouble(stock.getChangePerHour(),2);
+												
+												if (stock.getChangePerHour() > 0) {
+				
+													profitPerHour = profitPerHour + "/h &#9650;";
+													
+													out.write("<span class=\"green-profit\">" + profitPerHour + "</span>");
+												}
+												else if (user.getProfitPerHour() < 0){
+													profitPerHour = profitPerHour + "/h &#9660;";
+													out.write("<span class=\"red-profit\">" +  profitPerHour  + "</span>");
+													
+												}
+												%>
+										</td>
+									</tr>
+								</table>
 						</td>
 					</tr>
 				</table></td>
@@ -150,6 +186,9 @@
 		</tr>
 		<%
 			}
+		}else{
+			out.write(Util.NO_RECORDS_FOUND_HTML);
+		}
 		%>
 	</table>
 </div>

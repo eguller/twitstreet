@@ -7,8 +7,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-
 
 import com.google.inject.Inject;
 import com.twitstreet.main.Twitstreet;
@@ -18,8 +18,16 @@ public class DBSetupImpl implements DBSetup {
 	private static final String CREATE_TABLES_FILE = "WEB-INF/db/setup/createTables.sql";
 	private static final String DATA_FILL_FILE = "WEB-INF/db/setup/dataFill.sql";
 	private static final String PROC_RERANK = "WEB-INF/db/setup/proc/rerank.sql";
+	private static final String PROC_RESET_GAME = "WEB-INF/db/setup/proc/reset_game.sql";
 	private static final String FUNC_PORTFOLIO_VALUE = "WEB-INF/db/setup/proc/portfolio_value.sql";
 	private static final String FUNC_STOCK_SOLD = "WEB-INF/db/setup/proc/stock_sold.sql";
+	private static final String FUNC_USER_PROFIT = "WEB-INF/db/setup/proc/user_profit.sql";
+	private static final String FUNC_USER_STOCK_PROFIT = "WEB-INF/db/setup/proc/user_stock_profit.sql";
+	private static final String FUNC_GET_STOCK_TREND_FOR_X_MINUTES = "WEB-INF/db/setup/proc/get_stock_trend_for_x_minutes.sql";
+	
+	
+	public static String[] SCRIPT_FILES_ARRAY = {PROC_RERANK, PROC_RESET_GAME, FUNC_PORTFOLIO_VALUE,FUNC_STOCK_SOLD,FUNC_USER_PROFIT,FUNC_USER_STOCK_PROFIT,FUNC_GET_STOCK_TREND_FOR_X_MINUTES};
+	public static ArrayList<String> SCRIPT_FILES = new ArrayList<String>(Arrays.asList(SCRIPT_FILES_ARRAY));
 	
 	private static final String DATABASENAME_KEY = "databasename";
 	private static final String USERNAME = "username";
@@ -60,12 +68,8 @@ public class DBSetupImpl implements DBSetup {
 	
 	@Override
 	public void executeScriptFiles() throws IOException, SQLException {
-		// add all static sql scripts here
-		ArrayList<String> scripts = new ArrayList<String>();
-		scripts.add(PROC_RERANK);
-		scripts.add(FUNC_PORTFOLIO_VALUE);
-		scripts.add(FUNC_STOCK_SOLD);
-		executeScripts(scripts);
+
+		executeScripts(SCRIPT_FILES);
 	}
 	
 

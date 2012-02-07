@@ -32,6 +32,7 @@ create table `stock`(
     `total` int not null,
     `pictureUrl` varchar(255),
     `lastUpdate` timestamp,
+    `changePerHour` int,
      primary key (`id`)
 )  engine=innodb default charset=`utf8`;
 
@@ -75,9 +76,10 @@ create table `stock_history` (
   `stock` bigint(20) not null,
   `total` int(11) not null,
   `date` varchar(10) not null,  
+  `hour` int(11) not null default 0,
   `lastUpdate` timestamp,
   primary key (`id`),
-  unique key `unique_daily_stock` (`stock`,`date`),
+  unique key `unique_hourly_stock` (`stock`,`date`,`hour`),
   constraint `fk_stock_history_stock` foreign key (`stock`) references `stock` (`id`)
 ) engine=innodb default charset=`utf8`;
 
@@ -119,6 +121,7 @@ create table `ranking` (
     `rank` int,
     `oldRank` int,
     `direction` int,
+    `profit` decimal(11,2),
     `lastUpdate` timestamp,
      primary key (`user_id`),
      constraint `fk_ranking_user` foreign key (`user_id`) references `users` (`id`)

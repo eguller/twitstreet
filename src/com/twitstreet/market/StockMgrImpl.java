@@ -14,14 +14,16 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Stock;
+import com.twitstreet.db.data.StockHistoryData;
+import com.twitstreet.task.StockUpdateTask;
 
 public class StockMgrImpl implements StockMgr {
 	@Inject
 	private DBMgr dbMgr;
 	private static Logger logger = Logger.getLogger(StockMgrImpl.class);
-	// update in every 20 minutes
-	private static final int LAST_UPDATE_DIFF = 20 * 60;
-
+	
+	public static int STOCK_TREND_IN_MINUTES = 60;
+	
 	public Stock notifyBuy(String stock, double amount) {
 		return null;
 	}
@@ -35,7 +37,7 @@ public class StockMgrImpl implements StockMgr {
 			connection = dbMgr.getConnection();
 
 			ps = connection
-					.prepareStatement("select id, name, total, stock_sold(id) as sold, lastUpdate, pictureUrl from stock where name = ?");
+					.prepareStatement("select id, name, total, stock_sold(id) as sold, lastUpdate, pictureUrl, changePerHour from stock where name = ?");
 			ps.setString(1, name);
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -45,6 +47,7 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.setTotal(rs.getInt("total"));
 				stockDO.setPictureUrl(rs.getString("pictureUrl"));
 				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
+				stockDO.setChangePerHour(rs.getInt("changePerHour"));
 				break;
 			}
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -65,7 +68,7 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate from stock where id = ?");
+					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour from stock where id = ?");
 			ps.setLong(1, id);
 
 			rs = ps.executeQuery();
@@ -77,6 +80,7 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.setSold(rs.getDouble("sold"));
 				stockDO.setPictureUrl(rs.getString("pictureUrl"));
 				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
+				stockDO.setChangePerHour(rs.getInt("changePerHour"));
 			}
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
@@ -87,6 +91,38 @@ public class StockMgrImpl implements StockMgr {
 		return stockDO;
 	}
 
+	public StockHistoryData getStockHistory(long id){
+		
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		StockHistoryData stockHistoryData = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select distinct stock_history.lastUpdate, stock.id, stock.name, stock_history.total " +
+							" from stock_history,stock " +
+							" where stock_history.stock = ? and stock.id =  stock_history.stock " +
+							" order by stock_history.lastUpdate asc ");
+			ps.setLong(1, id);
+
+			rs = ps.executeQuery();
+			stockHistoryData = new StockHistoryData();
+			
+			stockHistoryData.getDataFromResultSet(rs);
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return stockHistoryData;
+		
+		
+		
+		
+	}
 
 	public void updateStockHistory(){
 		Connection connection = null;
@@ -95,16 +131,18 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert into stock_history(stock, total, date, lastUpdate) " +
-											" select id, total, DATE(NOW()), lastUpdate from stock " +
-											" 	on duplicate key update " +
-											"	stock_history.total=stock.total, " +
-											"	stock_history.lastUpdate=stock.lastUpdate ");
+					.prepareStatement("insert ignore into stock_history(stock, total, date, hour, lastUpdate) " +
+											" select id, total, DATE(NOW()), HOUR(NOW()), lastUpdate from stock ");
 		
 			ps.executeUpdate();
 				
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
+		}catch(MySQLIntegrityConstraintViolationException ex){
+			
+			logger.debug(DBConstants.RECORD_ALREADY_EXISTS + ps.toString());
+			
+		}
+		catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
 			dbMgr.closeResources(connection, ps, null);
@@ -123,11 +161,23 @@ public class StockMgrImpl implements StockMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ? where id = ?");
+			
 			ps.setInt(1, total);
 			ps.setString(2, pictureUrl);
 			ps.setString(3, screenName);
 			ps.setLong(4, id);
 			ps.executeUpdate();
+			
+			//This query should be called right after the stock update, 
+			// since the get_stock_trend_for_x_minutes requires an up to date stock table
+			ps = connection
+					.prepareStatement("update stock set changePerHour = get_stock_trend_for_x_minutes(?,?) where id = ?");
+			
+			ps.setLong(1, id);
+			ps.setInt(2, STOCK_TREND_IN_MINUTES);
+			ps.setLong(3, id);
+			ps.executeUpdate();
+
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
@@ -170,9 +220,9 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate from stock where ((now() - lastUpdate) > ? or lastUpdate is null) and stock.id in (select distinct stock from portfolio)");
+					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate from stock where ((now() - lastUpdate) > (? / 1000) or lastUpdate is null) and stock.id in (select distinct stock from portfolio)");
 
-			ps.setLong(1, LAST_UPDATE_DIFF);
+			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				Stock stockDO = new Stock();

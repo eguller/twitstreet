@@ -107,9 +107,10 @@ function loadPortfolio() {
 	}, function(data) {
 		var stockInPortfolioList = data.stockInPortfolioList;
 		$("#portfolio-table").empty();
-		for ( var i = 0; i < stockInPortfolioList.length;) {
+		var i;
+		for ( i = 0; i < stockInPortfolioList.length;) {
 			var tr = $('<tr></tr>');
-			for ( var j = 0; j < 3; j++) {
+			for ( var j = 0; j < 1; j++) {
 				var stockInPortfolio = null;
 
 				if (i < stockInPortfolioList.length) {
@@ -129,23 +130,64 @@ function loadPortfolio() {
 
 				var tableTd2 = $('<td></td>');
 				if (stockInPortfolio != null) {
+					
 					var tdA = $('<a>' + stockInPortfolio.stockName + '</a>');
 					tdA.attr('href', '/?stock='+stockInPortfolio.stockId);
 					tdA.attr('title', 'Loads ' + stockInPortfolio.stockName + '\'s stock details.');
 					
-					var balance = stockInPortfolio.amount-stockInPortfolio.capital;
-					var balanceStr = '<br><span>$'+commasep( balance.toFixed(2) )+'</span>';
-					if(balance > 0){
-						balanceStr = '<br><span class=\'green-light\'>$'+commasep( balance.toFixed(2) )  + '&nbsp; &#9650; </span>';
-					}
-					else if(balance < 0){
-						balanceStr = '<br><span  class=\'red-light\'>$'+commasep( balance.toFixed(2) )  + '&nbsp; &#9660;</span>';
-					}
+					var valueStr = '$'+commasep(stockInPortfolio.amount);
 					
-					balance = (balance>0)?'+'+balance:balance;
-					tableTd2.append(tdA).append(
-							'<br>$' + commasep( stockInPortfolio.amount.toFixed(2) ) 
-							).append(balanceStr);
+					var pctgStr = getDouble(100*stockInPortfolio.percentage,0.01);
+					
+					valueStr = valueStr +"&nbsp;("+ pctgStr+ "%)";				
+					
+					var psTable = $("<table class=\"portfolio-stock-tbl\"></table");					
+					var psTr = $("<tr></tr>");					
+					var tdLeft = $("<td align=\"left\"></td>");
+					var tdRight = $("<td align=\"right\"></td>");
+					
+					var balance = stockInPortfolio.amount-stockInPortfolio.capital;				
+					var balanceStr = '$'+getDouble(balance,0.01);					
+					var balanceHtml = $('<span></span>');					
+					if(balance > 0){
+						// balanceStr = balanceStr+'&#9650;';
+						balanceHtml = $('<span class=\'green-light\'></span>');
+					} 
+					else if(balance < 0){
+						//balanceStr = balanceStr+'&#9660;';
+						balanceHtml = $('<span class=\'red-light\'></span>');
+					}				
+					balanceHtml.append(balanceStr);		
+					
+					var cph = getDouble(stockInPortfolio.changePerHour,0.01);				
+					var cphStr = '$'+commasep(cph) + '/h';					
+					var cphHtml = $('<span></span>');					
+					if(cph > 0){
+						cphStr = cphStr+' &#9650;';
+						cphHtml = $('<span class=\'green-profit\'></span>');
+					}
+					else if(cph){
+						cphStr = cphStr+' &#9660;';
+						cphHtml = $('<span class=\'red-profit\'></span>');
+					}				
+					cphHtml.append(cphStr);		
+									
+					if(balance!=0){
+						tdLeft.append(balanceHtml);
+					}
+					if(cph!=0){
+						tdRight.append(cphHtml);	
+					}			
+					
+					psTr.append(tdLeft);
+					psTr.append(tdRight);
+					psTable.append(psTr);
+					
+					tableTd2.append(tdA);
+					tableTd2.append('<br>');
+					tableTd2.append(valueStr);
+					tableTd2.append('<br>');
+					tableTd2.append(psTable);
 				}
 				$(tableTr).append(tableTd1);
 				$(tableTr).append(tableTd2);
@@ -155,6 +197,12 @@ function loadPortfolio() {
 				i++;
 			}
 			$("#portfolio-table").append(tr);
+		}
+		if(i==0){
+			var tr = $('<tr></tr>');
+			var td = $('<td></td>');
+			$("#portfolio-table").append(tr).append(tr).html(getNoRecordsFound());
+			
 		}
 	});
 }
@@ -171,13 +219,15 @@ function loadUserProfile() {
 		$("#userProfilePortfolio").html('$'+commasep(user.portfolio.toFixed(2)));
 		$("#userProfileTotal").html('$'+commasep((user.cash+user.portfolio).toFixed(2)));
 		
-		if (user.direction > 0) {
-			$("#userProfileDirection").html("<img src=\"/images/up_small.png\" />");
-		} else if (user.direction < 0){
-			$("#userProfileDirection").html("<img src=\"/images/down_small.png\" />");
+		var className = '';
+		if (user.profit > 0) {
+			$("#userProfileProfit").html("<span class=\"green-profit\">$" +commasep(user.profit.toFixed(2)) + "/h &#9650" + "</span>");
+		} else if (user.profit < 0){
+			$("#userProfileProfit").html("<span class=\"red-profit\">$" +commasep(user.profit.toFixed(2)) + "/h &#9660" + "</span>");
 		}else{
-			$("#userProfileDirection").html("<img src=\"/images/nochange_small.png\" />");
-		}	
+			
+			$("#userProfileProfit").html("");
+		}
 		
 	});
 }
@@ -423,7 +473,8 @@ function setup() {
 
 function toprank() {
 	$("topranktable").empty();
-	$.getJSON('/toprank', function(data) {
+	var pageParam = $('.active_tnt_link').text();
+	$.getJSON('/toprank?page=' + pageParam , function(data) {
 		$("#topranktable").empty();
 		
 		for ( var i = 0, length = data.length; i < length; i++) {
@@ -437,18 +488,39 @@ function toprank() {
 			$(tr).append(
 					$("<td><img class=\'twuser\' src=\'" + user.pictureUrl
 							+ "\'/></td>"));
+			
+		
+			var profitStr = '';
+			var profitDiff = 0;
+			if (i > 0) {
+
+				profitDiff = user.profit - data[i - 1].profit;
+			}
+							
+			var className = null;
+			var profitPerHour = "$"+ roundedInteger(user.profitPerHour);
+
+			if (user.profitPerHour > 0) {
+
+				profitPerHour = profitPerHour+ "/h &#9650;"
+				if (profitDiff > 0) {
+					className = "green-profit";
+				} else {
+					className = "gray-profit";
+				}
+				
+				profitStr = "<br><div class=\"" + className + "\">" + profitPerHour + "</div>";
+			}else if (user.profitPerHour < 0){
+				profitPerHour = profitPerHour+ "/h &#9660;"
+				profitStr = "<br><div class=\"red-profit\">" + profitPerHour + "</div>";	
+			}
+			
 			$(tr).append(
 					$("<td><a href=\"/user?user=" + user.id + "\" title=\""+user.userName+"&#39;s profile page.\">" + user.userName
 							+ "</a> <br>$"
 							+ commasep((user.cash + user.portfolio).toFixed(2))
-							+ '</td>'));
-			if (user.direction > 0) {
-				$(tr).append($("<td><img src=\"/images/up.png\" /></td>"));
-			} else if (user.direction < 0){
-				$(tr).append($("<td><img src=\"/images/down.png\" /></td>"));
-			}else{
-				$(tr).append($("<td><img src=\"/images/nochange.png\" /></td>"));
-			}
+							+ profitStr + '</td>'));
+	
 			$("#topranktable").append(tr);
 		}
 	});
@@ -468,8 +540,7 @@ function loadBalance() {
 				$("#balance_direction").html(
 						data.rank + "."+"<img src=\"/images/down_small.png\" />");
 			}else {
-				$("#balance_direction").html(
-						data.rank + "."+"<img src=\"/images/nochange_small.png\" />");
+				$("#balance_direction").html(data.rank + ".");//"<img src=\"/images/nochange_small.png\" />"
 			}
 
 			$("#cash_value").html("$" + commasep(data.cash.toFixed(2)));
@@ -480,8 +551,27 @@ function loadBalance() {
 	});
 }
 
+function retrievePage(pageElement) {
+	// is this clicked one ?
+	if (pageElement.attr("class") != 'active_tnt_link') {
+		// make previous page number clickable
+		var clicked = $('.active_tnt_link');
+		clicked.removeClass();
+		// and add href to it
+		clicked.attr("href", "javascript:void(0)");
+		
+		// then add make new link disabled
+		pageElement.attr('class','active_tnt_link');
+		// remove href
+		pageElement.removeAttr("href");
+		
+		// finally load data
+		toprank();
+	}
+}
+
 function commasep(nStr) {
-	
+	nStr = parseFloat(nStr).toFixed(2);
 	nStr += '';
 	x = nStr.split('.');
 	x1 = x[0];
@@ -493,7 +583,41 @@ function commasep(nStr) {
 	return x1 + x2;
 }
 
+
+function getNoRecordsFound() {
+	
+	return '<p>No records found.</p>';
+}
+
 function selectAllText(textbox) {
 	textbox.focus();
 	textbox.select();
+}
+
+function roundedInteger(number){
+	if(parseInt(number)!=number){
+	
+		if(number<0){
+			return parseInt(number-1);
+		}
+		else if(number>0){
+			return parseInt(number+1);
+		}
+	}	
+	return number;
+}
+
+function getDouble(dbl, minval){
+	var pctgStr = dbl.toFixed(2);
+	
+	if(pctgStr== '0.00'){
+		if(dbl<0){
+			pctgStr= pctgStr.replace('0.00','-'+minval.toFixed(2));
+		}
+		else if(dbl>0){
+			
+			pctgStr= pctgStr.replace('0.00',minval.toFixed(2));
+		}
+	}
+	return pctgStr;
 }

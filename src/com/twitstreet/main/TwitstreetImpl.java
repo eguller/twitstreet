@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -15,13 +14,10 @@ import com.google.inject.Singleton;
 import com.twitstreet.cache.TransactionCache;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
-import com.twitstreet.db.data.Group;
-import com.twitstreet.db.data.User;
+import com.twitstreet.market.StockMgr;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.AsyncQuery;
-import com.twitstreet.task.ReRankTask;
-import com.twitstreet.task.StockHistoryUpdateTask;
 import com.twitstreet.task.StockUpdateTask;
 
 
@@ -36,6 +32,7 @@ public class TwitstreetImpl implements Twitstreet {
 	@Inject TransactionCache transactionCache;
 	@Inject GroupMgr groupMgr;
 	@Inject UserMgr userMgr;
+	@Inject StockMgr stockMgr;
 	@Inject public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr){
 		this.dbMgr = dbMgr;
 		this.configMgr = configMgr;
@@ -66,13 +63,13 @@ public class TwitstreetImpl implements Twitstreet {
 		dbMgr.init();
 		configMgr.load();
 		
-		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
+//		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
-		StockHistoryUpdateTask stockHistoryUpdateTask = injector.getInstance(StockHistoryUpdateTask.class);
+		//StockHistoryUpdateTask stockHistoryUpdateTask = injector.getInstance(StockHistoryUpdateTask.class);
 		
-		Thread reRankThread = new Thread(reRankTask);
-		reRankThread.setName("Re-Rank");
-		reRankThread.start();
+//		Thread reRankThread = new Thread(reRankTask);
+//		reRankThread.setName("Re-Rank");
+//		reRankThread.start();
 		
 		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
 		updateFollowerCountThread.setName("Update Follower Count");
@@ -82,9 +79,9 @@ public class TwitstreetImpl implements Twitstreet {
 		asyncQueryTaskThread.setName("Async query task");
 		asyncQueryTaskThread.start();
 		
-		Thread stockHistoryUpdateThread = new Thread (stockHistoryUpdateTask);
-		stockHistoryUpdateThread.setName("Update Stock History");
-		stockHistoryUpdateThread.start();
+		//Thread stockHistoryUpdateThread = new Thread (stockHistoryUpdateTask);
+		///stockHistoryUpdateThread.setName("Update Stock History");
+		//stockHistoryUpdateThread.start();
 		
 		transactionCache.load();
 		
@@ -92,6 +89,7 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		
 		//REMOVE HERE (ADDED FOR DEBUG PURPOSE)
+		
 //		User userDO = userMgr.getUserById(324562459);
 //		userMgr.saveUser(userDO);
 //		groupMgr.addUserToDefaultGroup(userDO);

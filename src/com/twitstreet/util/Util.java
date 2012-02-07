@@ -1,13 +1,14 @@
 package com.twitstreet.util;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 
 public class Util {
-
+	public static String NO_RECORDS_FOUND_HTML = "<p>No records found.</p>";
 	public static java.sql.Date toSqlDate(java.util.Date date) {
 		return new java.sql.Date(date.getTime());
 	}
@@ -65,10 +66,26 @@ public class Util {
 	}
 
 	public static String commaSep(double amount) {
+		
+//		if(Math.abs(amount)<0.1 && amount!=0 && (int)amount != amount){
+//			
+//			if(amount<0){
+//				amount = -0.1;
+//			}
+//			else{
+//				amount = 0.1;
+//			}
+//			
+//			
+//			
+//		}
 		DecimalFormat decimalFormatter = new DecimalFormat("#,###,###.00");
 		String formatted = decimalFormatter.format(amount);
 		if (formatted.startsWith(".")) {
 			formatted = "0" + formatted;
+		}
+		else if (formatted.startsWith("-.")) {
+			formatted = formatted.replace("-.", "-0.");
 		}
 		return formatted;
 	}
@@ -87,5 +104,14 @@ public class Util {
 
 		return newStr;
 	}
+	public static double roundDouble(double pDouble, int decimalLength){
+	
+		BigDecimal bd = new BigDecimal(pDouble);
+		bd = bd.setScale(decimalLength,BigDecimal.ROUND_UP);
+
+		return (bd.doubleValue());
+		}
+
+
 
 }

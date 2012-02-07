@@ -78,19 +78,19 @@ PAGE STRUCTURE
 }
 
 #column_left {
-	width: 500px;
+	width: 260px;
 	margin-right: 20px;
 	float: left;
 }
 
 #column_center {
-	width: 240px;
+	width: 500px;
 	margin-right: 20px;
 	float: left;
 }
 
 #column_right {
-	width: 240px;
+	width: 220px;
 	float: left;
 }
 
@@ -203,7 +203,12 @@ CUSTOM CLASSES
 	border-collapse:collapse;
 	width: 100%;
 }
-
+.portfolio-stock-tbl {
+	border-width: 2px;
+	border-spacing: 1px;
+	border-collapse:collapse;
+	width: 160px;
+}
 .thead {
     border-bottom: 2px solid #6678B1;
     color: #003399;
@@ -258,7 +263,29 @@ a:hover {
 .red-light {
 	color: #CC0000;
 }
-
+.gray {
+	color: #444444;
+}
+.green-profit {
+	
+	text-align: right;
+	width:100%;
+	color: #00AA00;
+	
+}
+.gray-profit {
+	font-size: 90%;
+	text-align: right;
+	width:100%;
+	color: #444444;
+}
+.red-profit {
+	
+	text-align: right;
+	width:100%;
+	color: #CC0000;
+	
+}
 .rank-number {
 	font-size: 18px;
 	font-weight: bolder;
@@ -314,6 +341,62 @@ img.twuser {
 	border-style: none;
 }
 
+#tnt_pagination {
+	display:block;
+	text-align:left;
+	height:22px;
+	line-height:21px;
+	clear:both;
+	padding-top:3px;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	font-weight:normal;
+	margin: 5px 30px;
+	position: relative;
+}
+
+#tnt_pagination a:link, #tnt_pagination a:visited{
+	padding:7px;
+	padding-top:2px;
+	padding-bottom:2px;
+	border:1px solid #EBEBEB;
+	margin-left:10px;
+	text-decoration:none;
+	background-color:#F5F5F5;
+	color:#0072bc;
+	width:22px;
+	font-weight:normal;
+}
+
+#tnt_pagination a:hover {
+	background-color:#DDEEFF;
+	border:1px solid #BBDDFF;
+	color:#0072BC;	
+}
+
+#tnt_pagination .active_tnt_link {
+	padding:7px;
+	padding-top:2px;
+	padding-bottom:2px;
+	border:1px solid #BBDDFF;
+	margin-left:10px;
+	text-decoration:none;
+	background-color:#DDEEFF;
+	color:#0072BC;
+	cursor:default;
+}
+
+#tnt_pagination .disabled_tnt_pagination {
+	padding:7px;
+	padding-top:2px;
+	padding-bottom:2px;
+	border:1px solid #EBEBEB;
+	margin-left:10px;
+	text-decoration:none;
+	background-color:#F5F5F5;
+	color:#D7D7D7;
+	cursor:default;
+}
 
 .subheader a {
     color: #000000;
@@ -361,3 +444,6 @@ img.twuser {
     border-width: 1px;
     line-height: 20px;
     margin-top: 9px;
+}
+
+

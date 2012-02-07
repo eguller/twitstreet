@@ -1,0 +1,10 @@
+-- 2012-02-04 matkap 1
+-- stock_history table is modified to track the stocks hourly.
+
+ALTER TABLE `twitstreet`.`stock_history` ADD COLUMN `hour` INT(11) NOT NULL DEFAULT 0  AFTER `date` 
+
+, DROP INDEX `unique_daily_stock` 
+
+, ADD UNIQUE INDEX `unique_hourly_stock` (`stock` ASC, `date` ASC, `hour` ASC) ;
+
+--

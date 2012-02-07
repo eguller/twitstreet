@@ -6,29 +6,39 @@ public class StockInPortfolio {
 	double amount;
 	String pictureUrl;
 	double capital;
-	public StockInPortfolio(long stockId, String stockName, double amount, String pictureUrl, double capital){
+	double changePerHour;
+	private double percentage;
+
+	public StockInPortfolio(long stockId, String stockName, double amount, String pictureUrl, double capital,double changePerHour, double percentage) {
 		this.stockId = stockId;
 		this.stockName = stockName;
 		this.amount = amount;
 		this.pictureUrl = pictureUrl;
 		this.capital = capital;
+		this.changePerHour = changePerHour;
+		this.percentage = percentage;
 	}
-	
+
 	public long getStockId() {
 		return stockId;
 	}
+
 	public void setStockId(long stockId) {
 		this.stockId = stockId;
 	}
+
 	public String getStockName() {
 		return stockName;
 	}
+
 	public void setStockName(String stockName) {
 		this.stockName = stockName;
 	}
+
 	public double getAmount() {
 		return amount;
 	}
+
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
@@ -47,5 +57,21 @@ public class StockInPortfolio {
 
 	public void setCapital(double capital) {
 		this.capital = capital;
+	}
+
+	public double getChangePerHour() {
+		return changePerHour;
+	}
+
+	public void setChangePerHour(double changePerHour) {
+		this.changePerHour = changePerHour;
+	}
+
+	public double getPercentage() {
+		return percentage;
+	}
+
+	public void setPercentage(double percentage) {
+		this.percentage = percentage;
 	}
 }

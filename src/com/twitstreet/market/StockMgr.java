@@ -3,6 +3,7 @@ package com.twitstreet.market;
 import java.util.List;
 
 import com.twitstreet.db.data.Stock;
+import com.twitstreet.db.data.StockHistoryData;
 
 /**
  * Manages a cache of "percent available" of stocks.
@@ -62,4 +63,5 @@ public interface StockMgr {
 	 */
 	public void updateStockHistory();
 	
+	public StockHistoryData getStockHistory(long id);
 }

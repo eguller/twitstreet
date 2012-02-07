@@ -14,7 +14,7 @@ import com.twitstreet.market.StockMgr;
 public class StockHistoryUpdateTask implements Runnable {
 	private static final long HOUR = 60 * 60 * 1000;
 	private static final long MIN = 60 * 1000;
-	private static final long INITIAL_DELAY = 30 * MIN;
+	private static final long INITIAL_DELAY = 2 * MIN;
 	private static final long PERIOD = 6 * HOUR;
 	
 	@Inject
@@ -34,7 +34,7 @@ public class StockHistoryUpdateTask implements Runnable {
 	@Override
 	public void run() {
 
-		//sleep(INITIAL_DELAY);
+		sleep(INITIAL_DELAY);
 		
 		while (true) {
 

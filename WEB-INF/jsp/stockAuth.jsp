@@ -4,6 +4,7 @@
   <template:put name='topbar' content='topbar.jsp' />
   <template:put name='stockdetails' content='stockDetails.jsp' />
   <template:put name='balance' content='balance.jsp' />
+  <template:put name='portfolio' content='portfolio.jsp' />
   <template:put name='yourtransactions' content='yourtransactions.jsp' />
   <template:put name='latesttransactions' content='latesttransactions.jsp' />
   <template:put name='recentTweets' content='recentTweets.jsp' />

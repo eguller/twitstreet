@@ -19,7 +19,6 @@ import com.twitstreet.db.data.User;
 import com.twitstreet.util.Util;
 
 public class UserMgrImpl implements UserMgr {
-	private static final int TOP = 100;
 	@Inject
 	DBMgr dbMgr;
 	@Inject ConfigMgr configMgr;
@@ -39,10 +38,11 @@ public class UserMgrImpl implements UserMgr {
 							"userName, " + 
 							"lastLogin, " + 
 							"firstLogin, " + 
-							"users.cash, " + 
+							"users.cash as cash, " + 
 							"lastIp, " + 
 							"oauthToken, " +
 							"oauthTokenSecret, " + 
+							"user_profit(users.id) as changePerHour," +
 							"rank, " +
 							"oldRank, " + 
 							"direction, " + 
@@ -53,19 +53,7 @@ public class UserMgrImpl implements UserMgr {
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				userDO = new User();
-				userDO.setId(rs.getLong("id"));
-				userDO.setRank(rs.getInt("rank"));
-				userDO.setOldRank(rs.getInt("oldRank"));
-				userDO.setDirection(rs.getInt("direction"));
-				userDO.setUserName(rs.getString("userName"));
-				userDO.setLastLogin(rs.getDate("lastLogin"));
-				userDO.setFirstLogin(rs.getDate("firstLogin"));
-				userDO.setCash(rs.getDouble("cash"));
-				userDO.setPortfolio(rs.getDouble("portfolio"));
-				userDO.setLastIp(rs.getString("lastIp"));
-				userDO.setOauthToken(rs.getString("oauthToken"));
-				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
-				userDO.setPictureUrl(rs.getString("pictureUrl"));
+				userDO.getDataFromResultSet(rs);
 			}
 			
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -94,7 +82,8 @@ public class UserMgrImpl implements UserMgr {
 							"userName, " + 
 							"lastLogin, " + 
 							"firstLogin, " + 
-							"users.cash, " + 
+							"users.cash as cash, " +
+							"user_profit(users.id) as changePerHour," +
 							"lastIp, " + 
 							"oauthToken, " +
 							"oauthTokenSecret, " + 
@@ -108,20 +97,7 @@ public class UserMgrImpl implements UserMgr {
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				userDO = new User();
-				userDO.setId(rs.getLong("id"));
-				userDO.setRank(rs.getInt("rank"));
-				userDO.setOldRank(rs.getInt("oldRank"));
-				userDO.setDirection(rs.getInt("direction"));
-				userDO.setUserName(rs.getString("userName"));
-				userDO.setLastLogin(rs.getDate("lastLogin"));
-				userDO.setFirstLogin(rs.getDate("firstLogin"));
-				userDO.setCash(rs.getDouble("cash"));
-				userDO.setPortfolio(rs.getDouble("portfolio"));
-				userDO.setLastIp(rs.getString("lastIp"));
-				userDO.setOauthToken(rs.getString("oauthToken"));
-				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
-				userDO.setPictureUrl(rs.getString("pictureUrl"));
-				
+				userDO.getDataFromResultSet(rs);
 				users.add(userDO);
 			}
 			
@@ -143,12 +119,16 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			
-			ps = connection.prepareStatement("(select (count(*)+1) as newrank from ranking where (portfolio + cash) > ? " +
-					" or  ? > (select userName from users,ranking where ranking.user_id = users.id and (ranking.portfolio + ranking.cash) = ?)) ");
+			ps = connection.prepareStatement(" select (count(*)+1) as newrank from ranking,users " +
+					" where ranking.user_id = users.id and " +
+					" ( " +
+					" (portfolio + ranking.cash) > ? or " +
+					" (ranking.portfolio + ranking.cash = ? and username <?) " +
+					" ) ");
 			
 			ps.setDouble(1, userDO.getCash());
-			ps.setString(2, userDO.getUserName());
-			ps.setDouble(3, userDO.getCash());
+			ps.setDouble(2, userDO.getCash());
+			ps.setString(3, userDO.getUserName());
 			rs = ps.executeQuery();
 			int newRank = 999999;
 			if(rs.next()){
@@ -267,11 +247,12 @@ public class UserMgrImpl implements UserMgr {
 							"userName, " + 
 							"lastLogin, " + 
 							"firstLogin, " + 
-							"ranking.cash, " + 
+							"ranking.cash as cash, " + 
 							"lastIp, " + 
 							"oauthToken, " + 
 							"oauthTokenSecret, " + 
 							"rank, " +
+							"user_profit(users.id) as changePerHour," +							
 							"oldRank, " + 
 							"direction, " + 
 							"pictureUrl, " + 
@@ -280,19 +261,8 @@ public class UserMgrImpl implements UserMgr {
 							"order by users.id limit 1");
 			if (rs.next()) {
 				user = new User();
-				user.setId(rs.getLong("id"));
-				user.setRank(rs.getInt("rank"));
-				user.setOldRank(rs.getInt("oldRank"));
-				user.setDirection(rs.getInt("direction"));
-				user.setUserName(rs.getString("userName"));
-				user.setLastLogin(rs.getDate("lastLogin"));
-				user.setFirstLogin(rs.getDate("firstLogin"));
-				user.setCash(rs.getDouble("cash"));
-				user.setPortfolio((int)rs.getDouble("portfolio"));
-				user.setLastIp(rs.getString("lastIp"));
-				user.setOauthToken(rs.getString("oauthToken"));
-				user.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
-				user.setPictureUrl(rs.getString("pictureUrl"));
+				user.getDataFromResultSet(rs);
+
 			} else {
 				logger.error("DB: Random user selection query is not working properly");
 			}
@@ -346,7 +316,11 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	@Override
-	public ArrayList<User> getTopRank() {
+	public ArrayList<User> getTopRank(int pageNumber) {
+		
+		// i.e limit : 17, 17
+		String limit = ((pageNumber - 1) * UserMgr.MAX_RANK ) + ", " + UserMgr.MAX_RANK;
+		
 		ArrayList<User> userList = new ArrayList<User>(100);
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -355,29 +329,29 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, userName, "
-							+ "lastLogin, firstLogin, ranking.cash as userCash, "
-							+ "ranking.portfolio, lastIp, oauthToken, "
-							+ "oauthTokenSecret, rank, oldRank, direction, pictureUrl from users,ranking where ranking.user_id= users.id " 
+					.prepareStatement("select " +
+							"id," +
+							"userName, " +
+							"lastLogin, " +
+							"firstLogin, " +
+							"ranking.cash as cash, " +
+							"user_profit(users.id) as changePerHour, " +
+							"ranking.portfolio as portfolio, " +
+							"lastIp, " +
+							"oauthToken, " +
+							"oauthTokenSecret, " +
+							"rank, " +
+							"oldRank, " +
+							"direction, " +
+							"pictureUrl " +
+							"from users,ranking where ranking.user_id= users.id " 
 							+" order by rank asc limit "
-							+ TOP);
+							+ limit);
 			rs = ps.executeQuery();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 			while (rs.next()) {
 				userDO = new User();
-				userDO.setId(rs.getLong("id"));
-				userDO.setRank(rs.getInt("rank"));
-				userDO.setOldRank(rs.getInt("oldRank"));
-				userDO.setDirection(rs.getInt("direction"));
-				userDO.setUserName(rs.getString("userName"));
-				userDO.setLastLogin(rs.getDate("lastLogin"));
-				userDO.setFirstLogin(rs.getDate("firstLogin"));
-				userDO.setCash(rs.getDouble("userCash"));
-				userDO.setPortfolio(rs.getDouble("portfolio"));
-				userDO.setLastIp(rs.getString("lastIp"));
-				userDO.setOauthToken(rs.getString("oauthToken"));
-				userDO.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
-				userDO.setPictureUrl(rs.getString("pictureUrl"));
+				userDO.getDataFromResultSet(rs);
 				userList.add(userDO);
 			}
 		} catch (SQLException ex) {
@@ -386,5 +360,27 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 		return userList;
+	}
+	
+	@Override
+	public int count() {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int count = 0;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement("SELECT count(*) FROM users");
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException exception) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), exception);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return count;
 	}
 }
