@@ -196,7 +196,7 @@ public class HomePageServlet extends HttpServlet {
 							searchResultList.remove(0);
 						}
 					}
-					else if(twUser.getScreenName().equalsIgnoreCase(searchResultList.get(0).getScreenName())){
+					else if(searchResultList.size() > 0 &&  twUser.getScreenName().equalsIgnoreCase(searchResultList.get(0).getScreenName())){
 						
 						searchResultList.remove(0);
 						
