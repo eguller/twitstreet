@@ -113,7 +113,7 @@ public class HomePageServlet extends HttpServlet {
 		start = System.currentTimeMillis();
 		queryStockByQuote(request, response);
 		end = System.currentTimeMillis();
-		logger.info("queryStockById: " + (end - start));
+		logger.info("queryStockByQuote: " + (end - start));
 
 		if (user != null) {
 			getServletContext().getRequestDispatcher(
