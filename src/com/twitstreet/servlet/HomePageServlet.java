@@ -80,12 +80,20 @@ public class HomePageServlet extends HttpServlet {
 				"meta-desc",
 				"Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
 
+		long start = 0;
+		long end = 0;
+		start = System.currentTimeMillis();
+		
 		if (!twitstreet.isInitialized()) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp")
 					.forward(request, response);
 			return;
 		}
-
+		
+		end = System.currentTimeMillis();
+		
+		logger.info("Init time: " + (end - start));
+		
 		if (request.getParameter("signout") != null) {
 			request.getSession(false).invalidate();
 			invalidateCookies(new String[] { CallBackServlet.COOKIE_ID,
@@ -97,8 +105,15 @@ public class HomePageServlet extends HttpServlet {
 
 		User user = (User) request.getSession().getAttribute(User.USER);
 
+		start = System.currentTimeMillis();
 		queryStockById(request, response);
+		end = System.currentTimeMillis();
+		logger.info("queryStockById: " + (end - start));
+		
+		start = System.currentTimeMillis();
 		queryStockByQuote(request, response);
+		end = System.currentTimeMillis();
+		logger.info("queryStockByQuote: " + (end - start));
 
 		if (user != null) {
 			getServletContext().getRequestDispatcher(
@@ -196,7 +211,7 @@ public class HomePageServlet extends HttpServlet {
 							searchResultList.remove(0);
 						}
 					}
-					else if(twUser.getScreenName().equalsIgnoreCase(searchResultList.get(0).getScreenName())){
+					else if(searchResultList.size() > 0 &&  twUser.getScreenName().equalsIgnoreCase(searchResultList.get(0).getScreenName())){
 						
 						searchResultList.remove(0);
 						
