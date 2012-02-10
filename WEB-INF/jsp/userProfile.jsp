@@ -112,7 +112,7 @@
 									.get(i).getPictureUrl()%>" />
 						</td>
 						<td><a
-							href='/stock?stock=<%=portfolio.getStockInPortfolioList()
+							href='/?stock=<%=portfolio.getStockInPortfolioList()
 									.get(i).getStockId()%>' title="<%=portfolio.getStockInPortfolioList().get(i).getStockName()%>&#39;s stock detail page">
 								<%
 									out.write(portfolio.getStockInPortfolioList()

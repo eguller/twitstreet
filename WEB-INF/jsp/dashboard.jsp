@@ -1,3 +1,5 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.HashSet"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.db.data.UserStock"%>
@@ -14,11 +16,34 @@
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 
+<%@ page import="com.twitstreet.servlet.HomePageServlet"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.util.LinkedHashMap"%>
+<%@page import="com.twitstreet.db.data.StockHistoryData"%>
+<%@page import="com.twitstreet.db.data.UserStock"%>
+<%@page import="java.sql.SQLException"%>
+<%@page import="com.twitstreet.market.StockMgr"%>
+<%@ page import="com.google.inject.Injector"%>
+<%@ page import="com.twitstreet.db.data.User"%>
+<%@ page import="com.google.inject.Guice"%>
+<%@ page import="com.twitstreet.util.Util"%>
+<%@ page import="com.twitstreet.db.data.Portfolio"%>
+<%@page import="com.twitstreet.config.ConfigMgr"%>
+<%@ page import="com.twitstreet.market.PortfolioMgr"%>
+<%@page import="com.twitstreet.session.UserMgr"%>
+<%@ page import="com.twitstreet.db.data.UserStockDetail"%>
+<%@ page import="java.util.List"%>
+<%@ page import="com.twitstreet.util.Util"%>
+<%@ page import="java.text.DecimalFormat"%>
+<%@ page import="com.twitstreet.market.StockMgr"%>
+<%@ page import="com.twitstreet.db.data.Stock"%>
+<%@ page import="java.text.DecimalFormat"%>
 <%
-	User sessionUser = (User) request.getSession().getAttribute(
-			User.USER);
-	Injector inj = (Injector) pageContext.getServletContext()
-			.getAttribute(Injector.class.getName());
+	HashMap<String, Object> requestObjects = new HashMap<String, Object>();
+
+	User sessionUser = (User) request.getSession().getAttribute(User.USER);
+	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
@@ -27,72 +52,98 @@
 	if (sessionUser != null) {
 		user = userMgr.getUserById(sessionUser.getId());
 	}
+
+	DecimalFormat f = new DecimalFormat("##.00");
+	String stockId = request.getParameter("stock");
+
+	long id = -1;
+	List<UserStockDetail> stockDetailList = null;
+	Stock stock = null;
+	
+	stock = (Stock) request.getAttribute("stock");
+	
+	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
+	
+	StockHistoryData shd = null;
+	if (stock == null) {
+		if(quote.length() > 0 ){
+		stock = stockMgr.getStock(quote);
+		 request.getParameterMap().put("stock",new String[]{String.valueOf(stock.getId())});
+		
+		}
+	}else{
+		 id=stock.getId();
+	}
+
+	
+	
+	try {
+		if(stockId!=null){
+
+			id = Long.parseLong(stockId);
+		}
+		stockDetailList = portfolioMgr.getStockDistribution(id);
+		
+
+		shd = stockMgr.getStockHistory(id);
+
+	} catch (NumberFormatException nfe) {
+
+	}
+
+	
+	requestObjects.put("stock", stock);
+	requestObjects.put("quote", quote);
+
+	request.setAttribute("requestObjects", requestObjects);
 %>
 
 <div id="dashboard">
-	<h3>Dashboard</h3>
-	<div id="quoteholder">
-		<%
-			String quote = request.getSession().getAttribute(
-					HomePageServlet.QUOTE) == null ? "" : (String) request
-					.getSession().getAttribute(HomePageServlet.QUOTE);
-			Stock stock = null;
-			if (quote.length() > 0) {
-				stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
-				if (stock == null) {
-					stock = stockMgr.getStock(quote);
-				}
-			}
-		%>
-		<form action="/" method="post" accept-charset="UTF-8">
-			<input type="text" class="textbox" id="quote" value="<%=quote%>" name="quote" />
-			<input type="submit" value="Get Quote">
-		</form>
-		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input
-			type="hidden" id="quote-id"
-			value="<%=stock == null ? "" : stock.getId()%>" />
-	</div>
+
+	
+	<jsp:include page="getQuote.jsp" />
+
+	<%
+		if (stock != null) {
+	%>
+	<br>
+	<jsp:include page="stockDetails.jsp" />
+	<%
+		}
+	%>
+	
+
+
 	<div id="userfound"
 		<%if (stock != null && quote.length() > 0 && stock.getTotal() > 0) {
 				out.write(" style=\"visibility: visible;\"");
 			} else {
 				out.write(" style=\"display: none;\"");
-			}%>>
-		<div id="dashboard-message-field" style="margin-top: 6px;"
-			class="field-white">
-			<p
-				style="width: 100%; text-align: center; margin-top: 10px; margin-bottom: 10px; padding-top: 5px; padding-bottom: 5px;">
-				<span id="user-stock"> <%
-					 	UserStock userStock = null;
-					 	if (user != null && stock != null) {
-					 		userStock = portfolioMgr.getStockInPortfolio(user.getId(),
-					 				stock.getId());
-					 		if (userStock == null) {
-					 			out.write("You don't have any " + stock.getName());
-					 		} else {
-					 			int amount = (int) (userStock.getPercent() * stock
-					 					.getTotal());
-					 			String commaSep = Util.commaSep(amount);
-					 			out.write("You have <b>" + commaSep + "</b> "
-					 					+ stock.getName());
-					 		}
-					
-					 		if (stock.getTotal() < configMgr.getMinFollower()) {
-					 			out.write("<br>");
-					 			out.write(stock.getName()
-					 					+ " has <b>"
-					 					+ stock.getTotal()
-					 					+ "</b> follower. <br>You cannot buy followers if total is less than <b>"
-					 					+ configMgr.getMinFollower() + "</b>");
-					 		}
-					 	}
- 		    %> </span>
-			</p>
-		</div>
+			}%>
+			>
+ <%
+ 	UserStock userStock = null;
+ 	if (user != null && stock != null) {
+ 		userStock = portfolioMgr.getStockInPortfolio(user.getId(), stock.getId());
+//  		if (userStock == null) {
+//  			out.write("You don't have any " + stock.getName());
+//  		} else {
+//  			int amount = (int) (userStock.getPercent() * stock.getTotal());
+//  			String commaSep = Util.commaSep(amount);
+//  			out.write("You have <b>" + commaSep + "</b> " + stock.getName());
+//  		}
+
+ 		if (stock.getTotal() < configMgr.getMinFollower()) {
+//  			out.write("<br>");
+//  			out.write(stock.getName() + " has <b>" + stock.getTotal() + "</b> follower. <br>You cannot buy followers if total is less than <b>" + configMgr.getMinFollower() + "</b>");
+ 		}
+ 	}
+ %> 
+		
+	</div>
 
 		<input type="hidden" id="user-stock-val"
-			value="<%=userStock == null ? ""
-					: (int) (userStock.getPercent() * stock.getTotal())%>" />
+			value="<%=userStock == null ? "" : (int) (userStock.getPercent() * stock.getTotal())%>" />
 		<input type="hidden" id="available-hidden"
 			value="<%=stock == null ? "" : stock.getAvailable()%>" /> <input
 			type="hidden" id="sold-hidden"
@@ -100,130 +151,33 @@
 			type="hidden" id="total-hidden"
 			value="<%=stock == null ? "" : stock.getTotal()%>" />
 
-		<table class="datatbl" style="margin-top: 10px;"
-			<%if (stock == null) {
-				out.write("style='display: none;'");
+
+	<%
+		if (quote.length()>0) {
+	%>
+		<div id="hasnofollowers"
+		<%if (quote.length() > 0 && stock != null && stock.getTotal() == 0) {
+				out.write(" style=\"visibility: visible\"");
+			} else {
+				out.write(" style=\"display: none\"");
 			}%>>
-			<tr>
-				<td colspan="3">
-					<table width="100%">
-						<tr>
-							<td width="36px;"><img class="twuser"
-								src="<%=stock == null ? "" : stock.getPictureUrl()%>"
-								id="dashboard-picture">
-							</td>
-							<td style="text-align: left;"
-								id="dashboard-stock-follower-status"><a
-								href="/stock?stock=<%=stock == null ? "" : stock.getId()%>"
-								title="<%=stock == null ? "" : stock.getName()%>&#39;s stock details page."><%=stock == null ? "" : stock.getName()%></a>'s
-								follower status</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td style="width: 33%; text-align: center;">Available</td>
-				<td style="width: 33%; text-align: center;">Sold</td>
-				<td style="width: 33%; text-align: center;">Total</td>
-			</tr>
-			<tr>
-				<td id="available" style="width: 33%; text-align: center;">
-					<%
-						if (stock != null) {
-							out.write(Util.commaSep(stock.getAvailable()));
-						}
-					%>
-				</td>
-				<td id="sold" style="width: 33%; text-align: center;">
-					<%
-						if (stock != null) {
-							out.write(Util.commaSep(stock.getTotal() - stock.getAvailable()));
-						}
-					%>
-				</td>
-				<td id="total" style="width: 33%; text-align: center;">
-					<%
-						if (stock != null) {
-							out.write(Util.commaSep(stock.getTotal()));
-						}
-					%>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="3" style="text-align: center; padding-top: 10px;">
-					Twitstreet gets 1% commission on every sale!</td>
-			</tr>
-			<tr id="buy-links-row">
-				<td colspan="3" id="buy-links">
-					<div id="buy-sell-div">
-						<table class="buy-sell-table">
-							<%
-								if (user != null && stock != null) {
-									ArrayList<Double> buyValues = new ArrayList<Double>();
-									ArrayList<Double> sellValues = new ArrayList<Double>();
-									double totalCash = user.getCash();
-									int available = stock.getAvailable();
-									int min = (int) Math.min(totalCash, available);
 
-									int i = min == 0 ? 0 : String.valueOf((int) min).length();
-									if ((int) Math.pow(10, i - 1) != min && min > 0) {
-										buyValues.add(Math.floor(min));
-									}
-
-									for (; i > 0; i--) {
-										buyValues.add(Math.pow(10, i - 1));
-									}
-
-									if (userStock != null) {
-										double userTotalStock = (userStock.getPercent() * stock
-												.getTotal());
-										i = userTotalStock < 1 ? 0 : String.valueOf(
-												(int) userTotalStock).length();
-										if (userTotalStock != Math.pow(10, i - 1)) {
-											sellValues.add(Math.floor(userTotalStock));
-										}
-										for (; i > 0; i--) {
-											sellValues.add(Math.pow(10, i - 1));
-										}
-									}
-									i = 0;
-									while (true) {
-										out.write("<tr>");
-										out.write("<td>");
-										if (i < buyValues.size()
-												&& stock.getTotal() > configMgr.getMinFollower()) {
-											out.write("<div class=\"field-green\" onclick=\"buy("
-													+ stock.getId() + "," + buyValues.get(i)
-													+ ");\">");
-											out.write("Buy<br>");
-											out.write(Util.commaSep(buyValues.get(i).intValue()));
-											out.write("</div>");
-										}
-										out.write("</td>");
-										out.write("<td>");
-										if (i < sellValues.size()) {
-											out.write("<div class=\"field-red\" onclick=\"sell("
-													+ stock.getId() + "," + sellValues.get(i)
-													+ ");\">");
-											out.write("Sell<br>");
-											out.write(Util.commaSep(sellValues.get(i).intValue()));
-											out.write("</div>");
-										}
-										out.write("</td>");
-										out.write("</tr>");
-										i++;
-										if (i > buyValues.size() && i > sellValues.size()) {
-											break;
-										}
-									}
-								}
-							%>
-						</table>
-					</div>
-				</td>
-			</tr>
-		</table>
-
+		<%
+			if (stock != null) {
+		%>
+				<div id="dashboard-message-field" style="margin-top: 6px;"
+			class="field-white">
+			<p style="margin-top: 10px; margin-bottom: 10px;">
+			<%
+				out.write(stock.getName() + " has 0 followers. Please try something else.");
+			%>
+			</p>
+			</div>
+		<%
+			}
+		%>
+	</div>
+	
 		<div id="other-search-result">
 			<%
 				ArrayList<SimpleTwitterUser> searchResults = (ArrayList<SimpleTwitterUser>) request.getSession().getAttribute(HomePageServlet.OTHER_SEARCH_RESULTS);
@@ -233,7 +187,7 @@
 			%>
 			<table class="datatbl" style="margin-top: 10px;">
 				<tr class="thead">
-					<td style="width: 33%; text-align: left; font-weight: bolder;" colspan="3">Other results for <%=quote %></td>
+					<td style="width: 33%; text-align: left; font-weight: bolder;" colspan="3">Other results for <%=quote%></td>
 				</tr>
 				<%
 					for (int i = 0; i < searchResults.size();) {
@@ -254,10 +208,10 @@
 									title="Loads <%=searchResults.get(i).getScreenName()%>'s stock details">
 										<%
 											out.write(searchResults.get(i).getScreenName());
-										%> </a> <br><%
- 	out.write(Util.commaSep(searchResults.get(i)
- 							.getFollowerCount()));
- %>
+										%> </a> <br>
+										<%
+											out.write(Util.commaSep(searchResults.get(i).getFollowerCount()));
+										%>
 								</td>
 
 							</tr>
@@ -282,7 +236,14 @@
 			%>
 		</div>
 
-	</div>
+	<%
+		}
+	%>
+	
+	
+
+	
+	
 	<div id="searchnoresult"
 		<%if (quote.length() > 0 && stock == null) {
 				out.write(" style=\"visibility: visible\"");
@@ -291,27 +252,6 @@
 			}%>>
 		Search does not have result</div>
 
-	<div id="hasnofollowers"
-		<%if (quote.length() > 0 && stock != null && stock.getTotal() == 0) {
-				out.write(" style=\"visibility: visible\"");
-			} else {
-				out.write(" style=\"display: none\"");
-			}%>>
 
-		<%
-			if (stock != null) {
-				%>
-				<div id="dashboard-message-field" style="margin-top: 6px;"
-			class="field-white">
-			<p style="margin-top: 10px; margin-bottom: 10px;">
-			<%
-				out.write(stock.getName()
-						+ " has 0 followers. Please try something else.");
-			%>
-			</p>
-			</div>
-		<%	}
-		%>
+
 	</div>
-</div>
-

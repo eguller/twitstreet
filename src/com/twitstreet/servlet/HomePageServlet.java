@@ -146,8 +146,8 @@ public class HomePageServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			request.getSession().setAttribute(HomePageServlet.QUOTE,
-					stock.getName());
+//			request.setAttribute(HomePageServlet.QUOTE,
+//					stock.getName());
 			request.setAttribute(STOCK, stock);
 			request.getSession().setAttribute(HomePageServlet.OTHER_SEARCH_RESULTS,
 					searchResultList);
@@ -161,7 +161,7 @@ public class HomePageServlet extends HttpServlet {
 			User user = request.getSession(false) == null ? null
 					: (User) request.getSession(false).getAttribute(User.USER);
 
-			request.getSession().setAttribute(QUOTE, twUserName);
+			request.setAttribute(QUOTE, twUserName);
 			TwitterProxy twitterProxy = null;
 			Response resp = Response.create();
 			if (user == null) {
@@ -235,6 +235,8 @@ public class HomePageServlet extends HttpServlet {
 
 					}
 					request.setAttribute(STOCK, stock);
+			
+					//request.getParameterMap().put("stock", new String[]{ String.valueOf(stock.getId())});
 					logger.debug("Servlet: Stock queried successfully. Stock name:"
 							+ stock.getName());
 				} else {

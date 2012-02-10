@@ -59,6 +59,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/").with(HomePageServlet.class);
 				serve("/signin").with(SigninServlet.class);
 				serve("/callback").with(CallBackServlet.class);
+				//serve("/getQuote").with(CallBackServlet.class);				
 				serve("/setup").with(SetupServlet.class);
 				serve("/a/buy").with(BuyServlet.class);
 				serve("/a/sell").with(SellServlet.class);

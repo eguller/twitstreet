@@ -132,7 +132,7 @@ public class StockMgrImpl implements StockMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement("insert ignore into stock_history(stock, total, date, hour, lastUpdate) " +
-											" select id, total, DATE(NOW()), HOUR(NOW()), lastUpdate from stock ");
+											" select id, total, DATE(lastUpdate), HOUR(lastUpdate), lastUpdate from stock ");
 		
 			ps.executeUpdate();
 				
@@ -150,7 +150,7 @@ public class StockMgrImpl implements StockMgr {
 		
 		
 	}
-	
+
 	
 	public void updateTwitterData(long id, int total, String pictureUrl,
 			String screenName) {
@@ -178,6 +178,14 @@ public class StockMgrImpl implements StockMgr {
 			ps.setLong(3, id);
 			ps.executeUpdate();
 
+			ps = connection
+					.prepareStatement("insert ignore into stock_history(stock, total, date, hour, lastUpdate) " +
+											" select id, total, DATE(NOW()), HOUR(NOW()), lastUpdate from stock where id = ?");
+			ps.setLong(1, id);
+			ps.executeUpdate();
+				
+			
+			
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);

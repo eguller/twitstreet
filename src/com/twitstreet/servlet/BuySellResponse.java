@@ -1,7 +1,10 @@
 package com.twitstreet.servlet;
 
+import java.util.List;
+
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
+import com.twitstreet.db.data.UserStockDetail;
 
 public class BuySellResponse {
 	long stockId;
@@ -12,6 +15,7 @@ public class BuySellResponse {
 	double userCash;
 	double userPortfolio;
 	double userStock;
+	private List<UserStockDetail> stockDetailList = null;
 	
 	public BuySellResponse(User user, Stock stock, int userStockValue){
 		this.stockId = stock.getId();
@@ -72,5 +76,13 @@ public class BuySellResponse {
 
 	public void setUserPortfolio(int userPortfolio) {
 		this.userPortfolio = userPortfolio;
+	}
+
+	public List<UserStockDetail> getStockDetailList() {
+		return stockDetailList;
+	}
+
+	public void setStockDetailList(List<UserStockDetail> stockDetailList) {
+		this.stockDetailList = stockDetailList;
 	}
 }

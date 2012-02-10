@@ -1,7 +1,49 @@
 
+function drawVisualization(){
+		
+	drawStockHistory(drawStockHistoryDivId, drawStockHistoryDateArray, drawStockHistoryValueArray, drawStockHistoryStockName);
+	drawStockDistribution(drawStockDistributionDivId,drawStockDistributionNameArray,drawStockDistributionPercentArray,drawStockDistributionStockName);
+
+}
+
+
+
+
+
+var drawStockHistoryDivId = null;
+var drawStockHistoryDateArray = null;
+var drawStockHistoryValueArray = null;
+var drawStockHistoryStockName = null;
+
+function setStockHistoryData(divId, dateArray, valueArray, stockName){
+	
+
+	  drawStockHistoryDivId = divId;
+	  drawStockHistoryDateArray = dateArray;
+	  drawStockHistoryValueArray = valueArray;
+	  drawStockHistoryStockName = stockName;
+	  
+}	function setStockDistributionData(divId, dateArray, valueArray, stockName){
+	
+
+	 drawStockDistributionDivId = divId;
+	 drawStockDistributionNameArray = nameArray;
+	 drawStockDistributionPercentArray = percentArray;
+	 drawStockDistributionStockName = stockName;
+	  
+}	
+
 function drawStockHistory(divId, dateArray, valueArray, stockName){
+	
+	  drawStockHistoryDivId = divId;
+	  drawStockHistoryDateArray = dateArray;
+	  drawStockHistoryValueArray = valueArray;
+	  drawStockHistoryStockName = stockName;
+	  
+	
+	  
 	  var data = new google.visualization.DataTable();
-	  data.addColumn('date', 'Date');
+	  data.addColumn('datetime', 'Date');
 	  data.addColumn('number', stockName);
 
 	  data.addRows(dateArray.length);
@@ -15,31 +57,57 @@ function drawStockHistory(divId, dateArray, valueArray, stockName){
 		  
 	  }
 	var div = document.getElementById(divId);
-	  var annotatedtimeline = new google.visualization.AnnotatedTimeLine(div);
-	  annotatedtimeline.draw(data, {
-          //'allValuesSuffix': '%', // A suffix that is added to all values
-          //'colors': ['blue', 'red', '#0000bb'], // The colors to be used
-          'displayAnnotations': true,
-          'displayExactValues': true, // Do not truncate values (i.e. using K suffix)
-          'displayRangeSelector' : false, // Do not sow the range selector
-          'displayZoomButtons': true, // DO not display the zoom buttons
-          'fill': 30, // Fill the area below the lines with 20% opacity
-          'displayLegendDots':true,
-        //  'legendPosition': 'newRow', // Can be sameRow
-         // 'max': 35000, // Override the automatic default
-         // 'min':  30000, // Override the automatic default
-          //'scaleColumns': [0], // Have two scales, by the first and second lines
-          'scaleType': 'allmaximized', // See docs...
-          'thickness': 3, // Make the lines thicker
-       //   'zoomStartTime': new Date(2009, 1 ,2), //NOTE: month 1 = Feb (javascript to blame)
-       //   'zoomEndTime': new Date(2009, 1 ,5) //NOTE: month 1 = Feb (javascript to blame)
-         });
+
+
+		var annotatedtimeline = new google.visualization.AnnotatedTimeLine(div);
+		annotatedtimeline.draw(data, {
+			// 'allValuesSuffix': '%', // A suffix that is added to all values
+			// 'colors': ['blue', 'red', '#0000bb'], // The colors to be used
+			'displayAnnotations' : true,
+			'displayExactValues' : true, // Do not truncate values (i.e.
+											// using K suffix)
+			'displayRangeSelector' : false, // Do not sow the range selector
+			'displayZoomButtons' : true, // DO not display the zoom buttons
+			'fill' : 30, // Fill the area below the lines with 20% opacity
+			'displayLegendDots' : true,
+			 'legendPosition': 'newRow', // Can be sameRow
+			// 'max': 35000, // Override the automatic default
+			// 'min': 30000, // Override the automatic default
+			// 'scaleColumns': [0], // Have two scales, by the first and second
+			// lines
+			'scaleType' : 'allmaximized', // See docs...
+			'thickness' : 3, // Make the lines thicker
+		// 'zoomStartTime': new Date(2009, 1 ,2), //NOTE: month 1 = Feb
+		// (javascript to blame)
+		// 'zoomEndTime': new Date(2009, 1 ,5) //NOTE: month 1 = Feb (javascript
+		// to blame)
+		});
+
+
+
+	  
+
 	
 
 }
 
+
+var drawStockDistributionDivId = null;
+var drawStockDistributionNameArray = null;
+var drawStockDistributionPercentArray = null;
+var drawStockDistributionStockName = null;
+
 function drawStockDistribution(divId,nameArray,percentArray,stockName) {
-	var div = document.getElementById(divId)
+	 drawStockDistributionDivId = divId;
+	  drawStockDistributionNameArray = nameArray;
+	  drawStockDistributionPercentArray = percentArray;
+	  drawStockDistributionStockName = stockName;
+	
+	
+	var div = document.getElementById(divId);
+	
+	
+	
     // Create the data table.
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'User');
@@ -64,6 +132,9 @@ function drawStockDistribution(divId,nameArray,percentArray,stockName) {
     var chart = new google.visualization.PieChart(div);
     chart.draw(data, options);
     
-    
+	  
+	 
+	
+
 
 }

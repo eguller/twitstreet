@@ -353,18 +353,19 @@ function buy(stock, amount) {
 		$("#sold").html(commasep(sold));
 		$("#sold-hidden").val(sold);
 
-		$("#available").html(commasep(parseInt(data.stockTotal - sold)));
+		var available = parseInt(data.stockTotal - sold);
+		$("#available").html(commasep(available));
 		$("#available-hidden").val(parseInt(data.stockTotal - sold));
 
 		$("#cash_value").html("$" + commasep(data.userCash.toFixed(2)));
 		$("#cash-hidden").val(data.userCash);
 		$("#portfolio_value").html(
 				"$" + commasep(data.userPortfolio.toFixed(2)));
-		$("#total_value")
-				.html(
-						commasep("$"
-								+ (data.userCash + data.userPortfolio)
-										.toFixed(2)));
+		
+		var totalValue = "$" + commasep( (data.userCash + data.userPortfolio) .toFixed(2));
+		
+		$("#total_value").html(totalValue);
+		
 		$("#user-stock-val").val(
 				parseInt(data.userStock)
 						);
@@ -377,8 +378,44 @@ function buy(stock, amount) {
 
 		loadPortfolio();
 		loadUserTransactions();
+		
+		reloadStockDistribution(data);
 	});
 }
+
+function reloadStockDistribution(buySellResponse){
+	var sold = parseInt(buySellResponse.stockTotal * buySellResponse.stockSold);
+
+	var available = parseInt(buySellResponse.stockTotal - sold);
+
+
+	var percentArray = new Array();
+	var nameArray = new Array();
+	var stockName = buySellResponse.stockName;
+
+	if (available > 0) {
+		nameArray.push('Available');
+
+		percentArray.push(available);
+	}
+	
+	var i =0;
+	for (i;i< buySellResponse.stockDetailList.length; i++) {
+		var stockDetail = buySellResponse.stockDetailList[i];
+		nameArray.push(stockDetail.userName);
+
+		percentArray.push(stockDetail.stockTotal * stockDetail.percent);
+	}			
+	
+	drawStockDistribution('stock-shares-chart-div', nameArray,
+			percentArray, stockName);
+	
+	
+	
+	
+}
+
+
 
 function sell(stock, amount) {
 	// if already clicked do nothing
@@ -431,6 +468,9 @@ function sell(stock, amount) {
 
 		// update cash on top rank list
 		$('#userOnTopRank').text($("#total_value").text());
+		
+
+		reloadStockDistribution(data);
 	});
 }
 
@@ -622,18 +662,37 @@ function getDouble(dbl, minval){
 	return pctgStr;
 }
 
+function showBuySell(){
+	$("#stock-distribution-tab").removeClass("youarehere");
+	$("#stock-history-tab").removeClass("youarehere");	
+	$("#buy-sell-tab").addClass("youarehere");
+	
+	$("#stock-share-section").hide();
+	$("#stock-trend-section").hide();
+	$("#buy-sell-section").show();
+	
+}
+
 function showStockDistribution(){
 	$("#stock-history-tab").removeClass("youarehere");
+	$("#buy-sell-tab").removeClass("youarehere");	
 	$("#stock-distribution-tab").addClass("youarehere");
+	
+	$("#buy-sell-section").hide();
 	$("#stock-trend-section").hide();
 	$("#stock-share-section").show();
+
 
 }
 
 function showStockHistory(){
 	$("#stock-distribution-tab").removeClass("youarehere");
+	$("#buy-sell-tab").removeClass("youarehere");
 	$("#stock-history-tab").addClass("youarehere");
+	
+
+	$("#buy-sell-section").hide();
 	$("#stock-share-section").hide();
 	$("#stock-trend-section").show();
-	
+	drawVisualization();
 }

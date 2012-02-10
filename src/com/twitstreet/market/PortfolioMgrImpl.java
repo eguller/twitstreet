@@ -63,7 +63,10 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				stock.getId());
 		int userStockValue = (int) (updateUserStock.getPercent() * stock
 				.getTotal());
-		return new BuySellResponse(buyer, stock, userStockValue);
+		
+		BuySellResponse bsr = new BuySellResponse(buyer, stock, userStockValue);
+		bsr.setStockDetailList(getStockDistribution(stock.getId()));
+		return bsr;
 
 	}
 	
@@ -117,9 +120,13 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			int userStockValue = updateUserStock == null ? 0
 					: (int) (updateUserStock.getPercent() * stock.getTotal());
 
-			return new BuySellResponse(seller, stock, userStockValue);
+			
+			BuySellResponse bsr = new BuySellResponse(seller, stock, userStockValue);
+			bsr.setStockDetailList(getStockDistribution(stock.getId()));
+			return bsr;
 		} else {
-			return new BuySellResponse(seller, stock, 0);
+			BuySellResponse bsr = new BuySellResponse(seller, stock, 0);
+			return bsr;
 		}
 
 	}
