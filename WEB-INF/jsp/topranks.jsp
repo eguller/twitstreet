@@ -9,10 +9,24 @@
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 User sessionUser = (User)request.getSession().getAttribute(User.USER);
 UserMgr userMgr = inj.getInstance(UserMgr.class);
-ArrayList<User> userList = userMgr.getTopRank(1);
 //TODO : count will be cached
 int userCount = userMgr.count();
+
+String pageParam = request.getParameter("page");
+
+int currPage = 1;
+if (pageParam != null && pageParam != "") {
+	// get pageNumber from param
+	currPage = Integer.parseInt(pageParam);
+	// check again
+	if (currPage < 1) {
+		currPage = 1;
+	}
+}
 int pageCount = 1;
+ArrayList<User> userList = userMgr.getTopRank(currPage);
+
+userList = (userList==null)? new ArrayList<User>(): userList;
 
 // if our users more than one page
 if (userCount > UserMgr.MAX_RANK) {
@@ -29,7 +43,7 @@ if (userCount > UserMgr.MAX_RANK) {
 		
 		
 		for(int i = 0; i < userList.size(); i++) {
-				int rank = i + 1;
+				
 				User user = userList.get(i);
 
 				double profitDiff = 0;
@@ -50,7 +64,7 @@ if (userCount > UserMgr.MAX_RANK) {
 				<%
 	    			}
 	    		%>
-				<td class="rank-number"><%=rank%>.</td>
+				<td class="rank-number"><%=user.getRank()%>.</td>
 				<td><img class="twuser" src="<%=user.getPictureUrl()%>" /></td>
 				<td><a href="/user?user=<%=user.getId()%>"
 					title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
@@ -97,7 +111,7 @@ if (userCount > UserMgr.MAX_RANK) {
 					stop = userCount;
 				}
 				
-				if (i == 1) {
+				if (i == currPage) {
 					%>
 			<a class="active_tnt_link" onclick="retrievePage($(this))"><%=i%></a>
 			<%

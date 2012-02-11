@@ -99,18 +99,22 @@ var drawStockDistributionStockName = null;
 
 
 function reloadStockDistribution(stockId) {
-	$("#stockDistributionScript").remove();
 	
-	$("#stock-share-section").empty();
 	
+	if ($('#stock-share-section').hasClass('blockUI'))
+		return;
+	
+	$('##stock-share-section').block({
+		message : 'Loading'
+	});
 	    
 	$.ajax({
 		type: 		"get",
 		url: 		"stockdistribution",
 		data: 		"stock=" + stockId,
 		success:	function(data) {			
-			 
-			
+			$("#stock-share-section").unblock();
+			$("#stock-share-section").empty();
 			$("#stock-share-section").html($(data).html());
 			 var script = $(data).find("script").prevObject[1].text;
 				

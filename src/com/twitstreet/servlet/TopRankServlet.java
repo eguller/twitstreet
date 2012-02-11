@@ -30,24 +30,7 @@ public class TopRankServlet extends HttpServlet{
 		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
-		String pageParam = request.getParameter("page");
-		
-		int page = 1;
-		if (pageParam != null && pageParam != "") {
-			// get pageNumber from param
-			page = Integer.parseInt(pageParam);
-			// check again
-			if (page < 1) {
-				page = 1;
-			}
-		}
-		
-		ArrayList<User> userList = userMgr.getTopRank(page);
-		
-		userList = (userList==null)? new ArrayList<User>(): userList;
-		
-		request.setAttribute(TOPRANKS_USER_LIST, userList);
-		if (userList.size()>0) {
+	
 			try {
 				getServletContext().getRequestDispatcher(
 						"/WEB-INF/jsp/topranks.jsp").forward(request, response);
@@ -55,8 +38,7 @@ public class TopRankServlet extends HttpServlet{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-			
+				
 	//	response.getWriter().write(gson.toJson(userList));
 	}
 		

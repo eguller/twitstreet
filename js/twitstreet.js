@@ -192,9 +192,12 @@ function setup() {
 
 
 function toprank() {
+
+	var pageParam = $('.active_tnt_link').text();
 	$.ajax({
 		type: 		"get",
-		url: 		"toprank",		
+		url: 		"toprank",
+		data:		"page="+pageParam,
 		success:	function(data) {			
 			$("#topranks").empty();
 			$("#topranks").html($(data).html());		
