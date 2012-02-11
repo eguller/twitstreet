@@ -23,7 +23,7 @@
 		String userIdStr = String.valueOf(user.getId());
 %>
 <input id="userProfileUserId" type="hidden" value="<%=userIdStr%>"></input>
-<div id="userprofile">
+<div id="userprofile" class="main-div">
 	<h3><%=user.getUserName()%>'s Profile <a
 			style="float: right; vertical-align: bottom;" href="/">Go to Home
 			&gt;&gt;</a>
@@ -40,8 +40,7 @@
 						</td>
 						<td style="text-align: left;" id="dashboard-stock-follower-status"><a
 							href="http://twitter.com/#!/<%=user == null ? "" : user.getUserName()%>" title="<%=user == null ? "" : user.getUserName()%>&#39;s twitter page"
-							target="_blank"><%=user == null ? "" : user.getUserName()%></a>'s
-							follower status
+							target="_blank"><%=user == null ? "" : user.getUserName()%></a>'s status
 						</td>
 					</tr>
 				</table>

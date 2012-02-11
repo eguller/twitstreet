@@ -21,6 +21,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 
 
 <script src="/js/twitstreet.js"></script>
+<script src="/js/stockTabs.js"></script>
 <script src="/js/charts.js"></script>
 
 <script language="javascript" type="text/javascript">

@@ -13,7 +13,7 @@ TransactionMgr transactionMgr = inj.getInstance(TransactionMgr.class);
 List<TransactionRecord> transactionRecordList = transactionMgr.getCurrentTransactions();
 
 %>
-<div id="currenttransactions">
+<div id="currenttransactions" class="main-div">
 	<h3>Current Transactions</h3>
 	<table class="datatbl" id="current-transactions-table">
 		<% 

@@ -30,182 +30,20 @@ $(document).ready(function() {
 function calculateSold(total, soldPercentage) {
 	return total * soldPercentage;
 }
-
-function writeBuySellLinks() {
-	var cash = parseFloat($("#cash-hidden").val());
-	var available = parseFloat($("#available-hidden").val());
-	var quote = $("#quote-id").val();
-	var min = cash;
-	if (cash > available) {
-		min = available;
-	}
-
-	var buyValues = new Array();
-	var sellValues = new Array();
-	if (min > 1) {
-		buyValues.push(parseInt(min));
-	}
-	var i = min < 1 ? 0 : parseInt(min).toString().length;
-	$(".buy-sell-table").empty();
-	for (; i > 0; i--) {
-		var amount = Math.pow(10, i - 1);
-		buyValues.push(parseInt(amount));
-	}
-
-	var sold = parseInt($("#user-stock-val").val());
-	i = sold < 1 ? 0 : sold.toString().length;
-
-	if (sold > 0 && sold != Math.pow(10, i - 1)) {
-		sellValues.push(sold);
-	}
-
-	for (; i > 0; i--) {
-		var amount = Math.pow(10, i - 1);
-		sellValues.push(parseInt(amount));
-	}
-
-	i = 0
-	while (true) {
-		var tr = $('<tr></tr>');
-		var buyTd = $('<td></td>');
-		var sellTd = $('<td></td>');
-		if (i < buyValues.length) {
-			var div = $('<div></div>');
-			$(div).html('Buy <br>' + commasep(parseInt(buyValues[i])));
-			$(div).attr('class', 'field-green');
-			$(div).attr('onclick',
-					'buy(' + quote + ', ' + parseInt(buyValues[i]) + ');');
-			$(div).corner("round 5px");
-			$(buyTd).append($(div));
-
-		}
-
-		if (i < sellValues.length) {
-			var div = $('<div></div>');
-			$(div).html('Sell <br>' + commasep(parseInt(sellValues[i])));
-			$(div).attr('class', 'field-red');
-			$(div).attr('onclick',
-					'sell(' + quote + ', ' + parseInt(sellValues[i]) + ');');
-			$(div).corner("round 5px");
-			$(sellTd).append($(div));
-		}
-
-		tr.append(buyTd);
-		tr.append(sellTd);
-		$(".buy-sell-table").append(tr);
-
-		i++;
-		if (i > sellValues.length && i > buyValues.length) {
-			break;
-		}
-	}
-}
-
 function loadPortfolio() {
-	$.post('/portfolio', {
-
-	}, function(data) {
-		var stockInPortfolioList = data.stockInPortfolioList;
-		$("#portfolio-table").empty();
-		var i;
-		for ( i = 0; i < stockInPortfolioList.length;) {
-			var tr = $('<tr></tr>');
-			for ( var j = 0; j < 1; j++) {
-				var stockInPortfolio = null;
-
-				if (i < stockInPortfolioList.length) {
-					stockInPortfolio = stockInPortfolioList[i];
-				}
-
-				var td = $('<td></td>');
-				var table = $('<table></table');
-				var tableTr = $('<tr></tr>');
-
-				var tableTd1 = $('<td></td>');
-				if (stockInPortfolio != null) {
-					var img = $('<img />').attr('class', 'twuser').attr('src',
-							stockInPortfolio.pictureUrl);
-					$(tableTd1).append(img);
-				}
-
-				var tableTd2 = $('<td></td>');
-				if (stockInPortfolio != null) {
-					
-					var tdA = $('<a>' + stockInPortfolio.stockName + '</a>');
-					tdA.attr('href', '/?stock='+stockInPortfolio.stockId);
-					tdA.attr('title', 'Loads ' + stockInPortfolio.stockName + '\'s stock details.');
-					
-					var valueStr = '$'+commasep(stockInPortfolio.amount);
-					
-					var pctgStr = getDouble(100*stockInPortfolio.percentage,0.01);
-					
-					valueStr = valueStr +"&nbsp;("+ pctgStr+ "%)";				
-					
-					var psTable = $("<table class=\"portfolio-stock-tbl\"></table");					
-					var psTr = $("<tr></tr>");					
-					var tdLeft = $("<td align=\"left\"></td>");
-					var tdRight = $("<td align=\"right\"></td>");
-					
-					var balance = stockInPortfolio.amount-stockInPortfolio.capital;				
-					var balanceStr = '$'+getDouble(balance,0.01);					
-					var balanceHtml = $('<span></span>');					
-					if(balance > 0){
-						// balanceStr = balanceStr+'&#9650;';
-						balanceHtml = $('<span class=\'green-light\'></span>');
-					} 
-					else if(balance < 0){
-						//balanceStr = balanceStr+'&#9660;';
-						balanceHtml = $('<span class=\'red-light\'></span>');
-					}				
-					balanceHtml.append(balanceStr);		
-					
-					var cph = getDouble(stockInPortfolio.changePerHour,0.01);				
-					var cphStr = '$'+commasep(cph) + '/h';					
-					var cphHtml = $('<span></span>');					
-					if(cph > 0){
-						cphStr = cphStr+' &#9650;';
-						cphHtml = $('<span class=\'green-profit\'></span>');
-					}
-					else if(cph){
-						cphStr = cphStr+' &#9660;';
-						cphHtml = $('<span class=\'red-profit\'></span>');
-					}				
-					cphHtml.append(cphStr);		
-									
-					if(balance!=0){
-						tdLeft.append(balanceHtml);
-					}
-					if(cph!=0){
-						tdRight.append(cphHtml);	
-					}			
-					
-					psTr.append(tdLeft);
-					psTr.append(tdRight);
-					psTable.append(psTr);
-					
-					tableTd2.append(tdA);
-					tableTd2.append('<br>');
-					tableTd2.append(valueStr);
-					tableTd2.append('<br>');
-					tableTd2.append(psTable);
-				}
-				$(tableTr).append(tableTd1);
-				$(tableTr).append(tableTd2);
-				$(table).append(tableTr);
-				$(td).append(table);
-				$(tr).append(td);
-				i++;
-			}
-			$("#portfolio-table").append(tr);
-		}
-		if(i==0){
-			var tr = $('<tr></tr>');
-			var td = $('<td></td>');
-			$("#portfolio-table").append(tr).append(tr).html(getNoRecordsFound());
+	
+	$.ajax({
+		type: 		"get",
+		url: 		"portfolio",
+		success:	function(data) {			
+			$("#portfolio").empty();
+			$("#portfolio").html($(data).html());	
 			
+		
 		}
 	});
 }
+
 function loadUserProfile() {
 	var userId = $('#userProfileUserId').val();
 	$.post('/user', {
@@ -235,85 +73,26 @@ function loadUserProfile() {
 
 
 function loadCurrentTransactions() {
-	$
-			.post(
-					'/transaction',
-					{
-							
-					},
-					function(data) {
-						if (data != null) {
-							$("#current-transactions-table").empty();
-							for ( var i = 0; i < data.length; i++) {
-								var transactionRecord = data[i];
-								var tr = $("<tr></tr>");
-								if (i % 2 == 0) {
-									$(tr).attr('class', 'odd');
-								}
-								var td = $('<td></td>');
-
-								if (transactionRecord.operation == 1) {
-									$(td)
-											.html(
-													"<a href=\"/user?user="
-															+ transactionRecord.userId
-															+ "\" title=\""+transactionRecord.userName+"&#39;s profile page.\">"
-															+ transactionRecord.userName
-															+ "</a> <span class=\"green\">bought</span> "
-															+ commasep(transactionRecord.amount)
-															+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
-															+ transactionRecord.stockName
-															+ "</a>");
-								} else {
-									$(td)
-											.html(
-													"<a href=\"/user?user="
-															+ transactionRecord.userId
-															+ "\" title=\""+transactionRecord.userName+"&#39;s profile page.\">"
-															+ transactionRecord.userName
-															+ "</a> <span class=\"red\">sold</span> "
-															+ commasep(transactionRecord.amount)
-															+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
-															+ transactionRecord.stockName
-															+ "</a>");
-								}
-								$(tr).append(td);
-								$("#current-transactions-table").append(tr);
-							}
-						}
-					});
+	$.ajax({
+		type: 		"get",
+		url: 		"/transaction",	
+		success:	function(data) {			
+			$("#currenttransactions").empty();
+			$("#currenttransactions").html($(data).html());	
+			
+		}
+	});
 }
 
 function loadUserTransactions() {
-	$.post('/transaction', {
-		type : 'user'
-	}, function(data) {
-		if (data != null) {
-			$("#your-transactions-table").empty();
-			for ( var i = 0; i < data.length; i++) {
-				var transactionRecord = data[i];
-				var tr = $("<tr></tr>");
-				if (i % 2 == 0) {
-					$(tr).attr('class', 'odd');
-				}
-				var td = $('<td></td>');
-
-				if (transactionRecord.operation == 1) {
-					$(td).html(
-							"You <span class=\"green\">bought</span> "
-									+ commasep(transactionRecord.amount)
-									+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
-									+ transactionRecord.stockName + "</a>");
-				} else {
-					$(td).html(
-							"You <span class=\"red\">sold</span> "
-									+ commasep(transactionRecord.amount)
-									+ " <a href=\"/?stock="+transactionRecord.stockId+"\" title=\""+transactionRecord.stockName+"&#39;s stock details page.\">"
-									+ transactionRecord.stockName + "</a>");
-				}
-				$(tr).append(td);
-				$("#your-transactions-table").append(tr);
-			}
+	$.ajax({
+		type: 		"get",
+		url: 		"/transaction",	
+		data:		"type=user",
+		success:	function(data) {			
+			$("#yourtransactions").empty();
+			$("#yourtransactions").html($(data).html());	
+			
 		}
 	});
 }
@@ -329,7 +108,6 @@ function showQuotePanel(panel) {
 		}
 	}
 }
-
 function buy(stock, amount) {
 	// if already clicked do nothing
 	if ($('#buy-sell-div').hasClass('blockUI'))
@@ -338,83 +116,19 @@ function buy(stock, amount) {
 	$('#buy-sell-div').block({
 		message : 'Processing'
 	});
-
-	$.post('/a/buy', {
-		stock : stock,
-		amount : amount
-	}, function(data) {
-		// unblock when data arrives
-		$('#buy-sell-div').unblock();
-
-		$("#total").html(commasep(parseInt(data.stockTotal)));
-		$("#total-hidden").val(parseInt(data.stockTotal));
-
-		var sold = parseInt(data.stockTotal * data.stockSold);
-		$("#sold").html(commasep(sold));
-		$("#sold-hidden").val(sold);
-
-		var available = parseInt(data.stockTotal - sold);
-		$("#available").html(commasep(available));
-		$("#available-hidden").val(parseInt(data.stockTotal - sold));
-
-		$("#cash_value").html("$" + commasep(data.userCash.toFixed(2)));
-		$("#cash-hidden").val(data.userCash);
-		$("#portfolio_value").html(
-				"$" + commasep(data.userPortfolio.toFixed(2)));
-		
-		var totalValue = "$" + commasep( (data.userCash + data.userPortfolio) .toFixed(2));
-		
-		$("#total_value").html(totalValue);
-		
-		$("#user-stock-val").val(
-				parseInt(data.userStock)
-						);
-		
-		$("#user-stock").html(
-				"You have <b>" + commasep(parseInt(data.userStock))
-						+ "</b> of " + data.stockName);
-		
-		writeBuySellLinks();
-
-		loadPortfolio();
-		loadUserTransactions();
-		
-		reloadStockDistribution(data);
+	$.ajax({
+		type: 		"get",
+		url: 		"a/buy",	
+		data:		"stock="+stock+"&amount="+amount,
+		success:	function(data) {			
+			$("#buy-sell-section").empty();
+			$("#buy-sell-section").html($(data).html());	
+			
+			loadPortfolio();
+			loadUserTransactions();
+		}
 	});
 }
-
-function reloadStockDistribution(buySellResponse){
-	var sold = parseInt(buySellResponse.stockTotal * buySellResponse.stockSold);
-
-	var available = parseInt(buySellResponse.stockTotal - sold);
-
-
-	var percentArray = new Array();
-	var nameArray = new Array();
-	var stockName = buySellResponse.stockName;
-
-	if (available > 0) {
-		nameArray.push('Available');
-
-		percentArray.push(available);
-	}
-	
-	var i =0;
-	for (i;i< buySellResponse.stockDetailList.length; i++) {
-		var stockDetail = buySellResponse.stockDetailList[i];
-		nameArray.push(stockDetail.userName);
-
-		percentArray.push(stockDetail.stockTotal * stockDetail.percent);
-	}			
-	
-	drawStockDistribution('stock-shares-chart-div', nameArray,
-			percentArray, stockName);
-	
-	
-	
-	
-}
-
 
 
 function sell(stock, amount) {
@@ -425,52 +139,17 @@ function sell(stock, amount) {
 	$('#buy-sell-div').block({
 		message : 'Processing'
 	});
-
-	$.post('/a/sell', {
-		stock : stock,
-		amount : amount
-	}, function(data) {
-		// unblock when data arrives
-		$('#buy-sell-div').unblock();
-
-		$("#total").html(parseInt(data.stockTotal));
-		$("#total-hidden").val(parseInt(data.stockTotal));
-
-		var sold = data.stockTotal * data.stockSold;
-		$("#sold").html(parseInt(sold));
-		$("#sold-hidden").val(parseInt(sold));
-
-		$("#available").html(parseInt((data.stockTotal - sold)));
-		$("#available-hidden").val( parseInt(data.stockTotal - sold));
-
-		$("#cash_value").html("$" + commasep(data.userCash.toFixed(2)));
-		$("#cash-hidden").val(data.userCash);
-		$("#portfolio_value").html(
-				"$" + commasep(data.userPortfolio.toFixed(2)));
-		$("#total_value")
-				.html(
-						"$"
-								+ commasep((data.userCash + data.userPortfolio)
-										.toFixed(2)));
-		
-		$("#user-stock-val").val(
-				parseInt(data.userStock)
-						);
-		
-		$("#user-stock").html(
-				"You have <b>" + commasep(parseInt(data.userStock)) + "</b> of "
-						+ data.stockName);
-		
-		writeBuySellLinks();
-
-		loadPortfolio();
-		loadUserTransactions();
-
-		// update cash on top rank list
-		$('#userOnTopRank').text($("#total_value").text());
-		
-
-		reloadStockDistribution(data);
+	$.ajax({
+		type: 		"get",
+		url: 		"a/sell",	
+		data:		"stock="+stock+"&amount="+amount,
+		success:	function(data) {			
+			$("#buy-sell-section").empty();
+			$("#buy-sell-section").html($(data).html());	
+			
+			loadPortfolio();
+			loadUserTransactions();
+		}
 	});
 }
 
@@ -511,60 +190,16 @@ function setup() {
 	});
 }
 
+
 function toprank() {
-	$("topranktable").empty();
-	var pageParam = $('.active_tnt_link').text();
-	$.getJSON('/toprank?page=' + pageParam , function(data) {
-		$("#topranktable").empty();
-		
-		for ( var i = 0, length = data.length; i < length; i++) {
-			var user = data[i];
-			var tr = $("<tr></tr>");
-			if (i % 2 == 0) {
-				tr.attr('class', 'odd');
-			}
-			$(tr).append(
-					$("<td class=\'rank-number\'>" + user.rank + ". </td>"));
-			$(tr).append(
-					$("<td><img class=\'twuser\' src=\'" + user.pictureUrl
-							+ "\'/></td>"));
-			
-		
-			var profitStr = '';
-			var profitDiff = 0;
-			if (i > 0) {
-
-				profitDiff = user.profit - data[i - 1].profit;
-			}
-							
-			var className = null;
-			var profitPerHour = "$"+ roundedInteger(user.profitPerHour);
-
-			if (user.profitPerHour > 0) {
-
-				profitPerHour = profitPerHour+ "/h &#9650;"
-				if (profitDiff > 0) {
-					className = "green-profit";
-				} else {
-					className = "gray-profit";
-				}
-				
-				profitStr = "<br><div class=\"" + className + "\">" + profitPerHour + "</div>";
-			}else if (user.profitPerHour < 0){
-				profitPerHour = profitPerHour+ "/h &#9660;"
-				profitStr = "<br><div class=\"red-profit\">" + profitPerHour + "</div>";	
-			}
-			
-			$(tr).append(
-					$("<td><a href=\"/user?user=" + user.id + "\" title=\""+user.userName+"&#39;s profile page.\">" + user.userName
-							+ "</a> <br>$"
-							+ commasep((user.cash + user.portfolio).toFixed(2))
-							+ profitStr + '</td>'));
-	
-			$("#topranktable").append(tr);
+	$.ajax({
+		type: 		"get",
+		url: 		"toprank",		
+		success:	function(data) {			
+			$("#topranks").empty();
+			$("#topranks").html($(data).html());		
 		}
 	});
-
 }
 
 function loadBalance() {
@@ -662,37 +297,4 @@ function getDouble(dbl, minval){
 	return pctgStr;
 }
 
-function showBuySell(){
-	$("#stock-distribution-tab").removeClass("youarehere");
-	$("#stock-history-tab").removeClass("youarehere");	
-	$("#buy-sell-tab").addClass("youarehere");
-	
-	$("#stock-share-section").hide();
-	$("#stock-trend-section").hide();
-	$("#buy-sell-section").show();
-	
-}
 
-function showStockDistribution(){
-	$("#stock-history-tab").removeClass("youarehere");
-	$("#buy-sell-tab").removeClass("youarehere");	
-	$("#stock-distribution-tab").addClass("youarehere");
-	
-	$("#buy-sell-section").hide();
-	$("#stock-trend-section").hide();
-	$("#stock-share-section").show();
-
-
-}
-
-function showStockHistory(){
-	$("#stock-distribution-tab").removeClass("youarehere");
-	$("#buy-sell-tab").removeClass("youarehere");
-	$("#stock-history-tab").addClass("youarehere");
-	
-
-	$("#buy-sell-section").hide();
-	$("#stock-share-section").hide();
-	$("#stock-trend-section").show();
-	drawVisualization();
-}

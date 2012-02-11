@@ -1,3 +1,4 @@
+
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
@@ -39,84 +40,70 @@
 <%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
-<%
-	User sessionUser = (User) request.getSession().getAttribute(User.USER);
-	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-	StockMgr stockMgr = inj.getInstance(StockMgr.class);
-	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
-	ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
-	UserMgr userMgr = inj.getInstance(UserMgr.class);
-	User user = null;
-	if (sessionUser != null) {
-		user = userMgr.getUserById(sessionUser.getId());
-	}
-
-	DecimalFormat f = new DecimalFormat("##.00");
-	
-	long id = -1;
-	
-	
-	
-	Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
+	<%
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
 	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);
-
-	StockHistoryData shd = null;
-	List<UserStockDetail> stockDetailList = null;
-
-	if(stock!=null){
-		stockDetailList = portfolioMgr.getStockDistribution(stock.getId());
-
-		shd = stockMgr.getStockHistory(stock.getId());
+	
+	if(quote.length()>0){
+	%>
+<div id="other-search-result">
+			
+			<%
+				ArrayList<SimpleTwitterUser> searchResults = (ArrayList<SimpleTwitterUser>) request.getSession().getAttribute(HomePageServlet.OTHER_SEARCH_RESULTS);
 		
-		
-	}
-	
-
-%>
-
-	
-<div id="dashboard" class="main-div">
-
-
-	<jsp:include page="getQuote.jsp" />
-
-
-	<jsp:include page="stockDetails.jsp" />
-
-
-	
-
-	<div id="hasnofollowers">
-
-		<%
-			if (quote.length() > 0 && stock != null && stock.getTotal() == 0) {
-		%>
-		<div id="dashboard-message-field" style="margin-top: 6px;"
-			class="field-white">
-			<p style="margin-top: 10px; margin-bottom: 10px;">
+				if (quote.length()>0 && searchResults != null && searchResults.size() > 0) {
+			%>
+			
+			<h3>Other Results for "<%=quote%>"</h3>
+			<table class="datatbl" style="margin-top: 10px;">
+				
 				<%
-					out.write(stock.getName() + " has 0 followers. Please try something else.");
+					for (int i = 0; i < searchResults.size();) {
 				%>
-			</p>
+				<tr>
+					<%
+						for (int j = 0; j < 3; j++) {
+									if (i < searchResults.size()) {
+					%>
+
+					<td>
+						<table>
+							<tr>
+								<td><img class="twuser"
+									src="<%=searchResults.get(i).getPictureUrl()%>" />
+								</td>
+								<td><a href='/?stock=<%=searchResults.get(i).getId()%>'
+									title="Loads <%=searchResults.get(i).getScreenName()%>'s stock details">
+										<%
+											out.write(searchResults.get(i).getScreenName());
+										%> </a> <br>
+										<%
+											out.write(Util.commaSep(searchResults.get(i).getFollowerCount()));
+										%>
+								</td>
+
+							</tr>
+						</table>
+					</td>
+					<%
+						} else {
+					%>
+					<td></td>
+					<%
+						}
+									i++;
+								}
+					%>
+				</tr>
+				<%
+					}
+				%>
+			</table>
+			<%
+				}
+			%>
 		</div>
-		<%
-			}
-		%>
-	</div>
-
-
-	<jsp:include page="otherSearchResults.jsp" />
-
-
-	<%
-		if (quote.length() > 0 && stock == null) {
-	%>
-
-	<div id="searchnoresult">Search does not have result</div>
-
-	<%
-		}
-	%>
-
-</div>
+		
+			<%
+				}
+			%>

@@ -16,12 +16,17 @@
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 
 <%
-	HashMap<String,Object> map = (HashMap<String,Object>) request.getAttribute("requestObjects");
-	Stock stock = (Stock) map.get("stock");
-	String quote = (String) map.get("quote");
+	Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
+	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
+	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);
+
+	if (quote == null || quote.length() < 1) {
+
+		quote = quoteDisplay;
+	}
 %>
 	<h3>Dashboard</h3>
-	<div id="quoteholder">
+	<div id="quoteholder" class="main-div">
 	
 		<form action="/" method="post" accept-charset="UTF-8">
 			<input type="text" class="textbox" id="quote" value="<%=quote%>" name="quote" />

@@ -6,7 +6,7 @@
 			type : 'profile',
 			rpp : 5,
 			interval : 30000,
-			width : 240,
+			width : 260,
 			height : 300,
 			theme : {
 				shell : {

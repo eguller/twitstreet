@@ -65,7 +65,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				.getTotal());
 		
 		BuySellResponse bsr = new BuySellResponse(buyer, stock, userStockValue);
-		bsr.setStockDetailList(getStockDistribution(stock.getId()));
+		
 		return bsr;
 
 	}
@@ -122,7 +122,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 			
 			BuySellResponse bsr = new BuySellResponse(seller, stock, userStockValue);
-			bsr.setStockDetailList(getStockDistribution(stock.getId()));
+			
 			return bsr;
 		} else {
 			BuySellResponse bsr = new BuySellResponse(seller, stock, 0);
@@ -278,7 +278,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 				connection = dbMgr.getConnection();
 				ps = connection
 						.prepareStatement("select user_stock_profit(portfolio.user_id, portfolio.stock) as changePerHour, portfolio.capital as capital, stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount, stock.pictureUrl as pictureUrl, percentage " +
-								"from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ? order by (amount-capital) desc, stockName asc ");
+								"from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ? order by changePerHour desc, stockName asc ");
 				ps.setLong(1, user.getId());
 				rs = ps.executeQuery();
 
@@ -320,7 +320,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 							+ "portfolio.percentage as portfolio_percentage, "
 							+ "stock.total as stock_total from portfolio, stock, "
 							+ "users where portfolio.user_id = users.id and "
-							+ "portfolio.stock = stock.id and stock = ?");
+							+ "portfolio.stock = stock.id and stock = ? order by portfolio_percentage desc ");
 			ps.setLong(1, stock);
 			rs = ps.executeQuery();
 

@@ -16,6 +16,11 @@ Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.
 User sessionUser = (User)request.getSession().getAttribute(User.USER);
 PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 UserMgr userMgr = inj.getInstance(UserMgr.class);
+
+
+if(sessionUser==null){
+	return;
+}
 User user = userMgr.getUserById(sessionUser.getId());
 Portfolio portfolio = null;
 if(user != null){
@@ -27,7 +32,7 @@ if(portfolio==null){
 	
 }
 %>
-<div id="portfolio" style="margin-top: 10px;">
+<div id="portfolio" class="main-div">
 	<h3>Portfolio</h3>
 	<table class="datatbl" id="portfolio-table">
 	<% 

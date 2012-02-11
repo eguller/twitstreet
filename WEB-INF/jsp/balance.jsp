@@ -11,7 +11,7 @@ UserMgr userMgr = inj.getInstance(UserMgr.class);
 User user = userMgr.getUserById(sessionUser.getId());
 
 %>
-<div id="balance">
+<div id="balance" class="main-div">
 	<input id="cash-hidden" type="hidden" value="<%=user.getCash()%>" />
 	<h3>Balance</h3>
 	<table class="right_aligned datatbl">

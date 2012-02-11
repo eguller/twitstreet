@@ -1,3 +1,4 @@
+
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
@@ -39,84 +40,63 @@
 <%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
-<%
-	User sessionUser = (User) request.getSession().getAttribute(User.USER);
+	
+	<div id="stock-trend-section" style="display: none;">
+	
+	<%
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
-	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
-	ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
-	UserMgr userMgr = inj.getInstance(UserMgr.class);
-	User user = null;
-	if (sessionUser != null) {
-		user = userMgr.getUserById(sessionUser.getId());
-	}
-
-	DecimalFormat f = new DecimalFormat("##.00");
-	
-	long id = -1;
-	
-	
 	
 	Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
-	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
-	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);
-
 	StockHistoryData shd = null;
-	List<UserStockDetail> stockDetailList = null;
-
+	
 	if(stock!=null){
-		stockDetailList = portfolioMgr.getStockDistribution(stock.getId());
-
+		
 		shd = stockMgr.getStockHistory(stock.getId());
 		
 		
 	}
 	
-
-%>
-
-	
-<div id="dashboard" class="main-div">
-
-
-	<jsp:include page="getQuote.jsp" />
-
-
-	<jsp:include page="stockDetails.jsp" />
-
-
-	
-
-	<div id="hasnofollowers">
-
-		<%
-			if (quote.length() > 0 && stock != null && stock.getTotal() == 0) {
+	if (shd != null && shd.getDateValueMap().size() > 1) {
 		%>
-		<div id="dashboard-message-field" style="margin-top: 6px;"
-			class="field-white">
-			<p style="margin-top: 10px; margin-bottom: 10px;">
-				<%
-					out.write(stock.getName() + " has 0 followers. Please try something else.");
-				%>
-			</p>
-		</div>
-		<%
+	
+
+
+		<div id="stock-trend-chart-div" style="height: 200px; width: 500px;"></div>
+		<script type="text/javascript">
+			var dateArray = new Array();
+			var valueArray = new Array();
+			var stockName =
+		<%out.write("'" + shd.getName() + "';\n");
+
+					LinkedHashMap<Date, Integer> dvm = shd.getDateValueMap();
+
+					for (Date date : dvm.keySet()) {
+						out.write("dateArray.push(new Date(" + date.getTime() + "));\n");
+
+						out.write("valueArray.push(" + dvm.get(date) + ");\n");
+					}%>
+			drawStockHistory('stock-trend-chart-div', dateArray, valueArray,
+					stockName);
+		</script>
+
+	
+
+	<%
+			}else if(stock!=null){%>
+			
+			
+			
+			<div>
+			
+			No history data available for <%=stock.getName()%> yet.
+			
+			</div>
+			
+			
+				<%			
 			}
 		%>
-	</div>
-
-
-	<jsp:include page="otherSearchResults.jsp" />
-
-
-	<%
-		if (quote.length() > 0 && stock == null) {
-	%>
-
-	<div id="searchnoresult">Search does not have result</div>
-
-	<%
-		}
-	%>
-
-</div>
+		
+		</div>
+	

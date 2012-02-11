@@ -15,7 +15,7 @@ public class BuySellResponse {
 	double userCash;
 	double userPortfolio;
 	double userStock;
-	private List<UserStockDetail> stockDetailList = null;
+	
 	
 	public BuySellResponse(User user, Stock stock, int userStockValue){
 		this.stockId = stock.getId();
@@ -78,11 +78,4 @@ public class BuySellResponse {
 		this.userPortfolio = userPortfolio;
 	}
 
-	public List<UserStockDetail> getStockDetailList() {
-		return stockDetailList;
-	}
-
-	public void setStockDetailList(List<UserStockDetail> stockDetailList) {
-		this.stockDetailList = stockDetailList;
-	}
 }

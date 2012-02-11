@@ -2,6 +2,7 @@ package com.twitstreet.servlet;
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +23,7 @@ import com.twitstreet.twitter.TwitterProxyFactory;
 @SuppressWarnings("serial")
 @Singleton
 public class SellServlet extends HttpServlet {
-	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
+	private static Logger logger = Logger.getLogger(SellServlet.class);
 	@Inject UserMgr userMgr;
 	@Inject StockMgr stockMgr;
 	@Inject TwitterProxyFactory twitterProxyFactory = null;
@@ -54,10 +55,14 @@ public class SellServlet extends HttpServlet {
 				Stock stockObj = stockMgr.getStockById(Long.parseLong(stock));
 				if(seller != null && stockObj != null){
 					BuySellResponse buySellResponse = portfolioMgr.sell(seller, stockObj, Integer.parseInt(amount));
-					response.getWriter().write(gson.toJson(buySellResponse));
+					request.setAttribute(HomePageServlet.STOCK, stockObj);
+					getServletContext().getRequestDispatcher(
+							"/WEB-INF/jsp/buySell.jsp").forward(request, response);
 				}
 			} catch (NumberFormatException e) {
 				logger.error("Servlet: Parsin stock id or amount failed", e);
+			} catch (ServletException e) {
+				logger.error("Servlet: Dispatch error", e);
 			}
 		}
 	}

@@ -49,7 +49,12 @@ public class HomePageServlet extends HttpServlet {
 	PortfolioMgr portfolioMgr = null;
 
 	public static final String STOCK = "stock";
+
+	public static final String STOCK_ID = "stockId";
+	public static final String STOCK_DETAIL_LIST = "stockDetailList";
 	public static final String QUOTE = "quote";
+	public static final String QUOTE_DISPLAY = "quotedisplay";
+	
 	public static final String OTHER_SEARCH_RESULTS = "other-search-results";
 
 	public static final String RESULT = "result";
@@ -161,9 +166,11 @@ public class HomePageServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			request.setAttribute(HomePageServlet.QUOTE,
-//					stock.getName());
+			request.setAttribute(HomePageServlet.QUOTE_DISPLAY,
+					stock.getName());
 			request.setAttribute(STOCK, stock);
+
+			request.setAttribute(STOCK_ID,new Long(stock.getId()));
 			request.getSession().setAttribute(HomePageServlet.OTHER_SEARCH_RESULTS,
 					searchResultList);
 		}

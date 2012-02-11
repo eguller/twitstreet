@@ -1,3 +1,4 @@
+
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
@@ -39,84 +40,68 @@
 <%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
-<%
-	User sessionUser = (User) request.getSession().getAttribute(User.USER);
-	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-	StockMgr stockMgr = inj.getInstance(StockMgr.class);
-	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
-	ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
-	UserMgr userMgr = inj.getInstance(UserMgr.class);
-	User user = null;
-	if (sessionUser != null) {
-		user = userMgr.getUserById(sessionUser.getId());
-	}
-
-	DecimalFormat f = new DecimalFormat("##.00");
 	
-	long id = -1;
+	<div id="tweets-of-user-section" style="display: none;">
 	
-	
-	
-	Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
-	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
-	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);
+	<%
+			Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+			StockMgr stockMgr = inj.getInstance(StockMgr.class);
 
-	StockHistoryData shd = null;
-	List<UserStockDetail> stockDetailList = null;
+			Stock stock = null;
+			long stockId = -1;
+			stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
 
-	if(stock!=null){
-		stockDetailList = portfolioMgr.getStockDistribution(stock.getId());
+			if (stock != null) {
+				stockId = stock.getId();
+			} else {
+				try {
+					stockId = (Long) Long.parseLong(request.getParameter("stock"));
+					stock=stockMgr.getStockById(stockId);
+				} catch (Exception ex) {
 
-		shd = stockMgr.getStockHistory(stock.getId());
-		
-		
-	}
-	
-
-%>
-
-	
-<div id="dashboard" class="main-div">
-
-
-	<jsp:include page="getQuote.jsp" />
-
-
-	<jsp:include page="stockDetails.jsp" />
-
-
-	
-
-	<div id="hasnofollowers">
-
-		<%
-			if (quote.length() > 0 && stock != null && stock.getTotal() == 0) {
-		%>
-		<div id="dashboard-message-field" style="margin-top: 6px;"
-			class="field-white">
-			<p style="margin-top: 10px; margin-bottom: 10px;">
-				<%
-					out.write(stock.getName() + " has 0 followers. Please try something else.");
-				%>
-			</p>
-		</div>
-		<%
+				}
 			}
+
+			if (stock!=null) {
 		%>
-	</div>
+	
 
 
-	<jsp:include page="otherSearchResults.jsp" />
-
+	<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
+	<script>
+		new TWTR.Widget({
+			version : 2,
+			type : 'profile',
+			rpp : 5,
+			interval : 30000,
+			width : 500,
+			height : 300,
+			theme : {
+				shell : {
+					background : '#f2f2f2',
+					color : '#000000'
+				},
+				tweets : {
+					background : '#ffffff',
+					color : '#000000',
+					links : '#4183c4'
+				}
+			},
+			features : {
+				scrollbar : false,
+				loop : false,
+				live : false,
+				behavior : 'all'
+			}
+		}).render().setUser('<%=stock.getName()%>').start();
+	</script>
+	
 
 	<%
-		if (quote.length() > 0 && stock == null) {
-	%>
+			} 
+		%>
+			
 
-	<div id="searchnoresult">Search does not have result</div>
-
-	<%
-		}
-	%>
-
-</div>
+		
+		</div>
+	

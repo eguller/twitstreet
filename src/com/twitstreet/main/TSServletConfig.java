@@ -20,6 +20,7 @@ import com.twitstreet.servlet.SellServlet;
 import com.twitstreet.servlet.SetupServlet;
 import com.twitstreet.servlet.SigninServlet;
 import com.twitstreet.servlet.StockDetailsServlet;
+import com.twitstreet.servlet.StockDistributionServlet;
 import com.twitstreet.servlet.TopRankServlet;
 import com.twitstreet.servlet.TransactionServlet;
 import com.twitstreet.servlet.UserProfileServlet;
@@ -64,6 +65,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/a/buy").with(BuyServlet.class);
 				serve("/a/sell").with(SellServlet.class);
 				serve("/toprank").with(TopRankServlet.class);
+				serve("/stockdistribution").with(StockDistributionServlet.class);
 				serve("/portfolio").with(PortfolioServlet.class);
 				serve("/transaction").with(TransactionServlet.class);
 				serve("/balance").with(BalanceServlet.class);

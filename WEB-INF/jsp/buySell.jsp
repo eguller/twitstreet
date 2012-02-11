@@ -45,51 +45,10 @@
 		userStock = portfolioMgr.getStockInPortfolio(user.getId(), stock.getId());
 
 	}
+	
 %>
 
-			<input type="hidden" id="user-stock-val"
-				value="<%=userStock == null ? "" : (int) (userStock.getPercent() * stock.getTotal())%>" />
-			<input type="hidden" id="available-hidden"
-				value="<%=stock == null ? "" : stock.getAvailable()%>" /> <input
-				type="hidden" id="sold-hidden"
-				value="<%=stock == null ? "" : stock.getSold()%>" /> <input
-				type="hidden" id="total-hidden"
-				value="<%=stock == null ? "" : stock.getTotal()%>" />
-					<input type="hidden" id="quote-id"
-		value="<%=stock == null ? "" : stock.getId()%>" />
 				
-
-<div id="stockdetails" class="main-div">
-	
-	
-	<%
-				if (stock != null) {
-			%>
-	<div class="subheader">
-		<h1>
-			<a
-				href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
-				title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page"
-				target="_blank"><%=stock == null ? "" : stock.getName()%></a>
-		</h1>
-		
-		
-		<div id="tabs">
-			<a id="buy-sell-tab" class="youarehere" onClick="showBuySell();">
-				Buy/Sell</a> 
-			<a id="stock-history-tab"
-				onClick="showStockHistory();"> 
-				History</a> 
-			<a id="stock-distribution-tab"
-				onClick="showStockDistribution(<%=stock.getId()%>);">
-				Distribution
-				</a>
-			<a id="tweets-of-user-tab"
-				onClick="showTweetsOfUser();">
-				Tweets
-				</a>
-		</div>
-	</div>
 
 	<div id="buy-sell-section">
 		<div id="userfound"
@@ -113,13 +72,7 @@
 									<td width="36px;"><img class="twuser"
 										src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 										id="dashboard-picture"></td>
-									<!-- 								<td style="text-align: left;" -->
-									<!-- 									id="dashboard-stock-follower-status"><a -->
-									<%-- 							href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>" title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page" --%>
-									<%-- 							target="_blank"><%=stock == null ? "" : stock.getName()%></a>'s --%>
-									<!-- 									follower status</td> -->
-
-									<!-- 								<td width="20%;"></td> -->
+							
 									<td>
 
 										<table class="datatbl">
@@ -194,12 +147,6 @@
 
 
 				</tr>
-
-				<%
-					if (stock == null) {
-							out.write("style='display: none;'");
-						}
-				%>
 				<tr>
 					<td colspan="3" style="text-align: center; padding-top: 10px;">
 						Twitstreet gets 1% commission on every sale!</td>
@@ -270,23 +217,5 @@
 		</div>
 	</div>
 	
-
-	<jsp:include page="stockHistory.jsp" />
-	<jsp:include page="stockDistribution.jsp" />
-
-	<jsp:include page="tweetsOfUser.jsp" />
-
-	<script type="text/javascript">
-		initStockTabs();
-	</script>
-
-
-	<%
-		}
-	%>
-
-
-
-</div>
 
 

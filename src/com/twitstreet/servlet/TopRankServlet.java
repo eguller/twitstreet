@@ -3,6 +3,7 @@ package com.twitstreet.servlet;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,9 @@ import com.twitstreet.session.UserMgr;
 @SuppressWarnings("serial")
 @Singleton
 public class TopRankServlet extends HttpServlet{
+	
+	public static String TOPRANKS_USER_LIST = "topranksuserlist";
+
 	@Inject UserMgr userMgr;
 	@Inject
 	private final Gson gson = null;
@@ -39,6 +43,21 @@ public class TopRankServlet extends HttpServlet{
 		}
 		
 		ArrayList<User> userList = userMgr.getTopRank(page);
-		response.getWriter().write(gson.toJson(userList));
+		
+		userList = (userList==null)? new ArrayList<User>(): userList;
+		
+		request.setAttribute(TOPRANKS_USER_LIST, userList);
+		if (userList.size()>0) {
+			try {
+				getServletContext().getRequestDispatcher(
+						"/WEB-INF/jsp/topranks.jsp").forward(request, response);
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+			
+	//	response.getWriter().write(gson.toJson(userList));
 	}
+		
 }

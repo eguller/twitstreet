@@ -2,6 +2,7 @@ package com.twitstreet.servlet;
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,11 +57,18 @@ public class BuyServlet extends HttpServlet {
 					BuySellResponse buySellResponse = portfolioMgr.buy(
 							buyer, stockObj,
 							Integer.parseInt(amount));
-					response.getWriter().write(gson.toJson(buySellResponse));
+					
+					
+					request.setAttribute(HomePageServlet.STOCK, stockObj);
+					getServletContext().getRequestDispatcher(
+							"/WEB-INF/jsp/buySell.jsp").forward(request, response);
+					//response.getWriter().write(gson.toJson(buySellResponse));
 				}
 			} catch (NumberFormatException e) {
-				logger.error("Servlet: Parsin stock, amount failed. Stock: "
+				logger.error("Servlet: Parsing stock, amount failed. Stock: "
 						+ stock + ", amount: " + amount, e);
+			} catch (ServletException e) {
+				logger.error("Servlet: Dispatch error", e);
 			}
 		}
 

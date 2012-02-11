@@ -3,7 +3,7 @@
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="java.util.ArrayList"%>
-<%@ page import="com.twitstreet.util.Util" %>
+<%@ page import="com.twitstreet.util.Util"%>
 
 <%
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
@@ -20,10 +20,12 @@ if (userCount > UserMgr.MAX_RANK) {
 	pageCount = (userCount / UserMgr.MAX_RANK) + 1;
 }
 %>
-<div id="topranks">
+<div id="topranks" class="main-div">
 	<h3>Ranking</h3>
-	<table class="datatbl" id="topranktable">
-		<%
+
+	
+		<table class="datatbl" id="topranktable">
+			<%
 		
 		
 		for(int i = 0; i < userList.size(); i++) {
@@ -39,21 +41,20 @@ if (userCount > UserMgr.MAX_RANK) {
 				double total = user.getCash() + user.getPortfolio();
 				if (i % 2 == 1) {
 		%>
-					<tr>
-	    		<%
+			<tr>
+				<%
 	    			} else {
 	    		%>
-	    			<tr class="odd">
-	    		<%
+			
+			<tr class="odd">
+				<%
 	    			}
 	    		%>
-						<td class="rank-number"><%=rank%>.</td>
-						<td><img class="twuser" src="<%=user.getPictureUrl()%>"/></td>
-						<td><a href="/user?user=<%=user.getId()%>" title="<%=user.getUserName()%>&#39;s profile page.">
-						<%=user.getUserName()%></a> 
-						<br> $<%=Util.commaSep(total)%>
-						
-						<%
+				<td class="rank-number"><%=rank%>.</td>
+				<td><img class="twuser" src="<%=user.getPictureUrl()%>" /></td>
+				<td><a href="/user?user=<%=user.getId()%>"
+					title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
+					<br> $<%=Util.commaSep(total)%> <%
 								String className = null; 
 								String profitPerHour = "$" ;
 
@@ -76,17 +77,16 @@ if (userCount > UserMgr.MAX_RANK) {
 									out.write("<br><div class=\"red-profit\">" + profitPerHour + "</div>");
 									
 								}
-						%>
-						</td>			
-					</tr>
-		<%
+						%></td>
+			</tr>
+			<%
 			}
 		%>
-	</table>
-	
-			<div id="tnt_pagination">
-		<!-- <span class="disabled_tnt_pagination">Prev</span> -->
-		<%
+		</table>
+
+		<div id="tnt_pagination">
+			<!-- <span class="disabled_tnt_pagination">Prev</span> -->
+			<%
 			for(int i = 1; i <= pageCount; i++) {
 				
 				int start = i*UserMgr.MAX_RANK+1;
@@ -99,16 +99,16 @@ if (userCount > UserMgr.MAX_RANK) {
 				
 				if (i == 1) {
 					%>
-					<a class="active_tnt_link" onclick="retrievePage($(this))"><%=i%></a>
-					<%
+			<a class="active_tnt_link" onclick="retrievePage($(this))"><%=i%></a>
+			<%
 				} else {
 					%>
-					<a href="javascript:void(0)" onclick="retrievePage($(this))"><%=i%></a>
-					<%
+			<a href="javascript:void(0)" onclick="retrievePage($(this))"><%=i%></a>
+			<%
 				}
 			}
 		%>
 			<!--<a href="#forward">Next</a>-->
-	</div>
-
+		</div>
+	
 </div>

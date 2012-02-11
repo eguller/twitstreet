@@ -97,6 +97,36 @@ var drawStockDistributionNameArray = null;
 var drawStockDistributionPercentArray = null;
 var drawStockDistributionStockName = null;
 
+
+function reloadStockDistribution(stockId) {
+	$("#stockDistributionScript").remove();
+	
+	$("#stock-share-section").empty();
+	
+	    
+	$.ajax({
+		type: 		"get",
+		url: 		"stockdistribution",
+		data: 		"stock=" + stockId,
+		success:	function(data) {			
+			 
+			
+			$("#stock-share-section").html($(data).html());
+			 var script = $(data).find("script").prevObject[1].text;
+				
+				eval(script);
+
+			
+		
+		}
+	});
+}
+function redrawStockDistribution(){
+	
+	
+	drawStockDistribution(drawStockDistributionDivId, drawStockDistributionNameArray,
+			drawStockDistributionPercentArray, drawStockDistributionStockName);
+}
 function drawStockDistribution(divId,nameArray,percentArray,stockName) {
 	 drawStockDistributionDivId = divId;
 	  drawStockDistributionNameArray = nameArray;

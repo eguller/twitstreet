@@ -14,7 +14,7 @@ TransactionMgr transactionMgr = inj.getInstance(TransactionMgr.class);
 List<TransactionRecord> transactionRecordList = transactionMgr.queryTransactionRecord(sessionUser.getId());
 
 %>
-<div id="yourtransactions">
+<div id="yourtransactions" class="main-div">
 	<h3>Your Transactions</h3>
 	<table class="datatbl" id="your-transactions-table">
 		<% 
