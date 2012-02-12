@@ -192,28 +192,28 @@ function setup() {
 function loadStock(id){
 	
 	
-	if(objectExists('#stockdetails')){
-	
-
-			blockElementWithMsg('#stockdetails', 'Loading');
-		$.ajax({
-			type : "get",
-			url : "stock",
-			data : "stock=" + id,
-			success : function(data) {
-
-				$("#stockdetails").unblock();
-				$("#stockdetails").empty();
-				$("#stockdetails").html($(data).html());
-			}
-		});
-	}
-	else{
+//	if(objectExists('#stockdetails')){
+//	
+//
+//			blockElementWithMsg('#stockdetails', 'Loading');
+//		$.ajax({
+//			type : "get",
+//			url : "stock",
+//			data : "stock=" + id,
+//			success : function(data) {
+//
+//				$("#stockdetails").unblock();
+//				$("#stockdetails").empty();
+//				$("#stockdetails").html($(data).html());
+//			}
+//		});
+//	}
+//	else{
 		
 		window.location = '/?stock='+id;
 		
-		
-	}
+//		
+//	}
 	
 }
 
