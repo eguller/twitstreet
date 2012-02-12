@@ -72,11 +72,11 @@
 			
 			<%
 			if(user.getProfitPerHour()>0){
-				out.write("<span class=\"green-profit\">$" + Util.commaSep(user.getProfitPerHour())+"/h &#9650" + "</span>");			
+				out.write("<span class=\"green-profit\">" + Util.getRoundedChangePerHourString(user.getProfitPerHour())+ "</span>");			
 			}
 			else if(user.getProfitPerHour()<0){
 				
-				out.write("<span class=\"red-profit\">$" + Util.commaSep(user.getProfitPerHour())+"/h &#9660" + "</span>");
+				out.write("<span class=\"red-profit\">" + Util.getRoundedChangePerHourString(user.getProfitPerHour())+ "</span>");
 			}
 			
 			%>
@@ -88,7 +88,7 @@
 	</table>
 
 </div>
-<div id="userportfolio" style="margin-top: 15px;">
+<div id="userportfolio" class="main-div">
 	<h3><%=user.getUserName()%>'s Portfolio
 	</h3>
 	<table class="datatbl">
@@ -107,24 +107,15 @@
 				<table>
 					<tr>
 						<td><img class="twuser"
-							src="<%=portfolio.getStockInPortfolioList()
-									.get(i).getPictureUrl()%>" />
+							src="<%=stock.getPictureUrl()%>" />
 						</td>
-						<td><a
-							href='/?stock=<%=portfolio.getStockInPortfolioList()
-									.get(i).getStockId()%>' title="<%=portfolio.getStockInPortfolioList().get(i).getStockName()%>&#39;s stock detail page">
+						<td><a href='javascript:void(0)' onclick='loadStock(<%=stock.getStockId()%>)' title="<%=stock.getStockName()%>&#39;s stock detail page">
 								<%
-									out.write(portfolio.getStockInPortfolioList()
-															.get(i).getStockName());
+									out.write(stock.getStockName());
 								%>
 						</a> <br> $<%
- 							out.write(Util.commaSep(portfolio
-			 							.getStockInPortfolioList().get(i)
-			 							.getAmount()) + "&nbsp;("+													
-										Util.commaSep(
-												(100*(Util.roundDouble(stock.getPercentage(),4))
-														))
-							+"%)"); %>
+ 							out.write(Util.commaSep(stock.getAmount()) + "&nbsp;("+ Util.getShareString(stock.getPercentage())
+							+")"); %>
 
  <br>
 								
@@ -135,34 +126,30 @@
 								
 								double profit = 0;
 								
-								double amount = portfolio.getStockInPortfolioList().get(i).getAmount();
-								double capital = portfolio.getStockInPortfolioList().get(i).getCapital();
+								double amount = stock.getAmount();
+								double capital = stock.getCapital();
 								
 								profit = amount - capital;
 								if(profit > 0){
-									out.write("<span class=\"green-light\">$"+Util.commaSep(profit) + "&nbsp; &#9650;</span>"); 
+									out.write("<span class=\"green-light\">"+Util.getProfitString(profit) + "</span>"); 
 								}
 								else if(profit < 0){
-									out.write("<span class=\"red-light\">$"+Util.commaSep(profit) + "&nbsp; &#9660;</span>"); 
+									out.write("<span class=\"red-light\">"+Util.getProfitString(profit) + "</span>"); 
 								}
-								else {
-									out.write("<span>$"+Util.commaSep(profit)+"</span>"); 
-								}
+// 								else {
+// 									out.write("<span>$"+Util.getProfitString(profit)+"</span>"); 
+// 								}
 								%>
 										</td>
 										<td align="right">
 												<%
-												String profitPerHour = "$";
-												profitPerHour = profitPerHour +  Util.roundDouble(stock.getChangePerHour(),2);
+												String profitPerHour =  Util.getChangePerHourString(stock.getChangePerHour());
 												
 												if (stock.getChangePerHour() > 0) {
 				
-													profitPerHour = profitPerHour + "/h &#9650;";
-													
 													out.write("<span class=\"green-profit\">" + profitPerHour + "</span>");
 												}
-												else if (user.getProfitPerHour() < 0){
-													profitPerHour = profitPerHour + "/h &#9660;";
+												else if (stock.getChangePerHour() < 0){
 													out.write("<span class=\"red-profit\">" +  profitPerHour  + "</span>");
 													
 												}
@@ -202,3 +189,38 @@
 <%
 	}
 %>
+
+<div id="usertweets" class="main-div">
+	<h3><%=user.getUserName()%>'s Tweets
+	</h3>
+	<div id="user-tweets">
+	<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
+	<script>
+		new TWTR.Widget({
+			version : 2,
+			type : 'profile',
+			rpp : 5,
+			interval : 30000,
+			width : 500,
+			height : 300,
+			theme : {
+				shell : {
+					background : '#f2f2f2',
+					color : '#000000'
+				},
+				tweets : {
+					background : '#ffffff',
+					color : '#000000',
+					links : '#4183c4'
+				}
+			},
+			features : {
+				scrollbar : false,
+				loop : false,
+				live : false,
+				behavior : 'all'
+			}
+		}).render().setUser('<%=user.getUserName()%>').start();
+	</script>
+</div>
+</div>

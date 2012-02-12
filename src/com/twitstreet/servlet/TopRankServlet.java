@@ -23,6 +23,8 @@ public class TopRankServlet extends HttpServlet{
 	@Inject UserMgr userMgr;
 	@Inject
 	private final Gson gson = null;
+	
+	public static String PAGE = "toprankPage";
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {

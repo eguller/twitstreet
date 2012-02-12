@@ -30,7 +30,7 @@
 	
 		<form action="/" method="post" accept-charset="UTF-8">
 			<input type="text" class="textbox" id="quote" value="<%=quote%>" name="quote" />
-			<input type="submit" value="Get Quote">
+			<input type="submit" id="getQuoteButton" value="Get Quote">
 		</form>
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input
 			type="hidden" id="quote-id"

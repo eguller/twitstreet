@@ -39,7 +39,13 @@
 	Stock stock = null;
 
 	stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
+	if (stock == null) {
+		try {
+			stock = stockMgr.getStockById(Long.valueOf((String) request.getParameter(HomePageServlet.STOCK)));
+		} catch (Exception ex) {
 
+		}
+	}
 	UserStock userStock = null;
 	if (user != null && stock != null) {
 		userStock = portfolioMgr.getStockInPortfolio(user.getId(), stock.getId());
@@ -47,24 +53,15 @@
 	}
 %>
 
-			<input type="hidden" id="user-stock-val"
-				value="<%=userStock == null ? "" : (int) (userStock.getPercent() * stock.getTotal())%>" />
-			<input type="hidden" id="available-hidden"
-				value="<%=stock == null ? "" : stock.getAvailable()%>" /> <input
-				type="hidden" id="sold-hidden"
-				value="<%=stock == null ? "" : stock.getSold()%>" /> <input
-				type="hidden" id="total-hidden"
-				value="<%=stock == null ? "" : stock.getTotal()%>" />
-					<input type="hidden" id="quote-id"
-		value="<%=stock == null ? "" : stock.getId()%>" />
-				
-
+	
 <div id="stockdetails" class="main-div">
 	
 	
+				
+	
 		<%
-		if (stock != null) {
-		%>
+					if (stock != null) {
+				%>
 		
 	<div class="subheader">
 		<h1>

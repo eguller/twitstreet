@@ -38,11 +38,11 @@ public class StockDetailsServlet extends HttpServlet {
 		
 		if (user != null) {
 			getServletContext().getRequestDispatcher(
-			"/WEB-INF/jsp/stockAuth.jsp?stock="+stockIdStr).forward(request, response);
+			"/WEB-INF/jsp/stockDetails.jsp").forward(request, response);
 		}
 		else{
 			getServletContext().getRequestDispatcher(
-			"/WEB-INF/jsp/stockUnAuth.jsp?stock="+stockIdStr).forward(request, response);
+			"/WEB-INF/jsp/stockDetails.jsp").forward(request, response);
 		}
 	}
 	public void doPost(HttpServletRequest request, HttpServletResponse response)

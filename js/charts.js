@@ -33,31 +33,32 @@ function setStockHistoryData(divId, dateArray, valueArray, stockName){
 	  
 }	
 
-function drawStockHistory(divId, dateArray, valueArray, stockName){
-	
-	  drawStockHistoryDivId = divId;
-	  drawStockHistoryDateArray = dateArray;
-	  drawStockHistoryValueArray = valueArray;
-	  drawStockHistoryStockName = stockName;
-	  
-	
-	  
-	  var data = new google.visualization.DataTable();
-	  data.addColumn('datetime', 'Date');
-	  data.addColumn('number', stockName);
 
-	  data.addRows(dateArray.length);
-	  
-	  var i=0;
-	  
-	  for(i;i<dateArray.length; i++){
-		  
-		  data.setValue(i, 0, dateArray[i]);
-		  data.setValue(i, 1, valueArray[i]);
-		  
-	  }
-	var div = document.getElementById(divId);
 
+function drawStockHistory(divId, dateArray, valueArray, stockName) {
+
+	drawStockHistoryDivId = divId;
+	drawStockHistoryDateArray = dateArray;
+	drawStockHistoryValueArray = valueArray;
+	drawStockHistoryStockName = stockName;
+
+	if (dateArray != null && dateArray.length > 0) {
+
+		var data = new google.visualization.DataTable();
+		data.addColumn('datetime', 'Date');
+		data.addColumn('number', stockName);
+
+		data.addRows(dateArray.length);
+
+		var i = 0;
+
+		for (i; i < dateArray.length; i++) {
+
+			data.setValue(i, 0, dateArray[i]);
+			data.setValue(i, 1, valueArray[i]);
+
+		}
+		var div = document.getElementById(divId);
 
 		var annotatedtimeline = new google.visualization.AnnotatedTimeLine(div);
 		annotatedtimeline.draw(data, {
@@ -65,12 +66,12 @@ function drawStockHistory(divId, dateArray, valueArray, stockName){
 			// 'colors': ['blue', 'red', '#0000bb'], // The colors to be used
 			'displayAnnotations' : true,
 			'displayExactValues' : true, // Do not truncate values (i.e.
-											// using K suffix)
+			// using K suffix)
 			'displayRangeSelector' : false, // Do not sow the range selector
 			'displayZoomButtons' : true, // DO not display the zoom buttons
 			'fill' : 30, // Fill the area below the lines with 20% opacity
 			'displayLegendDots' : true,
-			 'legendPosition': 'newRow', // Can be sameRow
+			'legendPosition' : 'newRow', // Can be sameRow
 			// 'max': 35000, // Override the automatic default
 			// 'min': 30000, // Override the automatic default
 			// 'scaleColumns': [0], // Have two scales, by the first and second
@@ -83,11 +84,7 @@ function drawStockHistory(divId, dateArray, valueArray, stockName){
 		// to blame)
 		});
 
-
-
-	  
-
-	
+	}
 
 }
 
@@ -101,10 +98,10 @@ var drawStockDistributionStockName = null;
 function reloadStockDistribution(stockId) {
 	
 	
-	if ($('#stock-share-section').hasClass('blockUI'))
+	if ($('#tabs').hasClass('blockUI'))
 		return;
 	
-	$('##stock-share-section').block({
+	$('#tabs').block({
 		message : 'Loading'
 	});
 	    
@@ -113,7 +110,7 @@ function reloadStockDistribution(stockId) {
 		url: 		"stockdistribution",
 		data: 		"stock=" + stockId,
 		success:	function(data) {			
-			$("#stock-share-section").unblock();
+			$('#tabs').unblock();
 			$("#stock-share-section").empty();
 			$("#stock-share-section").html($(data).html());
 			 var script = $(data).find("script").prevObject[1].text;

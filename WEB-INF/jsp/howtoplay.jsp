@@ -1,4 +1,4 @@
-<div id="howtoplay">
+<div id="howtoplay" class="main-div">
 	<h3>How to play ?</h3>
 	<p>Twitstreet is a stock exchange game. But in this game we are
 		buying and selling followers of twitter users.</p>

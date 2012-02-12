@@ -78,7 +78,6 @@
 	
 <div id="dashboard" class="main-div">
 
-
 	<jsp:include page="getQuote.jsp" />
 
 
@@ -113,7 +112,7 @@
 		if (quote.length() > 0 && stock == null) {
 	%>
 
-	<div id="searchnoresult">Search does not have result</div>
+	<div id="searchnoresult"><p>No results found.</p></div>
 
 	<%
 		}

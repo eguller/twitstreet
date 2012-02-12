@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.servlet.TopRankServlet"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
 <%@ page import="com.twitstreet.session.UserMgr"%>
@@ -14,31 +15,53 @@ int userCount = userMgr.count();
 
 String pageParam = request.getParameter("page");
 
+if (pageParam == null || pageParam == ""){
+	
+	pageParam = (String) request.getSession().getAttribute(TopRankServlet.PAGE);
+}
 int currPage = 1;
 if (pageParam != null && pageParam != "") {
 	// get pageNumber from param
-	currPage = Integer.parseInt(pageParam);
-	// check again
+	try{
+		
+		currPage = Integer.parseInt(pageParam);
+	}catch(Exception ex){		
+		currPage = 1;		
+	}
 	if (currPage < 1) {
 		currPage = 1;
 	}
+	// check again
+	
 }
+
+request.getSession().setAttribute(TopRankServlet.PAGE,String.valueOf(currPage));
+
 int pageCount = 1;
 ArrayList<User> userList = userMgr.getTopRank(currPage);
 
 userList = (userList==null)? new ArrayList<User>(): userList;
 
 // if our users more than one page
-if (userCount > UserMgr.MAX_RANK) {
+int maxRank = userMgr.getRecordPerPage();
+if (userCount > maxRank) {
 	// we should add 1 because of integer conversion
-	pageCount = (userCount / UserMgr.MAX_RANK) + 1;
+	pageCount = (userCount / maxRank) + 1;
 }
 %>
 <div id="topranks" class="main-div">
 	<h3>Ranking</h3>
 
-	
-		<table class="datatbl" id="topranktable">
+	<jsp:include page="toprankPagination.jsp">
+
+		<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+		<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+		<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+
+	</jsp:include>
+
+
+	<table class="datatbl" id="topranktable">
 			<%
 		
 		
@@ -53,41 +76,42 @@ if (userCount > UserMgr.MAX_RANK) {
 
 				}
 				double total = user.getCash() + user.getPortfolio();
+				String clssNm = "odd";
+				
 				if (i % 2 == 1) {
+					clssNm ="";
+				}
+				
+				String style = "";
+				if(sessionUser!=null && sessionUser.getId() == user.getId()){
+					
+					style = "border:solid 3px #DDD";
+					
+				}
+				
 		%>
-			<tr>
-				<%
-	    			} else {
-	    		%>
 			
-			<tr class="odd">
-				<%
-	    			}
-	    		%>
+			<tr style="<%=style%>" class="<%=clssNm%>">
+				
 				<td class="rank-number"><%=user.getRank()%>.</td>
 				<td><img class="twuser" src="<%=user.getPictureUrl()%>" /></td>
 				<td><a href="/user?user=<%=user.getId()%>"
 					title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
 					<br> $<%=Util.commaSep(total)%> <%
 								String className = null; 
-								String profitPerHour = "$" ;
+								String profitPerHour = Util.getRoundedChangePerHourString(user.getProfitPerHour());
 
 								if (user.getProfitPerHour() > 0) {
 
-									profitPerHour = profitPerHour + (int) (user.getProfitPerHour()+1)+"/h &#9650;";
 									if (profitDiff > 0) {
 										className= "green-profit";
-										
-
 									} else {
-										className= "gray-profit";
-										
+										className= "gray-profit";										
 									}
 									
 									out.write("<br><div class=\""+className+"\">" + profitPerHour + "</div>");
 								}
 								else if (user.getProfitPerHour() < 0){
-									profitPerHour = profitPerHour + (int) (user.getProfitPerHour()-1)+"/h &#9660;";
 									out.write("<br><div class=\"red-profit\">" + profitPerHour + "</div>");
 									
 								}
@@ -98,31 +122,13 @@ if (userCount > UserMgr.MAX_RANK) {
 		%>
 		</table>
 
-		<div id="tnt_pagination">
-			<!-- <span class="disabled_tnt_pagination">Prev</span> -->
-			<%
-			for(int i = 1; i <= pageCount; i++) {
-				
-				int start = i*UserMgr.MAX_RANK+1;
-				int stop = (i+1)*UserMgr.MAX_RANK;
-				
-				if(stop>userCount){
-					
-					stop = userCount;
-				}
-				
-				if (i == currPage) {
-					%>
-			<a class="active_tnt_link" onclick="retrievePage($(this))"><%=i%></a>
-			<%
-				} else {
-					%>
-			<a href="javascript:void(0)" onclick="retrievePage($(this))"><%=i%></a>
-			<%
-				}
-			}
-		%>
-			<!--<a href="#forward">Next</a>-->
-		</div>
+
+	<jsp:include page="toprankPagination.jsp">
+
+		<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+		<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+		<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+
+	</jsp:include>
 	
 </div>

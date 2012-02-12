@@ -5,7 +5,6 @@ import com.twitstreet.db.data.User;
 
 public interface UserMgr {
 	
-	public static final int MAX_RANK = 20;
 
     /**
      * Return user by given twitter id
@@ -13,6 +12,7 @@ public interface UserMgr {
      * @return - user details.
      */
     public User getUserById(long userId);
+	public int getRecordPerPage();
 
 
 	public void saveUser(User user);

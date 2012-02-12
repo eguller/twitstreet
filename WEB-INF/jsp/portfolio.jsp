@@ -46,19 +46,15 @@ if(portfolio==null){
 			%>
 			
 				<td>
-					<table>
+					<table class="datatbl">
 						<tr>
 							<td>
 								<img class="twuser" src="<%=stock.getPictureUrl()%>"/>
 							</td>
 							<td>
-								<a href='/?stock=<%=stock.getStockId() %>' title="Loads <%=stock.getStockName() %>'s stock details"><% out.write(stock.getStockName()); %></a>
+								<a href='javascript:void(0)' onclick='loadStock(<%=stock.getStockId() %>)' title="Loads <%=stock.getStockName() %>'s stock details"><% out.write(stock.getStockName()); %></a>
 								<br>
-								$<% out.write(Util.commaSep(stock.getAmount()) + "&nbsp;("+													
-													Util.commaSep(
-															(100*(Util.roundDouble(stock.getPercentage(),4))
-																	))
-													+"%)"); %>
+								$<% out.write(Util.commaSep(stock.getAmount()) + "&nbsp;("+Util.getShareString(stock.getPercentage())+")"); %>
 								<br>							
 								<table class="portfolio-stock-tbl">
 									<tr>
@@ -72,10 +68,10 @@ if(portfolio==null){
 											
 											profit = amount - capital;
 											if(profit > 0){
-												out.write("<span class=\"green-light\">$"+Util.commaSep(profit) + "</span>"); 
+												out.write("<span class=\"green-light\">"+Util.getProfitString(profit) + "</span>"); 
 											}
 											else if(profit < 0){
-												out.write("<span class=\"red-light\">$"+Util.commaSep(profit) + "</span>"); 
+												out.write("<span class=\"red-light\">"+Util.getProfitString(profit) + "</span>"); 
 											}
 											else {
 												out.write("<span></span>"); 
@@ -84,19 +80,12 @@ if(portfolio==null){
 										</td>
 										<td align="right">
 												<%
-												String profitPerHour = "$";
-												profitPerHour = profitPerHour + Util.roundDouble(stock.getChangePerHour(),2);
-												
+												String profitPerHour = Util.getChangePerHourString(stock.getChangePerHour());
 												if (stock.getChangePerHour() > 0) {
-				
-													profitPerHour = profitPerHour + "/h &#9650;";
-													
 													out.write("<span class=\"green-profit\">" + profitPerHour + "</span>");
 												}
-												else if (user.getProfitPerHour() < 0){
-													profitPerHour = profitPerHour + "/h &#9660;";
+												else if (stock.getChangePerHour() < 0){
 													out.write("<span class=\"red-profit\">" +  profitPerHour  + "</span>");
-													
 												}
 												%>
 										</td>

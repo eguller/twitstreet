@@ -41,7 +41,7 @@
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
 
-<div id="stock-share-section" style="display: none;">
+<div id="stock-share-section" style="display: none;" >
 
 
 	<%
@@ -145,7 +145,7 @@
 				title="<%=stockDetail.getUserName()%>&#39;s user profile page"><%=stockDetail.getUserName()%></a>
 			</td>
 			<td>$<%=Util.commaSep((int) (stockDetail.getPercent() * stockDetail.getStockTotal()))%></td>
-			<td><%=f.format(stockDetail.getPercent() * 100 > 100 ? 100 : stockDetail.getPercent() * 100)%>%</td>
+			<td><%=Util.getShareString(stockDetail.getPercent()) %></td>
 		</tr>
 		<%
 				i++;

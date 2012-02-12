@@ -23,6 +23,8 @@ public class UserMgrImpl implements UserMgr {
 	DBMgr dbMgr;
 	@Inject ConfigMgr configMgr;
 	@Inject GroupMgr groupMgr;
+	
+	private static int MAX_RECORD_PER_PAGE = 20;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 
 	public User getUserById(long id) {
@@ -319,7 +321,8 @@ public class UserMgrImpl implements UserMgr {
 	public ArrayList<User> getTopRank(int pageNumber) {
 		
 		// i.e limit : 17, 17
-		String limit = ((pageNumber - 1) * UserMgr.MAX_RANK ) + ", " + UserMgr.MAX_RANK;
+		int maxRank = getRecordPerPage();
+		String limit = ((pageNumber - 1) *  maxRank) + ", " + maxRank;
 		
 		ArrayList<User> userList = new ArrayList<User>(100);
 		Connection connection = null;
@@ -382,5 +385,9 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 		return count;
+	}
+	@Override
+	public int getRecordPerPage() {
+		return MAX_RECORD_PER_PAGE;
 	}
 }

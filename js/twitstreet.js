@@ -189,21 +189,49 @@ function setup() {
 		}
 	});
 }
+function loadStock(id){
+	
+	
+	if(objectExists('#stockdetails')){
+	
 
+			blockElementWithMsg('#stockdetails', 'Loading');
+		$.ajax({
+			type : "get",
+			url : "stock",
+			data : "stock=" + id,
+			success : function(data) {
+
+				$("#stockdetails").unblock();
+				$("#stockdetails").empty();
+				$("#stockdetails").html($(data).html());
+			}
+		});
+	}
+	else{
+		
+		window.location = '/?stock='+id;
+		
+		
+	}
+	
+}
 
 function toprank() {
-
-	var pageParam = $('.active_tnt_link').text();
+	var pageParam = $('.toprank-current-page:first').val();
 	$.ajax({
 		type: 		"get",
 		url: 		"toprank",
 		data:		"page="+pageParam,
-		success:	function(data) {			
+		success:	function(data) {	
+			
+			$("#topranks").unblock();
 			$("#topranks").empty();
 			$("#topranks").html($(data).html());		
 		}
 	});
 }
+
 
 function loadBalance() {
 	$.post('/balance', {
@@ -229,7 +257,7 @@ function loadBalance() {
 	});
 }
 
-function retrievePage(pageElement) {
+function retrievePage(pageElement, page) {
 	// is this clicked one ?
 	if (pageElement.attr("class") != 'active_tnt_link') {
 		// make previous page number clickable
@@ -242,10 +270,24 @@ function retrievePage(pageElement) {
 		pageElement.attr('class','active_tnt_link');
 		// remove href
 		pageElement.removeAttr("href");
+	
 		
+		blockElementWithMsg('#topranks', 'Loading')
+	
+		
+		 $('.toprank-current-page').val(page);
 		// finally load data
 		toprank();
 	}
+}
+function blockElementWithMsg(elementId,msg){
+	if ($(elementId).hasClass('blockUI'))
+		return;
+	// block element
+	$(elementId).block({
+		message : msg
+	});
+	
 }
 
 function commasep(nStr) {
@@ -260,7 +302,6 @@ function commasep(nStr) {
 	}
 	return x1 + x2;
 }
-
 
 function getNoRecordsFound() {
 	
@@ -300,4 +341,6 @@ function getDouble(dbl, minval){
 	return pctgStr;
 }
 
-
+function objectExists(id){
+	return $(id).length > 0;
+}

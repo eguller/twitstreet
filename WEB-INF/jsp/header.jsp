@@ -18,7 +18,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script src="/js/jquery-corner.js"></script>
 <script src="/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
+<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
 
 <script src="/js/twitstreet.js"></script>
 <script src="/js/stockTabs.js"></script>
