@@ -68,21 +68,38 @@
 						<div class="field-white">
 							<table class="datatbl">
 								<tr>
-									<td width="36px;"><img class="twuser"
-										src="<%=stock == null ? "" : stock.getPictureUrl()%>"
-										id="dashboard-picture"></td>
+								
 							
 									<td>
 
+
+
+<%
+boolean changePerHourAvailable = stock != null && stock.getChangePerHour() != 0;
+int col = 3;
+if(changePerHourAvailable){
+	col = 4;
+}
+	
+%>
 										<table class="datatbl">
 											<tr>
 												<!--class="thead"-->
-												<td style="width: 25%; text-align: center;"><span
+												<td style="width: <%=100/col%>%; text-align: center;"><span
 													class="green-light"><b>Available</b></span></td>
-												<td style="width: 25%; text-align: center;"><span
+												<td style="width: <%=100/col%>%; text-align: center;"><span
 													class="red-light"><b>Sold</b></span></td>
-												<td style="width: 25%; text-align: center;"><b>Total</b></td>
-												<td style="width: 25%; text-align: center;"></td>
+												<td style="width: <%=100/col%>%; text-align: center;"><b>Total</b></td>
+												
+												<%
+													if (changePerHourAvailable) {
+															
+												%>
+													
+												<td style="width: <%=100/col%>%; text-align: center;"></td>
+												<%
+													}	
+												%>
 											</tr>
 											<tr>
 												<td id="available" style="width: 25%; text-align: center;">
@@ -106,26 +123,37 @@
 														}
 													%>
 												</td>
-											<td id="changePerHour"
-												style="width: 25%; text-align: center;">
-												<%
-													if (stock != null && stock.getChangePerHour() != 0) {
-														int cph = stock.getChangePerHour();
-														String str = Util.getFollowerChangePerHourString(cph,stock.getTotal());
-														if (stock.getChangePerHour() > 0) {
-
-															out.write("<span class=\"green-profit\">" + str + "</span>");
-														} else if (stock.getChangePerHour() < 0) {
-															out.write("<span class=\"red-profit\">" + str + "</span>");
-
-														}
-
-													}
+												
+													<%
+													if (changePerHourAvailable) {
+															
 												%>
+													<td id="changePerHour"
+													style="width: 25%; text-align: center;">
+													<%
+														if (stock != null && stock.getChangePerHour() != 0) {
+															int cph = stock.getChangePerHour();
+															String str = Util.getFollowerChangePerHourString(cph,stock.getTotal());
+															if (stock.getChangePerHour() > 0) {
+	
+																out.write("<span class=\"green-profit\">" + str + "</span>");
+															} else if (stock.getChangePerHour() < 0) {
+																out.write("<span class=\"red-profit\">" + str + "</span>");
+	
+															}
+	
+														}
+													%>
+	
+	
+												</td>
 
-
-											</td>
-										</tr>
+												<%
+													}	
+												%>
+												
+												
+																						</tr>
 										</table>
 
 									</td>
@@ -134,7 +162,17 @@
 						</div>
 					</td>
 				</tr>
-
+				
+<!-- 				<tr> -->
+<!-- 					<td colspan="3" style="text-align: center; padding-top: 10px;"> -->
+	
+<!-- 						<div id="dashboard-message-field" style="margin-top: 6px;" -->
+<!-- 							class="field-white"></div> -->
+	
+<!-- 					</td> -->
+	
+<!-- 				</tr> -->
+				
 				<tr>
 					<td colspan="3" style="text-align: center; padding-top: 10px;">
 

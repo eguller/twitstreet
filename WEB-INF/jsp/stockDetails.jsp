@@ -60,35 +60,40 @@
 				
 	
 		<%
-					if (stock != null) {
-				%>
+										if (stock != null) {
+									%>
 		
 	<div id="stock-details-menu" class="subheader">
-		<h1>
-			<a
-				href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
-				title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page"
-				target="_blank"><%=stock == null ? "" : stock.getName()%></a>
-		</h1>
-		
-		
-		<div id="tabs">
-			<a id="buy-sell-tab" class="youarehere" onClick="showBuySell();">
-				Buy/Sell</a> 
-			<a id="stock-history-tab"
-				onClick="showStockHistory();"> 
-				History</a> 
-			<a id="stock-distribution-tab"
-				onClick="showStockDistribution(<%=stock.getId()%>);">
-				Distribution
-				</a>
-			<a id="tweets-of-user-tab"
-				onClick="showTweetsOfUser();">
-				Tweets
-				</a>
-		</div>
-	</div>
 
+			
+		<table class="datatbl">
+			<tr>
+				<td>
+					<img class="twuser"
+					src="<%=stock == null ? "" : stock.getPictureUrl()%>"
+					id="dashboard-picture"></td>
+				<td>
+					<h1>
+						<a href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
+							title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page"
+							target="_blank"><%=stock == null ? "" : stock.getName()%></a>
+					</h1>
+				</td>
+				<td style="vertical-align: bottom;">
+					<div id="tabs">
+						<a id="buy-sell-tab" class="youarehere" onClick="showBuySell();">
+							Buy/Sell</a> <a id="stock-history-tab" onClick="showStockHistory();">
+							History</a> <a id="stock-distribution-tab"
+							onClick="showStockDistribution(<%=stock.getId()%>);">
+							Distribution </a> <a id="tweets-of-user-tab"
+							onClick="showTweetsOfUser();"> Tweets </a>
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+	</div>
+<br>
 	<div id="stock-details-screen">
 
 		<jsp:include page="buySell.jsp" />

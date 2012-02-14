@@ -34,20 +34,31 @@
 
 	}
 %>
+<div id="get-quote-div">
+
+	
 	<h3>Dashboard</h3>
 	<div id="quoteholder" class="main-div">
-	
+
 		<div>
-			<input type="text" class="textbox" id="quote" value="<%=quote%>" name="quote" />
-			<input type="button" id="getQuoteButton" onclick="getQuote($('#quote').val())" value="Get Quote">
+			<input type="text" class="textbox" id="quote" value="<%=quote%>"
+				name="quote" /> <input type="button" id="getQuoteButton"
+				onclick="getQuote($('#quote').val())" value="Get Quote">
 		</div>
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input
 			type="hidden" id="quote-id"
 			value="<%=stock == null ? "" : stock.getId()%>" />
 	</div>
-	
-	
-	
-	
-	
-	
+
+	<script type="text/javascript">
+		$("#quote").keyup(function(event) {
+			if (event.keyCode == 13) {
+				$("#getQuoteButton").click();
+			}
+		});
+	</script>
+
+
+</div>
+
+
