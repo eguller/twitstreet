@@ -63,7 +63,7 @@
 					if (stock != null) {
 				%>
 		
-	<div class="subheader">
+	<div id="stock-details-menu" class="subheader">
 		<h1>
 			<a
 				href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
@@ -89,19 +89,15 @@
 		</div>
 	</div>
 
-	
-	
-	<jsp:include page="buySell.jsp" />
-	<jsp:include page="stockHistory.jsp" />
-	<jsp:include page="stockDistribution.jsp" />
+	<div id="stock-details-screen">
 
-	<jsp:include page="tweetsOfUser.jsp" />
+		<jsp:include page="buySell.jsp" />
+		<jsp:include page="stockHistory.jsp" />
+		<jsp:include page="stockDistribution.jsp" />
 
-	<script type="text/javascript">
-		initStockTabs();
-	</script>
+		<jsp:include page="tweetsOfUser.jsp" />
 
-
+	</div>
 	<%
 		}
 	%>

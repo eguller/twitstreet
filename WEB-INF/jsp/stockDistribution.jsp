@@ -86,7 +86,7 @@
 	<div id="stock-shares-chart-div"></div>
 
 	<script id="stockDistributionScript" type="text/javascript">
-		drawStockDistributionDivId = 'stock-shares-chart-div';
+		drawStockDistributionDivId = '#stock-shares-chart-div';
 		drawStockDistributionPercentArray = new Array();
 		drawStockDistributionNameArray = new Array();
 		drawStockDistributionStockName =

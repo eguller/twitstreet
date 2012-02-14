@@ -43,19 +43,22 @@ a {
 	text-decoration: none;
 	font-weight: bolder;
 }
+/* .twtr-hd h3 { */
+/* 	border-style: none; */
+/* } */
+/* .twtr-bd { */
+/* 	font-family: 'Trebuchet MS', sans-serif; */
+/* } */
 
-.twtr-bd {
-	font-family: 'Trebuchet MS', sans-serif;
-}
+/* .twtr-hd { */
+/* 	font-family: 'Trebuchet MS', sans-serif; */
+/* } */
 
-.twtr-hd {
-	font-family: 'Trebuchet MS', sans-serif;
-}
-
-.twtr-ft {
-	font-family: 'Trebuchet MS', sans-serif;
-}
-
+/* .twtr-ft { */
+/* 	font-family: 'Trebuchet MS', sans-serif; */
+/* } */
+.twtr-hd { display: none; }
+.twtr-ft { display: none; }
 /* ------------------------------
 PAGE STRUCTURE
 ------------------------------ */
@@ -357,9 +360,7 @@ margin-bottom: 20px;
 	font-size: 16px;
 }
 
-.twtr-hd h3 {
-	border-style: none;
-}
+
 
 .tnt_pagination {
 	display: block;
