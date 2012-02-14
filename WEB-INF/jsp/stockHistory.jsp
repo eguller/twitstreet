@@ -67,7 +67,7 @@
 					
 					
 					%>
-			drawStockHistory('stock-trend-chart-div', dateArray, valueArray,
+			drawStockHistory('#stock-trend-chart-div', dateArray, valueArray,
 					stockName);
 		</script>
 

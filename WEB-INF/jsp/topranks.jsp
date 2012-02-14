@@ -51,84 +51,84 @@ if (userCount > maxRank) {
 %>
 <div id="topranks" class="main-div">
 	<h3>Ranking</h3>
-
-	<jsp:include page="toprankPagination.jsp">
-
-		<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
-		<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-		<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-
-	</jsp:include>
-
-
-	<table class="datatbl" id="topranktable">
-			<%
-		
-		
-		for(int i = 0; i < userList.size(); i++) {
-				
-				User user = userList.get(i);
-
-				double profitDiff = 0;
-				if (i > 0) {
-					User prevUser = userList.get(i - 1);
-					profitDiff = user.getProfit() - prevUser.getProfit();
-
-				}
-				double total = user.getCash() + user.getPortfolio();
-				String clssNm = "odd";
-				
-				if (i % 2 == 1) {
-					clssNm ="";
-				}
-				
-				String style = "";
-				if(sessionUser!=null && sessionUser.getId() == user.getId()){
-					
-					style = "border:solid 3px #DDD";
-					
-				}
-				
-		%>
-			
-			<tr style="<%=style%>" class="<%=clssNm%>">
-				
-				<td class="rank-number"><%=user.getRank()%>.</td>
-				<td><img class="twuser" src="<%=user.getPictureUrl()%>" /></td>
-				<td><a href="/user?user=<%=user.getId()%>"
-					title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
-					<br> $<%=Util.commaSep(total)%> <%
-								String className = null; 
-								String profitPerHour = Util.getRoundedChangePerHourString(user.getProfitPerHour());
-
-								if (user.getProfitPerHour() > 0) {
-
-									if (profitDiff > 0) {
-										className= "green-profit";
-									} else {
-										className= "gray-profit";										
-									}
-									
-									out.write("<br><div class=\""+className+"\">" + profitPerHour + "</div>");
-								}
-								else if (user.getProfitPerHour() < 0){
-									out.write("<br><div class=\"red-profit\">" + profitPerHour + "</div>");
-									
-								}
-						%></td>
-			</tr>
-			<%
-			}
-		%>
-		</table>
-
-
-	<jsp:include page="toprankPagination.jsp">
-
-		<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
-		<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-		<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-
-	</jsp:include>
+	<div id="topranks-loading-div">
+		<jsp:include page="toprankPagination.jsp">
 	
+			<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+			<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+			<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+	
+		</jsp:include>
+	
+	
+		<table class="datatbl" id="topranktable">
+				<%
+			
+			
+			for(int i = 0; i < userList.size(); i++) {
+					
+					User user = userList.get(i);
+	
+					double profitDiff = 0;
+					if (i > 0) {
+						User prevUser = userList.get(i - 1);
+						profitDiff = user.getProfit() - prevUser.getProfit();
+	
+					}
+					double total = user.getCash() + user.getPortfolio();
+					String clssNm = "odd";
+					
+					if (i % 2 == 1) {
+						clssNm ="";
+					}
+					
+					String style = "";
+					if(sessionUser!=null && sessionUser.getId() == user.getId()){
+						
+						style = "border:solid 3px #DDD";
+						
+					}
+					
+			%>
+				
+				<tr style="<%=style%>" class="<%=clssNm%>">
+					
+					<td class="rank-number"><%=user.getRank()%>.</td>
+					<td><img class="twuser" src="<%=user.getPictureUrl()%>" /></td>
+					<td><a href="javascript:void(0)" onclick="loadUserProfile(<%=user.getId()%>)"
+						title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
+						<br> $<%=Util.commaSep(total)%> <%
+									String className = null; 
+									String profitPerHour = Util.getRoundedChangePerHourString(user.getProfitPerHour());
+	
+									if (user.getProfitPerHour() > 0) {
+	
+										if (profitDiff > 0) {
+											className= "green-profit";
+										} else {
+											className= "gray-profit";										
+										}
+										
+										out.write("<br><div class=\""+className+"\">" + profitPerHour + "</div>");
+									}
+									else if (user.getProfitPerHour() < 0){
+										out.write("<br><div class=\"red-profit\">" + profitPerHour + "</div>");
+										
+									}
+							%></td>
+				</tr>
+				<%
+				}
+			%>
+			</table>
+	
+	
+		<jsp:include page="toprankPagination.jsp">
+	
+			<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+			<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+			<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+	
+		</jsp:include>
+	</div>
 </div>

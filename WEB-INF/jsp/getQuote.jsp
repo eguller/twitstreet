@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.servlet.UserProfileServlet"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
 <%@page import="java.util.ArrayList"%>
@@ -20,25 +21,44 @@
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
 	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);
 
+	User user = (User) request.getAttribute(User.USER);
+
 	if (quote == null || quote.length() < 1) {
 
 		quote = quoteDisplay;
 	}
+	if (quote == null || quote.length() < 1) {
+		if (user != null) {
+			quote = user.getUserName();
+		}
+
+	}
 %>
+<div id="get-quote-div">
+
+	
 	<h3>Dashboard</h3>
 	<div id="quoteholder" class="main-div">
-	
-		<form action="/" method="post" accept-charset="UTF-8">
-			<input type="text" class="textbox" id="quote" value="<%=quote%>" name="quote" />
-			<input type="submit" id="getQuoteButton" value="Get Quote">
-		</form>
+
+		<div>
+			<input type="text" class="textbox" id="quote" value="<%=quote%>"
+				name="quote" /> <input type="button" id="getQuoteButton"
+				onclick="getQuote($('#quote').val())" value="Get Quote">
+		</div>
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input
 			type="hidden" id="quote-id"
 			value="<%=stock == null ? "" : stock.getId()%>" />
 	</div>
-	
-	
-	
-	
-	
-	
+
+	<script type="text/javascript">
+		$("#quote").keyup(function(event) {
+			if (event.keyCode == 13) {
+				$("#getQuoteButton").click();
+			}
+		});
+	</script>
+
+
+</div>
+
+

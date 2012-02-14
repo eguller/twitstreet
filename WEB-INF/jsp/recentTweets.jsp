@@ -1,4 +1,7 @@
 <div id="recent-tweets" style="margin-top: 5px;">
+<h3>
+@twitstreet_game
+</h3>
 	<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
 	<script>
 		new TWTR.Widget({

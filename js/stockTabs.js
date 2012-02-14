@@ -1,51 +1,43 @@
 
-var stockTabsArray = new Array();
+	stockTabsArray = new Array();
 
-var stockTabContentsArray = new Array();
-
-
-function initStockTabs(){
-
-	stockTabsArray.push($("#buy-sell-tab"));
-	stockTabsArray.push($("#stock-history-tab"));
-	stockTabsArray.push($("#stock-distribution-tab"));
-	stockTabsArray.push($("#tweets-of-user-tab"));
+	stockTabContentsArray = new Array();
+	stockTabsArray.push("#buy-sell-tab");
+	stockTabsArray.push("#stock-history-tab");
+	stockTabsArray.push("#stock-distribution-tab");
+	stockTabsArray.push("#tweets-of-user-tab");
 	
-	stockTabContentsArray.push($("#buy-sell-section"));
-	stockTabContentsArray.push($("#stock-trend-section"));
-	stockTabContentsArray.push($("#stock-share-section"));
-	stockTabContentsArray.push($("#tweets-of-user-section"));
-	
-	
-}
+	stockTabContentsArray.push("#buy-sell-section");
+	stockTabContentsArray.push("#stock-trend-section");
+	stockTabContentsArray.push("#stock-share-section");
+	stockTabContentsArray.push("#tweets-of-user-section");
 
 function showTab(tabId,tabContentId){
 	var i;
 	for(i=0; i<stockTabsArray.length; i++){
-		var element = stockTabsArray[i];
-		if(element.attr('id') == $(tabId).attr('id')){
+		
+		if(tabId == stockTabsArray[i]){
 			
-			element.addClass("youarehere");
+			$(stockTabsArray[i]).addClass("youarehere");
 		}
 		else{
 			
-			element.removeClass("youarehere");
+			$(stockTabsArray[i]).removeClass("youarehere");
 		}
 	}
 	
 	for(i=0; i<stockTabContentsArray.length; i++){
-		var element = stockTabContentsArray[i];
-		if(element.attr('id') == $(tabContentId).attr('id')){
+		
+		if(tabContentId == stockTabContentsArray[i]){
 			
-			element.show();
+			$(stockTabContentsArray[i]).show();
 		}
 		else{
 			
-			element.hide();
+			$(stockTabContentsArray[i]).hide();
 		}
 		
-	}
-	
+	}	
 	
 }
 
@@ -64,4 +56,5 @@ function showStockHistory(){
 }
 function showTweetsOfUser(){
 	showTab("#tweets-of-user-tab","#tweets-of-user-section");
+	//runScriptsInElement($("#tweets-of-user-section").html());
 }

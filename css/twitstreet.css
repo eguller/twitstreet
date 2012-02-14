@@ -19,7 +19,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 h1 {
-	font-size: 16px;
+	font-size: 13px;
 }
 
 h2 {
@@ -43,19 +43,22 @@ a {
 	text-decoration: none;
 	font-weight: bolder;
 }
+/* .twtr-hd h3 { */
+/* 	border-style: none; */
+/* } */
+/* .twtr-bd { */
+/* 	font-family: 'Trebuchet MS', sans-serif; */
+/* } */
 
-.twtr-bd {
-	font-family: 'Trebuchet MS', sans-serif;
-}
+/* .twtr-hd { */
+/* 	font-family: 'Trebuchet MS', sans-serif; */
+/* } */
 
-.twtr-hd {
-	font-family: 'Trebuchet MS', sans-serif;
-}
-
-.twtr-ft {
-	font-family: 'Trebuchet MS', sans-serif;
-}
-
+/* .twtr-ft { */
+/* 	font-family: 'Trebuchet MS', sans-serif; */
+/* } */
+.twtr-hd { display: none; }
+.twtr-ft { display: none; }
 /* ------------------------------
 PAGE STRUCTURE
 ------------------------------ */
@@ -357,9 +360,7 @@ margin-bottom: 20px;
 	font-size: 16px;
 }
 
-.twtr-hd h3 {
-	border-style: none;
-}
+
 
 .tnt_pagination {
 	display: block;
@@ -420,8 +421,6 @@ margin-bottom: 20px;
 .subheader {
 	border-bottom: 1px solid #666666;
 	clear: both;
-	height: 34px;
-	margin-bottom: 15px;
 	width: 100%;
 }
 

@@ -21,8 +21,9 @@ $(document).ready(function() {
 	if ($("#portfolio").length > 0) {
 		setInterval(loadPortfolio, 20000);
 	}
+	
 	if ($("#userprofile").length > 0) {
-		setInterval(loadUserProfile, 20000);
+		setInterval(reloadUserProfile, 20000);
 	}
 
 });
@@ -44,29 +45,37 @@ function loadPortfolio() {
 	});
 }
 
-function loadUserProfile() {
-	var userId = $('#userProfileUserId').val();
-	$.post('/user', {
-		isAjaxRequest: true,
-		user:userId
-	}, function(data) {
-		var user = data;
-		var directionImage;
-		$("#userProfileRank").html(user.rank+".");
-		$("#userProfileCash").html('$'+commasep(user.cash.toFixed(2)));
-		$("#userProfilePortfolio").html('$'+commasep(user.portfolio.toFixed(2)));
-		$("#userProfileTotal").html('$'+commasep((user.cash+user.portfolio).toFixed(2)));
-		
-		var className = '';
-		if (user.profit > 0) {
-			$("#userProfileProfit").html("<span class=\"green-profit\">$" +commasep(user.profit.toFixed(2)) + "/h &#9650" + "</span>");
-		} else if (user.profit < 0){
-			$("#userProfileProfit").html("<span class=\"red-profit\">$" +commasep(user.profit.toFixed(2)) + "/h &#9660" + "</span>");
-		}else{
+function getQuote(quote) {
+	
+	blockElementWithMsg('#column_center', 'Loading');
+	$.ajax({
+		type: 		"get",
+		url: 		"/getquote",
+		data: 		"quote="+quote,
+		success:	function(data) {			
+			$("#column_center").unblock();
+			$("#column_center").empty();
+			$("#column_center").append($(data));	
 			
-			$("#userProfileProfit").html("");
-		}
 		
+		}
+	});
+}
+function reloadUserProfile() {
+	var userId = $('#userProfileUserId').val();
+	loadUserProfile(userId);
+}
+function loadUserProfile(userId) {
+	blockElementWithMsg('#column_center', 'Loading');
+	$.ajax({
+		type: 		"get",
+		url: 		"/user",	
+		data:		"user="+userId,
+		success:	function(data) {
+			$("#column_center").unblock();
+			$("#column_center").empty();
+			$("#column_center").append($(data));				
+		}
 	});
 }
 
@@ -190,31 +199,24 @@ function setup() {
 	});
 }
 function loadStock(id){
-	
-	
-//	if(objectExists('#stockdetails')){
-//	
-//
-//			blockElementWithMsg('#stockdetails', 'Loading');
-//		$.ajax({
-//			type : "get",
-//			url : "stock",
-//			data : "stock=" + id,
-//			success : function(data) {
-//
-//				$("#stockdetails").unblock();
-//				$("#stockdetails").empty();
-//				$("#stockdetails").html($(data).html());
-//			}
-//		});
-//	}
-//	else{
-		
-		window.location = '/?stock='+id;
-		
-//		
-//	}
-	
+
+	blockElementWithMsg('#column_center', 'Loading');
+	$.ajax({
+		type : "get",
+		url : "stock",
+		data : "stock=" + id,
+		success : function(data) {
+
+			$("#column_center").unblock();
+			$("#column_center").empty();
+
+			//var html = $("<div />").append($(data).clone()).html();
+			$("#column_center").append($(data));
+			//runScriptsInElement(data);
+			// initStockTabs();
+		}
+	});
+
 }
 
 function toprank() {
@@ -225,13 +227,26 @@ function toprank() {
 		data:		"page="+pageParam,
 		success:	function(data) {	
 			
-			$("#topranks").unblock();
+			$("#topranks-loading-div").unblock();
 			$("#topranks").empty();
 			$("#topranks").html($(data).html());		
 		}
 	});
 }
 
+function runScriptsInElement(responseData){
+	 var scriptArray = $(responseData).find("script").prevObject;
+
+	
+	for(var i=0; i<scriptArray.length; i++){
+		if(scriptArray[i]!=null && scriptArray[i].text!=null){
+			eval(scriptArray[i].text);
+			
+		}
+	}
+
+	
+}
 
 function loadBalance() {
 	$.post('/balance', {
@@ -272,7 +287,7 @@ function retrievePage(pageElement, page) {
 		pageElement.removeAttr("href");
 	
 		
-		blockElementWithMsg('#topranks', 'Loading')
+		blockElementWithMsg('#topranks-loading-div', 'Loading')
 	
 		
 		 $('.toprank-current-page').val(page);
@@ -343,4 +358,34 @@ function getDouble(dbl, minval){
 
 function objectExists(id){
 	return $(id).length > 0;
+}
+
+function showTweetsOfUserInDiv(username, elementId){
+
+	new TWTR.Widget({
+		version : 2,
+		type : 'profile',
+		rpp : 10,
+		interval : 30000,
+		width : 500,
+		height : 300,
+		id :elementId,
+		theme : {
+			shell : {
+				background : '#f2f2f2',
+				color : '#000000'
+			},
+			tweets : {
+				background : '#ffffff',
+				color : '#000000',
+				links : '#4183c4'
+			}
+		},
+		features : {
+			scrollbar : false,
+			loop : false,
+			live : false,
+			behavior : 'all'
+		}
+	}).render().setUser(username).start();
 }

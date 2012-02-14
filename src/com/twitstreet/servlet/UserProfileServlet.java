@@ -51,16 +51,12 @@ public class UserProfileServlet extends HttpServlet {
 		request.setAttribute("title", "User profile of " + userObj.getUserName());
 		request.setAttribute("meta-desc", "This page shows profile of a "+userObj.getUserName()+". You can find details of "+userObj.getUserName()+" like rank, portfolio, cash and portfolio details.");
 		
-		if (isAjaxRequest) {
-			
-			response.getWriter().write(gson.toJson(userObj));
+		if (user != null) {
+			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);
 		} else {
-			if (user != null) {
-				getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfileAuth.jsp").forward(request, response);
-			} else {
-				getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfileUnAuth.jsp").forward(request, response);
-			}
+			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);
 		}
+
 	}
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
