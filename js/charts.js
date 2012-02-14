@@ -98,10 +98,11 @@ var drawStockDistributionStockName = null;
 function reloadStockDistribution(stockId) {
 	
 	
-	if ($('#tabs').hasClass('blockUI'))
+	if ($('#stock-share-section').hasClass('blockUI'))
 		return;
 	
-	$('#tabs').block({
+	$("#stock-share-section").empty();
+	$('#stock-share-section').block({
 		message : 'Loading'
 	});
 	    
@@ -110,8 +111,7 @@ function reloadStockDistribution(stockId) {
 		url: 		"stockdistribution",
 		data: 		"stock=" + stockId,
 		success:	function(data) {			
-			$('#tabs').unblock();
-			$("#stock-share-section").empty();
+			$('#stock-share-section').unblock();
 			$("#stock-share-section").html($(data).html());
 			 var script = $(data).find("script").prevObject[1].text;
 				

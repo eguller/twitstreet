@@ -34,7 +34,7 @@ import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
 @Singleton
-public class HomePageServlet extends HttpServlet {
+public class HomePageServlet extends TwitStreetServlet {
 	@Inject
 	UserMgr userMgr;
 	@Inject
@@ -64,22 +64,15 @@ public class HomePageServlet extends HttpServlet {
 
 	private static Logger logger = Logger.getLogger(HomePageServlet.class);
 	
-	protected void doPost(HttpServletRequest request,
+	public void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request,
+	public void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-		response.setDateHeader("Expires", 0); // prevents caching at the proxy
-												// server
-
+		super.doGet(request, response);
 		request.setAttribute("title", "twitstreet - Twitter stock market game");
 		request.setAttribute(
 				"meta-desc",
@@ -108,7 +101,6 @@ public class HomePageServlet extends HttpServlet {
 			return;
 		}
 
-		User user = (User) request.getSession().getAttribute(User.USER);
 
 		start = System.currentTimeMillis();
 		queryStockById(request, response);
@@ -120,7 +112,7 @@ public class HomePageServlet extends HttpServlet {
 		end = System.currentTimeMillis();
 		logger.info("queryStockByQuote: " + (end - start));
 
-		if (user != null) {
+		if (getUser() != null) {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
 		} else if (validateCookies(request)) {
@@ -180,20 +172,19 @@ public class HomePageServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String twUserName = (String) request.getParameter(QUOTE);
 		if (twUserName != null && twUserName.length() > 0) {
-			User user = request.getSession(false) == null ? null
-					: (User) request.getSession(false).getAttribute(User.USER);
+			User userTmp = getUser();
 
 			request.setAttribute(QUOTE, twUserName);
 			TwitterProxy twitterProxy = null;
 			Response resp = Response.create();
-			if (user == null) {
+			if (userTmp == null) {
 				// uses someone else account to get quote for unauthenticated
 				// users.
-				user = userMgr.random();
+				userTmp = userMgr.random();
 			}
 
-			twitterProxy = user == null ? null : twitterProxyFactory.create(
-					user.getOauthToken(), user.getOauthTokenSecret());
+			twitterProxy = userTmp == null ? null : twitterProxyFactory.create(
+					userTmp.getOauthToken(), userTmp.getOauthTokenSecret());
 
 			SimpleTwitterUser twUser = null;
 			ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();

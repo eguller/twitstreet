@@ -20,16 +20,12 @@ import com.twitstreet.session.UserMgr;
 @SuppressWarnings("serial")
 @Singleton
 public class StockDistributionServlet extends HttpServlet{
-	
 	public static String STOCK_DISTRIBUTION_DETAIL_LIST = "stockdistributiondetaillist";
-
 	@Inject PortfolioMgr portfolioMgr;
-	@Inject
-	private final Gson gson = null;
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		response.setContentType("application/json;charset=utf-8");
+		response.setContentType("text/html;charset=utf-8");
 		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server

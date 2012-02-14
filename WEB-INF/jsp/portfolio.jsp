@@ -9,19 +9,14 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="com.twitstreet.util.Util" %>
 <%@ page import="com.twitstreet.session.UserMgr" %>
+<%@ page import="com.twitstreet.servlet.TwitStreetServlet" %>
 
 
 <%
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-User sessionUser = (User)request.getSession().getAttribute(User.USER);
+User user = (User)request.getAttribute(TwitStreetServlet.USER);
 PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
-UserMgr userMgr = inj.getInstance(UserMgr.class);
 
-
-if(sessionUser==null){
-	return;
-}
-User user = userMgr.getUserById(sessionUser.getId());
 Portfolio portfolio = null;
 if(user != null){
 	portfolio = portfolioMgr.getUserPortfolio(user);

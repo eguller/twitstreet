@@ -21,15 +21,12 @@
 <%@ page import="java.text.DecimalFormat"%>
 <%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
+<%@ page import="com.twitstreet.servlet.TwitStreetServlet" %>
 
 <%
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
-	User sessionUser = (User) request.getSession().getAttribute(User.USER);
-	User user = null;
-	if (sessionUser != null) {
-		user = userMgr.getUserById(sessionUser.getId());
-	}
+	User user = (User) request.getAttribute(TwitStreetServlet.USER);
 
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
