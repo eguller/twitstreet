@@ -210,6 +210,7 @@ public class Util {
 		return cphStr;
 		
 	}
+
 	public static String getShareString(double cph){
 		cph= cph*100;
 		String cphStr = String.valueOf(Util.roundDouble(Math.abs(cph),2));

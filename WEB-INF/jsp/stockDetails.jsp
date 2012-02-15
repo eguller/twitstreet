@@ -80,7 +80,7 @@
 					</h1>
 				</td>
 				<td style="vertical-align: bottom;">
-					<div id="tabs">
+					<div class="tabs">
 						<a id="buy-sell-tab" class="youarehere" onClick="showBuySell();">
 							Buy/Sell</a> <a id="stock-history-tab" onClick="showStockHistory();">
 							History</a> <a id="stock-distribution-tab"

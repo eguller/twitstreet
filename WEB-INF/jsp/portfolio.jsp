@@ -12,106 +12,122 @@
 
 
 <%
-Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-User sessionUser = (User)request.getSession().getAttribute(User.USER);
-PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
-UserMgr userMgr = inj.getInstance(UserMgr.class);
+	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+	User sessionUser = (User) request.getSession().getAttribute(User.USER);
+	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
+	UserMgr userMgr = inj.getInstance(UserMgr.class);
 
+	if (sessionUser == null) {
+		return;
+	}
+	User user = userMgr.getUserById(sessionUser.getId());
+	Portfolio portfolio = null;
+	if (user != null) {
+		portfolio = portfolioMgr.getUserPortfolio(user);
+	}
+	if (portfolio == null) {
 
-if(sessionUser==null){
-	return;
-}
-User user = userMgr.getUserById(sessionUser.getId());
-Portfolio portfolio = null;
-if(user != null){
-	portfolio = portfolioMgr.getUserPortfolio(user);
-}
-if(portfolio==null){
-	
-	return;
-	
-}
+		return;
+
+	}
 %>
 <div id="portfolio" class="main-div">
 	<h3>Portfolio</h3>
-	<table class="datatbl" id="portfolio-table">
-	<% 
-	if(portfolio.getStockInPortfolioList().size()>0){
-	for(int i = 0; i < portfolio.getStockInPortfolioList().size();){ %>
-		<tr>
-			<% for(int j = 0; j < 1; j ++) { 
-				if( i < portfolio.getStockInPortfolioList().size()){
-					
-					StockInPortfolio stock = portfolio.getStockInPortfolioList().get(i);
+	<table class="datatbl2" id="portfolio-table">
+		<tbody>
+			<%
+				if (portfolio.getStockInPortfolioList().size() > 0) {
+					for (int i = 0; i < portfolio.getStockInPortfolioList().size(); i++) {
+
+						StockInPortfolio stock = portfolio.getStockInPortfolioList().get(i);
 			%>
-			
-				<td>
-					<table class="datatbl">
-						<tr>
-							<td>
-								<img class="twuser" src="<%=stock.getPictureUrl()%>"/>
-							</td>
-							<td>
-								<a href='javascript:void(0)' onclick='loadStock(<%=stock.getStockId() %>)' title="Loads <%=stock.getStockName() %>'s stock details"><% out.write(stock.getStockName()); %></a>
-								<br>
-								$<% out.write(Util.commaSep(stock.getAmount()) + "&nbsp;("+Util.getShareString(stock.getPercentage())+")"); %>
-								<br>							
-								<table class="portfolio-stock-tbl">
-									<tr>
-										<td align="left">
-													<%
-								
-											double profit = 0;
-											
-											double amount =stock.getAmount();
-											double capital = stock.getCapital();
-											
-											profit = amount - capital;
-											if(profit > 0){
-												out.write("<span class=\"green-light\">"+Util.getProfitString(profit) + "</span>"); 
-											}
-											else if(profit < 0){
-												out.write("<span class=\"red-light\">"+Util.getProfitString(profit) + "</span>"); 
-											}
-											else {
-												out.write("<span></span>"); 
-											}
-											%>
-										</td>
-										<td align="right">
-												<%
-												String profitPerHour = Util.getChangePerHourString(stock.getChangePerHour());
-												if (stock.getChangePerHour() > 0) {
-													out.write("<span class=\"green-profit\">" + profitPerHour + "</span>");
-												}
-												else if (stock.getChangePerHour() < 0){
-													out.write("<span class=\"red-profit\">" +  profitPerHour  + "</span>");
-												}
-												%>
-										</td>
-									</tr>
-								</table>
-								
-								
+				<tr>
+					<td width="58px">
 					
-							</td>
+						
+						<img class="twuser" src="<%=stock.getPictureUrl()%>"/>
+					</td>			
+					<td>		
+						<table class="portfolio-stock-tbl">
+							<tr>
+	
+								<td colspan="3" rowspan="1" height="20px" align="left">
+								
+									<div style="float:left">	
+										
+										<a href='javascript:void(0)'
+											onclick='loadStock(<%=stock.getStockId()%>)'
+											title="Loads <%=stock.getStockName()%>'s stock details"><%=stock.getStockName()%> 
+										</a>
+									</div>
+									<div style="float:left" title="The ratio of your share to the whole stock">&nbsp;(<%=Util.getShareString(stock.getPercentage())%>)
+									</div>
+								</td>
+	
+							</tr>
 							
-						</tr>
-					</table>
-				</td>
-				<% } else { %>
-				<td></td>
-			<% 
-				}
-				i++;
-			} %>
-		</tr>
-	<% } 
-	} else{
-		
-		out.write("<tr><td>"+Util.NO_RECORDS_FOUND_HTML+"</td></tr>");
-		
-	}
-	%>
+							<tr>
+							
+								<td colspan="1" rowspan="1">
+									<div title="The cash equivalent of your share"><b>$<%=Util.commaSep(stock.getAmount())%></b></div>
+							
+								</td>
+								<td colspan="1" rowspan="1">
+									
+<%-- 								$<%=Util.commaSep(stock.getCapital())%> --%>
+							
+								</td>
+								<td colspan="1" rowspan="1" align="right">
+											<%
+										double profit = 0;
+	
+												double amount = stock.getAmount();
+												double capital = stock.getCapital();
+	
+												profit = amount - capital;
+												if (profit > 0) {
+													out.write("<div title=\"Your profit from this stock\">" + Util.getProfitString(profit) + "</div>");
+												} else if (profit < 0) {
+													out.write("<div title=\"Your loss from this stock\">" + Util.getProfitString(profit) + "</div>");
+												} else {
+													out.write("<div style=\"float:left;\"></div>");
+												}
+									%>
+											
+								</td>
+					
+							</tr>
+							<tr>
+								<td colspan="1" rowspan="1"  align="left">
+									
+								
+								</td>
+								<td colspan="1" rowspan="1">
+									
+								</td>
+								<td colspan="1" rowspan="1">
+									<%
+										String profitPerHour = Util.getChangePerHourString(stock.getChangePerHour());
+												if (stock.getChangePerHour() > 0) {
+													out.write("<div title=\"Your estimated profit from this stock for the next hour\" style=\"float:left;\" class=\"green-profit\">" + profitPerHour + "</div");
+												} else if (stock.getChangePerHour() < 0) {
+													out.write("<div title=\"Your estimated loss from this stock for the next hour\" style=\"float:left;\" class=\"red-profit\">" + profitPerHour + "</div");
+												}else{
+													out.write("<div style=\"float:left;\">&nbsp;<div>");
+													
+												}
+									%>
+								</td>							
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<%
+					}
+					} else {
+						out.write("<tr><td>" + Util.NO_RECORDS_FOUND_HTML + "</td></tr>");
+					}
+				%>
+		</tbody>
 	</table>
 </div>
