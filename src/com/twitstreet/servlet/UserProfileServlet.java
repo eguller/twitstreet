@@ -22,11 +22,9 @@ public class UserProfileServlet extends HttpServlet {
 	private final Gson gson = null;
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
-		response.setContentType("application/json;charset=utf-8");
-		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-		response.setHeader("Pragma","no-cache"); //HTTP 1.0
-		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
+		response.setContentType("application/json;charset=utf-8");
+
 		User user = (User) request.getSession().getAttribute(User.USER);
 		
 		String userIdStr = request.getParameter("user");

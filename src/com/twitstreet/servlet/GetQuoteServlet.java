@@ -30,7 +30,7 @@ import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
 @Singleton
-public class GetQuoteServlet extends HttpServlet {
+public class GetQuoteServlet extends TwitStreetServlet {
 	@Inject
 	UserMgr userMgr;
 	@Inject
@@ -68,14 +68,9 @@ public class GetQuoteServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
+		super.doGet(request, response);
+		setPageAttributes();
 		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-		response.setDateHeader("Expires", 0); // prevents caching at the proxy
-												// server
-
 		request.setAttribute("title", "twitstreet - Twitter stock market game");
 		request.setAttribute(
 				"meta-desc",
@@ -96,7 +91,6 @@ public class GetQuoteServlet extends HttpServlet {
 		logger.info("Init time: " + (end - start));
 		
 
-		User user = (User) request.getSession().getAttribute(User.USER);
 
 		start = System.currentTimeMillis();
 		queryStockById(request, response);
@@ -109,10 +103,7 @@ public class GetQuoteServlet extends HttpServlet {
 		logger.info("queryStockByQuote: " + (end - start));
 
 
-		if (user != null) {
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/dashboard.jsp").forward(request, response);
-		} else if (validateCookies(request)) {
+		if (getUser() != null) {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/dashboard.jsp").forward(request, response);
 		} else {

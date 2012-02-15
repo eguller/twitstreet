@@ -115,9 +115,6 @@ public class HomePageServlet extends TwitStreetServlet {
 		if (getUser() != null) {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
-		} else if (validateCookies(request)) {
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
 		} else {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
@@ -126,7 +123,6 @@ public class HomePageServlet extends TwitStreetServlet {
 
 	public void queryStockById(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		User user = (User) request.getSession().getAttribute(User.USER);
 		String stockIdStr = request.getParameter(STOCK);
 
 		if (user != null && stockIdStr != null && stockIdStr.length() > 0) {
@@ -266,43 +262,6 @@ public class HomePageServlet extends TwitStreetServlet {
 						.reason("Something wrong, we could not retrieved quote info. Working on it. ");
 			}
 		}
-	}
-
-	private boolean validateCookies(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies() == null ? new Cookie[] {}
-				: request.getCookies();
-		boolean idFound = false;
-		boolean oAuthFound = false;
-		String idStr = "";
-		String oAuth = "";
-		boolean valid = false;
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(CallBackServlet.COOKIE_ID)) {
-				idStr = cookie.getValue();
-				idFound = true;
-			}
-			if (cookie.getName().equals(CallBackServlet.COOKIE_OAUTHTOKEN)) {
-				oAuth = cookie.getValue();
-				oAuthFound = true;
-			}
-
-			if (idFound && oAuthFound) {
-				try {
-					long id = Long.parseLong(idStr);
-					User user = null;
-					user = userMgr.getUserById(id);
-					if (user != null && oAuth.equals(user.getOauthToken())) {
-						request.getSession().setAttribute(User.USER, user);
-						valid = true;
-						break;
-					}
-				} catch (NumberFormatException nfe) {
-					// log here someday.
-				}
-				break;
-			}
-		}
-		return valid;
 	}
 
 	private void invalidateCookies(String[] cookieNames,

@@ -22,7 +22,7 @@ import com.twitstreet.session.UserMgrImpl;
 
 @SuppressWarnings("serial")
 @Singleton
-public class SigninServlet extends HttpServlet {
+public class SigninServlet extends TwitStreetServlet {
 	private static Logger logger = Logger.getLogger(SigninServlet.class);
 	@Inject
 	ConfigMgr configMgr;
@@ -30,14 +30,9 @@ public class SigninServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		setPageAttributes();
 		response.setContentType("text/html");
-		response.setContentType("application/json;charset=utf-8");
-		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-		response.setHeader("Pragma","no-cache"); //HTTP 1.0
-		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
-		User user = (User) request.getSession().getAttribute(
-				User.USER);
 		if (user == null) {
 			Twitter twitter = new TwitterFactory().getInstance();
 			try {

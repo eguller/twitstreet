@@ -14,17 +14,14 @@ import com.twitstreet.db.data.User;
 import com.twitstreet.market.StockMgr;
 @SuppressWarnings("serial")
 @Singleton
-public class StockDetailsServlet extends HttpServlet {
+public class StockDetailsServlet extends TwitStreetServlet {
 	@Inject StockMgr stockMgr;
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
+		super.doGet(request, response);
+		setPageAttributes();
 		response.setContentType("application/json;charset=utf-8");
-		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-		response.setHeader("Pragma","no-cache"); //HTTP 1.0
-		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
-		
-		User user = (User) request.getSession().getAttribute(User.USER);
 		String stockIdStr = request.getParameter("stock");
 				
 		if(stockIdStr == null){

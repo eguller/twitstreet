@@ -17,7 +17,7 @@ public abstract class TwitStreetServlet extends HttpServlet {
 	public static final String USER = "user";
 	HttpServletRequest request;
 	HttpServletResponse response;
-	private User user = null;
+	protected User user = null;
 	/**
 	 * 
 	 */
@@ -43,7 +43,6 @@ public abstract class TwitStreetServlet extends HttpServlet {
 	
 	public void setPageAttributes(){
 		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
 		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
 		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 		response.setDateHeader("Expires", 0); // prevents caching at the proxy

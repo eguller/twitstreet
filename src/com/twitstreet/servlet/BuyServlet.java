@@ -21,7 +21,7 @@ import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
 @Singleton
-public class BuyServlet extends HttpServlet {
+public class BuyServlet extends TwitStreetServlet {
 	private static Logger logger = Logger.getLogger(BuyServlet.class);
 	@Inject
 	TwitterProxyFactory twitterProxyFactory = null;
@@ -42,11 +42,8 @@ public class BuyServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		response.setContentType("application/json;charset=utf-8");
-		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-		response.setHeader("Pragma","no-cache"); //HTTP 1.0
-		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		setPageAttributes();
 		
-		User user = (User) request.getSession(false).getAttribute(User.USER);
 		if (user != null) {
 			String stock = request.getParameter("stock");
 			String amount = request.getParameter("amount");
