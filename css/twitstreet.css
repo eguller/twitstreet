@@ -209,12 +209,15 @@ CUSTOM CLASSES
 	border-collapse: collapse;
 	width: 100%;
 }
+.datatbl2 {
+	width: 100%;
+}
 
 .portfolio-stock-tbl {
-	border-width: 2px;
-	border-spacing: 1px;
+	border-width: 4px;
+	border-spacing: 4px;
 	border-collapse: collapse;
-	width: 160px;
+	width: 100%;
 }
 
 .thead {
@@ -432,12 +435,12 @@ margin-bottom: 20px;
 	float: left;
 }
 
-#tabs {
+.tabs {
 	float: right;
 	font-weight: bold;
 }
 
-#tabs a.youarehere {
+.tabs a.youarehere {
 	background: none repeat scroll 0 0 #FFFFFF;
 	border-color: #777777 #777777 #FFFFFF;
 	border-style: solid;
@@ -450,7 +453,7 @@ margin-bottom: 20px;
 	padding: 0 11px;
 }
 
-#tabs a {
+.tabs a {
 	background: inherit;
 	border: 1px solid #FFFFFF;
 	color: #777777;
@@ -464,7 +467,7 @@ margin-bottom: 20px;
 	text-decoration: none;
 }
 
-#tabs a:hover {
+.tabs a:hover {
 	background: none repeat scroll 0 0 #FFFFFF;
 	border-color: #777777 #777777 #FFFFFF;
 	border-style: solid;

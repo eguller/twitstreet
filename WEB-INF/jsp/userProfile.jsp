@@ -25,27 +25,49 @@
 <div id="userprofile" class="main-div">
 	<input id="userProfileUserId" type="hidden" value="<%=userIdStr%>"></input>
 	<jsp:include page="getQuote.jsp" />
+	
+	<div id="user-profile-menu" class="subheader">
+
+			
+		<table class="datatbl">
+			<tr>
+				<td>
+					<img class="twuser"
+					src="<%=user == null ? "" : user.getPictureUrl()%>"
+					id="dashboard-picture"></td>
+				<td>
+					<h1>
+						<a href="http://twitter.com/#!/<%=user == null ? "" : user.getUserName()%>"
+							title="<%=user == null ? "" : user.getUserName()%>&#39;s twitter page"
+							target="_blank"><%=user == null ? "" : user.getUserName()%></a>
+					</h1>
+				</td>
+				<td style="vertical-align: bottom;">
+					<div class="tabs">
+						<a id="balance-tab" class="youarehere" onClick="showUserProfileTab('#balance-tab','#userbalance');">
+							Balance</a> 
+						<a id="portfolio-tab" onClick="showUserProfileTab('#portfolio-tab','#userportfolio');">
+							Portfolio</a> 
+						<a id="user-tweets-tab"
+							onClick="showUserProfileTab('#user-tweets-tab','#usertweets');">
+							Tweets </a> 
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+	</div>
+
+
+<br>
 
 
 	<div id="userbalance" class="main-div">
-		<h3><%=user.getUserName()%>'s Profile
-		</h3>
-
+	
 		<table class="datatbl">
 			<tr>
 				<td colspan="4">
-					<table class="datatbl">
-						<tr>
-							<td width="36px;"><img class="twuser"
-								src="<%=user == null ? "" : user.getPictureUrl()%>"
-								id="dashboard-picture">
-							</td>
-							<td style="text-align: left;" id="dashboard-stock-follower-status"><a
-								href="http://twitter.com/#!/<%=user == null ? "" : user.getUserName()%>" title="<%=user == null ? "" : user.getUserName()%>&#39;s twitter page"
-								target="_blank"><%=user == null ? "" : user.getUserName()%></a>'s status
-							</td>
-						</tr>
-					</table>
+					
 				</td>
 			</tr>
 			<tr>
@@ -90,9 +112,8 @@
 		</table>
 
 	</div>
-	<div id="userportfolio" class="main-div">
-		<h3><%=user.getUserName()%>'s Portfolio
-		</h3>
+	<div id="userportfolio" class="main-div" style="display: none;">
+		
 		<table class="datatbl">
 			<%
 			if(portfolio.getStockInPortfolioList().size()>0){
@@ -106,18 +127,17 @@
 				%>
 	
 				<td>
-					<table>
+					<table class="datatbl">
 						<tr>
-							<td><img class="twuser"
+							<td width="58px"><img class="twuser"
 								src="<%=stock.getPictureUrl()%>" />
 							</td>
 							<td><a href='javascript:void(0)' onclick='loadStock(<%=stock.getStockId()%>)' title="<%=stock.getStockName()%>&#39;s stock detail page">
 									<%
 										out.write(stock.getStockName());
 									%>
-							</a> <br> $<%
-	 							out.write(Util.commaSep(stock.getAmount()) + "&nbsp;("+ Util.getShareString(stock.getPercentage())
-								+")"); %>
+							</a> (<%=Util.getShareString(stock.getPercentage())%>)<br> $<%
+	 							out.write(Util.commaSep(stock.getAmount())); %>
 	
 	 <br>
 									
@@ -143,7 +163,7 @@
 	// 								}
 									%>
 											</td>
-											<td align="right">
+											<td align="left">
 													<%
 													String profitPerHour =  Util.getChangePerHourString(stock.getChangePerHour());
 													
@@ -192,12 +212,11 @@
 		}
 	%>
 
-	<div id="usertweets" class="main-div">
-		<h3><%=user.getUserName()%>'s Tweets
-		</h3>
+	<div id="usertweets" class="main-div" style="display: none;">
+	
 		
 		<div id="user-tweets-widget-container" class="main-div">
 		<script>showTweetsOfUserInDiv('<%=user.getUserName()%>',"user-tweets-widget-container");</script>
-		
+		</div>
 	</div>
 </div>
