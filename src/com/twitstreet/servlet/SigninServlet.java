@@ -30,6 +30,7 @@ public class SigninServlet extends TwitStreetServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		super.doGet(request, response);
 		setPageAttributes();
 		response.setContentType("text/html");
 		
@@ -46,7 +47,7 @@ public class SigninServlet extends TwitStreetServlet {
 				logger.debug("Consumer Key: " + configMgr.getConsumerKey() + ", Consumer Secret: " + configMgr.getConsumerSecret());
 				RequestToken requestToken = twitter
 						.getOAuthRequestToken(callbackURL.toString());
-				request.getSession().setAttribute("requestToken", requestToken);
+				configMgr.setRequestToken(requestToken);
 				response.sendRedirect(requestToken.getAuthenticationURL());
 				logger.debug("Redirect sent to authentication URL: " + requestToken.getAuthenticationURL());
 

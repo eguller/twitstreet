@@ -34,25 +34,25 @@ public class BuyServlet extends TwitStreetServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			throws IOException, ServletException {
 		doPost(request, response);
 	}
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
-		response.setContentType("application/json;charset=utf-8");
+			throws IOException, ServletException {
+		super.doPost(request, response);
+		response.setContentType("text/html;charset=utf-8");
 		setPageAttributes();
 		
 		if (user != null) {
 			String stock = request.getParameter("stock");
 			String amount = request.getParameter("amount");
 			try {
-				User buyer = userMgr.getUserById(user.getId());
 				Stock stockObj = stockMgr.getStockById(Long.parseLong(stock));
-				if (buyer != null && stockObj != null) {
+				if (user != null && stockObj != null) {
 					BuySellResponse buySellResponse = portfolioMgr.buy(
-							buyer, stockObj,
+							user, stockObj,
 							Integer.parseInt(amount));
 					
 					

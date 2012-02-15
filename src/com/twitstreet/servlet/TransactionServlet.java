@@ -18,7 +18,7 @@ import com.twitstreet.market.TransactionMgr;
 
 @SuppressWarnings("serial")
 @Singleton
-public class TransactionServlet extends HttpServlet {
+public class TransactionServlet extends TwitStreetServlet {
 	private static String USER_TRANSACTIONS = "user";
 	@Inject
 	TransactionMgr transactionMgr;
@@ -27,18 +27,14 @@ public class TransactionServlet extends HttpServlet {
 	@Inject
 	private final Gson gson = null;
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		response.setContentType("application/json;charset=utf-8");
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		doPost(request, response);
 	}
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		response.setContentType("application/json;charset=utf-8");
-		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-		response.setDateHeader("Expires", 0); // prevents caching at the proxy
-												// server
-
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		super.doPost(request, response);
+		setPageAttributes();
+		response.setContentType("text/html;charset=utf-8");
 		List<TransactionRecord> transactionRecordList = null;
 		String type = request.getParameter("type");
 

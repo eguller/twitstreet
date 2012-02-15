@@ -51,8 +51,7 @@ public class CallBackServlet extends HttpServlet {
 		twitter.setOAuthConsumer(configMgr.getConsumerKey(),
 				configMgr.getConsumerSecret());
 
-		RequestToken requestToken = (RequestToken) request.getSession()
-				.getAttribute(REQUEST_TOKEN);
+		RequestToken requestToken = configMgr.getRequestToken();
 		String verifier = request.getParameter(OAUTH_VERIFIER);
 		try {
 			AccessToken accessToken = twitter.getOAuthAccessToken(requestToken,
@@ -76,7 +75,7 @@ public class CallBackServlet extends HttpServlet {
 				user.setCash(configMgr.getInitialMoney());
 				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 				userMgr.saveUser(user);
-				request.getSession().setAttribute(User.USER, user);
+				request.setAttribute(User.USER, user);
 			} else {
 				user = new User();
 				user.setId(userId);
@@ -87,7 +86,7 @@ public class CallBackServlet extends HttpServlet {
 				user.setOauthTokenSecret(oauthTokenSecret);
 				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 				userMgr.updateUser(user);
-				request.getSession().setAttribute(User.USER, user);
+				request.setAttribute(User.USER, user);
 			}
 			request.getSession().removeAttribute(REQUEST_TOKEN);
 			Cookie cookies[] = createCookie(userId, oauthToken);

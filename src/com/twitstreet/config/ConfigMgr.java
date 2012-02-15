@@ -1,5 +1,7 @@
 package com.twitstreet.config;
 
+import twitter4j.auth.RequestToken;
+
 public interface ConfigMgr {
 	public static final String CONSUMER_KEY = "consumerKey";
 	public static final String CONSUMER_SECRET = "consumerSecret";
@@ -12,4 +14,7 @@ public interface ConfigMgr {
 	public int getMinFollower();
 	public String getGaAccount();
 	public double getInitialMoney();
+	public void setRequestToken(RequestToken requestToken);
+	public RequestToken getRequestToken();
+	
 }

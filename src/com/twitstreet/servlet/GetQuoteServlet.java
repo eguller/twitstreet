@@ -114,7 +114,6 @@ public class GetQuoteServlet extends TwitStreetServlet {
 
 	public void queryStockById(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		User user = (User) request.getSession().getAttribute(User.USER);
 		String stockIdStr = request.getParameter(STOCK);
 
 		if (user != null && stockIdStr != null && stockIdStr.length() > 0) {
@@ -160,9 +159,6 @@ public class GetQuoteServlet extends TwitStreetServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String twUserName = (String) request.getParameter(QUOTE);
 		if (twUserName != null && twUserName.length() > 0) {
-			User user = request.getSession(false) == null ? null
-					: (User) request.getSession(false).getAttribute(User.USER);
-
 			request.setAttribute(QUOTE, twUserName);
 			TwitterProxy twitterProxy = null;
 			Response resp = Response.create();
@@ -253,57 +249,6 @@ public class GetQuoteServlet extends TwitStreetServlet {
 						+ twUserName);
 				resp.fail()
 						.reason("Something wrong, we could not retrieved quote info. Working on it. ");
-			}
-		}
-	}
-
-	private boolean validateCookies(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies() == null ? new Cookie[] {}
-				: request.getCookies();
-		boolean idFound = false;
-		boolean oAuthFound = false;
-		String idStr = "";
-		String oAuth = "";
-		boolean valid = false;
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(CallBackServlet.COOKIE_ID)) {
-				idStr = cookie.getValue();
-				idFound = true;
-			}
-			if (cookie.getName().equals(CallBackServlet.COOKIE_OAUTHTOKEN)) {
-				oAuth = cookie.getValue();
-				oAuthFound = true;
-			}
-
-			if (idFound && oAuthFound) {
-				try {
-					long id = Long.parseLong(idStr);
-					User user = null;
-					user = userMgr.getUserById(id);
-					if (user != null && oAuth.equals(user.getOauthToken())) {
-						request.getSession().setAttribute(User.USER, user);
-						valid = true;
-						break;
-					}
-				} catch (NumberFormatException nfe) {
-					// log here someday.
-				}
-				break;
-			}
-		}
-		return valid;
-	}
-
-	private void invalidateCookies(String[] cookieNames,
-			HttpServletRequest request, HttpServletResponse response) {
-		List<String> cookieNameList = Arrays.asList(cookieNames);
-		for (Cookie cookie : request.getCookies()) {
-			if (cookieNameList.contains(cookie.getName())) {
-				cookie.setMaxAge(0);
-				cookie.setValue("");
-				cookie.setPath("/");
-				cookie.setDomain(request.getHeader("host"));
-				response.addCookie(cookie);
 			}
 		}
 	}

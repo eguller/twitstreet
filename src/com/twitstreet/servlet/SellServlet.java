@@ -32,18 +32,17 @@ public class SellServlet extends TwitStreetServlet {
 	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			throws IOException, ServletException {
 		doPost(request, response);
 	}
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			throws IOException, ServletException {
+		super.doPost(request, response);
+		setPageAttributes();
 		response.setContentType("application/json;charset=utf-8");
-		response.setContentType("application/json;charset=utf-8");
-		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-		response.setHeader("Pragma","no-cache"); //HTTP 1.0
-		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+
 		
 		if(user != null){
 			String stock = request.getParameter("stock");
