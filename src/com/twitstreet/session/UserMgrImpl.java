@@ -26,7 +26,7 @@ public class UserMgrImpl implements UserMgr {
 	@Inject ConfigMgr configMgr;
 	@Inject GroupMgr groupMgr;
 	
-	private static int MAX_RECORD_PER_PAGE = 20;
+	private static int MAX_RECORD_PER_PAGE = 10;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 
 	public User getUserById(long id) {
