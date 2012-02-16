@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
+import twitter4j.auth.RequestToken;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.base.DBConstants;
@@ -21,6 +23,7 @@ public class ConfigMgrImpl implements ConfigMgr{
 	private static Logger logger = Logger.getLogger(ConfigMgrImpl.class);
 	@Inject DBMgr dbMgr;
 	private HashMap<String, Config> configMap = new HashMap<String, Config>();
+	private RequestToken requestToken;
 	
 	@Inject public ConfigMgrImpl(DBMgr dbMgr) {
 		this.dbMgr = dbMgr;
@@ -79,5 +82,15 @@ public class ConfigMgrImpl implements ConfigMgr{
 	@Override
 	public double getInitialMoney() {
 		return INITIAL_MONEY;
+	}
+
+	@Override
+	public void setRequestToken(RequestToken requestToken) {
+		this.requestToken = requestToken;
+	}
+
+	@Override
+	public RequestToken getRequestToken() {
+		return requestToken;
 	}
 }

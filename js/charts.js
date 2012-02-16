@@ -6,10 +6,15 @@ function drawVisualization(){
 
 }
 
+
+
+
+
 var drawStockHistoryDivId = null;
 var drawStockHistoryDateArray = null;
 var drawStockHistoryValueArray = null;
 var drawStockHistoryStockName = null;
+
 
 
 function drawStockHistory(divId, dateArray, valueArray, stockName) {
@@ -34,7 +39,6 @@ function drawStockHistory(divId, dateArray, valueArray, stockName) {
 			for (i; i < dateArray.length; i++) {
 
 				data.setValue(i, 0, dateArray[i]);
-//				data.setValue(i, 1, stockName);
 				data.setValue(i, 1, valueArray[i]);
 
 			}
@@ -45,7 +49,7 @@ function drawStockHistory(divId, dateArray, valueArray, stockName) {
 			google.visualization.events.addListener(annotatedtimeline, 'error', errHandler);
 			
 			annotatedtimeline.draw(data, {
-				 //'allValuesSuffix': ' followers', // A suffix that is added to all values
+				// 'allValuesSuffix': '%', // A suffix that is added to all values
 				// 'colors': ['blue', 'red', '#0000bb'], // The colors to be used
 				'displayAnnotations' : true,
 				'displayExactValues' : true, // Do not truncate values (i.e.
@@ -74,20 +78,22 @@ function drawStockHistory(divId, dateArray, valueArray, stockName) {
 }
 function errHandler(err){
 	
-	alert(err);
 	
+	alert(err);
 }
+
 var drawStockDistributionDivId = null;
 var drawStockDistributionNameArray = null;
 var drawStockDistributionPercentArray = null;
 var drawStockDistributionStockName = null;
 
+
 function reloadStockDistribution(stockId) {
 	
 	
+
 	if ($('#stock-details-screen').hasClass('blockUI'))
 		return;
-	
 	$('#stock-details-screen').block({
 		message : 'Loading'
 	});
@@ -101,8 +107,6 @@ function reloadStockDistribution(stockId) {
 			$("#stock-share-section").empty();
 			$("#stock-share-section").html($(data).html());
 			runScriptsInElement(data);
-			
-		
 		}
 	});
 }

@@ -30,7 +30,7 @@ import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
 @Singleton
-public class GetQuoteServlet extends HttpServlet {
+public class GetQuoteServlet extends TwitStreetServlet {
 	@Inject
 	UserMgr userMgr;
 	@Inject
@@ -68,14 +68,9 @@ public class GetQuoteServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
+		super.doGet(request, response);
+		setPageAttributes();
 		response.setContentType("text/html");
-		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-		response.setDateHeader("Expires", 0); // prevents caching at the proxy
-												// server
-
 		request.setAttribute("title", "twitstreet - Twitter stock market game");
 		request.setAttribute(
 				"meta-desc",
@@ -96,7 +91,6 @@ public class GetQuoteServlet extends HttpServlet {
 		logger.info("Init time: " + (end - start));
 		
 
-		User user = (User) request.getSession().getAttribute(User.USER);
 
 		start = System.currentTimeMillis();
 		queryStockById(request, response);
@@ -109,10 +103,7 @@ public class GetQuoteServlet extends HttpServlet {
 		logger.info("queryStockByQuote: " + (end - start));
 
 
-		if (user != null) {
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/dashboard.jsp").forward(request, response);
-		} else if (validateCookies(request)) {
+		if (getUser() != null) {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/dashboard.jsp").forward(request, response);
 		} else {
@@ -123,7 +114,6 @@ public class GetQuoteServlet extends HttpServlet {
 
 	public void queryStockById(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		User user = (User) request.getSession().getAttribute(User.USER);
 		String stockIdStr = request.getParameter(STOCK);
 
 		if (user != null && stockIdStr != null && stockIdStr.length() > 0) {
@@ -169,9 +159,6 @@ public class GetQuoteServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String twUserName = (String) request.getParameter(QUOTE);
 		if (twUserName != null && twUserName.length() > 0) {
-			User user = request.getSession(false) == null ? null
-					: (User) request.getSession(false).getAttribute(User.USER);
-
 			request.setAttribute(QUOTE, twUserName);
 			TwitterProxy twitterProxy = null;
 			Response resp = Response.create();
@@ -262,57 +249,6 @@ public class GetQuoteServlet extends HttpServlet {
 						+ twUserName);
 				resp.fail()
 						.reason("Something wrong, we could not retrieved quote info. Working on it. ");
-			}
-		}
-	}
-
-	private boolean validateCookies(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies() == null ? new Cookie[] {}
-				: request.getCookies();
-		boolean idFound = false;
-		boolean oAuthFound = false;
-		String idStr = "";
-		String oAuth = "";
-		boolean valid = false;
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(CallBackServlet.COOKIE_ID)) {
-				idStr = cookie.getValue();
-				idFound = true;
-			}
-			if (cookie.getName().equals(CallBackServlet.COOKIE_OAUTHTOKEN)) {
-				oAuth = cookie.getValue();
-				oAuthFound = true;
-			}
-
-			if (idFound && oAuthFound) {
-				try {
-					long id = Long.parseLong(idStr);
-					User user = null;
-					user = userMgr.getUserById(id);
-					if (user != null && oAuth.equals(user.getOauthToken())) {
-						request.getSession().setAttribute(User.USER, user);
-						valid = true;
-						break;
-					}
-				} catch (NumberFormatException nfe) {
-					// log here someday.
-				}
-				break;
-			}
-		}
-		return valid;
-	}
-
-	private void invalidateCookies(String[] cookieNames,
-			HttpServletRequest request, HttpServletResponse response) {
-		List<String> cookieNameList = Arrays.asList(cookieNames);
-		for (Cookie cookie : request.getCookies()) {
-			if (cookieNameList.contains(cookie.getName())) {
-				cookie.setMaxAge(0);
-				cookie.setValue("");
-				cookie.setPath("/");
-				cookie.setDomain(request.getHeader("host"));
-				response.addCookie(cookie);
 			}
 		}
 	}

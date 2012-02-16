@@ -12,6 +12,7 @@
 <%@page import="com.twitstreet.market.PortfolioMgr"%>
 <%@page import="com.twitstreet.config.ConfigMgr"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
+<%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Date"%>
@@ -32,16 +33,12 @@
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
 <%
-	User sessionUser = (User) request.getSession().getAttribute(User.USER);
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
-	User user = null;
-	if (sessionUser != null) {
-		user = userMgr.getUserById(sessionUser.getId());
-	}
+	User user = (User) request.getAttribute(User.USER);
 	
 	DecimalFormat f = new DecimalFormat("##.00");
 	

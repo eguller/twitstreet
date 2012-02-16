@@ -3,13 +3,11 @@
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="com.twitstreet.util.Util" %>
+<%@ page import="com.twitstreet.servlet.TwitStreetServlet" %>
 
 <%
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-User sessionUser = (User)request.getSession().getAttribute(User.USER);
-UserMgr userMgr = inj.getInstance(UserMgr.class);
-User user = userMgr.getUserById(sessionUser.getId());
-
+User user = (User)request.getAttribute(TwitStreetServlet.USER);
 %>
 <div id="balance" class="main-div">
 	<input id="cash-hidden" type="hidden" value="<%=user.getCash()%>" />

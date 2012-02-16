@@ -25,11 +25,7 @@
 <%
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
-	User sessionUser = (User) request.getSession().getAttribute(User.USER);
-	User user = null;
-	if (sessionUser != null) {
-		user = userMgr.getUserById(sessionUser.getId());
-	}
+	User user = (User) request.getAttribute(User.USER);
 
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);

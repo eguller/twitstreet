@@ -6,10 +6,11 @@
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="java.util.List"%>
 <%@ page import="com.twitstreet.util.Util" %>
+<%@ page import="com.twitstreet.servlet.TwitStreetServlet" %>
 
 <%
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-User sessionUser = (User)request.getSession().getAttribute(User.USER);
+User sessionUser = (User)request.getAttribute(TwitStreetServlet.USER);
 TransactionMgr transactionMgr = inj.getInstance(TransactionMgr.class);
 List<TransactionRecord> transactionRecordList = transactionMgr.queryTransactionRecord(sessionUser.getId());
 

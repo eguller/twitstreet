@@ -7,26 +7,22 @@
 <%@ page import="com.twitstreet.util.Util"%>
 
 <%
+	int pageSelectorPerRow = 4;
 
-int pageSelectorPerRow = 4;
+	Injector inj = (Injector) pageContext.getServletContext()
+			.getAttribute(Injector.class.getName());
 
-Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+	UserMgr userMgr = inj.getInstance(UserMgr.class);
 
-UserMgr userMgr = inj.getInstance(UserMgr.class);
+	int pageCount = Integer.valueOf(request.getParameter("pageCount"));
 
-int pageCount= Integer.valueOf(request.getParameter("pageCount"));
+	int userCount = Integer.valueOf(request.getParameter("userCount"));
+	int currPage = Integer.valueOf(request.getParameter("currPage"));
 
-int userCount = Integer.valueOf(request.getParameter("userCount"));
-int currPage = Integer.valueOf(request.getParameter("currPage"));
+	if (pageCount < pageSelectorPerRow) {
 
-
-
-if(pageCount<pageSelectorPerRow){
-	
-	pageSelectorPerRow = pageCount;
-}
-
-
+		pageSelectorPerRow = pageCount;
+	}
 %>
 
 
@@ -40,7 +36,7 @@ if(pageCount<pageSelectorPerRow){
 			href="javascript:void(0)"><span class="rankingDropDownItem"><%=Util.getIntervalStringForPage(currPage, userMgr.getRecordPerPage(), userCount) %></span>
 			<![if gt IE 6]></a>
 		<![endif]>
-			<!--[if lte IE 6]><table><tr><td><![endif]-->
+		
 			<ul class="pureCssMenum">
 
 				<!-- <span class="disabled_tnt_pagination">Prev</span> -->

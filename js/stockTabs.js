@@ -47,7 +47,6 @@ function showBuySell(){
 
 function showStockDistribution(id){
 	showTab("#stock-distribution-tab","#stock-share-section");
-	
 	reloadStockDistribution(id);
 }
 

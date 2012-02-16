@@ -11,7 +11,7 @@
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 TransactionMgr transactionMgr = inj.getInstance(TransactionMgr.class);
 List<TransactionRecord> transactionRecordList = transactionMgr.getCurrentTransactions();
-
+User user = (User)request.getAttribute(User.USER);
 %>
 <div id="currenttransactions" class="main-div">
 	<h3>Current Transactions</h3>
@@ -32,17 +32,17 @@ List<TransactionRecord> transactionRecordList = transactionMgr.getCurrentTransac
 					
 					if(transactionRecord.getOperation() == TransactionRecord.BUY){  
 						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-							out.write("<a href=\"/user?user=" + transactionRecord.getUserId() + "\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+							out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 						}
 						else{
-							out.write("<a href=\"/user?user=" + transactionRecord.getUserId() + "\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+							out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 						}
 					}
 					else{
 						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-							out.write("<a href=\"/user?user=" + transactionRecord.getUserId() + "\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+							out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 						}else{
-							out.write("<a href=\"/user?user=" + transactionRecord.getUserId() + "\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+							out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 						}
 					}
 					%>

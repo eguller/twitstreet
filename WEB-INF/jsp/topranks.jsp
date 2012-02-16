@@ -8,7 +8,7 @@
 
 <%
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-User sessionUser = (User)request.getSession().getAttribute(User.USER);
+User sessionUser = (User)request.getAttribute(User.USER);
 UserMgr userMgr = inj.getInstance(UserMgr.class);
 //TODO : count will be cached
 int userCount = userMgr.count();
