@@ -14,12 +14,20 @@
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	Portfolio portfolio = null;
-	User user = (User)request.getAttribute("user");
-	portfolio = portfolioMgr.getUserPortfolio(user);
+	
+	String parameterUser = request.getParameter(User.USER);
+	User user = null;
+	
+	if(parameterUser!=null){
+		user = userMgr.getUserById(Long.valueOf(parameterUser));		
+	}
+			
+			
+	
 %>
 <%
 	if (user != null) {
-
+		portfolio = portfolioMgr.getUserPortfolio(user);
 		String userIdStr = String.valueOf(user.getId());
 		
 %>
