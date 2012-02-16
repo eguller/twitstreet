@@ -365,7 +365,7 @@ function showTweetsOfUserInDiv(username, elementId){
 	new TWTR.Widget({
 		version : 2,
 		type : 'profile',
-		rpp : 10,
+		rpp : 20,
 		interval : 30000,
 		width : 500,
 		height : 300,

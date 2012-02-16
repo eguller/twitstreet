@@ -22,7 +22,6 @@
 			<div id="column_center">
 			
 				<template:get name="userprofile"></template:get>
-				<template:get name="userportfolio"></template:get>
 			</div>
 			<div id="column_right">
 				<template:get name="topranks"></template:get>
