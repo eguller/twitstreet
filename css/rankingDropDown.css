@@ -129,16 +129,9 @@ ul.pureCssMenu a:hover img.def,ul.pureCssMenu a:hover ul img.over,ul.pureCssMenu
 ul.pureCssMenu a:hover ul{display:block}
 ul.pureCssMenu span{
 	display:block;
-	background-image:url(./images/arrv_blue_2.gif);
 	background-position:right center;
 	background-repeat: no-repeat;
    padding-right:8px;}
-ul.pureCssMenu li:hover>a>span{	background-image:url(./images/arrv_white_2.gif);
-}
-ul.pureCssMenu a:hover span{	_background-image:url(./images/arrv_white_2.gif)}
-ul.pureCssMenu ul span,ul.pureCssMenu a:hover table span{background-image:url(./images/arr_blue_2.gif)}
-ul.pureCssMenu ul li:hover > a span{	background-image:url(./images/arr_white_2.gif);}
-ul.pureCssMenu table a:hover span{background-image:url(./images/arr_white_2.gif)}
 ul.pureCssMenu li a.pureCssMenui0{
 font:n;
 }
