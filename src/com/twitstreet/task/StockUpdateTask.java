@@ -61,9 +61,12 @@ public class StockUpdateTask implements Runnable {
 			logger.debug("Stock history update - end.");
 			
 			logger.debug("Re-rank begin.");
-			portfolioMgr.rerank();			
+			userMgr.rerank();			
 			logger.debug("Re-rank end.");
 			
+			logger.debug("Rank history update - begin.");
+			userMgr.updateRankingHistory();			
+			logger.debug("Rank history update - end.");
 			
 			
 			long endTime = System.currentTimeMillis();

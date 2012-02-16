@@ -1,5 +1,6 @@
 package com.twitstreet.session;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +16,7 @@ import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Group;
+import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
 import com.twitstreet.util.Util;
 
@@ -363,6 +365,83 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 		return userList;
+	}
+	
+	@Override
+	public void rerank() {
+		Connection connection = null;
+		CallableStatement cs = null;
+		try {
+			connection = dbMgr.getConnection();
+			cs = connection.prepareCall("{call rerank()}");
+			cs.execute();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + cs.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + cs.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, cs, null);
+		}
+	}
+	
+	@Override
+	public void updateRankingHistory(){
+		Connection connection = null;
+		PreparedStatement ps = null;
+
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank) " +
+											" select user_id, cash, portfolio,  lastUpdate, rank from ranking ");
+		
+			ps.executeUpdate();
+				
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		}catch(MySQLIntegrityConstraintViolationException ex){
+			
+			logger.debug(DBConstants.RECORD_ALREADY_EXISTS + ps.toString());
+			
+		}
+		catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+		
+		
+	}
+
+	
+	@Override
+	public RankingHistoryData getRankingHistoryForUser(long id) {
+	
+		RankingHistoryData rhd = new RankingHistoryData();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement(" select " +
+							" rh.user_id as user_id, " +
+							" rh.cash as cash, " +
+							" rh.portfolio as portfolio, " +
+							" rh.rank as rank, " +
+							" rh.lastUpdate as lastUpdate " +
+							" from ranking_history rh " + 
+							"  where user_id = ? order by lastUpdate desc ");
+			ps.setLong(1, id);
+			rs = ps.executeQuery();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			while (rs.next()) {
+				rhd.getDataFromResultSet(rs);
+			}
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return rhd;
 	}
 	
 	@Override

@@ -366,28 +366,22 @@ margin-bottom: 20px;
 
 
 .tnt_pagination {
-	display: block;
-	line-height: 21px;
-	clear: both;
-	/*padding-top: 3px;*/
+	width:218px;
+	margin-bottom:10px;
+	height:30px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-weight: normal;
-	margin-top: 5px;
-	margin-bottom: 5px;
 	position: relative;
 }
 
 .tnt_pagination a:link,#tnt_pagination a:visited {
-	padding: 7px;
-	padding-top: 2px;
-	padding-bottom: 2px;
+
 	border: 1px solid #EBEBEB;
 	
 	text-decoration: none;
 	background-color: #F5F5F5;
 	color: #0072bc;
-	width: 22px;
 	font-weight: normal;
 }
 
@@ -398,9 +392,7 @@ margin-bottom: 20px;
 }
 
 .tnt_pagination .active_tnt_link {
-	padding: 7px;
-	padding-top: 2px;
-	padding-bottom: 2px;
+
 	border: 1px solid #BBDDFF;
 	
 	text-decoration: none;
@@ -410,9 +402,7 @@ margin-bottom: 20px;
 }
 
 .tnt_pagination .disabled_tnt_pagination {
-	padding: 7px;
-	padding-top: 2px;
-	padding-bottom: 2px;
+	
 	border: 1px solid #EBEBEB;
 	
 	text-decoration: none;

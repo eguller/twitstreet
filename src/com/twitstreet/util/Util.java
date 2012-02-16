@@ -7,7 +7,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 
+import com.google.inject.Inject;
+import com.twitstreet.session.UserMgr;
+
 public class Util {
+	
+	
 	public static String NO_RECORDS_FOUND_HTML = "<p>No records found.</p>";
 	public static java.sql.Date toSqlDate(java.util.Date date) {
 		return new java.sql.Date(date.getTime());
@@ -224,4 +229,34 @@ public class Util {
 		return cphStr;
 		
 	}
+
+
+	public static String getIntervalStringForPage(int page, int recordPerPage, int userCount){
+	
+	
+		int i = page-1;
+
+		int start = i*recordPerPage+1;
+		int stop = (i+1)*recordPerPage;
+		
+		if(stop>userCount){
+			
+			stop = userCount;
+		}
+		String intervalString = "";
+		
+		if(start==stop){
+			
+
+			intervalString =String.valueOf((start));
+		}
+		else{
+			
+			intervalString = (start)+"-"+(stop);
+		}
+		
+		return intervalString;
+	
+	}
+
 }

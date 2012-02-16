@@ -51,14 +51,15 @@
 						<a id="user-tweets-tab"
 							onClick="showUserProfileTab('#user-tweets-tab','#usertweets');">
 							Tweets </a> 
+						<a id="user-ranking-history-tab"
+							onClick="showUserProfileTab('#user-ranking-history-tab','#user-trend-section');redrawUserRankingHistory();">
+							History </a> 
 					</div>
 				</td>
 			</tr>
 		</table>
 		
 	</div>
-
-
 <br>
 
 
@@ -219,4 +220,7 @@
 		<script>showTweetsOfUserInDiv('<%=user.getUserName()%>',"user-tweets-widget-container");</script>
 		</div>
 	</div>
+	
+	<jsp:include page="userRankingHistory.jsp" />
+	
 </div>

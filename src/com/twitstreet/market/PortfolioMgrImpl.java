@@ -1,6 +1,5 @@
 package com.twitstreet.market;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -249,21 +248,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		}
 	}
 
-	@Override
-	public void rerank() {
-		Connection connection = null;
-		CallableStatement cs = null;
-		try {
-			connection = dbMgr.getConnection();
-			cs = connection.prepareCall("{call rerank()}");
-			cs.execute();
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + cs.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + cs.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, cs, null);
-		}
-	}
+
 
 	@Override
 	public Portfolio getUserPortfolio(User user) {
