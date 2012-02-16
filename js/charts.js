@@ -210,7 +210,7 @@ function drawUserValueHistory(divId, dateArray, valueArray, userName){
 			annotatedtimeline.draw(data, {
 
 				// 'allValuesSuffix': '%', // A suffix that is added to all values
-				 'colors': ['blue'], // The colors to be used
+				 'colors': ['#F2469C'],//, 'red', '#0000bb'], // The colors to be used
 				'displayAnnotations' : true,
 				'displayExactValues' : true, // Do not truncate values (i.e.
 				// using K suffix)
@@ -225,10 +225,7 @@ function drawUserValueHistory(divId, dateArray, valueArray, userName){
 				// lines
 				'scaleType' : 'allmaximized', // See docs...
 				'thickness' : 3, // Make the lines thicker
-			// 'zoomStartTime': new Date(2009, 1 ,2), //NOTE: month 1 = Feb
-			// (javascript to blame)
-			// 'zoomEndTime': new Date(2009, 1 ,5) //NOTE: month 1 = Feb (javascript
-			// to blame)
+			// 'zoomStartTime': new Date(2009, 1 ,2), //NOTE: mo
 			});
 
 		}
@@ -268,9 +265,8 @@ function drawUserRankingHistory(divId, dateArray, rankArray, userName) {
 			google.visualization.events.addListener(annotatedtimeline, 'error', errHandler);
 			
 			annotatedtimeline.draw(data, {
-
 				// 'allValuesSuffix': '%', // A suffix that is added to all values
-				'colors': ['red'], // The colors to be used
+				 'colors': ['F2D046'], // The colors to be used
 				'displayAnnotations' : true,
 				'displayExactValues' : true, // Do not truncate values (i.e.
 				// using K suffix)
@@ -280,15 +276,12 @@ function drawUserRankingHistory(divId, dateArray, rankArray, userName) {
 				'displayLegendDots' : true,
 				'legendPosition' : 'newRow', // Can be sameRow
 				// 'max': 35000, // Override the automatic default
-				 'min': 0, // Override the automatic default
+				// 'min': 30000, // Override the automatic default
 				// 'scaleColumns': [0], // Have two scales, by the first and second
 				// lines
 				'scaleType' : 'allmaximized', // See docs...
 				'thickness' : 3, // Make the lines thicker
-			// 'zoomStartTime': new Date(2009, 1 ,2), //NOTE: month 1 = Feb
-			// (javascript to blame)
-			// 'zoomEndTime': new Date(2009, 1 ,5) //NOTE: month 1 = Feb (javascript
-			// to blame)
+			// 'zoomStartTime': new Date(2009, 1 ,2), //NOTE: mo
               
 			});
 

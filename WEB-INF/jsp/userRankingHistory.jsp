@@ -70,8 +70,8 @@
 	<h3>Asset History</h3>
 	<div id="user-value-chart-div" style="height: 200px; width: 500px;"></div>
 	<br>
-	<h3>Ranking History</h3>
-		<div id="user-trend-chart-div" style="height: 200px; width: 500px;"></div>
+<!-- 	<h3>Ranking History</h3> -->
+<!-- 		<div id="user-trend-chart-div" style="height: 200px; width: 500px;"></div> -->
 		<script type="text/javascript">
 			var dateArray = new Array();
 			var valueArray = new Array();
@@ -100,7 +100,7 @@
 		}		
 					
 					%>
-			drawUserRankingHistory('#user-trend-chart-div', dateArray, rankArray, userName);
+			//drawUserRankingHistory('#user-trend-chart-div', dateArray, rankArray, userName);
 			drawUserValueHistory('#user-value-chart-div', dateArray, valueArray, userName);
 		</script>
 
