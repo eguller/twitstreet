@@ -3,7 +3,6 @@ package com.twitstreet.servlet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,11 +11,8 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.twitstreet.db.data.Portfolio;
-import com.twitstreet.db.data.User;
 import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.session.UserMgr;
-import com.twitstreet.session.UserMgrImpl;
 
 @SuppressWarnings("serial")
 @Singleton
