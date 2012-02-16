@@ -33,6 +33,7 @@ create table `stock`(
     `pictureUrl` varchar(255),
     `lastUpdate` timestamp,
     `changePerHour` int,
+    `verified` bit(1) DEFAULT b'0',
      primary key (`id`)
 )  engine=innodb default charset=`utf8`;
 

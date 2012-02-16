@@ -76,7 +76,11 @@
 									title="Loads <%=searchResults.get(i).getScreenName()%>'s stock details">
 										<%
 											out.write(searchResults.get(i).getScreenName());
-										%> </a> <br>
+										%> </a> 
+										<% if(searchResults.get(i).isVerified()){ %>
+											<img src="images/verified.png" title="This twitter account is verified"/>
+											<% } %>
+										<br>
 										<%
 											out.write(Util.commaSep(searchResults.get(i).getFollowerCount()));
 										%>

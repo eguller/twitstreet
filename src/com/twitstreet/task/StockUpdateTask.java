@@ -48,7 +48,7 @@ public class StockUpdateTask implements Runnable {
 				} catch (Exception ex) {
 				}
 				if (twUser != null) {
-					stockMgr.updateTwitterData(stock.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName());
+					stockMgr.updateTwitterData(stock.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(), twUser.isVerified());
 				}
 
 			}		

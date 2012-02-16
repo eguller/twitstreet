@@ -10,6 +10,7 @@ public class Stock {
 	String pictureUrl;
 	Date lastUpdate;
 	int changePerHour;
+	boolean verified;
 	public long getId() {
 		return id;
 	}
@@ -54,5 +55,11 @@ public class Stock {
 	}
 	public void setChangePerHour(int changePerHour) {
 		this.changePerHour = changePerHour;
+	}
+	public boolean isVerified() {
+		return verified;
+	}
+	public void setVerified(boolean verified) {
+		this.verified = verified;
 	}
 }

@@ -30,32 +30,34 @@ public class SigninServlet extends TwitStreetServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		super.doGet(request, response);
-		setPageAttributes();
-		response.setContentType("text/html");
 		
-		if (user == null) {
-			Twitter twitter = new TwitterFactory().getInstance();
-			try {
-				StringBuffer callbackURL = request.getRequestURL();
-				int index = callbackURL.lastIndexOf("/");
-				callbackURL.replace(index, callbackURL.length(), "").append(
-						"/callback");
-				logger.debug("Callback url is: " + callbackURL.toString());
-				twitter.setOAuthConsumer(configMgr.getConsumerKey(),
-						configMgr.getConsumerSecret());
-				logger.debug("Consumer Key: " + configMgr.getConsumerKey() + ", Consumer Secret: " + configMgr.getConsumerSecret());
-				RequestToken requestToken = twitter
-						.getOAuthRequestToken(callbackURL.toString());
-				configMgr.setRequestToken(requestToken);
-				response.sendRedirect(requestToken.getAuthenticationURL());
-				logger.debug("Redirect sent to authentication URL: " + requestToken.getAuthenticationURL());
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+		response.setDateHeader("Expires", 0); // prevents caching at the proxy server
+		
 
-			} catch (TwitterException e) {
-				throw new ServletException(e);
-			}
-		} else {
-			response.sendRedirect(request.getContextPath() + "/");
+		Twitter twitter = new TwitterFactory().getInstance();
+		try {
+			StringBuffer callbackURL = request.getRequestURL();
+			int index = callbackURL.lastIndexOf("/");
+			callbackURL.replace(index, callbackURL.length(), "").append(
+					"/callback");
+			logger.debug("Callback url is: " + callbackURL.toString());
+			twitter.setOAuthConsumer(configMgr.getConsumerKey(),
+					configMgr.getConsumerSecret());
+			logger.debug("Consumer Key: " + configMgr.getConsumerKey()
+					+ ", Consumer Secret: " + configMgr.getConsumerSecret());
+			RequestToken requestToken = twitter
+					.getOAuthRequestToken(callbackURL.toString());
+			configMgr.setRequestToken(requestToken);
+			response.sendRedirect(requestToken.getAuthenticationURL());
+			logger.debug("Redirect sent to authentication URL: "
+					+ requestToken.getAuthenticationURL());
+
+		} catch (TwitterException e) {
+			throw new ServletException(e);
 		}
 	}
 }

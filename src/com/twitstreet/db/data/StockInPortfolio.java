@@ -8,8 +8,8 @@ public class StockInPortfolio {
 	double capital;
 	double changePerHour;
 	private double percentage;
-
-	public StockInPortfolio(long stockId, String stockName, double amount, String pictureUrl, double capital,double changePerHour, double percentage) {
+	private boolean verified;
+	public StockInPortfolio(long stockId, String stockName, double amount, String pictureUrl, double capital,double changePerHour, double percentage, boolean verified) {
 		this.stockId = stockId;
 		this.stockName = stockName;
 		this.amount = amount;
@@ -17,6 +17,7 @@ public class StockInPortfolio {
 		this.capital = capital;
 		this.changePerHour = changePerHour;
 		this.percentage = percentage;
+		this.verified = verified;
 	}
 
 	public long getStockId() {
@@ -73,5 +74,13 @@ public class StockInPortfolio {
 
 	public void setPercentage(double percentage) {
 		this.percentage = percentage;
+	}
+
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
 	}
 }

@@ -142,6 +142,7 @@ public class HomePageServlet extends TwitStreetServlet {
 					stock.setPictureUrl(twUser.getProfileImageURL()
 							.toExternalForm());
 					stock.setSold(0.0D);
+					stock.setVerified(twUser.isVerified());
 					stockMgr.saveStock(stock);
 				} catch (TwitterException e) {
 					logger.error("Servlet: Twitter exception occured", e);
@@ -236,12 +237,13 @@ public class HomePageServlet extends TwitStreetServlet {
 						stock.setTotal(twUser.getFollowerCount());
 						stock.setPictureUrl(twUser.getPictureUrl());
 						stock.setSold(0.0D);
+						stock.setVerified(twUser.isVerified());
 						stockMgr.saveStock(stock);
 
 					} else {
 						stockMgr.updateTwitterData(stock.getId(),
 								twUser.getFollowerCount(),
-								twUser.getPictureUrl(), twUser.getScreenName());
+								twUser.getPictureUrl(), twUser.getScreenName(), twUser.isVerified());
 
 					}
 					request.setAttribute(STOCK, stock);
