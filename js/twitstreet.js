@@ -249,25 +249,15 @@ function runScriptsInElement(responseData){
 }
 
 function loadBalance() {
-	$.post('/balance', {
-
-	}, function(data) {
-		if (data != null) {
-			//$("#balance_rank").html(data.rank + ".");
-			if (data.direction > 0) {
-				$("#balance_direction").html(
-						data.rank + "."+"<img src=\"/images/up_small.png\" />");
-			} else if (data.direction < 0){
-				$("#balance_direction").html(
-						data.rank + "."+"<img src=\"/images/down_small.png\" />");
-			}else {
-				$("#balance_direction").html(data.rank + ".");//"<img src=\"/images/nochange_small.png\" />"
-			}
-
-			$("#cash_value").html("$" + commasep(data.cash.toFixed(2)));
-			$("#portfolio_value").html(
-					"$" + commasep(data.portfolio.toFixed(2)));
-			$("#total_value").html("$" + commasep(data.total.toFixed(2)));
+	
+	$.ajax({
+		type: 		"get",
+		url: 		"balance",
+		success:	function(data) {	
+			
+			$("#balance").unblock();
+			$("#balance").empty();
+			$("#balance").html($(data).html());		
 		}
 	});
 }

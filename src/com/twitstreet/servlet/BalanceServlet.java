@@ -28,7 +28,7 @@ public class BalanceServlet extends TwitStreetServlet {
 		super.doPost(request, response);
 		response.setContentType("application/json");
 		if(getUser() != null){
-			response.getWriter().write(gson.toJson(new BalanceResponse(getUser())));
+	
 		}
 	}
 }

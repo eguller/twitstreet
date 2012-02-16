@@ -20,7 +20,7 @@ import com.twitstreet.session.UserMgrImpl;
 
 @SuppressWarnings("serial")
 @Singleton
-public class PortfolioServlet extends HttpServlet {
+public class PortfolioServlet extends TwitStreetServlet {
 
 	private static Logger logger = Logger.getLogger(PortfolioServlet.class);
 	@Inject
@@ -31,12 +31,9 @@ public class PortfolioServlet extends HttpServlet {
 	private final UserMgr userMgr = null;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
-		response.setContentType("application/json;charset=utf-8");
-		response.setContentType("application/json;charset=utf-8");
-		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-		response.setHeader("Pragma","no-cache"); //HTTP 1.0
-		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+			throws IOException, ServletException {
+		
+		super.doPost(request, response);
 		
 		try {
 			getServletContext().getRequestDispatcher(
@@ -47,8 +44,8 @@ public class PortfolioServlet extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
-		doPost(request, response);
+			throws IOException, ServletException {
+		    doPost(request, response);
 	}
 
 }
