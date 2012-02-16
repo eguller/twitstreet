@@ -48,7 +48,13 @@
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	
-	User user = (User) request.getAttribute(User.USER);
+	String parameterUser = request.getParameter(User.USER);
+	User user = null;
+	
+	if(parameterUser!=null){
+		user = userMgr.getUserById(Long.valueOf(parameterUser));		
+	}
+	
 	RankingHistoryData rhd = null;
 	
 	if(user!=null){
