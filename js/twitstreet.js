@@ -46,37 +46,37 @@ function loadPortfolio() {
 }
 
 function getQuote(quote) {
-	
-	blockElementWithMsg('#column_center', 'Loading');
-	$.ajax({
-		type: 		"get",
-		url: 		"/getquote",
-		data: 		"quote="+quote,
-		success:	function(data) {			
-			$("#column_center").unblock();
-			$("#column_center").empty();
-			$("#column_center").append($(data));	
-			
-		
-		}
-	});
+	if(user.length>0){
+		blockElementWithMsg('#column_center', 'Loading');
+		$.ajax({
+			type : "get",
+			url : "/getquote",
+			data : "quote=" + quote,
+			success : function(data) {
+				$("#column_center").unblock();
+				$("#column_center").empty();
+				$("#column_center").append($(data));
+
+			}
+		});
+	}
 }
 
 function getUser(user) {
-	
-	blockElementWithMsg('#column_center', 'Loading');
-	$.ajax({
-		type: 		"get",
-		url: 		"/getuser",
-		data: 		"getuser="+user,
-		success:	function(data) {			
-			$("#column_center").unblock();
-			$("#column_center").empty();
-			$("#column_center").append($(data));	
-			
-		
-		}
-	});
+	if(user.length>0){
+		blockElementWithMsg('#column_center', 'Loading');
+		$.ajax({
+			type : "get",
+			url : "/getuser",
+			data : "getuser=" + user,
+			success : function(data) {
+				$("#column_center").unblock();
+				$("#column_center").empty();
+				$("#column_center").append($(data));
+
+			}
+		});
+	}
 }
 function reloadUserProfile() {
 	var userId = $('#userProfileUserId').val();

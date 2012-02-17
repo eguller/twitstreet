@@ -522,51 +522,35 @@ public class UserMgrImpl implements UserMgr {
 	
 	@Override
 	public ArrayList<User> searchUser(String searchText) {
-		
-		
-		searchText=searchText.replace(" ", "");
-		
+
+		searchText = searchText.replace(" ", "");
+
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		User userDO = null;
 		ArrayList<User> userList = new ArrayList<User>();
-		
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("select " + 
-							"id, " + 
-							"userName, " + 
-							"lastLogin, " + 
-							"firstLogin, " + 
-							"users.cash as cash, " + 
-							"lastIp, " + 
-							"oauthToken, " +
-							"oauthTokenSecret, " + 
-							"user_profit(users.id) as changePerHour," +
-							" rank, " +
-							" oldRank, " + 
-							" direction, " + 
-							" pictureUrl, " + 
-							" portfolio_value(id) as portfolio " + 
-							" from users,ranking where ranking.user_id = users.id and userName LIKE ? ");
-			
+		if (searchText.length() > 0) {
+			try {
+				connection = dbMgr.getConnection();
+				ps = connection.prepareStatement("select " + "id, " + "userName, " + "lastLogin, " + "firstLogin, " + "users.cash as cash, " + "lastIp, " + "oauthToken, " + "oauthTokenSecret, " + "user_profit(users.id) as changePerHour," + " rank, " + " oldRank, " + " direction, " + " pictureUrl, " + " portfolio_value(id) as portfolio " + " from users,ranking where ranking.user_id = users.id and userName LIKE ? ");
 
-				ps.setString(1, "%"+ searchText+"%");
+				ps.setString(1, "%" + searchText + "%");
 
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				userDO = new User();
-				userDO.getDataFromResultSet(rs);
-				userList.add(userDO);
+				rs = ps.executeQuery();
+				while (rs.next()) {
+					userDO = new User();
+					userDO.getDataFromResultSet(rs);
+					userList.add(userDO);
+				}
+
+				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			} catch (SQLException ex) {
+				logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+			} finally {
+				dbMgr.closeResources(connection, ps, rs);
 			}
-			
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
+
 		}
 		return userList;
 	}
