@@ -26,7 +26,7 @@
 %>
 
 
-<div class="tnt_pagination" style="height: 100px; overflow: auto;">
+<div class="tnt_pagination">
 	<input class="toprank-current-page" type="hidden" value="<%=currPage%>" />
 
 

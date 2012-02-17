@@ -16,5 +16,4 @@ public interface ConfigMgr {
 	public double getInitialMoney();
 	public void setRequestToken(RequestToken requestToken);
 	public RequestToken getRequestToken();
-	
 }

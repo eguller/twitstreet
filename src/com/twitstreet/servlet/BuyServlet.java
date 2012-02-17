@@ -59,7 +59,6 @@ public class BuyServlet extends TwitStreetServlet {
 					request.setAttribute(HomePageServlet.STOCK, stockObj);
 					getServletContext().getRequestDispatcher(
 							"/WEB-INF/jsp/buySell.jsp").forward(request, response);
-					//response.getWriter().write(gson.toJson(buySellResponse));
 				}
 			} catch (NumberFormatException e) {
 				logger.error("Servlet: Parsing stock, amount failed. Stock: "
