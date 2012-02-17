@@ -9,7 +9,6 @@
 		increased to 2 million during his 2012 election's campaign. So you
 		will have 20.000 follower of Obama and your portfolio worth 20.000$.</p>
 	<p>Point is, try to find trendy people on twitter. Who will be
-		popular on twitter in near future ? And you cannot buy follower of a
-		twitter user if it has less than 1000 follower.</p>
+		popular on twitter in near future ? </p>
 	<p>Good luck!</p>
 </div>
