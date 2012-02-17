@@ -73,6 +73,9 @@
 						<a href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
 							title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page"
 							target="_blank"><%=stock == null ? "" : stock.getName()%></a>
+							<% if(stock != null && stock.isVerified()){ %>
+								<img src="images/verified.png" title="This twitter account is verified"/>
+							<% } %>
 					</h1>
 				</td>
 				<td style="vertical-align: bottom;">

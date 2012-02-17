@@ -132,6 +132,7 @@ public class GetQuoteServlet extends TwitStreetServlet {
 					stock.setPictureUrl(twUser.getProfileImageURL()
 							.toExternalForm());
 					stock.setSold(0.0D);
+					stock.setVerified(twUser.isVerified());
 					stockMgr.saveStock(stock);
 				} catch (TwitterException e) {
 					logger.error("Servlet: Twitter exception occured", e);
@@ -157,19 +158,20 @@ public class GetQuoteServlet extends TwitStreetServlet {
 
 	public void queryStockByQuote(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		User userTmp = user;
 		String twUserName = (String) request.getParameter(QUOTE);
 		if (twUserName != null && twUserName.length() > 0) {
 			request.setAttribute(QUOTE, twUserName);
 			TwitterProxy twitterProxy = null;
 			Response resp = Response.create();
-			if (user == null) {
+			if (userTmp == null) {
 				// uses someone else account to get quote for unauthenticated
 				// users.
-				user = userMgr.random();
+				userTmp = userMgr.random();
 			}
 
-			twitterProxy = user == null ? null : twitterProxyFactory.create(
-					user.getOauthToken(), user.getOauthTokenSecret());
+			twitterProxy = userTmp == null ? null : twitterProxyFactory.create(
+					userTmp.getOauthToken(), userTmp.getOauthTokenSecret());
 
 			SimpleTwitterUser twUser = null;
 			ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
@@ -224,12 +226,13 @@ public class GetQuoteServlet extends TwitStreetServlet {
 						stock.setTotal(twUser.getFollowerCount());
 						stock.setPictureUrl(twUser.getPictureUrl());
 						stock.setSold(0.0D);
+						stock.setVerified(twUser.isVerified());
 						stockMgr.saveStock(stock);
 
 					} else {
 						stockMgr.updateTwitterData(stock.getId(),
 								twUser.getFollowerCount(),
-								twUser.getPictureUrl(), twUser.getScreenName());
+								twUser.getPictureUrl(), twUser.getScreenName(), twUser.isVerified());
 
 					}
 					request.setAttribute(STOCK, stock);

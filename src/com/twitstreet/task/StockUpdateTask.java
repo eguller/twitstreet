@@ -48,7 +48,7 @@ public class StockUpdateTask implements Runnable {
 				} catch (Exception ex) {
 				}
 				if (twUser != null) {
-					stockMgr.updateTwitterData(stock.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName());
+					stockMgr.updateTwitterData(stock.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(), twUser.isVerified());
 				}
 
 			}		
@@ -61,9 +61,12 @@ public class StockUpdateTask implements Runnable {
 			logger.debug("Stock history update - end.");
 			
 			logger.debug("Re-rank begin.");
-			portfolioMgr.rerank();			
+			userMgr.rerank();			
 			logger.debug("Re-rank end.");
 			
+			logger.debug("Rank history update - begin.");
+			userMgr.updateRankingHistory();			
+			logger.debug("Rank history update - end.");
 			
 			
 			long endTime = System.currentTimeMillis();

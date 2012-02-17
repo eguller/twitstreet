@@ -5,8 +5,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.google.inject.Inject;
-import com.twitstreet.task.ReRankTask;
-import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.twitter.TwitterProxy;
 
 public class User implements DataObjectIF{

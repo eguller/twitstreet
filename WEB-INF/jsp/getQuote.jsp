@@ -16,12 +16,23 @@
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 
+<%@page import="com.twitstreet.session.UserMgr"%>
 <%
+	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+	UserMgr userMgr = inj.getInstance(UserMgr.class);
+
 	Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
 	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);
 
-	User user = (User) request.getAttribute(User.USER);
+	User user = null;
+
+	try {
+		String userId = (String) request.getParameter(User.USER);
+		user = userMgr.getUserById(Long.valueOf(userId));
+	} catch (Exception ex) {
+
+	}
 
 	if (quote == null || quote.length() < 1) {
 

@@ -15,24 +15,6 @@ var drawStockHistoryDateArray = null;
 var drawStockHistoryValueArray = null;
 var drawStockHistoryStockName = null;
 
-function setStockHistoryData(divId, dateArray, valueArray, stockName){
-	
-
-	  drawStockHistoryDivId = divId;
-	  drawStockHistoryDateArray = dateArray;
-	  drawStockHistoryValueArray = valueArray;
-	  drawStockHistoryStockName = stockName;
-	  
-}	function setStockDistributionData(divId, dateArray, valueArray, stockName){
-	
-
-	 drawStockDistributionDivId = divId;
-	 drawStockDistributionNameArray = nameArray;
-	 drawStockDistributionPercentArray = percentArray;
-	 drawStockDistributionStockName = stockName;
-	  
-}	
-
 
 
 function drawStockHistory(divId, dateArray, valueArray, stockName) {
@@ -47,7 +29,8 @@ function drawStockHistory(divId, dateArray, valueArray, stockName) {
 
 			var data = new google.visualization.DataTable();
 			data.addColumn('datetime', 'Date');
-			data.addColumn('number', stockName);
+	//		data.addColumn('number', stockName);
+			data.addColumn('number', '');
 
 			data.addRows(dateArray.length);
 
@@ -169,5 +152,148 @@ function drawStockDistribution(divId,nameArray,percentArray,stockName) {
 
 		}
 	}
+
+}
+
+
+
+
+var drawUserValueHistoryDivId = null;
+var drawUserValueHistoryValueArray = null;
+var drawUserValueHistoryDateArray = null;
+var drawUserValueHistoryUserName = null;
+
+
+var drawUserRankingHistoryDivId = null;
+var drawUserRankingHistoryDateArray = null;
+var drawUserRankingHistoryRankArray = null;
+var drawUserRankingHistoryUserName = null;
+
+function redrawUserRankingHistory() {
+	
+	drawUserRankingHistory(drawUserRankingHistoryDivId, drawUserRankingHistoryDateArray, drawUserRankingHistoryRankArray, drawUserRankingHistoryUserName);
+	drawUserValueHistory(drawUserValueHistoryDivId, drawUserValueHistoryDateArray, drawUserValueHistoryValueArray, drawUserValueHistoryUserName);
+	
+	
+}
+function drawUserValueHistory(divId, dateArray, valueArray, userName){
+	
+	drawUserValueHistoryDivId = divId;
+	drawUserValueHistoryValueArray = valueArray;
+	drawUserValueHistoryDateArray = dateArray;
+	drawUserValueHistoryUserName = userName;
+	if($(divId).parent().css('display')!='none'){
+		
+
+		if (dateArray != null && dateArray.length > 0) {
+
+			var data = new google.visualization.DataTable();
+			data.addColumn('datetime', 'Date');
+			data.addColumn('number', '');
+
+			data.addRows(dateArray.length);
+
+			var i = 0;
+
+			for (i; i < dateArray.length; i++) {
+
+				data.setValue(i, 0, dateArray[i]);
+				data.setValue(i, 1, valueArray[i]);
+
+			}
+			var annotatedtimeline = new google.visualization.AnnotatedTimeLine($(divId)[0]);
+			
+			
+
+			google.visualization.events.addListener(annotatedtimeline, 'error', errHandler);
+			
+			annotatedtimeline.draw(data, {
+
+				// 'allValuesSuffix': '%', // A suffix that is added to all values
+				 'colors': ['blue'], // The colors to be used
+				'displayAnnotations' : true,
+				'displayExactValues' : true, // Do not truncate values (i.e.
+				// using K suffix)
+				'displayRangeSelector' : false, // Do not sow the range selector
+				'displayZoomButtons' : true, // DO not display the zoom buttons
+				'fill' : 30, // Fill the area below the lines with 20% opacity
+				'displayLegendDots' : true,
+				'legendPosition' : 'newRow', // Can be sameRow
+				// 'max': 35000, // Override the automatic default
+				// 'min': 30000, // Override the automatic default
+				// 'scaleColumns': [0], // Have two scales, by the first and second
+				// lines
+				'scaleType' : 'allmaximized', // See docs...
+				'thickness' : 3, // Make the lines thicker
+			// 'zoomStartTime': new Date(2009, 1 ,2), //NOTE: month 1 = Feb
+			// (javascript to blame)
+			// 'zoomEndTime': new Date(2009, 1 ,5) //NOTE: month 1 = Feb (javascript
+			// to blame)
+			});
+
+		}
+	}
+	
+	
+}
+function drawUserRankingHistory(divId, dateArray, rankArray, userName) {
+	drawUserRankingHistoryDivId = divId;
+	drawUserRankingHistoryDateArray = dateArray;
+	drawUserRankingHistoryUserName = userName;
+	drawUserRankingHistoryRankArray = rankArray;
+	if($(divId).parent().css('display')!='none'){
+		
+
+		if (dateArray != null && dateArray.length > 0) {
+
+			var data = new google.visualization.DataTable();
+			data.addColumn('datetime', 'Date');
+			data.addColumn('number', '');
+
+			data.addRows(dateArray.length);
+
+			var i = 0;
+
+			for (i; i < dateArray.length; i++) {
+
+				data.setValue(i, 0, dateArray[i]);
+
+				data.setValue(i, 1, rankArray[i]);
+
+			}
+			var annotatedtimeline = new google.visualization.AnnotatedTimeLine($(divId)[0]);
+			
+			
+
+			google.visualization.events.addListener(annotatedtimeline, 'error', errHandler);
+			
+			annotatedtimeline.draw(data, {
+
+				// 'allValuesSuffix': '%', // A suffix that is added to all values
+				'colors': ['red'], // The colors to be used
+				'displayAnnotations' : true,
+				'displayExactValues' : true, // Do not truncate values (i.e.
+				// using K suffix)
+				'displayRangeSelector' : false, // Do not sow the range selector
+				'displayZoomButtons' : true, // DO not display the zoom buttons
+				'fill' : 30, // Fill the area below the lines with 20% opacity
+				'displayLegendDots' : true,
+				'legendPosition' : 'newRow', // Can be sameRow
+				// 'max': 35000, // Override the automatic default
+				 'min': 0, // Override the automatic default
+				// 'scaleColumns': [0], // Have two scales, by the first and second
+				// lines
+				'scaleType' : 'allmaximized', // See docs...
+				'thickness' : 3, // Make the lines thicker
+			// 'zoomStartTime': new Date(2009, 1 ,2), //NOTE: month 1 = Feb
+			// (javascript to blame)
+			// 'zoomEndTime': new Date(2009, 1 ,5) //NOTE: month 1 = Feb (javascript
+			// to blame)
+              
+			});
+
+		}
+	}
+	
 
 }

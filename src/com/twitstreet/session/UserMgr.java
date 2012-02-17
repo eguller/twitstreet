@@ -1,6 +1,8 @@
 package com.twitstreet.session;
 
 import java.util.ArrayList;
+
+import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
 
 public interface UserMgr {
@@ -28,5 +30,9 @@ public interface UserMgr {
 	public ArrayList<User> getTopRank(int pageNumber);
 	
 	public int count();
+	public RankingHistoryData getRankingHistoryForUser(long id);
+	public void updateRankingHistory();
 
+	public void rerank();
+	
 }

@@ -37,7 +37,7 @@ public class StockMgrImpl implements StockMgr {
 			connection = dbMgr.getConnection();
 
 			ps = connection
-					.prepareStatement("select id, name, total, stock_sold(id) as sold, lastUpdate, pictureUrl, changePerHour from stock where name = ?");
+					.prepareStatement("select id, name, total, stock_sold(id) as sold, lastUpdate, pictureUrl, changePerHour, verified from stock where name = ?");
 			ps.setString(1, name);
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -48,6 +48,7 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.setPictureUrl(rs.getString("pictureUrl"));
 				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
 				stockDO.setChangePerHour(rs.getInt("changePerHour"));
+				stockDO.setVerified(rs.getBoolean("verified"));
 				break;
 			}
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -68,7 +69,7 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour from stock where id = ?");
+					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock where id = ?");
 			ps.setLong(1, id);
 
 			rs = ps.executeQuery();
@@ -81,6 +82,7 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.setPictureUrl(rs.getString("pictureUrl"));
 				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
 				stockDO.setChangePerHour(rs.getInt("changePerHour"));
+				stockDO.setVerified(rs.getBoolean("verified"));
 			}
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
@@ -153,19 +155,20 @@ public class StockMgrImpl implements StockMgr {
 
 	
 	public void updateTwitterData(long id, int total, String pictureUrl,
-			String screenName) {
+			String screenName, boolean verified) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ? where id = ?");
+					.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ?, verified = ? where id = ?");
 			
 			ps.setInt(1, total);
 			ps.setString(2, pictureUrl);
 			ps.setString(3, screenName);
-			ps.setLong(4, id);
+			ps.setBoolean(4, verified);
+			ps.setLong(5, id);
 			ps.executeUpdate();
 			
 			//This query should be called right after the stock update, 
@@ -201,11 +204,12 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert into stock(id, name, total, pictureUrl, lastUpdate) values(?, ?, ?, ?, now())");
+					.prepareStatement("insert into stock(id, name, total, pictureUrl, lastUpdate, verified) values(?, ?, ?, ?, now(), ?)");
 			ps.setLong(1, stock.getId());
 			ps.setString(2, stock.getName());
 			ps.setInt(3, stock.getTotal());
 			ps.setString(4, stock.getPictureUrl());
+			ps.setBoolean(5, stock.isVerified());
 
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());

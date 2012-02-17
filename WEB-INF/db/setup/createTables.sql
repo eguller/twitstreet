@@ -33,6 +33,7 @@ create table `stock`(
     `pictureUrl` varchar(255),
     `lastUpdate` timestamp,
     `changePerHour` int,
+    `verified` bit(1) DEFAULT b'0',
      primary key (`id`)
 )  engine=innodb default charset=`utf8`;
 
@@ -125,4 +126,15 @@ create table `ranking` (
     `lastUpdate` timestamp,
      primary key (`user_id`),
      constraint `fk_ranking_user` foreign key (`user_id`) references `users` (`id`)
+)  engine=innodb default charset=`utf8`;
+
+-- ranking history table
+create table `ranking_history` (
+    `user_id` bigint not null,
+    `cash` decimal(11,2),
+    `portfolio` decimal(11,2),
+    `rank` int,
+    `lastUpdate` timestamp,
+     primary key (`user_id`,`lastUpdate`),
+     constraint `fk_ranking_history_user` foreign key (`user_id`) references `users` (`id`)
 )  engine=innodb default charset=`utf8`;

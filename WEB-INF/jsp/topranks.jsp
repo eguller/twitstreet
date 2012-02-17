@@ -61,7 +61,7 @@ if (userCount > maxRank) {
 		</jsp:include>
 	
 	
-		<table class="datatbl" id="topranktable">
+		<table class="datatbl" id="topranktable" style="margin-bottom:10px">
 				<%
 			
 			

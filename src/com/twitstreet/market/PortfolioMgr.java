@@ -65,6 +65,5 @@ public interface PortfolioMgr {
 	
 	public List<UserStockDetail> getStockDistribution(long stock);
 
-	public void rerank();
 	
 }

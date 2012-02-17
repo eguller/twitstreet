@@ -54,6 +54,9 @@
 										onclick='loadStock(<%=stock.getStockId()%>)'
 										title="Loads <%=stock.getStockName()%>'s stock details"><%=stock.getStockName()%>
 									</a>
+									<% if(stock != null && stock.isVerified()){ %>
+										<img src="images/verified.png" title="This twitter account is verified"/>
+									<% } %>
 								</div>
 								<div style="float: left"
 									title="The ratio of your share to the whole stock">
