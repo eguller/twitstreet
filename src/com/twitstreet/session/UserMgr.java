@@ -14,6 +14,7 @@ public interface UserMgr {
      * @return - user details.
      */
     public User getUserById(long userId);
+    public ArrayList<User> getUsersByIdList(ArrayList<Long> idList);
 	public int getRecordPerPage();
 
 
@@ -34,5 +35,6 @@ public interface UserMgr {
 	public void updateRankingHistory();
 
 	public void rerank();
+	ArrayList<User> searchUser(String searchText);
 	
 }

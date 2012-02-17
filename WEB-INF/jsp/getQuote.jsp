@@ -48,13 +48,13 @@
 <div id="get-quote-div">
 
 	
-	<h3>Dashboard</h3>
+	<h3>Stocks</h3>
 	<div id="quoteholder" class="main-div">
 
 		<div>
 			<input type="text" class="textbox" id="quote" value="<%=quote%>"
 				name="quote" /> <input type="button" id="getQuoteButton"
-				onclick="getQuote($('#quote').val())" value="Get Quote">
+				onclick="getQuote($('#quote').val())" value="Search">
 		</div>
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input
 			type="hidden" id="quote-id"

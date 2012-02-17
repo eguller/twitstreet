@@ -49,7 +49,7 @@
 <div id="other-search-result">
 			
 			<%
-				ArrayList<SimpleTwitterUser> searchResults = (ArrayList<SimpleTwitterUser>) request.getSession().getAttribute(HomePageServlet.OTHER_SEARCH_RESULTS);
+				ArrayList<SimpleTwitterUser> searchResults = (ArrayList<SimpleTwitterUser>) request.getAttribute(HomePageServlet.OTHER_SEARCH_RESULTS);
 		
 				if (quote.length()>0 && searchResults != null && searchResults.size() > 0) {
 			%>

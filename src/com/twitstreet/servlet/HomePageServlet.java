@@ -161,7 +161,7 @@ public class HomePageServlet extends TwitStreetServlet {
 			request.setAttribute(STOCK, stock);
 
 			request.setAttribute(STOCK_ID,new Long(stock.getId()));
-			request.getSession().setAttribute(HomePageServlet.OTHER_SEARCH_RESULTS,
+			request.setAttribute(HomePageServlet.OTHER_SEARCH_RESULTS,
 					searchResultList);
 		}
 	}
@@ -213,7 +213,7 @@ public class HomePageServlet extends TwitStreetServlet {
 						
 					}
 
-					request.getSession().setAttribute(OTHER_SEARCH_RESULTS, searchResultList);
+					request.setAttribute(OTHER_SEARCH_RESULTS, searchResultList);
 
 				} catch (TwitterException e1) {
 					resp.fail()

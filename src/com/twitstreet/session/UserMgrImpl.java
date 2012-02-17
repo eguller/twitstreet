@@ -15,6 +15,7 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
+import com.twitstreet.db.base.DBMgrImpl;
 import com.twitstreet.db.data.Group;
 import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
@@ -468,5 +469,105 @@ public class UserMgrImpl implements UserMgr {
 	@Override
 	public int getRecordPerPage() {
 		return MAX_RECORD_PER_PAGE;
+	}
+	@Override
+	public ArrayList<User> getUsersByIdList(ArrayList<Long> idList) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		ArrayList<User> userList = new ArrayList<User>();
+		
+		String listStr = DBMgrImpl.getIdListAsCommaSeparatedString(idList);
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select " + 
+							"id, " + 
+							"userName, " + 
+							"lastLogin, " + 
+							"firstLogin, " + 
+							"users.cash as cash, " + 
+							"lastIp, " + 
+							"oauthToken, " +
+							"oauthTokenSecret, " + 
+							"user_profit(users.id) as changePerHour," +
+							"rank, " +
+							"oldRank, " + 
+							"direction, " + 
+							"pictureUrl, " + 
+							"portfolio_value(id) as portfolio " + 
+							"from users,ranking where ranking.user_id = users.id and users.id in ("+listStr+")");
+			
+//			for(int i = 0; i<idList.size(); i++){
+//				
+//				ps.setLong(i+1, idList.get(i));
+//				
+//			}
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
+	
+	@Override
+	public ArrayList<User> searchUser(String searchText) {
+		
+		
+		searchText=searchText.replace(" ", "");
+		
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		ArrayList<User> userList = new ArrayList<User>();
+		
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select " + 
+							"id, " + 
+							"userName, " + 
+							"lastLogin, " + 
+							"firstLogin, " + 
+							"users.cash as cash, " + 
+							"lastIp, " + 
+							"oauthToken, " +
+							"oauthTokenSecret, " + 
+							"user_profit(users.id) as changePerHour," +
+							" rank, " +
+							" oldRank, " + 
+							" direction, " + 
+							" pictureUrl, " + 
+							" portfolio_value(id) as portfolio " + 
+							" from users,ranking where ranking.user_id = users.id and userName LIKE ? ");
+			
+
+				ps.setString(1, "%"+ searchText+"%");
+
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
 	}
 }

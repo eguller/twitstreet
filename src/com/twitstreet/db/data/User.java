@@ -7,7 +7,7 @@ import java.util.Date;
 import com.google.inject.Inject;
 import com.twitstreet.twitter.TwitterProxy;
 
-public class User implements DataObjectIF{
+public class User implements DataObjectIF {
 	public static final String USER = "user";
     long id;
     String userName;
@@ -25,6 +25,21 @@ public class User implements DataObjectIF{
     int direction;
     String pictureUrl;
     @Inject TwitterProxy twitterProxy = null;
+    
+    @Override
+	public boolean equals(Object obj) {
+
+		try {
+
+			return id == ((User) obj).getId();
+		} catch (Exception ex) {
+
+		}
+
+		return false;
+
+	}
+    
 	public long getId() {
         return id;
     }

@@ -144,6 +144,16 @@ CUSTOM CLASSES
 	height: 34px;
 	font-weight: bolder;
 }
+#getUserTextboxId {
+	padding: 6px;
+	width: 410px;
+	font-weight: bolder;
+}
+#getUserButtonId {
+	width: 70px;
+	height: 34px;
+	font-weight: bolder;
+}
 
 .textbox {
 	border: 1px solid #CCCCCC;

@@ -18,6 +18,7 @@ import com.twitstreet.session.UserMgr;
 public class UserProfileServlet extends TwitStreetServlet {
 	@Inject UserMgr userMgr;
 
+	public static String USER_PROFILE_USER = "userprofileuser";
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
 		super.doGet(request, response);
@@ -25,9 +26,9 @@ public class UserProfileServlet extends TwitStreetServlet {
 		response.setContentType("text/html;charset=utf-8");
 		
 		request.setAttribute("title", "User profile of " + user.getUserName());
-		request.setAttribute("meta-desc", "This page shows profile of a "+user.getUserName()+". You can find details of "+user.getUserName()+" like rank, portfolio, cash and portfolio details.");
+		request.setAttribute("meta-desc", "This page shows profile of "+user.getUserName()+". You can find details of "+user.getUserName()+" like rank, portfolio, cash and portfolio details.");
 		
-		if (user != null) {
+		if (request.getParameter(User.USER) != null) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);
 		} else {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);

@@ -151,7 +151,7 @@ public class GetQuoteServlet extends TwitStreetServlet {
 			request.setAttribute(STOCK, stock);
 
 			request.setAttribute(STOCK_ID,new Long(stock.getId()));
-			request.getSession().setAttribute(GetQuoteServlet.OTHER_SEARCH_RESULTS,
+			request.setAttribute(GetQuoteServlet.OTHER_SEARCH_RESULTS,
 					searchResultList);
 		}
 	}
@@ -202,11 +202,11 @@ public class GetQuoteServlet extends TwitStreetServlet {
 						
 					}
 
-					request.getSession().setAttribute(OTHER_SEARCH_RESULTS, searchResultList);
+					request.setAttribute(OTHER_SEARCH_RESULTS, searchResultList);
 
 				} catch (TwitterException e1) {
 					resp.fail()
-							.reason("Something wrong, we could not connected to Twitter. Working on it.");
+							.reason("Something wrong, we could not connect to Twitter. Working on it.");
 					return;
 				}
 

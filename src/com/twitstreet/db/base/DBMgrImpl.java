@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
@@ -147,5 +148,24 @@ public class DBMgrImpl implements DBMgr {
 			return false;
 		}
 		return true;
+	}
+	
+	public static String getIdListAsCommaSeparatedString(ArrayList<Long> idList){
+		String idListStr = "";
+		
+		for(int i= 0;i <idList.size(); i++){
+			
+			if(i!=0){
+				
+				idListStr = idListStr +",";
+			}
+			
+			idListStr = idListStr + String.valueOf(idList.get(i));
+			
+			
+			
+		}
+		return idListStr;
+		
 	}
 }
