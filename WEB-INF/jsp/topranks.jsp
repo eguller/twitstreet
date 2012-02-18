@@ -50,8 +50,13 @@ if (userCount > maxRank) {
 }
 %>
 <div id="topranks" class="main-div">
+	
+	<table class="datatbl">
+	<tr>
+	<td>
 	<h3>Ranking</h3>
-	<div id="topranks-loading-div">
+	</td>
+	<td align="right">
 		<jsp:include page="toprankPagination.jsp">
 	
 			<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
@@ -60,6 +65,16 @@ if (userCount > maxRank) {
 	
 		</jsp:include>
 	
+	</td>
+	</tr>
+	
+	</table>
+	
+	
+	
+
+	<div id="topranks-loading-div">
+		
 	
 		<table class="datatbl" id="topranktable" style="margin-bottom:10px">
 				<%

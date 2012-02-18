@@ -43,6 +43,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 	public int getFollowerCount(String name) throws TwitterException {
 		int followerCount = 0;
 		try {
+			
 			User user = twitter.showUser(name);
 			followerCount = user.getFollowersCount();
 			logger.debug("Twitter: Follower count retrieved. Username: " + name

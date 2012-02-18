@@ -25,8 +25,27 @@
 	}
 %>
 
+<div class="h3">
 
-<div class="tnt_pagination">
+	<select  class="topRankSelectClass" ="<%=currPage%>" onchange="toprank()">
+	
+		<% 					
+					
+		for(int i = 0; i < pageCount;i++) {	
+			
+	       String intervalString = Util.getIntervalStringForPage(i+1, userMgr.getRecordPerPage(), userCount);
+					
+		%>
+			<option <%=(i+1==currPage)?"selected=\"selected\"":""%> value="<%=i+1%>"><%=intervalString%></option>
+			
+		<%	
+		}		
+		%>
+	</select>
+</div>
+
+
+<!--<div class="tnt_pagination">
 	<input class="toprank-current-page" type="hidden" value="<%=currPage%>" />
 
 
@@ -34,22 +53,20 @@
 
 		<li class="pureCssMenui0"><a class="pureCssMenui0"
 			href="javascript:void(0)"><span class="rankingDropDownItem"><%=Util.getIntervalStringForPage(currPage, userMgr.getRecordPerPage(), userCount) %></span>
-			<![if gt IE 6]></a>
-		<![endif]>
+			</a>
+		
 		
 			<ul class="pureCssMenum">
 
-				<!-- <span class="disabled_tnt_pagination">Prev</span> -->
-				<%
+<%-- 				
+
+
+
+				<% 
 					
 					
 					for(int i = 0; i < pageCount;i++) {	
-					%>
-
-
-
-
-				<%	
+						
 						
 				       String intervalString = Util.getIntervalStringForPage(i+1, userMgr.getRecordPerPage(), userCount);
 						
@@ -64,8 +81,17 @@
 					}
 					
 					%>
-			</ul> <!--[if lte IE 6]></td></tr></table></a><![endif]--></li>
+					
+					
+					
+--%>
+					
+					
+					
+			</ul></li>
 	</ul>
 
-</div>
+</div> 
+
+-->
 

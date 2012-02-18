@@ -91,6 +91,7 @@ public class GetUserServlet extends TwitStreetServlet {
 		
 		queryUserFromDB(searchText);
 		queryUserFromTwitter(searchText);	
+		searchResultUsers.removeAll(Collections.singleton(null));
 		
 		end = System.currentTimeMillis();
 		logger.info("queryStockByQuote: " + (end - start));
@@ -99,7 +100,6 @@ public class GetUserServlet extends TwitStreetServlet {
 		
 		User user = searchResultUsers.remove(0);
 		
-		searchResultUsers.removeAll(Collections.singleton(null));
 		
 		
 		

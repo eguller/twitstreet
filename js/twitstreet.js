@@ -278,8 +278,14 @@ function loadStock(id, reload) {
 
 }
 
-function toprank() {
-	var pageParam = $('.toprank-current-page:first').val();
+function toprank(page) {
+	var pageParam = page;
+	
+	if(pageParam==null){
+		pageParam = $('.topRankSelectClass:first').val();	
+		
+	}
+	
 	$.ajax({
 		type : "get",
 		url : "toprank",
