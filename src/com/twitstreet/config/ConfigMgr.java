@@ -7,6 +7,7 @@ public interface ConfigMgr {
 	public static final String CONSUMER_SECRET = "consumerSecret";
 	public static final String MIN_FOLLOWER = "minFollower";
 	public static final String GA_ACCOUNT = "gaAccount";
+	public static final String COMISSION_TRESHOLD = "comissionTreshold";
 	public void load();
 	public String get(String parm);
 	public String getConsumerKey();
@@ -16,4 +17,5 @@ public interface ConfigMgr {
 	public double getInitialMoney();
 	public void setRequestToken(RequestToken requestToken);
 	public RequestToken getRequestToken();
+	public int getComissionTreshold();
 }

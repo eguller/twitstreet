@@ -93,4 +93,9 @@ public class ConfigMgrImpl implements ConfigMgr{
 	public RequestToken getRequestToken() {
 		return requestToken;
 	}
+
+	@Override
+	public int getComissionTreshold() {
+		return Integer.parseInt(get(ConfigMgr.COMISSION_TRESHOLD));
+	}
 }

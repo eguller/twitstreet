@@ -3,6 +3,7 @@ insert into config(parm, val) values('consumerKey', '{consumerKey}');
 insert into config(parm, val) values('consumerSecret', '{consumerSecret}');
 insert into config(parm, val) values('minFollower', 0);
 insert into config(parm, val) values('gaAccount', 'UA-7030369-5');
+insert into config(parm, val) values('comissionTreshold', '15000');
 
 insert into groups(name,id) values('Overall',1);
 

@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
+import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Portfolio;
@@ -33,6 +34,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	private UserMgr userMgr;
 	@Inject
 	private TransactionMgr transactionMgr;
+	@Inject private ConfigMgr configMgr;
 
 	@Override
 	public BuySellResponse buy(User buyer, Stock stock, int amount) {
@@ -104,7 +106,8 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			}
 			
 			// calculate commission
-			double commission = (amount2Sell * COMMISSION_RATE);
+			
+			double commission = (seller.getCash() + seller.getPortfolio()) < configMgr.getComissionTreshold() ? 0 : (amount2Sell * COMMISSION_RATE);
 
 			// subtract commission
 			double cash = amount2Sell - commission;

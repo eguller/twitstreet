@@ -238,7 +238,7 @@
 									}
 									i = 0;
 
-									if (sellValues.size() > 0) {
+									if (sellValues.size() > 0 && ( (user.getCash() + user.getPortfolio()) > configMgr.getComissionTreshold()  )) {
 							%>
 							<tr>
 								<td colspan="3" style="text-align: center; padding-top: 10px;">
