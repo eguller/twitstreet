@@ -51,7 +51,7 @@
 <div id="other-search-result">
 			
 			<%
-				ArrayList<User> searchResults = (ArrayList<User>) request.getAttribute(GetUserServlet.OTHER_SEARCH_RESULTS);
+				ArrayList<User> searchResults = (ArrayList<User>) request.getAttribute(GetUserServlet.GET_USER_OTHER_SEARCH_RESULTS);
 		
 				if (getUserText.length()>0 && searchResults != null && searchResults.size() > 0) {
 			%>
@@ -65,38 +65,41 @@
 				<tr>
 					<%
 						for (int j = 0; j < 3; j++) {
-									if (i < searchResults.size()) {
-					%>
-
-					<td>
-						<table>
-							<tr>
-								<td><img class="twuser"
-									src="<%=searchResults.get(i).getPictureUrl()%>" />
+							if (i < searchResults.size()) {
+								%>
+			
+								<td>
+									<table>
+										<tr>
+											<td><img class="twuser"
+												src="<%=searchResults.get(i).getPictureUrl()%>" />
+											</td>
+											<td><a href="javascript:void(0)" onclick="getQuote('<%=searchResults.get(i).getUserName()%>')"
+												title="Loads <%=searchResults.get(i).getUserName()%>'s stock details">
+													<%
+														out.write(searchResults.get(i).getUserName());
+													%> </a> 
+												
+													<br>
+													<%
+														//out.write(Util.commaSep(searchResults.get(i).getFollowerCount()));
+													%>
+											</td>
+			
+										</tr>
+									</table>
 								</td>
-								<td><a href="javascript:void(0)" onclick="getQuote('<%=searchResults.get(i).getUserName()%>')"
-									title="Loads <%=searchResults.get(i).getUserName()%>'s stock details">
-										<%
-											out.write(searchResults.get(i).getUserName());
-										%> </a> 
-									
-										<br>
-										<%
-											//out.write(Util.commaSep(searchResults.get(i).getFollowerCount()));
-										%>
+						<%
+							} else {
+						%>
+								<td>
+								
+								
 								</td>
-
-							</tr>
-						</table>
-					</td>
-					<%
-						} else {
-					%>
-					<td></td>
-					<%
+						<%
+							}
+							i++;
 						}
-									i++;
-								}
 					%>
 				</tr>
 				<%
@@ -104,6 +107,9 @@
 				%>
 			</table>
 			<%
+				
+				int a =5;
+			a++;
 				}
 			%>
 		</div>

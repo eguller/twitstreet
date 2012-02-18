@@ -1,4 +1,4 @@
-<%@page import="com.twitstreet.servlet.UserProfileServlet"%>
+<%@page import="com.twitstreet.servlet.GetUserServlet"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
 <%@page import="java.util.ArrayList"%>
@@ -21,8 +21,8 @@
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 
-	String getUserText = request.getAttribute(HomePageServlet.GET_USER_TEXT) == null ? "" : (String) request.getAttribute(HomePageServlet.GET_USER_TEXT);
-	String getUserDisplay = request.getAttribute(HomePageServlet.GET_USER_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.GET_USER_DISPLAY);
+	String getUserText = request.getAttribute(GetUserServlet.GET_USER_TEXT) == null ? "" : (String) request.getAttribute(GetUserServlet.GET_USER_TEXT);
+	String getUserDisplay = request.getAttribute(GetUserServlet.GET_USER_DISPLAY) == null ? "" : (String) request.getAttribute(GetUserServlet.GET_USER_DISPLAY);
 
 	User user = null;
 
@@ -44,11 +44,11 @@
 
 	}
 %>
-<div id="get-user-div">
+<div id="get-user-div" class="searchDiv">
 
 	
 	<h3>Users</h3>
-	<div id="userholder" class="main-div">
+	<div id="userholder">
 
 		<div>
 			<input type="text" class="textbox" id="getUserTextboxId" value="<%=getUserText%>"

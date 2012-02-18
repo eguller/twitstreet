@@ -78,9 +78,40 @@ PAGE STRUCTURE
 #main {
 	width: auto;
 	display: block;
-	padding: 10px 0;
+/* 	padding: 10px 0; */
 }
 
+
+
+#top_right_div {
+	width: 220px;
+	float: left;
+}
+#top_center_div {
+	width: 500px;
+	margin-right: 20px;
+	float: left;
+}
+#top_left_div{
+	width: 260px;
+	margin-right: 20px;
+	float: left;
+}
+.top_center_ul {
+	
+
+}
+.top_center_li {
+	font-size: 16px;
+	font-weight: bolder;
+	padding: 4px 5px;
+	margin-bottom: 5px;
+	background-color: #F2F2F2;
+/* 	border-bottom: 1px solid #D9D9D9; */
+/* 	border-top: 1px solid #E5E5E5; */
+	float: left;
+	margin-right: 15px;
+}
 #column_left {
 	width: 260px;
 	margin-right: 20px;
@@ -134,9 +165,9 @@ CUSTOM CLASSES
 	width: 300px;
 }
 
-#quote {
+#getQuoteTextboxId {
 	padding: 6px;
-	width: 410px;
+	width: 412px;
 	font-weight: bolder;
 }
 #getQuoteButton {
@@ -146,7 +177,7 @@ CUSTOM CLASSES
 }
 #getUserTextboxId {
 	padding: 6px;
-	width: 410px;
+	width: 412px;
 	font-weight: bolder;
 }
 #getUserButtonId {
@@ -160,6 +191,16 @@ CUSTOM CLASSES
 	border-radius: 3px 3px 3px 3px;
 	padding: 6px 6px 4px;
 	width: 200px;
+}
+
+.rounded-corner {
+	border-color: #5f9900;
+	border: 1px solid #D9D9D9;
+	padding: 2px;
+	 -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
 }
 
 #loginbox .submit {
@@ -339,10 +380,22 @@ img.twuser {
 margin-bottom: 20px;
 
 }
+.searchDiv {
+
+	
+margin-bottom: 5px;
+
+}
 
 .field-white {
 	text-align: center;
 	margin: 1px;
+	border-color: #5f9900;
+	border: 1px solid #D9D9D9;
+	padding: 2px;
+}
+
+.field-white2 {
 	border-color: #5f9900;
 	border: 1px solid #D9D9D9;
 	padding: 2px;
@@ -474,4 +527,42 @@ margin-bottom: 20px;
 	border-width: 1px;
     cursor: pointer;
 }
+.main-tabs {
+	float: left;
+	font-weight: bold;
+}
 
+.main-tabs a.youarehere {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border-color: #777777 #777777 #FFFFFF;
+	border-style: solid;
+	border-width: 0px;
+	color: black;
+	font-size: 120%;
+	height: 30px;
+	line-height: 28px;
+	margin-top: 3px;
+	padding: 0 11px;
+}
+
+.main-tabs a {
+	background: inherit;
+	border: 0px solid #FFFFFF;
+	color: #777777;
+	display: block;
+	float: left;
+	font-size: 90%;
+	height: 24px;
+	line-height: 22px;
+	margin: 8px 8px 0 0;
+	padding: 0 11px;
+	text-decoration: none;
+}
+
+.main-tabs a:hover {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border-color: #777777 #777777 #FFFFFF;
+	border-style: solid;
+	border-width: 0px;
+    cursor: pointer;
+}

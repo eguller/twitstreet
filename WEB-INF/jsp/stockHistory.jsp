@@ -25,20 +25,19 @@
 	<div id="stock-trend-section" style="display: none;">
 	
 	<%
-	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-	StockMgr stockMgr = inj.getInstance(StockMgr.class);
-	
-	Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
-	StockHistoryData shd = null;
-	
-	if(stock!=null){
-		
-		shd = stockMgr.getStockHistory(stock.getId());
-		
-		
-	}
-	
-	if (shd != null && shd.getDateValueMap().size() > 1) {
+			Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+			StockMgr stockMgr = inj.getInstance(StockMgr.class);
+
+			Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
+			StockHistoryData shd = null;
+
+			if (stock != null) {
+
+				shd = stockMgr.getStockHistory(stock.getId());
+
+			}
+
+			if (shd != null && shd.getDateValueMap().size() > 1) {
 		%>
 	
 
@@ -50,23 +49,17 @@
 			var stockName =
 		<%out.write("'" + shd.getName() + "';\n");
 
-					LinkedHashMap<Date, Integer> dvm = shd.getDateValueMap();
+				LinkedHashMap<Date, Integer> dvm = shd.getDateValueMap();
 
-					
-					out.write("dateArray.push(new Date(" + stock.getLastUpdate().getTime()+ "));\n");
+				out.write("dateArray.push(new Date(" + stock.getLastUpdate().getTime() + "));\n");
 
-					out.write("valueArray.push(" + stock.getTotal() + ");\n");
-					
-					for (Date date : dvm.keySet()) {
-						out.write("dateArray.push(new Date(" + date.getTime() + "));\n");
+				out.write("valueArray.push(" + stock.getTotal() + ");\n");
 
-						out.write("valueArray.push(" + dvm.get(date) + ");\n");
-					}
-					
-					
-					
-					
-					%>
+				for (Date date : dvm.keySet()) {
+					out.write("dateArray.push(new Date(" + date.getTime() + "));\n");
+
+					out.write("valueArray.push(" + dvm.get(date) + ");\n");
+				}%>
 			drawStockHistory('#stock-trend-chart-div', dateArray, valueArray,
 					stockName);
 		</script>
@@ -74,20 +67,22 @@
 	
 
 	<%
-			}else if(stock!=null){%>
-			
-			
-			
-			<div>
-			<p>
-			No history data available for <%=stock.getName()%> yet.
-			</p>
-			</div>
-			
-			
-				<%			
-			}
+			} else if (stock != null) {
 		%>
+
+
+
+	<div class="field-white">
+	
+			<b>No history data available for <%=stock.getName()%> yet.
+			</b>
+	
+	</div>
+
+
+	<%
+		}
+	%>
 		
 		</div>
 	

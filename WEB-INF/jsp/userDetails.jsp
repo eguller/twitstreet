@@ -66,13 +66,12 @@
 		
 	</div>
 	
-	<br>
 
 	<div id="userstatus" class="main-div">
 		<div id="userbalance" class="main-div">
 			<h3>Balance
 			</h3>
-			<div class="field-white">
+<!-- 			<div class="field-white"> -->
 				<table class="datatbl">
 
 					<tr>
@@ -114,7 +113,7 @@
 				
 					</tr>
 				</table>
-			</div>
+<!-- 			</div> -->
 		</div>
 		
 		<div id="userPortfolio" class="main-div">
@@ -210,7 +209,7 @@
 		</div>
 	</div>
 
-	<div id="usertweets" class="main-div" style="display: none;">
+	<div id="usertweets" class="main-div"">
 	
 		
 		<div id="user-tweets-widget-container" class="main-div">

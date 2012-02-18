@@ -2,9 +2,13 @@ $(document).ready(function() {
 	$("#dashboard-message-field").corner("round 3px");
 	$("#buy-links div").corner("round 5px");
 
-	jQuery('#quote').click(function() {
+	jQuery('#getQuoteTextboxId').click(function() {
 		selectAllText(jQuery(this))
 	});
+	jQuery('#getUserTextboxId').click(function() {
+		selectAllText(jQuery(this))
+	});
+	
 
 	if ($("#topranks").length > 0) {
 		setInterval(toprank, 20000);
@@ -21,7 +25,7 @@ $(document).ready(function() {
 	if ($("#portfolio").length > 0) {
 		setInterval(loadPortfolio, 20000);
 	}
-	
+
 	if ($("#userprofile").length > 0) {
 		setInterval(reloadUserProfile, 20000);
 	}
@@ -32,30 +36,52 @@ function calculateSold(total, soldPercentage) {
 	return total * soldPercentage;
 }
 function loadPortfolio() {
-	
+
 	$.ajax({
-		type: 		"get",
-		url: 		"portfolio",
-		success:	function(data) {			
+		type : "get",
+		url : "portfolio",
+		success : function(data) {
 			$("#portfolio").empty();
-			$("#portfolio").html($(data).html());	
-			
-		
+			$("#portfolio").html($(data).html());
+
 		}
 	});
 }
 
+// function goToUsers(){
+//	
+//	
+// if(user.length>0){
+// blockElementWithMsg('#column_center', 'Loading');
+// $.ajax({
+// type : "get",
+// url : "/user",
+// data : "quote=" + quote,
+// success : function(data) {
+// $("#column_center").unblock();
+// $("#column_center").empty();
+// $("#column_center").append($(data));
+//
+// }
+// });
+// }
+//	
+// }
+
 function getQuote(quote) {
-	if(user.length>0){
+	if (quote.length > 0) {
+		
 		blockElementWithMsg('#column_center', 'Loading');
+		showTabMain('#stocks-tab','#stocks-container');
+		
 		$.ajax({
 			type : "get",
 			url : "/getquote",
 			data : "quote=" + quote,
 			success : function(data) {
 				$("#column_center").unblock();
-				$("#column_center").empty();
-				$("#column_center").append($(data));
+				$("#stocks-container").empty();
+				$("#stocks-container").append($(data).html());
 
 			}
 		});
@@ -63,16 +89,19 @@ function getQuote(quote) {
 }
 
 function getUser(user) {
-	if(user.length>0){
+	if (user.length > 0) {
 		blockElementWithMsg('#column_center', 'Loading');
+		showTabMain('#users-tab','#users-container');
+		
+		
 		$.ajax({
 			type : "get",
 			url : "/getuser",
 			data : "getuser=" + user,
 			success : function(data) {
 				$("#column_center").unblock();
-				$("#column_center").empty();
-				$("#column_center").append($(data));
+				$("#users-container").empty();
+				$("#users-container").append($(data));
 
 			}
 		});
@@ -82,43 +111,48 @@ function reloadUserProfile() {
 	var userId = $('#userProfileUserId').val();
 	loadUserProfile(userId);
 }
-function loadUserProfile(userId) {
-	blockElementWithMsg('#column_center', 'Loading');
-	$.ajax({
-		type: 		"get",
-		url: 		"/user",	
-		data:		"user="+userId,
-		success:	function(data) {
-			$("#column_center").unblock();
-			$("#column_center").empty();
-			$("#column_center").append($(data));				
+function loadUserProfile(userId,reload) {
+	if (userId != null) {
+		
+		if(!reload){
+			blockElementWithMsg('#column_center', 'Loading');
+			showTabMain('#users-tab','#users-container');
+			
 		}
-	});
+		$.ajax({
+			type : "get",
+			url : "/user",
+			data : "user=" + userId,
+			success : function(data) {
+				$("#column_center").unblock();
+				$("#users-container").empty();
+				$("#users-container").append($(data));
+			}
+		});
+	}
 }
-
-
 
 function loadCurrentTransactions() {
 	$.ajax({
-		type: 		"get",
-		url: 		"/transaction",	
-		success:	function(data) {			
+		type : "get",
+		url : "/transaction",
+		success : function(data) {
 			$("#currenttransactions").empty();
-			$("#currenttransactions").html($(data).html());	
-			
+			$("#currenttransactions").html($(data).html());
+
 		}
 	});
 }
 
 function loadUserTransactions() {
 	$.ajax({
-		type: 		"get",
-		url: 		"/transaction",	
-		data:		"type=user",
-		success:	function(data) {			
+		type : "get",
+		url : "/transaction",
+		data : "type=user",
+		success : function(data) {
 			$("#yourtransactions").empty();
-			$("#yourtransactions").html($(data).html());	
-			
+			$("#yourtransactions").html($(data).html());
+
 		}
 	});
 }
@@ -143,19 +177,18 @@ function buy(stock, amount) {
 		message : 'Processing'
 	});
 	$.ajax({
-		type: 		"get",
-		url: 		"a/buy",	
-		data:		"stock="+stock+"&amount="+amount,
-		success:	function(data) {			
+		type : "get",
+		url : "a/buy",
+		data : "stock=" + stock + "&amount=" + amount,
+		success : function(data) {
 			$("#buy-sell-section").empty();
-			$("#buy-sell-section").html($(data).html());	
-			
+			$("#buy-sell-section").html($(data).html());
+
 			loadPortfolio();
 			loadUserTransactions();
 		}
 	});
 }
-
 
 function sell(stock, amount) {
 	// if already clicked do nothing
@@ -166,13 +199,13 @@ function sell(stock, amount) {
 		message : 'Processing'
 	});
 	$.ajax({
-		type: 		"get",
-		url: 		"a/sell",	
-		data:		"stock="+stock+"&amount="+amount,
-		success:	function(data) {			
+		type : "get",
+		url : "a/sell",
+		data : "stock=" + stock + "&amount=" + amount,
+		success : function(data) {
 			$("#buy-sell-section").empty();
-			$("#buy-sell-section").html($(data).html());	
-			
+			$("#buy-sell-section").html($(data).html());
+
 			loadPortfolio();
 			loadUserTransactions();
 		}
@@ -215,9 +248,20 @@ function setup() {
 		}
 	});
 }
-function loadStock(id){
 
-	blockElementWithMsg('#column_center', 'Loading');
+function reloadStock(id){
+	
+	
+	loadStock(id, true);
+}
+function loadStock(id, reload) {
+
+	if(!reload){
+		blockElementWithMsg('#column_center', 'Loading');
+		showTabMain('#stocks-tab','#stocks-container');
+		
+	}
+	
 	$.ajax({
 		type : "get",
 		url : "stock",
@@ -225,12 +269,10 @@ function loadStock(id){
 		success : function(data) {
 
 			$("#column_center").unblock();
-			$("#column_center").empty();
+			$("#stocks-container").empty();
+			$("#stocks-container").append($(data));
 
-			//var html = $("<div />").append($(data).clone()).html();
-			$("#column_center").append($(data));
-			//runScriptsInElement(data);
-			// initStockTabs();
+			
 		}
 	});
 
@@ -239,42 +281,40 @@ function loadStock(id){
 function toprank() {
 	var pageParam = $('.toprank-current-page:first').val();
 	$.ajax({
-		type: 		"get",
-		url: 		"toprank",
-		data:		"page="+pageParam,
-		success:	function(data) {	
-			
+		type : "get",
+		url : "toprank",
+		data : "page=" + pageParam,
+		success : function(data) {
+
 			$("#topranks-loading-div").unblock();
 			$("#topranks").empty();
-			$("#topranks").html($(data).html());		
+			$("#topranks").html($(data).html());
 		}
 	});
 }
 
-function runScriptsInElement(responseData){
-	 var scriptArray = $(responseData).find("script").prevObject;
+function runScriptsInElement(responseData) {
+	var scriptArray = $(responseData).find("script").prevObject;
 
-	
-	for(var i=0; i<scriptArray.length; i++){
-		if(scriptArray[i]!=null && scriptArray[i].text!=null){
+	for ( var i = 0; i < scriptArray.length; i++) {
+		if (scriptArray[i] != null && scriptArray[i].text != null) {
 			eval(scriptArray[i].text);
-			
+
 		}
 	}
 
-	
 }
 
 function loadBalance() {
-	
+
 	$.ajax({
-		type: 		"get",
-		url: 		"balance",
-		success:	function(data) {	
-			
+		type : "get",
+		url : "balance",
+		success : function(data) {
+
 			$("#balance").unblock();
 			$("#balance").empty();
-			$("#balance").html($(data).html());		
+			$("#balance").html($(data).html());
 		}
 	});
 }
@@ -287,29 +327,27 @@ function retrievePage(pageElement, page) {
 		clicked.removeClass();
 		// and add href to it
 		clicked.attr("href", "javascript:void(0)");
-		
+
 		// then add make new link disabled
-		pageElement.attr('class','active_tnt_link');
+		pageElement.attr('class', 'active_tnt_link');
 		// remove href
 		pageElement.removeAttr("href");
-	
-		
+
 		blockElementWithMsg('#topranks-loading-div', 'Loading')
-	
-		
-		 $('.toprank-current-page').val(page);
+
+		$('.toprank-current-page').val(page);
 		// finally load data
 		toprank();
 	}
 }
-function blockElementWithMsg(elementId,msg){
+function blockElementWithMsg(elementId, msg) {
 	if ($(elementId).hasClass('blockUI'))
 		return;
 	// block element
 	$(elementId).block({
 		message : msg
 	});
-	
+
 }
 
 function commasep(nStr) {
@@ -326,7 +364,7 @@ function commasep(nStr) {
 }
 
 function getNoRecordsFound() {
-	
+
 	return '<p>No records found.</p>';
 }
 
@@ -335,39 +373,37 @@ function selectAllText(textbox) {
 	textbox.select();
 }
 
-function roundedInteger(number){
-	if(parseInt(number)!=number){
-	
-		if(number<0){
-			return parseInt(number-1);
+function roundedInteger(number) {
+	if (parseInt(number) != number) {
+
+		if (number < 0) {
+			return parseInt(number - 1);
+		} else if (number > 0) {
+			return parseInt(number + 1);
 		}
-		else if(number>0){
-			return parseInt(number+1);
-		}
-	}	
+	}
 	return number;
 }
 
-function getDouble(dbl, minval){
+function getDouble(dbl, minval) {
 	var pctgStr = dbl.toFixed(2);
-	
-	if(pctgStr== '0.00'){
-		if(dbl<0){
-			pctgStr= pctgStr.replace('0.00','-'+minval.toFixed(2));
-		}
-		else if(dbl>0){
-			
-			pctgStr= pctgStr.replace('0.00',minval.toFixed(2));
+
+	if (pctgStr == '0.00') {
+		if (dbl < 0) {
+			pctgStr = pctgStr.replace('0.00', '-' + minval.toFixed(2));
+		} else if (dbl > 0) {
+
+			pctgStr = pctgStr.replace('0.00', minval.toFixed(2));
 		}
 	}
 	return pctgStr;
 }
 
-function objectExists(id){
+function objectExists(id) {
 	return $(id).length > 0;
 }
 
-function showTweetsOfUserInDiv(username, elementId){
+function showTweetsOfUserInDiv(username, elementId) {
 
 	new TWTR.Widget({
 		version : 2,
@@ -376,7 +412,7 @@ function showTweetsOfUserInDiv(username, elementId){
 		interval : 30000,
 		width : 500,
 		height : 300,
-		id :elementId,
+		id : elementId,
 		theme : {
 			shell : {
 				background : '#f2f2f2',

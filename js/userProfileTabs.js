@@ -12,6 +12,11 @@
 	userProfileTabContentsArray.push("#usertweets");
 	userProfileTabContentsArray.push("#user-trend-section");
 	
+	function initUserProfileTabs(){
+		
+		
+		showUserProfileTab('#user-status-tab','#userstatus');
+	}
 function showUserProfileTab(tabId,tabContentId){
 	var i;
 	for(i=0; i<userProfileTabsArray.length; i++){

@@ -45,16 +45,16 @@
 
 	}
 %>
-<div id="get-quote-div">
+<div id="get-quote-div" class="searchDiv">
 
 	
 	<h3>Stocks</h3>
-	<div id="quoteholder" class="main-div">
+	<div id="quoteholder">
 
 		<div>
-			<input type="text" class="textbox" id="quote" value="<%=quote%>"
+			<input type="text" class="textbox" id="getQuoteTextboxId" value="<%=quote%>"
 				name="quote" /> <input type="button" id="getQuoteButton"
-				onclick="getQuote($('#quote').val())" value="Search">
+				onclick="getQuote($('#getQuoteTextboxId').val())" value="Search">
 		</div>
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input
 			type="hidden" id="quote-id"
@@ -62,7 +62,7 @@
 	</div>
 
 	<script type="text/javascript">
-		$("#quote").keyup(function(event) {
+		$("#getQuoteTextboxId").keyup(function(event) {
 			if (event.keyCode == 13) {
 				$("#getQuoteButton").click();
 			}

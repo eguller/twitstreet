@@ -2,6 +2,7 @@ package com.twitstreet.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -39,7 +40,6 @@ public class GetUserServlet extends TwitStreetServlet {
 	@Inject
 	PortfolioMgr portfolioMgr = null;
 
-	public static final String OTHER_SEARCH_RESULTS = "other-search-results";
 
 	public static final String RESULT = "result";
 	public static final String REASON = "reason";
@@ -48,7 +48,7 @@ public class GetUserServlet extends TwitStreetServlet {
 	public static final String GET_USER_TEXT = "getUserText";
 	public static final String GET_USER_DISPLAY = "getUserDisplay";
 	public static final String USER_NOT_FOUND = "user-not-found";
-	private static final String GET_USER_OTHER_SEARCH_RESULTS = "getUserOtherSearchResults";
+	public static final String GET_USER_OTHER_SEARCH_RESULTS = "getUserOtherSearchResults";
 
 
 	ArrayList<User> searchResultUsers = new ArrayList<User>();
@@ -62,6 +62,10 @@ public class GetUserServlet extends TwitStreetServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
+		
+		
+		 searchResultUsers = new ArrayList<User>();
+		 
 		setPageAttributes();
 		response.setContentType("text/html");
 		request.setAttribute("title", "twitstreet - Twitter stock market game");
@@ -94,6 +98,8 @@ public class GetUserServlet extends TwitStreetServlet {
 		
 		
 		User user = searchResultUsers.remove(0);
+		
+		searchResultUsers.removeAll(Collections.singleton(null));
 		
 		
 		

@@ -171,7 +171,7 @@ var drawUserRankingHistoryUserName = null;
 
 function redrawUserRankingHistory() {
 	
-	drawUserRankingHistory(drawUserRankingHistoryDivId, drawUserRankingHistoryDateArray, drawUserRankingHistoryRankArray, drawUserRankingHistoryUserName);
+	//drawUserRankingHistory(drawUserRankingHistoryDivId, drawUserRankingHistoryDateArray, drawUserRankingHistoryRankArray, drawUserRankingHistoryUserName);
 	drawUserValueHistory(drawUserValueHistoryDivId, drawUserValueHistoryDateArray, drawUserValueHistoryValueArray, drawUserValueHistoryUserName);
 	
 	

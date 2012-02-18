@@ -15,7 +15,7 @@
 <%@page import="com.twitstreet.market.PortfolioMgr"%>
 <%@page import="com.twitstreet.config.ConfigMgr"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
-<%@ page import="com.twitstreet.servlet.HomePageServlet"%>
+<%@ page import="com.twitstreet.servlet.UserProfileServlet"%>
 
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 <%@page import="java.util.ArrayList"%>
@@ -42,7 +42,7 @@
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
 	
-<div id="user-trend-section" style="display: none;">
+<div id="user-trend-section">
 	
 	<%
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
@@ -51,9 +51,10 @@
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
 	
-	if(parameterUser!=null){
-		user = userMgr.getUserById(Long.valueOf(parameterUser));		
-	}
+	user = (user == null) ? (User) request.getAttribute(UserProfileServlet.USER_PROFILE_USER) : user;
+	user = (user == null && parameterUser != null) ? userMgr.getUserById(Long.valueOf(parameterUser)) : user;
+	request.setAttribute(UserProfileServlet.USER_PROFILE_USER, user);
+			
 	
 	RankingHistoryData rhd = null;
 	

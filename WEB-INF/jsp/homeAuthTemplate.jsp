@@ -20,8 +20,14 @@
 				<template:get name="recentTweets"></template:get>
 			</div>
 			
-			<div id="column_center">			
-				<template:get name="dashboard"></template:get>
+			<div id="column_center">
+			
+				
+				<template:get name="stocks"></template:get>				
+				<template:get name="users"></template:get>
+				
+				<script type="text/javascript">showTabMain('#stocks-tab','#stocks-container')</script>
+				
 				<template:get name="howtoplay"></template:get>
 				<template:get name="signup"></template:get>
 			</div>

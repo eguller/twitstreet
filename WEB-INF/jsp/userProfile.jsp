@@ -28,27 +28,29 @@
 	String getUserTextDisplay = request.getAttribute(GetUserServlet.GET_USER_DISPLAY) == null ? "" : (String) request.getAttribute(GetUserServlet.GET_USER_DISPLAY);
 
 %>
-<div id="userprofile" class="main-div">
+<div id="userprofile" class="main-div" > 
 	<jsp:include page="getUser.jsp" />
 	
 	<%
-			if (user != null) {
-				portfolio = portfolioMgr.getUserPortfolio(user);
-				String userIdStr = String.valueOf(user.getId());
-				
-		%>
-		
-		
-		<jsp:include page="userDetails.jsp" />
-		
+		if (user != null) {
+			portfolio = portfolioMgr.getUserPortfolio(user);
+			String userIdStr = String.valueOf(user.getId());
+			
+	%>
+	
 
-		<jsp:include page="otherSearchResults.jsp" />
+			<jsp:include page="userDetails.jsp" />
+			
+			<script type="text/javascript">initUserProfileTabs()</script>
+	
+			<jsp:include page="getUserOtherSearchResults.jsp" />
+
 
 
 	<%
 		} else if (getUserText.length() > 0) {
 	%>	
-		<div id="searchusernoresult"><p>No results found.</p></div>
+			<div id="searchusernoresult"><p>No results found.</p></div>
 	<%
 		}
 	%>
