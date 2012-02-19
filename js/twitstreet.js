@@ -26,7 +26,7 @@ $(document).ready(function() {
 		setInterval(loadPortfolio, 20000);
 	}
 	if ($("#user-watch-list").length > 0) {
-		setInterval(loadWatchList, 20000);
+		setInterval(reloadWatchList, 20000);
 	}
 	if ($("#userprofile").length > 0) {
 		setInterval(reloadUserProfile, 20000);
@@ -49,12 +49,22 @@ function loadPortfolio() {
 		}
 	});
 }
-function loadWatchList() {
-
+function reloadWatchList() {
+	
+	loadWatchList(true);
+}
+function loadWatchList(reload) {
+	if(!reload){
+		blockElementWithMsg('#user-watch-list', 'Loading');
+		
+		
+	}
 	$.ajax({
 		type : "get",
 		url : "watchlist",
 		success : function(data) {
+
+			$("#user-watch-list").unblock();
 			$("#user-watch-list").empty();
 			$("#user-watch-list").html($(data).html());
 
@@ -63,12 +73,13 @@ function loadWatchList() {
 }
 function addToWatchList(stockid) {
 
+	blockElementWithMsg("#user-watch-list");
 	$.ajax({
 		type : "get",
 		url : "watchlist",
 		data : "stock="+stockid+"&operation=add",
 		success : function(data) {
-			
+			$("#user-watch-list").unblock();
 			$("#user-watch-list").empty();
 			$("#user-watch-list").html($(data).html());
 			$(".add-to-watch-list-link-"+stockid).hide();
@@ -79,12 +90,13 @@ function addToWatchList(stockid) {
 }
 function removeFromWatchList(stockid) {
 
+	blockElementWithMsg("#user-watch-list");
 	$.ajax({
 		type : "get",
 		url : "watchlist",
 		data : "stock="+stockid+"&operation=remove",
 		success : function(data) {
-			
+			$("#user-watch-list").unblock();
 			$("#user-watch-list").empty();
 			$("#user-watch-list").html($(data).html());
 			$(".remove-from-watch-list-link-"+stockid).hide();
@@ -409,6 +421,10 @@ function loadBalance() {
 }
 
 function blockElementWithMsg(elementId, msg) {
+	if(msg==null){
+		msg = 'Loading';
+		
+	}
 	if ($(elementId).hasClass('blockUI'))
 		return;
 	// block element
