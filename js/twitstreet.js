@@ -360,7 +360,8 @@ function toprank(page) {
 		pageParam = $('.topRankSelect:first').val();	
 		
 	}
-	
+	blockElementWithMsg('#topranks-loading-div', 'Loading');
+
 	$.ajax({
 		type : "get",
 		url : "toprank",
@@ -400,27 +401,6 @@ function loadBalance() {
 	});
 }
 
-function retrievePage(pageElement, page) {
-	// is this clicked one ?
-	if (pageElement.attr("class") != 'active_tnt_link') {
-		// make previous page number clickable
-		var clicked = $('.active_tnt_link');
-		clicked.removeClass();
-		// and add href to it
-		clicked.attr("href", "javascript:void(0)");
-
-		// then add make new link disabled
-		pageElement.attr('class', 'active_tnt_link');
-		// remove href
-		pageElement.removeAttr("href");
-
-		blockElementWithMsg('#topranks-loading-div', 'Loading')
-
-		$('.toprank-current-page').val(page);
-		// finally load data
-		toprank();
-	}
-}
 function blockElementWithMsg(elementId, msg) {
 	if ($(elementId).hasClass('blockUI'))
 		return;
