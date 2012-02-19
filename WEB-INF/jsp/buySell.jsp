@@ -71,12 +71,9 @@
 
 								<td>
 									<%
-										boolean changePerHourAvailable = stock != null
-												&& stock.getChangePerHour() != 0;
+									
 										int col = 3;
-										if (changePerHourAvailable) {
-											col = 4;
-										}
+										
 									%>
 									<table class="datatbl">
 										<tr>
@@ -86,16 +83,8 @@
 											<td style="width: <%=100 / col%>%; text-align: center;"><span
 												class="red-light"><b>Sold</b> </span></td>
 											<td style="width: <%=100 / col%>%; text-align: center;"><b>Total</b>
-											</td>
-
-											<%
-												if (changePerHourAvailable) {
-											%>
-
-											<td style="width: <%=100 / col%>%; text-align: center;"></td>
-											<%
-												}
-											%>
+											
+											
 										</tr>
 										<tr>
 											<td id="available" style="width: 25%; text-align: center;">
@@ -120,13 +109,12 @@
 												%>
 											</td>
 
-											<%
-												if (changePerHourAvailable) {
-											%>
 											<td id="changePerHour"
 												style="width: 25%; text-align: center;">
 												<%
-													if (stock != null && stock.getChangePerHour() != 0) {
+													if (stock != null) {
+														
+														if(stock.isChangePerHourCalculated()){
 															int cph = stock.getChangePerHour();
 															String str = Util.getFollowerChangePerHourString(cph,
 																	stock.getTotal());
@@ -141,12 +129,11 @@
 															}
 
 														}
+													}
 												%>
 											</td>
 
-											<%
-												}
-											%>
+										
 
 
 										</tr>
@@ -184,14 +171,14 @@
  		out.write("You have <b>" + commaSep + "</b> " + stock.getName());
  	}
 
- 	if (stock.getTotal() < configMgr.getMinFollower()) {
- 		out.write("<br>");
- 		out.write(stock.getName()
- 				+ " has <b>"
- 				+ stock.getTotal()
- 				+ "</b> follower. <br>You cannot buy followers if total is less than <b>"
- 				+ configMgr.getMinFollower() + "</b>");
- 	}
+//  	if (stock.getTotal() < configMgr.getMinFollower()) {
+//  		out.write("<br>");
+//  		out.write(stock.getName()
+//  				+ " has <b>"
+//  				+ stock.getTotal()
+//  				+ "</b> follower. <br>You cannot buy followers if total is less than <b>"
+//  				+ configMgr.getMinFollower() + "</b>");
+//  	}
  	if( user.getCash() < 1 ) {
  		out.write("<br>You do not have enough cash to buy " + stock.getName());
  	}

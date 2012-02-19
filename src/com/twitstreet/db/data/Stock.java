@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.Date;
 
 public class Stock implements DataObjectIF {
+	
+	
 	long id;
 	String name;
 	int total;
@@ -12,6 +14,7 @@ public class Stock implements DataObjectIF {
 	String pictureUrl;
 	Date lastUpdate;
 	int changePerHour;
+	boolean changePerHourCalculated;
 	boolean verified;
 	public long getId() {
 		return id;
@@ -72,8 +75,26 @@ public class Stock implements DataObjectIF {
 		this.setSold(rs.getDouble("sold"));
 		this.setPictureUrl(rs.getString("pictureUrl"));
 		this.setLastUpdate(rs.getTimestamp("lastUpdate"));
-		this.setChangePerHour(rs.getInt("changePerHour"));
+		
+		Integer changePerHour =	rs.getInt("changePerHour");
+		
+		if(rs.wasNull()){
+			
+			changePerHour = 0;
+			changePerHourCalculated = false;
+		}
+		else{
+			
+			changePerHourCalculated = true;
+		}
+		this.setChangePerHour(changePerHour);
 		this.setVerified(rs.getBoolean("verified"));
 		
+	}
+	public boolean isChangePerHourCalculated() {
+		return changePerHourCalculated;
+	}
+	public void setChangePerHourCalculated(boolean changePerHourCalculated) {
+		this.changePerHourCalculated = changePerHourCalculated;
 	}
 }

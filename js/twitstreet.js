@@ -81,7 +81,7 @@ function getQuote(quote) {
 			success : function(data) {
 				$("#column_center").unblock();
 				$("#stocks-container").empty();
-				$("#stocks-container").append($(data).html());
+				$("#stocks-container").append($(data));
 
 			}
 		});
@@ -200,6 +200,7 @@ function buy(stock, amount) {
 			$("#buy-sell-section").html($(data).html());
 
 			loadPortfolio();
+			loadBalance();
 			loadUserTransactions();
 		}
 	});
@@ -222,6 +223,7 @@ function sell(stock, amount) {
 			$("#buy-sell-section").html($(data).html());
 
 			loadPortfolio();
+			loadBalance();
 			loadUserTransactions();
 		}
 	});

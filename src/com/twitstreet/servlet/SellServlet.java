@@ -49,10 +49,10 @@ public class SellServlet extends TwitStreetServlet {
 			String amount = request.getParameter("amount");
 			
 			try {
-				User seller = userMgr.getUserById(user.getId());
+//				User seller = userMgr.getUserById(user.getId());
 				Stock stockObj = stockMgr.getStockById(Long.parseLong(stock));
-				if(seller != null && stockObj != null){
-					BuySellResponse buySellResponse = portfolioMgr.sell(seller, stockObj, Integer.parseInt(amount));
+				if(stockObj != null){
+					BuySellResponse buySellResponse = portfolioMgr.sell(user, stockObj, Integer.parseInt(amount));
 					request.setAttribute(HomePageServlet.STOCK, stockObj);
 					getServletContext().getRequestDispatcher(
 							"/WEB-INF/jsp/buySell.jsp").forward(request, response);

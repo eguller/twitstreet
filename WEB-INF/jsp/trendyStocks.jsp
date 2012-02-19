@@ -56,7 +56,7 @@
 		
 	%>
 	
-	<h3>Trendy Stocks"</h3>
+	<h3>Trendy Stocks</h3>
 	<table class="datatbl" style="margin-top: 10px;">
 		
 		<%

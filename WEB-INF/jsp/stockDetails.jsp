@@ -58,7 +58,14 @@
 		<%
 										if (stock != null) {
 									%>
-		
+		<h3>
+						<a href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
+							title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page"
+							target="_blank"><%=stock == null ? "" : stock.getName()%></a>
+							<% if(stock != null && stock.isVerified()){ %>
+								<img src="images/verified.png" title="This twitter account is verified"/>
+							<% } %>
+					</h3>
 	<div id="stock-details-menu" class="subheader">
 
 			
@@ -67,16 +74,14 @@
 				<td>
 					<img class="twuser"
 					src="<%=stock == null ? "" : stock.getPictureUrl()%>"
-					id="dashboard-picture"></td>
+					id="dashboard-picture">
+					
+					<img src="/images/activity_indicator_32.gif" />
+															
+					
+					</td>
 				<td>
-					<h1>
-						<a href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
-							title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page"
-							target="_blank"><%=stock == null ? "" : stock.getName()%></a>
-							<% if(stock != null && stock.isVerified()){ %>
-								<img src="images/verified.png" title="This twitter account is verified"/>
-							<% } %>
-					</h1>
+					
 				</td>
 				<td style="vertical-align: bottom;">
 					<div class="tabs">

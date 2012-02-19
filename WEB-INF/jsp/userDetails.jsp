@@ -94,12 +94,12 @@
 						<td id="userProfileTotal" style="width: 30%; text-align: center;">$<%=Util.commaSep(user.getPortfolio() + user.getCash())%>
 						
 						&nbsp;	<% 
-						if(user.getProfitPerHour()>0){
-							out.write("<span class=\"green-profit\">" + Util.getRoundedChangePerHourString(user.getProfitPerHour())+ "</span>");			
+						if(user.getProfit()>0){
+							out.write("<span class=\"green-profit\">" + Util.getRoundedChangePerHourString(user.getProfit())+ "</span>");			
 						}
-						else if(user.getProfitPerHour()<0){
+						else if(user.getProfit()<0){
 							
-							out.write("<span class=\"red-profit\">" + Util.getRoundedChangePerHourString(user.getProfitPerHour())+ "</span>");
+							out.write("<span class=\"red-profit\">" + Util.getRoundedChangePerHourString(user.getProfit())+ "</span>");
 						}
 						
 						%>

@@ -2,7 +2,7 @@ drop function if exists get_stock_trend_for_x_minutes;
 delimiter $$
 create function get_stock_trend_for_x_minutes(stock_id int, minutes int) returns double
 begin
-	declare oldValue double default 0.0;
+	declare oldValue double;
 	 	
 	select (s.total - sh.total) * minutes / TIMESTAMPDIFF(minute,sh.lastUpdate,s.lastUpdate) into oldValue from stock_history sh,stock s 
 	where 
@@ -11,5 +11,5 @@ begin
 	sh.stock = s.id
 	order by sh.lastUpdate asc limit 1;
 	
-	return ifnull(oldValue,0.0);
+	return oldValue;
 end $$

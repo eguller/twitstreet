@@ -15,8 +15,10 @@ public class User implements DataObjectIF {
     Date lastLogin;
     double cash;
     double portfolio;
+    
+    //profit per hour
     double profit;
-    double profitPerHour;
+
     String lastIp;
     String oauthToken;
     String oauthTokenSecret;
@@ -25,6 +27,7 @@ public class User implements DataObjectIF {
     int direction;
     String pictureUrl;
     @Inject TwitterProxy twitterProxy = null;
+	private boolean profitCalculated;
     
     @Override
 	public boolean equals(Object obj) {
@@ -151,17 +154,6 @@ public class User implements DataObjectIF {
 		this.profit = profit;
 	}
 
-	public void setProfitPerHour(double profitPerHour){
-		this.profitPerHour = profitPerHour;		
-	}
-	
-	public double getProfitPerHour() {	
-		return profitPerHour;
-	}
-	public void setProfitPerHour(){
-		 setProfitPerHour(profit);
-		
-	}
 
 	@Override
 	public void getDataFromResultSet(ResultSet rs) throws SQLException {
@@ -174,14 +166,38 @@ public class User implements DataObjectIF {
 		this.setFirstLogin(rs.getDate("firstLogin"));
 		this.setCash(rs.getDouble("cash"));
 		this.setPortfolio(rs.getDouble("portfolio"));
-		//this.setProfit(rs.getDouble("profit"));
-		this.setProfit(rs.getDouble("changePerHour"));
+		
+		Double profit =	rs.getDouble("changePerHour");
+		
+		if(rs.wasNull()){
+			
+			profit = 0.0;
+			setProfitCalculated(false);
+		}
+		else{
+			
+			setProfitCalculated(true);
+		}
+		this.setProfit(profit);
+		
+		
+	
+		
+		
 		this.setLastIp(rs.getString("lastIp"));
 		this.setOauthToken(rs.getString("oauthToken"));
 		this.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
 		this.setPictureUrl(rs.getString("pictureUrl"));
-		this.setProfitPerHour();
 		
+		
+	}
+
+	public boolean isProfitCalculated() {
+		return profitCalculated;
+	}
+
+	public void setProfitCalculated(boolean profitCalculated) {
+		this.profitCalculated = profitCalculated;
 	}
 
 	

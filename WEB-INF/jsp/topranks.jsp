@@ -35,7 +35,7 @@ if (pageParam != null && pageParam != "") {
 	}
 	
 }
-else{
+else if(sessionUser!=null){
 	currPage= userMgr.getPageOfRank(sessionUser.getRank());
 	
 }
@@ -119,9 +119,9 @@ if (userCount > maxRank) {
 						title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
 						<br> $<%=Util.commaSep(total)%> <%
 									String className = null; 
-									String profitPerHour = Util.getRoundedChangePerHourString(user.getProfitPerHour());
+									String profitPerHour = Util.getRoundedChangePerHourString(user.getProfit());
 	
-									if (user.getProfitPerHour() > 0) {
+									if (user.getProfit() > 0) {
 	
 										if (profitDiff > 0) {
 											className= "green-profit";
@@ -131,7 +131,7 @@ if (userCount > maxRank) {
 										
 										out.write("<br><div class=\""+className+"\">" + profitPerHour + "</div>");
 									}
-									else if (user.getProfitPerHour() < 0){
+									else if (user.getProfit() < 0){
 										out.write("<br><div class=\"red-profit\">" + profitPerHour + "</div>");
 										
 									}
