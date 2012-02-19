@@ -119,7 +119,7 @@ if (userCount > maxRank) {
 						title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
 						<br> $<%=Util.commaSep(total)%> <%
 									String className = null; 
-									String profitPerHour = Util.getRoundedChangePerHourString(user.getProfit());
+									String profitPerHour = Util.getRoundedProfitPerHourString(user.getProfit());
 	
 									if (user.getProfit() > 0) {
 	

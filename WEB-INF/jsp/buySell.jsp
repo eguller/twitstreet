@@ -24,8 +24,7 @@
 <%@ page import="com.twitstreet.servlet.TwitStreetServlet"%>
 
 <%
-	Injector inj = (Injector) pageContext.getServletContext()
-			.getAttribute(Injector.class.getName());
+	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	User user = (User) request.getAttribute(User.USER);
 
@@ -40,8 +39,7 @@
 
 	UserStock userStock = null;
 	if (user != null && stock != null) {
-		userStock = portfolioMgr.getStockInPortfolio(user.getId(),
-				stock.getId());
+		userStock = portfolioMgr.getStockInPortfolio(user.getId(), stock.getId());
 
 	}
 %>
@@ -71,9 +69,7 @@
 
 								<td>
 									<%
-									
 										int col = 3;
-										
 									%>
 									<table class="datatbl">
 										<tr>
@@ -87,52 +83,36 @@
 											
 										</tr>
 										<tr>
-											<td id="available" style="width: 25%; text-align: center;">
+											<td id="available" style="width:  <%=100 / col%>%; text-align: center;">
 												<%
 													if (stock != null) {
 														out.write(Util.commaSep(stock.getAvailable()));
 													}
 												%>
 											</td>
-											<td id="sold" style="width: 25%; text-align: center;">
+											<td id="sold" style="width:  <%=100 / col%>%; text-align: center;">
 												<%
 													if (stock != null) {
 														out.write(Util.commaSep(stock.getTotal() - stock.getAvailable()));
 													}
 												%>
 											</td>
-											<td id="total" style="width: 25%; text-align: center;">
-												<%
-													if (stock != null) {
-														out.write(Util.commaSep(stock.getTotal()));
-													}
-												%>
+											<td id="total" style="width:  <%=100 / col%>%; text-align: center;"><%
+												if (stock != null) {
+													out.write(Util.commaSep(stock.getTotal()));
+												}
+											%>
+											<%
+												String className = "";
+												className = (stock.getChangePerHour() < 0) ? "red-profit" : "green-profit";
+												if(stock.getChangePerHour()!=0){
+																				
+													out.write("<span class='" + className + "'>" + Util.getRoundedChangePerHourString(stock.getChangePerHour()) + "</span>");
+												}
+											%>
 											</td>
 
-											<td id="changePerHour"
-												style="width: 25%; text-align: center;">
-												<%
-													if (stock != null) {
-														
-														if(stock.isChangePerHourCalculated()){
-															int cph = stock.getChangePerHour();
-															String str = Util.getFollowerChangePerHourString(cph,
-																	stock.getTotal());
-															if (stock.getChangePerHour() > 0) {
-
-																out.write("<span class=\"green-profit\">" + str
-																		+ "</span>");
-															} else if (stock.getChangePerHour() < 0) {
-																out.write("<span class=\"red-profit\">" + str
-																		+ "</span>");
-
-															}
-
-														}
-													}
-												%>
-											</td>
-
+										
 										
 
 
@@ -171,16 +151,8 @@
  		out.write("You have <b>" + commaSep + "</b> " + stock.getName());
  	}
 
-//  	if (stock.getTotal() < configMgr.getMinFollower()) {
-//  		out.write("<br>");
-//  		out.write(stock.getName()
-//  				+ " has <b>"
-//  				+ stock.getTotal()
-//  				+ "</b> follower. <br>You cannot buy followers if total is less than <b>"
-//  				+ configMgr.getMinFollower() + "</b>");
-//  	}
- 	if( user.getCash() < 1 ) {
- 		out.write("<br>You do not have enough cash to buy " + stock.getName());
+ 	if (user.getCash() < 1) {
+ 		out.write("<br><br>You do not have enough cash to buy " + stock.getName());
  	}
  %> </span>
 						</p>
@@ -212,10 +184,8 @@
 									}
 
 									if (userStock != null) {
-										double userTotalStock = (userStock.getPercent() * stock
-												.getTotal());
-										i = userTotalStock < 1 ? 0 : String.valueOf(
-												(int) userTotalStock).length();
+										double userTotalStock = (userStock.getPercent() * stock.getTotal());
+										i = userTotalStock < 1 ? 0 : String.valueOf((int) userTotalStock).length();
 										if (userTotalStock != Math.pow(10, i - 1)) {
 											sellValues.add(Math.floor(userTotalStock));
 										}
@@ -225,7 +195,7 @@
 									}
 									i = 0;
 
-									if (sellValues.size() > 0 && ( (user.getCash() + user.getPortfolio()) > configMgr.getComissionTreshold()  )) {
+									if (sellValues.size() > 0 && ((user.getCash() + user.getPortfolio()) > configMgr.getComissionTreshold())) {
 							%>
 							<tr>
 								<td colspan="3" style="text-align: center; padding-top: 10px;">
@@ -240,11 +210,8 @@
 									while (true) {
 										out.write("<tr>");
 										out.write("<td>");
-										if (i < buyValues.size()
-												&& stock.getTotal() > configMgr.getMinFollower()) {
-											out.write("<div class=\"field-green\" onclick=\"buy("
-													+ stock.getId() + "," + buyValues.get(i)
-													+ ");\">");
+										if (i < buyValues.size() && stock.getTotal() > configMgr.getMinFollower()) {
+											out.write("<div class=\"field-green\" onclick=\"buy(" + stock.getId() + "," + buyValues.get(i) + ");\">");
 											out.write("Buy<br>");
 											out.write(Util.commaSep(buyValues.get(i).intValue()));
 											out.write("</div>");
@@ -252,9 +219,7 @@
 										out.write("</td>");
 										out.write("<td>");
 										if (i < sellValues.size()) {
-											out.write("<div class=\"field-red\" onclick=\"sell("
-													+ stock.getId() + "," + sellValues.get(i)
-													+ ");\">");
+											out.write("<div class=\"field-red\" onclick=\"sell(" + stock.getId() + "," + sellValues.get(i) + ");\">");
 											out.write("Sell<br>");
 											out.write(Util.commaSep(sellValues.get(i).intValue()));
 											out.write("</div>");

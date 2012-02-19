@@ -44,7 +44,7 @@
 
 	}
 %>
-<div id="get-user-div" class="searchDiv">
+<div id="get-user-div" class="main-div">
 
 	
 	<h3>Users</h3>

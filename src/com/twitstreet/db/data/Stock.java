@@ -97,4 +97,18 @@ public class Stock implements DataObjectIF {
 	public void setChangePerHourCalculated(boolean changePerHourCalculated) {
 		this.changePerHourCalculated = changePerHourCalculated;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+
+		try {
+
+			return id == ((Stock) obj).getId();
+		} catch (Exception ex) {
+
+		}
+
+		return false;
+
+	}
 }

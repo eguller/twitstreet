@@ -64,41 +64,67 @@
 		%>
 		<tr>
 			<%
-				for (int j = 0; j < 3; j++) {
-							if (i < trendResults.size()) {
+				for (int j = 0; j < 2; j++) {
+					if (i < trendResults.size()) {
+					
+						Stock stock = trendResults.get(i);
+						String className = "";
+						className = (stock.getChangePerHour()<0)?"red-profit":"green-profit";
 			%>
 
-			<td>
-				<table>
-					<tr>
-						<td><img class="twuser"
-							src="<%=trendResults.get(i).getPictureUrl()%>" />
-						</td>
-						<td><a href="javascript:void(0)" onclick="getQuote('<%=trendResults.get(i).getName()%>')"
-							title="Loads <%=trendResults.get(i).getName()%>'s stock details">
-								<%
-									out.write(trendResults.get(i).getName());
-								%> </a> 
-								<% if(trendResults.get(i).isVerified()){ %>
-									<img src="images/verified.png" title="This twitter account is verified"/>
-									<% } %>
-								<br>
-								<%
-									out.write(Util.commaSep(trendResults.get(i).getTotal()));
-								%>
-						</td>
-
-					</tr>
-				</table>
-			</td>
-			<%
-				} else {
-			%>
-			<td></td>
-			<%
-				}
-							i++;
+					<td>
+						<table>
+							<tr>
+								<td width="60">
+									<img class="twuser"
+									src="<%=stock.getPictureUrl()%>" />
+								</td>
+								<td width="130">
+								<table class="datatbl2">
+									<tr>									
+										<td>	
+											<a href="javascript:void(0)" onclick="getQuote('<%=stock.getName()%>')"
+																title="Loads <%=stock.getName()%>'s stock details">
+											<%=stock.getName()%>
+											</a> 
+											<% if(stock.isVerified()){ %>
+											<img src="images/verified.png" title="This twitter account is verified"/>
+											<% } %>
+										 	
+										</td>
+									</tr>
+									<tr>									
+										<td>								       
+											<%=Util.commaSep(stock.getAvailable())%> / <%=Util.commaSep(stock.getTotal())%>
+										</td>
+									</tr>
+<!-- 									<tr>									 -->
+<%-- 										<td align="right" class="<%=className %>"> --%>
+<%-- 											<%=Util.getChangePerHourString(stock.getChangePerHour())%> --%>
+<!-- 										</td> -->
+<!-- 									</tr> -->
+									<tr>									
+										<td align="right" class="<%=className %>">
+											<%=Util.getPercentageChangePerHourString((double)stock.getChangePerHour()/stock.getTotal())%>
+										</td>
+									</tr>
+								</table>
+								
+									
+									<br>
+								</td>
+		
+							</tr>
+						</table>
+					</td>
+					<%
+						} else {
+					%>
+					<td></td>
+					<%
 						}
+							i++;
+			}
 			%>
 		</tr>
 		<%

@@ -45,7 +45,7 @@
 
 	}
 %>
-<div id="get-quote-div" class="searchDiv">
+<div id="get-quote-div" class="main-div">
 
 	<table class="datatbl">
 	<tr>
@@ -53,7 +53,7 @@
 	<h3>Stocks</h3>
 	</td>
 	<td>
-		<div class="h3" align="right" style="height:18px;	padding: 4px 4px 4px 0px;">
+		<div class="h3-right-top">
 		<a href="javascript:void(0)" onclick="loadTrendyStocks()">Trendy Stocks </a>	
 		</div>
 	</td>

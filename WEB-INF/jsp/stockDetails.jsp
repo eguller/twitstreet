@@ -47,6 +47,8 @@
 		userStock = portfolioMgr.getStockInPortfolio(user.getId(), stock.getId());
 
 	}
+
+	
 %>
 
 	
@@ -55,10 +57,14 @@
 	
 				
 	
-		<%
-										if (stock != null) {
-									%>
-		<h3>
+	<%
+		if (stock != null) {
+	%>
+	
+		<table class="datatbl">
+			<tr>
+				<td>
+					<h3>
 						<a href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
 							title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page"
 							target="_blank"><%=stock == null ? "" : stock.getName()%></a>
@@ -66,6 +72,31 @@
 								<img src="images/verified.png" title="This twitter account is verified"/>
 							<% } %>
 					</h3>
+				</td>
+				<td>
+					<div class="h3-right-top">
+					
+						<%
+						ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
+						boolean beingWatched = watchList.contains(stock);
+						 %>
+						<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
+							Add to Watch List
+							
+						</a>	
+						<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
+							Remove from Watch List
+							
+						</a>	
+					</div>
+				</td>
+			</tr>
+			
+	</table>
+		
+			
+			
+	
 	<div id="stock-details-menu" class="subheader">
 
 			
@@ -76,14 +107,54 @@
 					src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 					id="dashboard-picture">
 					
-					<img src="/images/activity_indicator_32.gif" />
+<!-- 					<img src="/images/activity_indicator_32.gif" /> -->
 															
 					
 					</td>
 				<td>
+					<% if(stock.isChangePerHourCalculated()){ 
+					
+						
+						String colorClass = (stock.getChangePerHour()>0)?"green-profit":"red-profit";
+						String arrow = (stock.getChangePerHour()>0)?"&#9650;":"&#9660;";
+					%>
+					<div class="<%= colorClass %>">
+					
+					
+					
+						<table class="stock-change-per-hour">
+							<tr>
+								<td>
+									<span>
+										<%=Util.getPercentageChangeString((double) stock.getChangePerHour() / stock.getTotal()) %>
+									</span>																		
+								</td>							
+								<td rowspan="1"  >
+									/h 
+								</td>
+								<td rowspan="1">
+									<%= arrow %>
+								</td>
+							</tr>
+					
+						
+						</table>
+				
+					</div>
+				
+					<% }
+					
+					
+					%>
+					
+					
+			
+											
+						
+				
 					
 				</td>
-				<td style="vertical-align: bottom;">
+				<td style="vertical-align: bottom; width:330px">
 					<div class="tabs">
 						<a id="buy-sell-tab" class="youarehere" onClick="showBuySell();">
 							Buy/Sell</a> <a id="stock-history-tab" onClick="showStockHistory();">
@@ -97,7 +168,9 @@
 		</table>
 		
 	</div>
-<br>
+	
+	<br>
+	
 	<div id="stock-details-screen">
 
 		<jsp:include page="buySell.jsp" />

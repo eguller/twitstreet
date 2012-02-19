@@ -67,4 +67,10 @@ public interface StockMgr {
 	public StockHistoryData getStockHistory(long id);
 
 	ArrayList<Stock> getTrendyStocks();
+
+	ArrayList<Stock> getUserWatchList(long userid);
+
+	void addStockIntoUserWatchList(long userid, long stockid);
+
+	void removeStockFromUserWatchList(long stockid, long userid);
 }

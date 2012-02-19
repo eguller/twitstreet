@@ -19,6 +19,7 @@
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
 	
+	 
 	user = (user == null) ? (User) request.getAttribute(UserProfileServlet.USER_PROFILE_USER) : user;
 	user = (user == null && parameterUser != null) ? userMgr.getUserById(Long.valueOf(parameterUser)) : user;
 	request.setAttribute(UserProfileServlet.USER_PROFILE_USER, user);
@@ -26,7 +27,7 @@
 	
 %>
 
-<div id="userdetails">
+<div id="userdetails" class="main-div">
 	<%
 	if (user != null) {
 		
@@ -41,11 +42,7 @@
 					src="<%=user == null ? "" : user.getPictureUrl()%>"
 					id="dashboard-picture"></td>
 				<td>
-					<h1>
-						<a href="http://twitter.com/#!/<%=user == null ? "" : user.getUserName()%>"
-							title="<%=user == null ? "" : user.getUserName()%>&#39;s twitter page"
-							target="_blank"><%=user == null ? "" : user.getUserName()%></a>
-					</h1>
+					
 				</td>
 				<td style="vertical-align: bottom;">
 					<div class="tabs">
@@ -95,11 +92,11 @@
 						
 						&nbsp;	<% 
 						if(user.getProfit()>0){
-							out.write("<span class=\"green-profit\">" + Util.getRoundedChangePerHourString(user.getProfit())+ "</span>");			
+							out.write("<span class=\"green-profit\">" + Util.getRoundedProfitPerHourString(user.getProfit())+ "</span>");			
 						}
 						else if(user.getProfit()<0){
 							
-							out.write("<span class=\"red-profit\">" + Util.getRoundedChangePerHourString(user.getProfit())+ "</span>");
+							out.write("<span class=\"red-profit\">" + Util.getRoundedProfitPerHourString(user.getProfit())+ "</span>");
 						}
 						
 						%>

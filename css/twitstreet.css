@@ -48,6 +48,30 @@ h3 {
 	height:26px;	
 	
 }
+.h3-right-top {
+	font-size: 12px;
+	font-weight: bolder;
+	height:18px;	
+	padding: 4px 8px 4px 0px;
+	margin-bottom: 10px;
+	background-color: #F2F2F2;
+	border-bottom: 1px solid #D9D9D9;
+	border-top: 1px solid #E5E5E5;
+	text-align: right;
+	
+}
+
+.stock-change-per-hour-big {
+	text-align:center;
+	font-size: 20px;
+	
+}
+.stock-change-per-hour {
+	text-align:right;
+	font-size: 12px;
+	font-weight: bolder;
+	
+}
 .paginationLink {
 		
 	font-size: 12px;
@@ -562,7 +586,7 @@ margin-bottom: 5px;
 	height: 30px;
 	line-height: 28px;
 	margin-top: 3px;
-	padding: 0 11px;
+	padding: 0 11px 0 0;
 }
 
 .main-tabs a {

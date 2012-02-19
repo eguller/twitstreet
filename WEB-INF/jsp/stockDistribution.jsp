@@ -122,7 +122,7 @@
 			<td><img class='twuser'
 				style="margin-top: 2px; margin-bottom: 2px;"
 				src="<%=stockDetail.getUserPictureUrl()%>" /></td>
-			<td><a href="/user?user=<%=stockDetail.getUserId()%>"
+			<td><a href="javascript:void(0)" onclick="loadUserProfile(<%=stockDetail.getUserId()%>)" 
 				title="<%=stockDetail.getUserName()%>&#39;s user profile page"><%=stockDetail.getUserName()%></a>
 			</td>
 			<td>$<%=Util.commaSep((int) (stockDetail.getPercent() * stockDetail.getStockTotal()))%></td>

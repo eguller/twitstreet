@@ -18,6 +18,7 @@ import com.twitstreet.db.data.StockHistoryData;
 import com.twitstreet.task.StockUpdateTask;
 
 public class StockMgrImpl implements StockMgr {
+	private static String SELECT_FROM_STOCK = " select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
 	private static int MAX_TRENDS = 10;
 	@Inject
 	private DBMgr dbMgr;
@@ -38,7 +39,7 @@ public class StockMgrImpl implements StockMgr {
 			connection = dbMgr.getConnection();
 
 			ps = connection
-					.prepareStatement("select id, name, total, stock_sold(id) as sold, lastUpdate, pictureUrl, changePerHour, verified from stock where name = ?");
+					.prepareStatement(SELECT_FROM_STOCK +"  where name = ?");
 			ps.setString(1, name);
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -64,7 +65,7 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock where id = ?");
+					.prepareStatement(SELECT_FROM_STOCK +" where id = ?");
 			ps.setLong(1, id);
 
 			rs = ps.executeQuery();
@@ -220,7 +221,7 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock where ((now() - lastUpdate) > (? / 1000) or lastUpdate is null) and stock.id in (select distinct stock from portfolio)");
+					.prepareStatement(SELECT_FROM_STOCK +" where ((now() - lastUpdate) > (? / 1000) or lastUpdate is null) and (stock.id in (select distinct stock from portfolio) or stock.id in (select distinct stock_id from user_stock_watch ) )");
 
 			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF);
 			rs = ps.executeQuery();
@@ -247,7 +248,7 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock order by (changePerHour/total) desc limit ?;");
+					.prepareStatement(SELECT_FROM_STOCK +" where  stock_sold(id)<0.9999 and id in (select distinct stock from portfolio) order by (changePerHour/total) desc limit ?;");
 
 			ps.setInt(1, MAX_TRENDS);
 			rs = ps.executeQuery();
@@ -263,5 +264,77 @@ public class StockMgrImpl implements StockMgr {
 			dbMgr.closeResources(connection, ps, rs);			
 		}
 		return stockList;
+	}
+	
+	@Override
+	public ArrayList<Stock> getUserWatchList(long userid) {
+		ArrayList<Stock> stockList = new ArrayList<Stock>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement(SELECT_FROM_STOCK + " where id in (select stock_id from user_stock_watch where user_id=?)");
+
+			ps.setLong(1, userid);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				Stock stockDO = new Stock();
+				stockDO.getDataFromResultSet(rs);
+				stockList.add(stockDO);
+			}
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);			
+		}
+		return stockList;
+	}
+	@Override
+	public void addStockIntoUserWatchList(long stockid, long userid) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("insert ignore into user_stock_watch(user_id,stock_id) VALUES  (?,?) ");
+
+			ps.setLong(1, userid);
+
+			ps.setLong(2, stockid);
+			ps.executeUpdate();
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);			
+		}
+	}
+	
+	@Override
+	public void removeStockFromUserWatchList(long stockid, long userid) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("delete from user_stock_watch where user_id=? and stock_id=? ");
+
+			ps.setLong(1, userid);
+
+			ps.setLong(2, stockid);
+			ps.executeUpdate();
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);			
+		}
 	}
 }

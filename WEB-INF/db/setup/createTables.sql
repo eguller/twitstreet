@@ -138,3 +138,13 @@ create table `ranking_history` (
      primary key (`user_id`,`lastUpdate`),
      constraint `fk_ranking_history_user` foreign key (`user_id`) references `users` (`id`)
 )  engine=innodb default charset=`utf8`;
+
+
+-- ranking history table
+create table `user_stock_watch` (
+    `user_id` bigint not null,    
+    `stock_id` bigint not null, 
+     primary key (`user_id`,`stock_id`),
+     constraint `fk_user_stock_watch_user` foreign key (`user_id`) references `users` (`id`),
+     constraint `fk_user_stock_watch_stock` foreign key (`stock_id`) references `stock` (`id`)
+)  engine=innodb default charset=`utf8`;

@@ -15,6 +15,7 @@
 			<div id="column_left">
 				<template:get name="balance"></template:get>
 				<template:get name="portfolio"></template:get>
+				<template:get name="watchlist"></template:get>
 				<template:get name="yourtransactions"></template:get>
 				<template:get name="latesttransactions"></template:get>
 				<template:get name="recentTweets"></template:get>

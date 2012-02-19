@@ -140,6 +140,40 @@ public class Util {
 		return cphStr;
 		
 	}
+	public static String getPercentageChangePerHourString(double cph){
+		cph= cph*100;
+		String cphStr = String.valueOf(Util.roundDouble(Math.abs(cph),2));
+//		if( Math.abs(cph) <0.01){
+//			
+//			cphStr = "<" + cphStr;
+//			
+//		}	
+		cphStr += "%";
+		
+		//cphStr = cphStr + Util.commaSep(Util.roundDouble(Math.abs(cph),2));
+		
+		if (cph > 0) {
+
+			cphStr = cphStr + "/h &#9650;";
+			
+			
+		}
+		else if (cph < 0){
+			cphStr = cphStr + "/h &#9660;";
+		}
+		
+		return cphStr;
+		
+	}
+	
+	public static String getPercentageChangeString(double cph){
+		cph= cph*100;
+		String cphStr = String.valueOf(Util.roundDouble(Math.abs(cph),2));
+		cphStr += "% ";
+		
+		return cphStr;
+		
+	}
 	public static String getFollowerChangePerHourString(int cph,int total){
 		
 		String cphStr = "";
@@ -158,6 +192,30 @@ public class Util {
 		}
 		else if (cph < 0){
 			cphStr = cphStr+"/h"+ " ("+getShareString((double) cph/total)+") &#9660; ";
+		}
+		
+		return cphStr;
+		
+	}
+	public static String getFollowerChangeString(int cph){
+		
+		
+		String cphStr = "";
+
+		if (cph > 0) {
+			if (cph != (int) cph) {
+				cph += 1;
+			}
+			
+			int roundedVal = (int) Math.abs(cph);
+			cphStr = cphStr+String.valueOf(roundedVal);
+
+		} else if (cph < 0) {
+			if (cph != (int) cph) {
+				cph = cph - 1;
+			}
+			int roundedVal = (int) Math.abs(cph);
+			cphStr = cphStr+String.valueOf(roundedVal);
 		}
 		
 		return cphStr;
@@ -189,7 +247,7 @@ public class Util {
 
 	public static String getRoundedChangePerHourString(double cph){
 		
-		String cphStr = "$";
+		String cphStr = "";
 		
 //		if (Math.abs(cph) < 1) {
 //
@@ -215,7 +273,13 @@ public class Util {
 		return cphStr;
 		
 	}
-
+	public static String getRoundedProfitPerHourString(double cph){
+		
+		String cphStr = "$" + getRoundedChangePerHourString(cph);
+		
+		return cphStr;
+		
+	}
 	public static String getShareString(double cph){
 		cph= cph*100;
 		String cphStr = String.valueOf(Util.roundDouble(Math.abs(cph),2));

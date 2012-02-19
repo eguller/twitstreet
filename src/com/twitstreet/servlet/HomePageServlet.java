@@ -57,6 +57,7 @@ public class HomePageServlet extends TwitStreetServlet {
 	
 	public static final String OTHER_SEARCH_RESULTS = "other-search-results";
 
+	
 	public static final String RESULT = "result";
 	public static final String REASON = "reason";
 

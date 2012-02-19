@@ -25,7 +25,9 @@ $(document).ready(function() {
 	if ($("#portfolio").length > 0) {
 		setInterval(loadPortfolio, 20000);
 	}
-
+	if ($("#user-watch-list").length > 0) {
+		setInterval(loadWatchList, 20000);
+	}
 	if ($("#userprofile").length > 0) {
 		setInterval(reloadUserProfile, 20000);
 	}
@@ -47,6 +49,51 @@ function loadPortfolio() {
 		}
 	});
 }
+function loadWatchList() {
+
+	$.ajax({
+		type : "get",
+		url : "watchlist",
+		success : function(data) {
+			$("#user-watch-list").empty();
+			$("#user-watch-list").html($(data).html());
+
+		}
+	});
+}
+function addToWatchList(stockid) {
+
+	$.ajax({
+		type : "get",
+		url : "watchlist",
+		data : "stock="+stockid+"&operation=add",
+		success : function(data) {
+			
+			$("#user-watch-list").empty();
+			$("#user-watch-list").html($(data).html());
+			$(".add-to-watch-list-link-"+stockid).hide();
+			$(".remove-from-watch-list-link-"+stockid).show();
+
+		}
+	});
+}
+function removeFromWatchList(stockid) {
+
+	$.ajax({
+		type : "get",
+		url : "watchlist",
+		data : "stock="+stockid+"&operation=remove",
+		success : function(data) {
+			
+			$("#user-watch-list").empty();
+			$("#user-watch-list").html($(data).html());
+			$(".remove-from-watch-list-link-"+stockid).hide();
+			$(".add-to-watch-list-link-"+stockid).show();
+		}
+	});
+	
+}
+
 
 // function goToUsers(){
 //	
