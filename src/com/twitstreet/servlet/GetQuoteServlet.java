@@ -158,19 +158,14 @@ public class GetQuoteServlet extends TwitStreetServlet {
 
 	public void queryStockByQuote(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		User userTmp = user;
+		User userTmp = getUser() == null ? userMgr.random() : getUser();
 		String twUserName = (String) request.getParameter(QUOTE);
 		if (twUserName != null && twUserName.length() > 0) {
 			request.setAttribute(QUOTE, twUserName);
 			TwitterProxy twitterProxy = null;
 			Response resp = Response.create();
-			if (userTmp == null) {
-				// uses someone else account to get quote for unauthenticated
-				// users.
-				userTmp = userMgr.random();
-			}
 
-			twitterProxy = userTmp == null ? null : twitterProxyFactory.create(
+			twitterProxy = twitterProxyFactory.create(
 					userTmp.getOauthToken(), userTmp.getOauthTokenSecret());
 
 			SimpleTwitterUser twUser = null;

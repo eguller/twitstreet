@@ -170,18 +170,13 @@ public class HomePageServlet extends TwitStreetServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String twUserName = (String) request.getParameter(QUOTE);
 		if (twUserName != null && twUserName.length() > 0) {
-			User userTmp = getUser();
+			User userTmp = getUser() == null ? userMgr.random() : getUser();
 
 			request.setAttribute(QUOTE, twUserName);
 			TwitterProxy twitterProxy = null;
 			Response resp = Response.create();
-			if (userTmp == null) {
-				// uses someone else account to get quote for unauthenticated
-				// users.
-				userTmp = userMgr.random();
-			}
 
-			twitterProxy = userTmp == null ? null : twitterProxyFactory.create(
+			twitterProxy = twitterProxyFactory.create(
 					userTmp.getOauthToken(), userTmp.getOauthTokenSecret());
 
 			SimpleTwitterUser twUser = null;

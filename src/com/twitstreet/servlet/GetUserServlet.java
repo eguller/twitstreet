@@ -126,18 +126,13 @@ public class GetUserServlet extends TwitStreetServlet {
 		searchResultUsers.addAll(userMgr.searchUser(searchText));
 	}
 	public void queryUserFromTwitter(String searchText) throws ServletException, IOException {
-		User userTmp = getUser();
+		User userTmp = getUser() == null ? userMgr.random() : getUser();
 		
 			
 		if (searchText != null && searchText.length() > 0) {
 			//request.setAttribute(GET_USER, twUserName);
 			TwitterProxy twitterProxy = null;
 			Response resp = Response.create();
-			if (userTmp == null) {
-				// uses someone else account to get quote for unauthenticated
-				// users.
-				userTmp = userMgr.random();
-			}
 
 			twitterProxy = userTmp == null ? null : twitterProxyFactory.create(userTmp.getOauthToken(), userTmp.getOauthTokenSecret());
 
