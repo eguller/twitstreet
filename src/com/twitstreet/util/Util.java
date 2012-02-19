@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.util.regex.Pattern;
 
 import com.google.inject.Inject;
 import com.twitstreet.session.UserMgr;
@@ -257,6 +258,10 @@ public class Util {
 		
 		return intervalString;
 	
+	}
+	
+	public static boolean isValidTwitterUserName(String userName){
+		return Pattern.matches("[A-Za-z0-9_]+", userName);
 	}
 
 }

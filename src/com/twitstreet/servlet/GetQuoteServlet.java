@@ -23,6 +23,7 @@ import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.SimpleTwitterUser;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
+import com.twitstreet.util.Util;
 
 @SuppressWarnings("serial")
 @Singleton
@@ -46,7 +47,7 @@ public class GetQuoteServlet extends TwitStreetServlet {
 	public static final String STOCK_DETAIL_LIST = "stockDetailList";
 	public static final String QUOTE = "quote";
 	public static final String QUOTE_DISPLAY = "quotedisplay";
-	
+
 	public static final String OTHER_SEARCH_RESULTS = "other-search-results";
 
 	public static final String RESULT = "result";
@@ -55,7 +56,7 @@ public class GetQuoteServlet extends TwitStreetServlet {
 	public static final String USER_NOT_FOUND = "user-not-found";
 
 	private static Logger logger = Logger.getLogger(GetQuoteServlet.class);
-	
+
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
@@ -75,29 +76,26 @@ public class GetQuoteServlet extends TwitStreetServlet {
 		long start = 0;
 		long end = 0;
 		start = System.currentTimeMillis();
-		
+
 		if (!twitstreet.isInitialized()) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp")
 					.forward(request, response);
 			return;
 		}
-		
-		end = System.currentTimeMillis();
-		
-		logger.info("Init time: " + (end - start));
-		
 
+		end = System.currentTimeMillis();
+
+		logger.info("Init time: " + (end - start));
 
 		start = System.currentTimeMillis();
 		queryStockById(request, response);
 		end = System.currentTimeMillis();
 		logger.info("queryStockById: " + (end - start));
-		
+
 		start = System.currentTimeMillis();
 		queryStockByQuote(request, response);
 		end = System.currentTimeMillis();
 		logger.info("queryStockByQuote: " + (end - start));
-
 
 		if (getUser() != null) {
 			getServletContext().getRequestDispatcher(
@@ -142,11 +140,10 @@ public class GetQuoteServlet extends TwitStreetServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			request.setAttribute(GetQuoteServlet.QUOTE_DISPLAY,
-					stock.getName());
+			request.setAttribute(GetQuoteServlet.QUOTE_DISPLAY, stock.getName());
 			request.setAttribute(STOCK, stock);
 
-			request.setAttribute(STOCK_ID,new Long(stock.getId()));
+			request.setAttribute(STOCK_ID, new Long(stock.getId()));
 			request.setAttribute(GetQuoteServlet.OTHER_SEARCH_RESULTS,
 					searchResultList);
 		}
@@ -156,15 +153,15 @@ public class GetQuoteServlet extends TwitStreetServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		User userTmp = getUser() == null ? userMgr.random() : getUser();
 		String twUserName = (String) request.getParameter(QUOTE);
-		twUserName = new String(twUserName.getBytes("8859_1"),"UTF8");
+		twUserName = new String(twUserName.getBytes("8859_1"), "UTF8");
 		if (twUserName != null && twUserName.length() > 0) {
 			request.setAttribute(QUOTE, twUserName);
-			
+
 			TwitterProxy twitterProxy = null;
 			Response resp = Response.create();
 
-			twitterProxy = twitterProxyFactory.create(
-					userTmp.getOauthToken(), userTmp.getOauthTokenSecret());
+			twitterProxy = twitterProxyFactory.create(userTmp.getOauthToken(),
+					userTmp.getOauthTokenSecret());
 
 			SimpleTwitterUser twUser = null;
 			ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
@@ -172,14 +169,12 @@ public class GetQuoteServlet extends TwitStreetServlet {
 			if (twitterProxy != null) {
 				// Get user info from twitter.
 				try {
-					try {
-						twitter4j.User twitterUser = twitterProxy.getTwUser(twUserName);
-						if(twitterUser != null){
+					twitter4j.User twitterUser = null;
+					if (Util.isValidTwitterUserName(twUserName)) {
+						twitterUser = twitterProxy.getTwUser(twUserName);
+						if (twitterUser != null) {
 							twUser = new SimpleTwitterUser(twitterUser);
 						}
-					} catch (TwitterException ex) {
-						// omit exception, maybe this is search user not get
-						// user
 					}
 					searchResultList = twitterProxy.searchUsers(twUserName);
 					if (twUser == null) {
@@ -188,11 +183,12 @@ public class GetQuoteServlet extends TwitStreetServlet {
 							twUser = searchResultList.get(0);
 							searchResultList.remove(0);
 						}
-					}
-					else if(searchResultList.size() > 0 &&  twUser.getScreenName().equalsIgnoreCase(searchResultList.get(0).getScreenName())){
-						
+					} else if (searchResultList.size() > 0
+							&& twUser.getScreenName().equalsIgnoreCase(
+									searchResultList.get(0).getScreenName())) {
+
 						searchResultList.remove(0);
-						
+
 					}
 
 					request.setAttribute(OTHER_SEARCH_RESULTS, searchResultList);
@@ -225,12 +221,14 @@ public class GetQuoteServlet extends TwitStreetServlet {
 					} else {
 						stockMgr.updateTwitterData(stock.getId(),
 								twUser.getFollowerCount(),
-								twUser.getPictureUrl(), twUser.getScreenName(), twUser.isVerified());
+								twUser.getPictureUrl(), twUser.getScreenName(),
+								twUser.isVerified());
 
 					}
 					request.setAttribute(STOCK, stock);
-			
-					//request.getParameterMap().put("stock", new String[]{ String.valueOf(stock.getId())});
+
+					// request.getParameterMap().put("stock", new String[]{
+					// String.valueOf(stock.getId())});
 					logger.debug("Servlet: Stock queried successfully. Stock name:"
 							+ stock.getName());
 				} else {
