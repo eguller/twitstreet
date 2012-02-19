@@ -1,4 +1,3 @@
-
 <%@ page import="com.twitstreet.db.data.User"%>
 <%
 	User user = (User) request.getAttribute(User.USER);

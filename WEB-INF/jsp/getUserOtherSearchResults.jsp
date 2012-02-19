@@ -1,4 +1,3 @@
-
 <%@page import="com.twitstreet.servlet.GetUserServlet"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.HashSet"%>

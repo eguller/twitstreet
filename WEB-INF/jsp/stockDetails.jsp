@@ -1,4 +1,3 @@
-
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Date"%>
