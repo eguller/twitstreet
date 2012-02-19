@@ -1,4 +1,3 @@
-
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>

@@ -1,4 +1,4 @@
-<%@page import="com.twitstreet.servlet.TopRankServlet"%>
+<%@ page import="com.twitstreet.servlet.TopRankServlet"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
 <%@ page import="com.twitstreet.session.UserMgr"%>

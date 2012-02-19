@@ -156,8 +156,10 @@ public class GetQuoteServlet extends TwitStreetServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		User userTmp = getUser() == null ? userMgr.random() : getUser();
 		String twUserName = (String) request.getParameter(QUOTE);
+		twUserName = new String(twUserName.getBytes("8859_1"),"UTF8");
 		if (twUserName != null && twUserName.length() > 0) {
 			request.setAttribute(QUOTE, twUserName);
+			
 			TwitterProxy twitterProxy = null;
 			Response resp = Response.create();
 
