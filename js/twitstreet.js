@@ -87,7 +87,22 @@ function getQuote(quote) {
 		});
 	}
 }
+function loadTrendyStocks() {
+	
+	blockElementWithMsg('#column_center', 'Loading');
+	
+	$.ajax({
+		type : "get",
+		url : "/trendystocks",
+		success : function(data) {
+			$("#column_center").unblock();
+			$("#stockdetails").empty();
+			$("#stockdetails").append($(data).html());
 
+		}
+	});
+
+}
 function getUser(user) {
 	if (user.length > 0) {
 		blockElementWithMsg('#column_center', 'Loading');
@@ -277,12 +292,23 @@ function loadStock(id, reload) {
 	});
 
 }
-
+function toprankPrevPage(){
+	
+	var page = parseInt($(".topRankSelect:first").val());
+	toprank(page-1);
+	
+}
+function toprankNextPage(){
+	
+	var page = parseInt($(".topRankSelect:first").val());
+	toprank(page+1);
+	
+}
 function toprank(page) {
 	var pageParam = page;
 	
 	if(pageParam==null){
-		pageParam = $('.topRankSelectClass:first').val();	
+		pageParam = $('.topRankSelect:first').val();	
 		
 	}
 	

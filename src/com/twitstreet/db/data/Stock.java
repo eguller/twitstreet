@@ -1,8 +1,10 @@
 package com.twitstreet.db.data;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
-public class Stock {
+public class Stock implements DataObjectIF {
 	long id;
 	String name;
 	int total;
@@ -61,5 +63,17 @@ public class Stock {
 	}
 	public void setVerified(boolean verified) {
 		this.verified = verified;
+	}
+	@Override
+	public void getDataFromResultSet(ResultSet rs) throws SQLException {
+		this.setId(rs.getLong("id"));
+		this.setName(rs.getString("name"));
+		this.setTotal(rs.getInt("total"));
+		this.setSold(rs.getDouble("sold"));
+		this.setPictureUrl(rs.getString("pictureUrl"));
+		this.setLastUpdate(rs.getTimestamp("lastUpdate"));
+		this.setChangePerHour(rs.getInt("changePerHour"));
+		this.setVerified(rs.getBoolean("verified"));
+		
 	}
 }

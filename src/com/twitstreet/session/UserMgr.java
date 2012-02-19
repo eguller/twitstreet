@@ -37,4 +37,5 @@ public interface UserMgr {
 	public void rerank();
 	ArrayList<User> searchUser(String searchText);
 	
+	public int getPageOfRank(int rank);
 }

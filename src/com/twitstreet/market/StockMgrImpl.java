@@ -18,6 +18,7 @@ import com.twitstreet.db.data.StockHistoryData;
 import com.twitstreet.task.StockUpdateTask;
 
 public class StockMgrImpl implements StockMgr {
+	private static int MAX_TRENDS = 10;
 	@Inject
 	private DBMgr dbMgr;
 	private static Logger logger = Logger.getLogger(StockMgrImpl.class);
@@ -42,13 +43,7 @@ public class StockMgrImpl implements StockMgr {
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				stockDO = new Stock();
-				stockDO.setId(rs.getLong("id"));
-				stockDO.setName(rs.getString("name"));
-				stockDO.setTotal(rs.getInt("total"));
-				stockDO.setPictureUrl(rs.getString("pictureUrl"));
-				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
-				stockDO.setChangePerHour(rs.getInt("changePerHour"));
-				stockDO.setVerified(rs.getBoolean("verified"));
+				stockDO.getDataFromResultSet(rs);
 				break;
 			}
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -75,14 +70,7 @@ public class StockMgrImpl implements StockMgr {
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				stockDO = new Stock();
-				stockDO.setId(rs.getLong("id"));
-				stockDO.setName(rs.getString("name"));
-				stockDO.setTotal(rs.getInt("total"));
-				stockDO.setSold(rs.getDouble("sold"));
-				stockDO.setPictureUrl(rs.getString("pictureUrl"));
-				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
-				stockDO.setChangePerHour(rs.getInt("changePerHour"));
-				stockDO.setVerified(rs.getBoolean("verified"));
+				stockDO.getDataFromResultSet(rs);
 			}
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
@@ -232,18 +220,40 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate from stock where ((now() - lastUpdate) > (? / 1000) or lastUpdate is null) and stock.id in (select distinct stock from portfolio)");
+					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock where ((now() - lastUpdate) > (? / 1000) or lastUpdate is null) and stock.id in (select distinct stock from portfolio)");
 
 			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				Stock stockDO = new Stock();
-				stockDO.setId(rs.getLong("id"));
-				stockDO.setName(rs.getString("name"));
-				stockDO.setTotal(rs.getInt("total"));
-				stockDO.setSold(rs.getDouble("sold"));
-				stockDO.setPictureUrl(rs.getString("pictureUrl"));
-				stockDO.setLastUpdate(rs.getTimestamp("lastUpdate"));
+				stockDO.getDataFromResultSet(rs);
+				stockList.add(stockDO);
+			}
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);			
+		}
+		return stockList;
+	}
+	
+	@Override
+	public ArrayList<Stock> getTrendyStocks() {
+		ArrayList<Stock> stockList = new ArrayList<Stock>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock order by (changePerHour/total) desc limit ?;");
+
+			ps.setInt(1, MAX_TRENDS);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				Stock stockDO = new Stock();
+				stockDO.getDataFromResultSet(rs);
 				stockList.add(stockDO);
 			}
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());

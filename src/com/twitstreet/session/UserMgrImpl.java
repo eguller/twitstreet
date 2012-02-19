@@ -554,4 +554,13 @@ public class UserMgrImpl implements UserMgr {
 		}
 		return userList;
 	}
+	@Override
+	public int getPageOfRank(int rank) {
+		
+		int rpp = getRecordPerPage();
+		
+		int a = (rank+rpp)/rpp;
+		
+		return a;
+	}
 }

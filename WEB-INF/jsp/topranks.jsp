@@ -19,6 +19,8 @@ if (pageParam == null || pageParam == ""){
 	
 	pageParam = (String) request.getSession().getAttribute(TopRankServlet.PAGE);
 }
+
+
 int currPage = 1;
 if (pageParam != null && pageParam != "") {
 	// get pageNumber from param
@@ -31,7 +33,10 @@ if (pageParam != null && pageParam != "") {
 	if (currPage < 1) {
 		currPage = 1;
 	}
-	// check again
+	
+}
+else{
+	currPage= userMgr.getPageOfRank(sessionUser.getRank());
 	
 }
 

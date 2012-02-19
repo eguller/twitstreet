@@ -47,8 +47,20 @@
 %>
 <div id="get-quote-div" class="searchDiv">
 
-	
+	<table class="datatbl">
+	<tr>
+	<td>
 	<h3>Stocks</h3>
+	</td>
+	<td>
+		<div class="h3" align="right" style="height:18px;	padding: 4px 4px 4px 0px;">
+		<a href="javascript:void(0)" onclick="loadTrendyStocks()">Trendy Stocks </a>	
+		</div>
+	</td>
+	</tr>
+	
+	</table>
+	
 	<div id="quoteholder">
 
 		<div>

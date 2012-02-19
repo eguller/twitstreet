@@ -38,16 +38,26 @@ h3 {
 	
 }
 .h3 {
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: bolder;
-/* 	padding: 4px 5px; */
+
 	margin-bottom: 10px;
 	background-color: #F2F2F2;
 	border-bottom: 1px solid #D9D9D9;
 	border-top: 1px solid #E5E5E5;
+	height:26px;	
 	
 }
-
+.paginationLink {
+		
+	font-size: 12px;
+}
+.paginationDisabledLink {
+		
+	font-size: 12px;
+	
+	color: graytext;
+}
 a {
 	color: #4183C4;
 	text-decoration: none;

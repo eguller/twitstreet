@@ -13,15 +13,14 @@ import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
 @Singleton
-public class TopRankServlet extends TwitStreetServlet{
+public class TrendyStocksServlet extends TwitStreetServlet{
 	
 	public static String TOPRANKS_USER_LIST = "topranksuserlist";
 
 	@Inject UserMgr userMgr;
 	@Inject
 	private final Gson gson = null;
-	
-	public static String PAGE = "toprankPage";
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -33,7 +32,7 @@ public class TopRankServlet extends TwitStreetServlet{
 	
 			try {
 				getServletContext().getRequestDispatcher(
-						"/WEB-INF/jsp/topranks.jsp").forward(request, response);
+						"/WEB-INF/jsp/trendyStocks.jsp").forward(request, response);
 			} catch (ServletException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
