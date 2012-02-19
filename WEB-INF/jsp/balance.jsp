@@ -7,7 +7,7 @@
 
 <%
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-User user = (User)request.getAttribute(TwitStreetServlet.USER);
+User user = (User)request.getAttribute(User.USER);
 %>
 <div id="balance" class="main-div">
 	<input id="cash-hidden" type="hidden" value="<%=user.getCash()%>" />
