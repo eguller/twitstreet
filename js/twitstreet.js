@@ -11,7 +11,7 @@ $(document).ready(function() {
 	
 
 	if ($("#topranks").length > 0) {
-		setInterval(toprank, 20000);
+		setInterval(reloadToprank, 20000);
 	}
 
 	if ($("#currenttransactions").length) {
@@ -353,14 +353,21 @@ function toprankNextPage(){
 	toprank(page+1);
 	
 }
-function toprank(page) {
+function reloadToprank(){
+	
+	toprank(null, true);
+	
+}
+function toprank(page,reload) {
 	var pageParam = page;
 	
 	if(pageParam==null){
 		pageParam = $('.topRankSelect:first').val();	
 		
 	}
-	blockElementWithMsg('#topranks-loading-div', 'Loading');
+	if(!reload){
+		blockElementWithMsg('#topranks-loading-div', 'Loading');		
+	}
 
 	$.ajax({
 		type : "get",
