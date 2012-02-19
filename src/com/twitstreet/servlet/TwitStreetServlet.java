@@ -14,7 +14,6 @@ import com.twitstreet.session.UserMgr;
 
 public abstract class TwitStreetServlet extends HttpServlet {
 	@Inject UserMgr userMgr;
-	public static final String USER = "user";
 	HttpServletRequest request;
 	HttpServletResponse response;
 	protected User user = null;
@@ -79,7 +78,7 @@ public abstract class TwitStreetServlet extends HttpServlet {
 				break;
 			}
 		}
-		request.setAttribute(USER, user);
+		request.setAttribute(User.USER, user);
 	}
 
 	public User getUser() {

@@ -27,7 +27,7 @@
 	Injector inj = (Injector) pageContext.getServletContext()
 			.getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
-	User user = (User) request.getAttribute(TwitStreetServlet.USER);
+	User user = (User) request.getAttribute(User.USER);
 
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
