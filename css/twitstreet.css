@@ -610,3 +610,14 @@ margin-bottom: 5px;
 	border-width: 0px;
     cursor: pointer;
 }
+
+.buy-button {
+	width : 98%;
+	margin-bottom: 2px;
+	background-color: #99cc33;
+}
+.sell-button {
+	width : 98%;
+	margin-bottom: 2px;
+	background-color: #ff6666;
+}

@@ -1,6 +1,5 @@
 $(document).ready(function() {
 	$("#dashboard-message-field").corner("round 3px");
-	$("#buy-links div").corner("round 5px");
 
 	jQuery('#getQuoteTextboxId').click(function() {
 		selectAllText(jQuery(this))
