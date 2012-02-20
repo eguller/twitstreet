@@ -211,18 +211,18 @@
 										out.write("<tr>");
 										out.write("<td>");
 										if (i < buyValues.size() && stock.getTotal() > configMgr.getMinFollower()) {
-											out.write("<div class=\"field-green\" onclick=\"buy(" + stock.getId() + "," + buyValues.get(i) + ");\">");
+											out.write("<button class=\"buy-button\" onclick=\"buy(" + stock.getId() + "," + buyValues.get(i) + ");\">");
 											out.write("Buy<br>");
 											out.write(Util.commaSep(buyValues.get(i).intValue()));
-											out.write("</div>");
+											out.write("</button>");
 										}
 										out.write("</td>");
 										out.write("<td>");
 										if (i < sellValues.size()) {
-											out.write("<div class=\"field-red\" onclick=\"sell(" + stock.getId() + "," + sellValues.get(i) + ");\">");
+											out.write("<button class=\"sell-button\" onclick=\"sell(" + stock.getId() + "," + sellValues.get(i) + ");\">");
 											out.write("Sell<br>");
 											out.write(Util.commaSep(sellValues.get(i).intValue()));
-											out.write("</div>");
+											out.write("</button>");
 										}
 										out.write("</td>");
 										out.write("</tr>");

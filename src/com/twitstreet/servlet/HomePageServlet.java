@@ -107,7 +107,6 @@ public class HomePageServlet extends TwitStreetServlet {
 //		
 		
 		if (request.getParameter("signout") != null) {
-			request.getSession(false).invalidate();
 			request.removeAttribute(User.USER);
 			invalidateCookies(new String[] { CallBackServlet.COOKIE_ID,
 					CallBackServlet.COOKIE_OAUTHTOKEN }, request, response);
