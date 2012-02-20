@@ -46,8 +46,6 @@
 %>
 <div id="get-user-div" class="main-div">
 
-	
-	<h3>Users</h3>
 	<div id="userholder">
 
 		<div>

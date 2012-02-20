@@ -24,10 +24,11 @@
 			<div id="column_center">
 			
 				
+				<template:get name="mainmenu"></template:get>		
 				<template:get name="stocks"></template:get>				
 				<template:get name="users"></template:get>
 				
-				<script type="text/javascript">showTabMain('#stocks-tab','#stocks-container')</script>
+				<script type="text/javascript">showTabMain('.stocks-tab','#stocks-container')</script>
 				
 				<template:get name="howtoplay"></template:get>
 				<template:get name="signup"></template:get>

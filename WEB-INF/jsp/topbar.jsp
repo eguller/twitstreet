@@ -10,16 +10,10 @@
 	</div>
 
 
-	<div id="top_center_div" class="main-tabs">
+	<div id="top_center_div">
 				
-					<a id="stocks-tab" class="youarehere"
-						onclick="showTabMain('#stocks-tab','#stocks-container');">
-						Stocks</a></h3>
-						
-					<a id="users-tab"
-						onclick="showTabMain('#users-tab','#users-container');"> Users</a>
-						
-				</div>
+
+	</div>
 	
 	<div id="top_right_div">
 		<%

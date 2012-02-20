@@ -274,6 +274,34 @@ public class Util {
 		return cphStr;
 		
 	}
+	public static String getRoundedMoneyString(double cph){
+		
+		String cphStr = "$";
+		
+//		if (Math.abs(cph) < 1) {
+//
+//			cphStr = "<$";
+//
+//		} 
+		if (cph > 0) {
+			if (cph != (int) cph) {
+				cph += 1;
+			}
+			
+			int roundedVal = (int) Math.abs(cph);
+			cphStr = cphStr + Util.commaSep(roundedVal);
+
+		} else if (cph < 0) {
+			if (cph != (int) cph) {
+				cph = cph - 1;
+			}
+			int roundedVal = (int) Math.abs(cph);
+			cphStr = cphStr + Util.commaSep(roundedVal);
+		}
+		
+		return cphStr;
+		
+	}
 	public static String getRoundedProfitPerHourString(double cph){
 		
 		String cphStr = "$" + getRoundedChangePerHourString(cph);
@@ -326,6 +354,70 @@ public class Util {
 	
 	public static boolean isValidTwitterUserName(String userName){
 		return Pattern.matches("[A-Za-z0-9_]+", userName);
+	}
+	
+	public static String getTextInSpan(String text, String styleClass){
+		
+		String spanStr = "<span";
+				
+		if(styleClass!=null && styleClass.length()>0){
+			spanStr = spanStr +" class='"+styleClass+"'";
+			
+		}
+		spanStr = spanStr + ">";
+		spanStr=spanStr+text+"</span>";
+		
+		return spanStr;
+		
+		
+	}
+	
+	public static String getNumberFormatted(double amount, boolean dollar, boolean rounded,boolean perHour, boolean arrow, boolean appendPlusIfPositive, boolean getInSpan){
+		
+		String moneyStr = "";
+				
+		if (rounded) {
+			if (amount > 0) {
+				if (amount != (int) amount) {
+					amount += 1;					
+				}
+			} else if (amount < 0) {
+				if (amount != (int) amount) {
+					amount = amount - 1;
+				}
+			}
+			int roundedVal = (int) Math.abs(amount);
+			moneyStr = moneyStr + Util.commaSep(roundedVal);			
+		}else{			
+			moneyStr =  moneyStr + Util.commaSep(amount);
+		}
+		
+		String arrowStr = "";
+		String plusMinus = "";
+		String spanClass = "";
+		if(amount>0){
+			arrowStr="&#9650;";
+			plusMinus = "+";
+			spanClass = "green-profit";
+					
+			
+		}
+		else if(amount<0){
+			arrowStr="&#9660;";
+			plusMinus = "-";
+			spanClass = "red-profit";
+		}
+		
+
+		moneyStr = (dollar)?"$"+moneyStr:moneyStr;
+		moneyStr = (appendPlusIfPositive)?plusMinus+moneyStr:moneyStr;
+		
+		moneyStr = (perHour)?moneyStr+"/h":moneyStr;
+		moneyStr = (arrow)?moneyStr+arrowStr:moneyStr;
+
+		moneyStr = (getInSpan)?getTextInSpan(moneyStr, spanClass):moneyStr;
+		
+		return moneyStr;
 	}
 
 }

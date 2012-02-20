@@ -96,14 +96,15 @@ function reloadStockDistribution(stockId) {
 		return;
 	
 	
-	blockElementWithMsg('#stock-details-screen', msg)
+	blockElementWithMsg('#stock-details-screen');
 	    
 	$.ajax({
 		type: 		"get",
 		url: 		"stockdistribution",
 		data: 		"stock=" + stockId,
-		success:	function(data) {			
-			$('#stock-details-screen').unblock();
+		success:	function(data) {		
+			
+			unblockElement('#stock-details-screen');
 			$("#stock-share-section").empty();
 			$("#stock-share-section").html($(data).html());
 			runScriptsInElement(data);

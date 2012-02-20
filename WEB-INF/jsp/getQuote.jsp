@@ -45,21 +45,8 @@
 
 	}
 %>
-<div id="get-quote-div" class="main-div">
+<div id="get-quote-div">
 
-	<table class="datatbl">
-	<tr>
-	<td>
-	<h3>Stocks</h3>
-	</td>
-	<td>
-		<div class="h3-right-top">
-		<a href="javascript:void(0)" onclick="loadTrendyStocks()">Trendy Stocks </a>	
-		</div>
-	</td>
-	</tr>
-	
-	</table>
 	
 	<div id="quoteholder">
 
@@ -67,6 +54,11 @@
 			<input type="text" class="textbox" id="getQuoteTextboxId" value="<%=quote%>"
 				name="quote" /> <input type="button" id="getQuoteButton"
 				onclick="getQuote($('#getQuoteTextboxId').val())" value="Search">
+		</div>
+		<div style="text-align:right;height:20px">		
+			<a href="javascript:void(0)" onclick="loadTrendyStocks()">
+						Trendy Stocks 
+			</a>
 		</div>
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input
 			type="hidden" id="quote-id"
