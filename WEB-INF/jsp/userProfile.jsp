@@ -39,7 +39,7 @@
 	%>
 	
 			<h3>
-				<a href="http://twitter.com/#!/<%=user == null ? "" : user.getUserName()%>"
+				<a style="color:#000000"  href="http://twitter.com/#!/<%=user == null ? "" : user.getUserName()%>"
 					title="<%=user == null ? "" : user.getUserName()%>&#39;s twitter page"
 					target="_blank"><%=user == null ? "" : user.getUserName()%></a>
 				

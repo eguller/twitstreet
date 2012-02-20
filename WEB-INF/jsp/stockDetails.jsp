@@ -63,8 +63,8 @@
 		<table class="datatbl">
 			<tr>
 				<td>
-					<h3>
-						<a href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
+					<h3 >
+						<a style="color:#000000" href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
 							title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page"
 							target="_blank"><%=stock == null ? "" : stock.getName()%></a>
 							<% if(stock != null && stock.isVerified()){ %>

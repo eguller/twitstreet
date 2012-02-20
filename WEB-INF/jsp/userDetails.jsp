@@ -33,7 +33,7 @@
 		
 		portfolio = portfolioMgr.getUserPortfolio(user);
 	%>
-	<div id="user-profile-menu" class="subheader">
+	<div id="user-profile-menu" class="subheader main-div" style="height:54px">
 
 		<table class="datatbl">
 			<tr>
