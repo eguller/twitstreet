@@ -1,25 +1,25 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import twitter4j.ResponseList;
+import twitter4j.Trends;
+import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.internal.http.HttpRequest;
-import twitter4j.internal.http.HttpResponse;
+import twitter4j.TwitterFactory;
 
-import com.google.gson.Gson;
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.Stock;
@@ -92,6 +92,19 @@ public class HomePageServlet extends TwitStreetServlet {
 		end = System.currentTimeMillis();
 		
 		logger.info("Init time: " + (end - start));
+		
+		
+//		Twitter twitter = new TwitterFactory().getInstance();
+//		try {
+//			ResponseList<Trends> ts = twitter.getDailyTrends(new Date(), true);
+//			String name =ts.get(0).getTrends()[0].getName();
+//			
+//			queryStockByQuote(request, response);
+//		} catch (TwitterException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
 		
 		if (request.getParameter("signout") != null) {
 			request.getSession(false).invalidate();

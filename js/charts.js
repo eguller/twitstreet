@@ -94,9 +94,9 @@ function reloadStockDistribution(stockId) {
 
 	if ($('#stock-details-screen').hasClass('blockUI'))
 		return;
-	$('#stock-details-screen').block({
-		message : 'Loading'
-	});
+	
+	
+	blockElementWithMsg('#stock-details-screen', msg)
 	    
 	$.ajax({
 		type: 		"get",

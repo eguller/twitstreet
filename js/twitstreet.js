@@ -64,7 +64,8 @@ function loadWatchList(reload) {
 		url : "watchlist",
 		success : function(data) {
 
-			$("#user-watch-list").unblock();
+		unblockElement("#user-watch-list");
+		
 			$("#user-watch-list").empty();
 			$("#user-watch-list").html($(data).html());
 
@@ -79,7 +80,8 @@ function addToWatchList(stockid) {
 		url : "watchlist",
 		data : "stock="+stockid+"&operation=add",
 		success : function(data) {
-			$("#user-watch-list").unblock();
+			unblockElement("#user-watch-list");
+			
 			$("#user-watch-list").empty();
 			$("#user-watch-list").html($(data).html());
 			$(".add-to-watch-list-link-"+stockid).hide();
@@ -96,7 +98,8 @@ function removeFromWatchList(stockid) {
 		url : "watchlist",
 		data : "stock="+stockid+"&operation=remove",
 		success : function(data) {
-			$("#user-watch-list").unblock();
+			unblockElement("#user-watch-list");
+			
 			$("#user-watch-list").empty();
 			$("#user-watch-list").html($(data).html());
 			$(".remove-from-watch-list-link-"+stockid).hide();
@@ -107,25 +110,7 @@ function removeFromWatchList(stockid) {
 }
 
 
-// function goToUsers(){
-//	
-//	
-// if(user.length>0){
-// blockElementWithMsg('#column_center', 'Loading');
-// $.ajax({
-// type : "get",
-// url : "/user",
-// data : "quote=" + quote,
-// success : function(data) {
-// $("#column_center").unblock();
-// $("#column_center").empty();
-// $("#column_center").append($(data));
-//
-// }
-// });
-// }
-//	
-// }
+
 
 function getQuote(quote) {
 	if (quote.length > 0) {
@@ -138,7 +123,8 @@ function getQuote(quote) {
 			url : "/getquote",
 			data : "quote=" + quote,
 			success : function(data) {
-				$("#column_center").unblock();
+				unblockElement("#column_center");
+				
 				$("#stocks-container").empty();
 				$("#stocks-container").append($(data));
 
@@ -154,7 +140,8 @@ function loadTrendyStocks() {
 		type : "get",
 		url : "/trendystocks",
 		success : function(data) {
-			$("#column_center").unblock();
+			unblockElement("#column_center");
+			
 			$("#stockdetails").empty();
 			$("#stockdetails").append($(data).html());
 
@@ -173,7 +160,8 @@ function getUser(user) {
 			url : "/getuser",
 			data : "getuser=" + user,
 			success : function(data) {
-				$("#column_center").unblock();
+				unblockElement("#column_center");
+				
 				$("#users-container").empty();
 				$("#users-container").append($(data));
 
@@ -198,7 +186,8 @@ function loadUserProfile(userId,reload) {
 			url : "/user",
 			data : "user=" + userId,
 			success : function(data) {
-				$("#column_center").unblock();
+				unblockElement("#column_center");
+				
 				$("#users-container").empty();
 				$("#users-container").append($(data));
 			}
@@ -247,9 +236,8 @@ function buy(stock, amount) {
 	if ($('#buy-sell-div').hasClass('blockUI'))
 		return;
 	// block element
-	$('#buy-sell-div').block({
-		message : 'Processing'
-	});
+	blockElementWithMsg('#buy-sell-div', 'Processing');
+	
 	$.ajax({
 		type : "get",
 		url : "a/buy",
@@ -269,10 +257,9 @@ function sell(stock, amount) {
 	// if already clicked do nothing
 	if ($('#buy-sell-div').hasClass('blockUI'))
 		return;
-	// block element
-	$('#buy-sell-div').block({
-		message : 'Processing'
-	});
+	
+	blockElementWithMsg('#buy-sell-div', 'Processing');
+	
 	$.ajax({
 		type : "get",
 		url : "a/sell",
@@ -344,7 +331,8 @@ function loadStock(id, reload) {
 		data : "stock=" + id,
 		success : function(data) {
 
-			$("#column_center").unblock();
+			unblockElement("#column_center");
+			
 			$("#stocks-container").empty();
 			$("#stocks-container").append($(data));
 
@@ -386,8 +374,8 @@ function toprank(page,reload) {
 		url : "toprank",
 		data : "page=" + pageParam,
 		success : function(data) {
-
-			$("#topranks-loading-div").unblock();
+			unblockElement("#topranks-loading-div");
+			
 			$("#topranks").empty();
 			$("#topranks").html($(data).html());
 		}
@@ -412,8 +400,8 @@ function loadBalance() {
 		type : "get",
 		url : "balance",
 		success : function(data) {
-
-			$("#balance").unblock();
+			unblockElement("#topranks-loading-div");
+			
 			$("#balance").empty();
 			$("#balance").html($(data).html());
 		}
@@ -427,13 +415,23 @@ function blockElementWithMsg(elementId, msg) {
 	}
 	if ($(elementId).hasClass('blockUI'))
 		return;
+	
+	$(elementId).fadeOut();
+	
 	// block element
 	$(elementId).block({
-		message : msg
+		message : '<img src="images/activity_indicator_32.gif" /><br>'+msg
 	});
 
 }
+function unblockElement(elementId) {
+	
+	$(elementId).fadeIn();
+	
+	// block element
+	$(elementId).unblock();
 
+}
 function commasep(nStr) {
 	nStr = parseFloat(nStr).toFixed(2);
 	nStr += '';
