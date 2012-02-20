@@ -94,14 +94,23 @@
 	</div>
 
 
-	<jsp:include page="otherSearchResults.jsp" />
-
+	
 
 	<%
-		if (quote.length() > 0 && stock == null) {
-	%>
+		if (quote.length() > 0){
+			%>
+			<jsp:include page="otherSearchResults.jsp" />
+			
+			
+			<%
+			if(stock == null) {
+			%>	
+			
+				<div id="searchnoresult"><p>No results found.</p></div>
+		<%	}
+		%>
 
-	<div id="searchnoresult"><p>No results found.</p></div>
+			
 
 	<%
 		}

@@ -83,7 +83,7 @@
 								<table class="datatbl2">
 									<tr>									
 										<td>	
-											<a href="javascript:void(0)" onclick="getQuote('<%=stock.getName()%>')"
+											<a href="javascript:void(0)" onclick="loadStock(<%=stock.getId()%>)"
 																title="Loads <%=stock.getName()%>'s stock details">
 											<%=stock.getName()%>
 											</a> 
