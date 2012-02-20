@@ -416,7 +416,7 @@ function blockElementWithMsg(elementId, msg) {
 	if ($(elementId).hasClass('blockUI'))
 		return;
 	
-	$(elementId).fadeOut();
+	$(elementId).fadeTo('slow', 0.5, null);
 	
 	// block element
 	$(elementId).block({
@@ -426,7 +426,7 @@ function blockElementWithMsg(elementId, msg) {
 }
 function unblockElement(elementId) {
 	
-	$(elementId).fadeIn();
+	$(elementId).fadeTo('slow', 1,null);
 	
 	// block element
 	$(elementId).unblock();

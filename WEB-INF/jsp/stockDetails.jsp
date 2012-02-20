@@ -111,7 +111,7 @@
 					
 					</td>
 				<td>
-					<% if(stock.isChangePerHourCalculated()){ 
+					<% if(stock.isChangePerHourCalculated() && stock.getChangePerHour()!=0){ 
 					
 						
 						String colorClass = (stock.getChangePerHour()>0)?"green-profit":"red-profit";
