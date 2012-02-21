@@ -65,7 +65,7 @@ function loadPortfolio(reload) {
 		url : "portfolio",
 		success : function(data) {
 			
-			portfolioLastUpdate = (new Date()).getTime();
+			portfolioLastUpdate = new Date();
 			
 			unblockElement('#portfolio-container');	
 			if (objectExists(data)) {
@@ -95,7 +95,7 @@ function loadWatchList(reload) {
 		type : "get",
 		url : "watchlist",
 		success : function(data) {
-			watchListLastUpdate = (new Date()).getTime();
+			watchListLastUpdate = new Date();
 			unblockElement("#user-watch-list");
 			if (objectExists(data)) {				
 				$("#user-watch-list").empty();
@@ -251,7 +251,7 @@ function loadCurrentTransactions(reload) {
 		url : "/transaction",
 		success : function(data) {
 			
-			currentTransactionsLastUpdate = (new Date()).getTime();
+			currentTransactionsLastUpdate = new Date();
 			unblockElement("#currenttransactions-container");
 			if (objectExists(data)) {
 				$("#currenttransactions-container").empty();
@@ -285,7 +285,7 @@ function loadUserTransactions(reload) {
 		data : "type=user",
 		success : function(data) {
 			
-			userTransactionsLastUpdate = (new Date()).getTime();
+			userTransactionsLastUpdate = new Date();
 			unblockElement("#yourtransactions-container");
 
 						
@@ -459,7 +459,7 @@ function toprank(page,reload) {
 		data : "page=" + pageParam,
 		success : function(data) {
 			
-			toprankLastUpdate = (new Date()).getTime();
+			toprankLastUpdate = new Date();
 			unblockElement("#topranks-loading-div");
 			
 			$("#topranks").empty();
@@ -501,7 +501,7 @@ function loadBalance(reload) {
 		url : "balance",
 		success : function(data) {
 			
-			balanceLastUpdate = (new Date()).getTime();
+			balanceLastUpdate = new Date();
 			unblockElement('#balance-container');	
 			if (objectExists(data)) {
 				$("#balance-container").empty();
