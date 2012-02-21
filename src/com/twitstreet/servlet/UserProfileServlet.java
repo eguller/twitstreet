@@ -21,9 +21,13 @@ public class UserProfileServlet extends TwitStreetServlet {
 	public static String USER_PROFILE_USER = "userprofileuser";
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
-		super.doGet(request, response);
-		setPageAttributes();
 		response.setContentType("text/html;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
+		loadUserFromCookie(request);
+		User user = (User) request.getAttribute(User.USER);
 		
 		request.setAttribute("title", "User profile of " + user.getUserName());
 		request.setAttribute("meta-desc", "This page shows profile of "+user.getUserName()+". You can find details of "+user.getUserName()+" like rank, portfolio, cash and portfolio details.");

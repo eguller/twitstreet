@@ -30,9 +30,12 @@ public class BalanceServlet extends TwitStreetServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws IOException, ServletException {
-		super.doPost(request, response);
-		response.setContentType("application/json");
+		response.setContentType("text/html;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 
+		loadUserFromCookie(request);
 		
 		try {
 			getServletContext().getRequestDispatcher(

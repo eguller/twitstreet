@@ -19,7 +19,7 @@ import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
 @Singleton
-public class StockDistributionServlet extends HttpServlet{
+public class StockDistributionServlet extends TwitStreetServlet {
 	public static String STOCK_DISTRIBUTION_DETAIL_LIST = "stockdistributiondetaillist";
 	@Inject PortfolioMgr portfolioMgr;
 	@Override
@@ -30,6 +30,7 @@ public class StockDistributionServlet extends HttpServlet{
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
+		loadUserFromCookie(request);
 		try {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/stockDistribution.jsp").forward(request, response);
 		} catch (ServletException e) {

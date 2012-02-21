@@ -41,9 +41,14 @@ public class BuyServlet extends TwitStreetServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		super.doPost(request, response);
 		response.setContentType("text/html;charset=utf-8");
-		setPageAttributes();
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
+		loadUserFromCookie(request);
+		
+		User user = (User) request.getAttribute(User.USER);
 		
 		if (user != null) {
 			String stock = request.getParameter("stock");
@@ -51,7 +56,7 @@ public class BuyServlet extends TwitStreetServlet {
 			try {
 				Stock stockObj = stockMgr.getStockById(Long.parseLong(stock));
 				if (user != null && stockObj != null) {
-					BuySellResponse buySellResponse = portfolioMgr.buy(
+					portfolioMgr.buy(
 							user, stockObj,
 							Integer.parseInt(amount));
 					

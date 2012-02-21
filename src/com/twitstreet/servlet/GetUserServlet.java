@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -61,13 +62,14 @@ public class GetUserServlet extends TwitStreetServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		super.doGet(request, response);
+		response.setContentType("text/html;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
 		
 		 searchResultUsers = new ArrayList<User>();
 		 
-		setPageAttributes();
-		response.setContentType("text/html");
 		request.setAttribute("title", "twitstreet - Twitter stock market game");
 		request.setAttribute("meta-desc", "Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
 
@@ -85,12 +87,14 @@ public class GetUserServlet extends TwitStreetServlet {
 
 		start = System.currentTimeMillis();	
 		
+		loadUserFromCookie(request);
+		
 		String searchText = (String) request.getParameter(GET_USER_PARAM);
 		
 		
 		
 		queryUserFromDB(searchText);
-		queryUserFromTwitter(searchText);	
+		queryUserFromTwitter(searchText, request);	
 		searchResultUsers.removeAll(Collections.singleton(null));
 		
 		end = System.currentTimeMillis();
@@ -114,7 +118,7 @@ public class GetUserServlet extends TwitStreetServlet {
 		
 		
 		
-		if (getUser() != null) {
+		if (request.getAttribute(User.USER) != null) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);
 		} else {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);
@@ -125,10 +129,8 @@ public class GetUserServlet extends TwitStreetServlet {
 		
 		searchResultUsers.addAll(userMgr.searchUser(searchText));
 	}
-	public void queryUserFromTwitter(String searchText) throws ServletException, IOException {
-		User userTmp = getUser() == null ? userMgr.random() : getUser();
-		
-			
+	public void queryUserFromTwitter(String searchText, HttpServletRequest request) throws ServletException, IOException {
+		User userTmp = request.getAttribute(User.USER) == null ? userMgr.random() : (User)request.getAttribute(User.USER);
 		if (searchText != null && searchText.length() > 0) {
 			//request.setAttribute(GET_USER, twUserName);
 			TwitterProxy twitterProxy = null;

@@ -3,6 +3,7 @@ package com.twitstreet.servlet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,32 +14,34 @@ import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
 @Singleton
-public class TrendyStocksServlet extends TwitStreetServlet{
-	
+public class TrendyStocksServlet extends TwitStreetServlet {
+
 	public static String TOPRANKS_USER_LIST = "topranksuserlist";
 
-	@Inject UserMgr userMgr;
+	@Inject
+	UserMgr userMgr;
 	@Inject
 	private final Gson gson = null;
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		super.doGet(request, response);
 		response.setContentType("text/html;charset=utf-8");
-		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-		response.setHeader("Pragma","no-cache"); //HTTP 1.0
-		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
-	
-			try {
-				getServletContext().getRequestDispatcher(
-						"/WEB-INF/jsp/trendyStocks.jsp").forward(request, response);
-			} catch (ServletException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-				
-	//	response.getWriter().write(gson.toJson(userList));
+		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+		response.setDateHeader("Expires", 0); // prevents caching at the proxy
+												// server
+
+		loadUserFromCookie(request);
+		try {
+			getServletContext().getRequestDispatcher(
+					"/WEB-INF/jsp/trendyStocks.jsp").forward(request, response);
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// response.getWriter().write(gson.toJson(userList));
 	}
-		
+
 }

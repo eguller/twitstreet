@@ -23,16 +23,14 @@ import twitter4j.auth.RequestToken;
 
 @SuppressWarnings("serial")
 @Singleton
-public class CallBackServlet extends HttpServlet {
+public class CallBackServlet extends TwitStreetServlet {
 	public static final String COOKIE_ID = "id";
 	public static final String COOKIE_OAUTHTOKEN = "oauthtoken";
-	private static final String REQUEST_TOKEN = "requestToken";
+	public static final String REQUEST_TOKEN = "requestToken";
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
-	public static final double INITIAL_MONEY = 10000;
-	/*
-	 * I will be dead when this cookie is expired. Wed, 08 Nov 2079 04:24:42 GMT
-	 */
-	private static final int COOKIE_EXPIRE = Integer.MAX_VALUE;
+
+	private static final int COOKIE_EXPIRE = 30 * 24 * 60 * 60;
+	public static final String COOKIE_ACTIVE = "isActive";
 	@Inject
 	UserMgr userMgr;
 	@Inject
@@ -40,9 +38,7 @@ public class CallBackServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		
-		response.setContentType("text/html");
-		response.setContentType("application/json;charset=utf-8");
+		response.setContentType("text/html;charset=utf-8");
 		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
@@ -51,7 +47,7 @@ public class CallBackServlet extends HttpServlet {
 		twitter.setOAuthConsumer(configMgr.getConsumerKey(),
 				configMgr.getConsumerSecret());
 
-		RequestToken requestToken = configMgr.getRequestToken();
+		RequestToken requestToken = (RequestToken) request.getSession().getAttribute(REQUEST_TOKEN);
 		String verifier = request.getParameter(OAUTH_VERIFIER);
 		try {
 			AccessToken accessToken = twitter.getOAuthAccessToken(requestToken,
@@ -75,7 +71,6 @@ public class CallBackServlet extends HttpServlet {
 				user.setCash(configMgr.getInitialMoney());
 				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 				userMgr.saveUser(user);
-				request.setAttribute(User.USER, user);
 			} else {
 				user = new User();
 				user.setId(userId);
@@ -86,9 +81,7 @@ public class CallBackServlet extends HttpServlet {
 				user.setOauthTokenSecret(oauthTokenSecret);
 				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 				userMgr.updateUser(user);
-				request.setAttribute(User.USER, user);
 			}
-			request.getSession().removeAttribute(REQUEST_TOKEN);
 			Cookie cookies[] = createCookie(userId, oauthToken);
 			writeCookies(response, cookies);
 		} catch (TwitterException e) {
@@ -100,9 +93,11 @@ public class CallBackServlet extends HttpServlet {
 	public Cookie[] createCookie(long userId, String oauthToken) {
 		Cookie ck1 = new Cookie(COOKIE_ID, String.valueOf(userId));
 		Cookie ck2 = new Cookie(COOKIE_OAUTHTOKEN, oauthToken);
+		Cookie ck3 = new Cookie(COOKIE_ACTIVE, String.valueOf(true));
 		ck1.setMaxAge(COOKIE_EXPIRE);
 		ck2.setMaxAge(COOKIE_EXPIRE);
-		return new Cookie[] { ck1, ck2 };
+		ck3.setMaxAge(COOKIE_EXPIRE);
+		return new Cookie[] { ck1, ck2, ck3 };
 	}
 
 	public void writeCookies(HttpServletResponse response, Cookie[] cookies) {

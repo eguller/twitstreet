@@ -85,16 +85,6 @@ public class ConfigMgrImpl implements ConfigMgr{
 	}
 
 	@Override
-	public void setRequestToken(RequestToken requestToken) {
-		this.requestToken = requestToken;
-	}
-
-	@Override
-	public RequestToken getRequestToken() {
-		return requestToken;
-	}
-
-	@Override
 	public int getComissionTreshold() {
 		return Integer.parseInt(get(ConfigMgr.COMISSION_TRESHOLD));
 	}

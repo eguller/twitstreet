@@ -1,60 +1,33 @@
 package com.twitstreet.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
 import com.twitstreet.db.data.User;
 import com.twitstreet.session.UserMgr;
 
-public abstract class TwitStreetServlet extends HttpServlet {
-	@Inject UserMgr userMgr;
-	HttpServletRequest request;
-	HttpServletResponse response;
-	protected User user = null;
+public class TwitStreetServlet extends HttpServlet{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8842472067124473768L;
-	
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		this.request = request;
-		this.response = response;
-		setPageAttributes();
-		loadUserFromCookie();
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		this.request = request;
-		this.response = response;
-		setPageAttributes();
-		loadUserFromCookie();
-	}
-	
-	public void setPageAttributes(){
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-		response.setDateHeader("Expires", 0); // prevents caching at the proxy
-												// server
-	}
-	
-	public void loadUserFromCookie() {
+	private static final long serialVersionUID = 4132204849052813369L;
+	@Inject UserMgr userMgr;
+	public void loadUserFromCookie(HttpServletRequest request) {
+		
+		if(request.getAttribute(User.USER) != null){
+			return;
+		}
+		
 		Cookie[] cookies = request.getCookies() == null ? new Cookie[] {}
 				: request.getCookies();
 		boolean idFound = false;
 		boolean oAuthFound = false;
+		boolean active = false;
 		String idStr = "";
 		String oAuth = "";
+		User user = null;
 		for (Cookie cookie : cookies) {
 			if (cookie.getName().equals(CallBackServlet.COOKIE_ID)) {
 				idStr = cookie.getValue();
@@ -64,8 +37,12 @@ public abstract class TwitStreetServlet extends HttpServlet {
 				oAuth = cookie.getValue();
 				oAuthFound = true;
 			}
+			
+			if(cookie.getName().equals(CallBackServlet.COOKIE_ACTIVE)){
+				active = Boolean.parseBoolean(cookie.getValue());
+			}
 
-			if (idFound && oAuthFound) {
+			if (idFound && oAuthFound && active) {
 				try {
 					long id = Long.parseLong(idStr);
 					user = userMgr.getUserById(id);
@@ -80,13 +57,4 @@ public abstract class TwitStreetServlet extends HttpServlet {
 		}
 		request.setAttribute(User.USER, user);
 	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 }

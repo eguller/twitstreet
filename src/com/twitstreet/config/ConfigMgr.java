@@ -15,7 +15,5 @@ public interface ConfigMgr {
 	public int getMinFollower();
 	public String getGaAccount();
 	public double getInitialMoney();
-	public void setRequestToken(RequestToken requestToken);
-	public RequestToken getRequestToken();
 	public int getComissionTreshold();
 }
