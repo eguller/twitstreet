@@ -14,6 +14,16 @@ public class TwitStreetServlet extends HttpServlet{
 	 */
 	private static final long serialVersionUID = 4132204849052813369L;
 	@Inject UserMgr userMgr;
+	
+	public void loadUser(HttpServletRequest request){
+		if(request.getAttribute(User.USER) != null || request.getSession().getAttribute(User.USER_ID) == null){
+			return;
+		}
+		long userId = (Long) request.getSession().getAttribute(User.USER_ID);
+		User user = userMgr.getUserById(userId);
+		request.setAttribute(User.USER, user);
+	}
+	
 	public void loadUserFromCookie(HttpServletRequest request) {
 		
 		if(request.getAttribute(User.USER) != null){
@@ -29,11 +39,11 @@ public class TwitStreetServlet extends HttpServlet{
 		String oAuth = "";
 		User user = null;
 		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(CallBackServlet.COOKIE_ID)) {
+			if (cookie.getName().equals(CallBackServlet.COOKIE_ID) ) {
 				idStr = cookie.getValue();
 				idFound = true;
 			}
-			if (cookie.getName().equals(CallBackServlet.COOKIE_OAUTHTOKEN)) {
+			if (cookie.getName().equals(CallBackServlet.COOKIE_OAUTHTOKEN) ) {
 				oAuth = cookie.getValue();
 				oAuthFound = true;
 			}

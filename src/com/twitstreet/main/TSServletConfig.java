@@ -21,6 +21,7 @@ import com.twitstreet.servlet.PortfolioServlet;
 import com.twitstreet.servlet.SellServlet;
 import com.twitstreet.servlet.SetupServlet;
 import com.twitstreet.servlet.SigninServlet;
+import com.twitstreet.servlet.SignoutServlet;
 import com.twitstreet.servlet.StockDetailsServlet;
 import com.twitstreet.servlet.StockDistributionServlet;
 import com.twitstreet.servlet.TopRankServlet;
@@ -80,6 +81,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/trendystocks").with(TrendyStocksServlet.class);
 				
 				serve("/watchlist").with(WatchListServlet.class);
+				serve("/signout").with(SignoutServlet.class);
 			}
 		});
 	}

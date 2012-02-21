@@ -33,7 +33,8 @@ public class WatchListServlet extends TwitStreetServlet {
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
 		
-		loadUserFromCookie(request);
+		loadUser(request);
+		//loadUserFromCookie(request);
 		User user = (User) request.getAttribute(User.USER);
 		
 		String operation = request.getParameter(OPERATION);

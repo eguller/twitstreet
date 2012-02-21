@@ -87,7 +87,8 @@ public class GetUserServlet extends TwitStreetServlet {
 
 		start = System.currentTimeMillis();	
 		
-		loadUserFromCookie(request);
+		loadUser(request);
+		//loadUserFromCookie(request);
 		
 		String searchText = (String) request.getParameter(GET_USER_PARAM);
 		

@@ -41,7 +41,8 @@ public class SellServlet extends TwitStreetServlet{
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 
-		loadUserFromCookie(request);
+		loadUser(request);
+		//loadUserFromCookie(request);
 		User user = (User) request.getAttribute(User.USER);
 		if(user != null){
 			String stock = request.getParameter("stock");

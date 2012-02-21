@@ -90,7 +90,8 @@ public class GetQuoteServlet extends TwitStreetServlet {
 
 		logger.info("Init time: " + (end - start));
 		
-		loadUserFromCookie(request);
+		loadUser(request);
+		//loadUserFromCookie(request);
 
 		start = System.currentTimeMillis();
 		queryStockById(request, response);

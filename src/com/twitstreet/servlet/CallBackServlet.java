@@ -82,8 +82,9 @@ public class CallBackServlet extends TwitStreetServlet {
 				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 				userMgr.updateUser(user);
 			}
-			Cookie cookies[] = createCookie(userId, oauthToken);
-			writeCookies(response, cookies);
+			request.getSession().setAttribute(User.USER_ID, user.getId());
+			//Cookie cookies[] = createCookie(userId, oauthToken);
+			//writeCookies(response, cookies);
 		} catch (TwitterException e) {
 			throw new ServletException(e);
 		}

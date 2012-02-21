@@ -32,7 +32,8 @@ public class TrendyStocksServlet extends TwitStreetServlet {
 		response.setDateHeader("Expires", 0); // prevents caching at the proxy
 												// server
 
-		loadUserFromCookie(request);
+		loadUser(request);
+		//loadUserFromCookie(request);
 		try {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/trendyStocks.jsp").forward(request, response);
@@ -41,7 +42,6 @@ public class TrendyStocksServlet extends TwitStreetServlet {
 			e.printStackTrace();
 		}
 
-		// response.getWriter().write(gson.toJson(userList));
 	}
 
 }

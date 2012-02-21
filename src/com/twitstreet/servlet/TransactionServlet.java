@@ -39,7 +39,8 @@ public class TransactionServlet extends TwitStreetServlet {
 		
 		String type = request.getParameter("type");
 		
-		loadUserFromCookie(request);
+		loadUser(request);
+		//loadUserFromCookie(request);
 		try {
 
 			if (USER_TRANSACTIONS.equals(type)) {

@@ -110,19 +110,9 @@ public class HomePageServlet extends TwitStreetServlet {
 //			e.printStackTrace();
 //		}
 //		
-		
-		if (request.getParameter("signout") != null) {
-			request.getSession().invalidate();
-			request.removeAttribute(User.USER);
-			invalidateCookies(new String[] { CallBackServlet.COOKIE_ID,
-					CallBackServlet.COOKIE_OAUTHTOKEN , CallBackServlet.COOKIE_ACTIVE	}, request, response);
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
-			return;
-		}
-		
-		
-		loadUserFromCookie(request);
+
+		loadUser(request);
+		//loadUserFromCookie(request);
 
 		start = System.currentTimeMillis();
 		queryStockById(request, response);
@@ -134,7 +124,7 @@ public class HomePageServlet extends TwitStreetServlet {
 		end = System.currentTimeMillis();
 		logger.info("queryStockByQuote: " + (end - start));
 
-		if (request.getAttribute(User.USER) != null) {
+		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
 		} else {
@@ -283,20 +273,7 @@ public class HomePageServlet extends TwitStreetServlet {
 		}
 	}
 
-	private void invalidateCookies(String[] cookieNames,
-			HttpServletRequest request, HttpServletResponse response) {
-		List<String> cookieNameList = Arrays.asList(cookieNames);
-		for (Cookie cookie : request.getCookies()) {
-			if (cookieNameList.contains(cookie.getName())) {
-				if(CallBackServlet.COOKIE_ACTIVE.equalsIgnoreCase(cookie.getName())){
-					cookie.setValue(String.valueOf(false));
-				}
-				cookie.setMaxAge(0);
-				cookie.setDomain(request.getHeader("host"));
-				response.addCookie(cookie);
-			}
-		}
-	}
+
 	
 
 }
