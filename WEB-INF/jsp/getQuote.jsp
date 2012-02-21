@@ -48,18 +48,14 @@
 <div id="get-quote-div">
 
 	
-	<div id="quoteholder" onmouseover="$('#trendy-stocks-id').show()" onmouseout="$('#trendy-stocks-id').hide()">
+	<div id="quoteholder" class="main-div">
 
 		<div>
 			<input type="text" class="textbox" id="getQuoteTextboxId" value="<%=quote%>"
 				name="quote" /> <input type="button" id="getQuoteButton"
 				onclick="getQuote($('#getQuoteTextboxId').val())" value="Search">
 		</div>
-		<div style="text-align:center; text-size:20px; height:20px">		
-			<a id="trendy-stocks-id" style="display:none" href="javascript:void(0)" onclick="loadTrendyStocks()" >
-						Trendy Stocks 
-			</a>
-		</div>
+	
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input
 			type="hidden" id="quote-id"
 			value="<%=stock == null ? "" : stock.getId()%>" />

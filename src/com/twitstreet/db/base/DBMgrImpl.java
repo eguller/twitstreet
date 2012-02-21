@@ -160,7 +160,7 @@ public class DBMgrImpl implements DBMgr {
 				idListStr = idListStr +",";
 			}
 			
-			idListStr = idListStr + String.valueOf(idList.get(i));
+			idListStr = idListStr + "("+String.valueOf(idList.get(i)+(")"));
 			
 			
 			

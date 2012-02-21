@@ -36,25 +36,16 @@ public class StockUpdateTask implements Runnable {
 
 		while (true) {
 			long startTime = System.currentTimeMillis();
-			List<Stock> stockList = stockMgr.getUpdateRequiredStocks();
+		
 
-			for (Stock stock : stockList) {
-				User user = userMgr.random();
-				TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
-				twitter4j.User twUser = null;
-
-				try {
-					twUser = twitterProxy.getTwUser(stock.getId());
-				} catch (Exception ex) {
-				}
-				if (twUser != null) {
-					stockMgr.updateTwitterData(stock.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(), twUser.isVerified());
-				}
-
-			}		
-			logger.debug("Stock list updated. Number of stocks: "+ stockList.size());
-
+			logger.debug("witter trends update - begin.");
+			stockMgr.updateTwitterTrends();
+			logger.debug("Twitter trends update - end.");
 			
+
+			logger.debug("Stock list update - begin.");
+			List<Stock> stockList = updateStocks();
+			logger.debug("Stock list update - end. Number of stocks: "+ stockList.size());			
 		
 			logger.debug("Stock history update - begin.");
 			stockMgr.updateStockHistory();
@@ -68,7 +59,7 @@ public class StockUpdateTask implements Runnable {
 			userMgr.updateRankingHistory();			
 			logger.debug("Rank history update - end.");
 			
-			
+
 			long endTime = System.currentTimeMillis();
 			long diff = endTime - startTime;
 
@@ -81,6 +72,30 @@ public class StockUpdateTask implements Runnable {
 				}
 			}
 		}
+	}
+	
+	public List<Stock> updateStocks(){
+		
+		List<Stock> stockList = stockMgr.getUpdateRequiredStocks();
+
+		for (Stock stock : stockList) {
+			User user = userMgr.random();
+			TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
+			twitter4j.User twUser = null;
+
+			try {
+				twUser = twitterProxy.getTwUser(stock.getId());
+			} catch (Exception ex) {
+			}
+			if (twUser != null) {
+				stockMgr.updateTwitterData(stock.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(), twUser.isVerified());
+			}
+
+		}	
+		
+		return stockList;
+		
+		
 	}
 
 }

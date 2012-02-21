@@ -144,6 +144,10 @@ public class TwitterProxyImpl implements TwitterProxy {
 		ResponseList<User> userResponseList = null;
 
 		String query = user;
+		
+		query = query.replace("%23", "");
+		query = query.replace("%22", "");
+		query = query.replace("%20", " ");
 //		try {
 //			query = Util.convertStringToValidURL(query);
 //		} catch (UnsupportedEncodingException e1) {

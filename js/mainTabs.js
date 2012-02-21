@@ -16,10 +16,12 @@ function showTabMain(tabId,tabContentId){
 		if(tabId == mainTabsArray[i]){
 			
 			$(mainTabsArray[i]).addClass("youarehere");
+			$(mainTabsArray[i]+'-right-content').fadeTo('fast',1,null);
 		}
 		else{
 			
 			$(mainTabsArray[i]).removeClass("youarehere");
+			$(mainTabsArray[i]+'-right-content').hide();
 		}
 	}
 	

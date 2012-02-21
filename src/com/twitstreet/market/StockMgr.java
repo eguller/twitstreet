@@ -73,4 +73,6 @@ public interface StockMgr {
 	void addStockIntoUserWatchList(long userid, long stockid);
 
 	void removeStockFromUserWatchList(long stockid, long userid);
+
+	void updateTwitterTrends();
 }

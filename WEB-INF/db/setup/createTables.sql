@@ -148,3 +148,11 @@ create table `user_stock_watch` (
      constraint `fk_user_stock_watch_user` foreign key (`user_id`) references `users` (`id`),
      constraint `fk_user_stock_watch_stock` foreign key (`stock_id`) references `stock` (`id`)
 )  engine=innodb default charset=`utf8`;
+
+-- twitter trends table
+create table `twitter_trends` (  
+    `stock_id` bigint not null, 
+     primary key (`stock_id`),
+    `lastUpdate` timestamp default now(),
+     constraint `fk_twitter_trends_stock` foreign key (`stock_id`) references `stock` (`id`)
+)  engine=innodb default charset=`utf8`;

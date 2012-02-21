@@ -9,17 +9,40 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import twitter4j.Trend;
+import twitter4j.Trends;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+
 import com.google.inject.Inject;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
+import com.twitstreet.db.base.DBMgrImpl;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.StockHistoryData;
+import com.twitstreet.db.data.User;
+import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.StockUpdateTask;
+import com.twitstreet.twitter.SimpleTwitterUser;
+import com.twitstreet.twitter.TwitterProxy;
+import com.twitstreet.twitter.TwitterProxyFactory;
 
 public class StockMgrImpl implements StockMgr {
+	
+	
+	private static final int TWITTER_TRENDS_CLEANUP_PERIOD = 24 * 60 ; // minutes
+	
 	private static String SELECT_FROM_STOCK = " select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
+	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
 	private static int MAX_TRENDS = 10;
+	
+	@Inject
+	private UserMgr userMgr;
+
+	@Inject
+	private TwitterProxyFactory twitterProxyFactory = null;
 	@Inject
 	private DBMgr dbMgr;
 	private static Logger logger = Logger.getLogger(StockMgrImpl.class);
@@ -56,6 +79,79 @@ public class StockMgrImpl implements StockMgr {
 		}
 		return stockDO;
 	}
+	public Stock getStockFromTwitterIfNonExisting(String searchString) {
+		if (searchString == null || searchString.length() < 1) {
+			return null;
+		}
+		Stock stock = getStock(searchString);
+
+		if (stock != null) {
+			return stock;
+		}
+
+		User userTmp = userMgr.random();
+
+		TwitterProxy twitterProxy = null;
+		twitterProxy = twitterProxyFactory.create(userTmp.getOauthToken(), userTmp.getOauthTokenSecret());
+
+		SimpleTwitterUser twUser = null;
+		ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
+
+		if (twitterProxy == null) {
+			logger.error("StockMgr: Twitter proxy could not be created. Username: " + searchString);
+			return null;
+		}
+		// Get user info from twitter.
+
+		try {
+			twitter4j.User twitterUser = twitterProxy.getTwUser(searchString);
+			if (twitterUser != null) {
+				twUser = new SimpleTwitterUser(twitterUser);
+			}
+		} catch (TwitterException ex) {
+			// omit exception, maybe this is search user not get
+			// user
+		}
+
+		if (twUser == null) {
+			try {
+				searchResultList = twitterProxy.searchUsers(searchString);
+				if (searchResultList != null && searchResultList.size() > 0) {
+					twUser = searchResultList.get(0);
+					searchResultList.remove(0);
+				}
+			} catch (TwitterException e1) {
+				logger.error("Something wrong... Could not connect to Twitter.");
+			}
+
+		}
+
+		if (twUser != null) {
+			stock = getStockById(twUser.getId());
+
+			// User info retrieved both from twitter and database.
+			if (stock == null) {
+				// This user was not queried before.
+				logger.debug("StockMgr: Stock queried first time. Stock name: " + searchString);
+				stock = new Stock();
+				stock.setId(twUser.getId());
+				stock.setName(twUser.getScreenName());
+				stock.setTotal(twUser.getFollowerCount());
+				stock.setPictureUrl(twUser.getPictureUrl());
+				stock.setSold(0.0D);
+				stock.setVerified(twUser.isVerified());
+				saveStock(stock);
+
+			}
+			logger.debug("StockMgr: Stock queried successfully. Stock name:" + stock.getName());
+		} else {
+			logger.error("StockMgr: User not found. Search string: " + searchString);
+
+		}
+
+		return stock;
+
+	}
 
 	public Stock getStockById(long id) {
 		Connection connection = null;
@@ -64,8 +160,7 @@ public class StockMgrImpl implements StockMgr {
 		Stock stockDO = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement(SELECT_FROM_STOCK +" where id = ?");
+			ps = connection.prepareStatement(SELECT_FROM_STOCK + " where id = ?");
 			ps.setLong(1, id);
 
 			rs = ps.executeQuery();
@@ -82,26 +177,22 @@ public class StockMgrImpl implements StockMgr {
 		return stockDO;
 	}
 
-	public StockHistoryData getStockHistory(long id){
-		
+	public StockHistoryData getStockHistory(long id) {
+
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		StockHistoryData stockHistoryData = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("select distinct stock_history.lastUpdate, stock.id, stock.name, stock_history.total " +
-							" from stock_history,stock " +
-							" where stock_history.stock = ? and stock.id =  stock_history.stock " +
-							" order by stock_history.lastUpdate asc ");
+			ps = connection.prepareStatement("select distinct stock_history.lastUpdate, stock.id, stock.name, stock_history.total " + " from stock_history,stock " + " where stock_history.stock = ? and stock.id =  stock_history.stock " + " order by stock_history.lastUpdate asc ");
 			ps.setLong(1, id);
 
 			rs = ps.executeQuery();
 			stockHistoryData = new StockHistoryData();
-			
+
 			stockHistoryData.getDataFromResultSet(rs);
-			
+
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
@@ -221,7 +312,13 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement(SELECT_FROM_STOCK +" where ((now() - lastUpdate) > (? / 1000) or lastUpdate is null) and (stock.id in (select distinct stock from portfolio) or stock.id in (select distinct stock_id from user_stock_watch ) )");
+					.prepareStatement(SELECT_DISTINCT_FROM_STOCK +" " +
+							" where ((now() - lastUpdate) > (? / 1000) or lastUpdate is null) " +
+							" and (" +
+							"		stock.id in (select distinct stock from portfolio) or " +
+							"  		stock.id in (select distinct stock_id from user_stock_watch ) or " +
+							"		stock.id in (select stock_id from twitter_trends )" +
+							"		)");
 
 			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF);
 			rs = ps.executeQuery();
@@ -248,7 +345,13 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement(SELECT_FROM_STOCK +" where  stock_sold(id)<0.9999 and id in (select distinct stock from portfolio) order by (changePerHour/total) desc limit ?;");
+					.prepareStatement(SELECT_FROM_STOCK +
+							" where  stock_sold(id)<0.9999 and total-(total*stock_sold(id))>1000 and " +
+							"	(" +
+							"	id in (select distinct stock from portfolio) or " +
+							"	id in (select distinct stock_id from twitter_trends)" +
+							"	) " +
+							"	order by (changePerHour/total) desc limit ?;");
 
 			ps.setInt(1, MAX_TRENDS);
 			rs = ps.executeQuery();
@@ -335,6 +438,64 @@ public class StockMgrImpl implements StockMgr {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
 			dbMgr.closeResources(connection, ps, rs);			
+		}
+	}
+
+	@Override
+	public void updateTwitterTrends() {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		
+		
+		ResultSet rs = null;
+		
+
+		Twitter twitter = new TwitterFactory().getInstance();
+		
+		ArrayList<Long> idList = new ArrayList<Long>();
+		try {
+			Trends ts = twitter.getLocationTrends(1);
+			
+			Trend[] trends = ts.getTrends();
+			
+			
+			if(trends!=null){
+				
+				for(Trend trend: trends){
+					
+					String name =trend.getQuery();
+					
+					name = name.replace("#", "");
+					Stock stock = getStockFromTwitterIfNonExisting(name);
+					
+					if(stock!=null){
+						idList.add(stock.getId());				
+					}
+				}
+			}
+			
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (idList.size() > 0) {
+			String idListStr = DBMgrImpl.getIdListAsCommaSeparatedString(idList);
+			try {
+				connection = dbMgr.getConnection();
+				ps = connection.prepareStatement("insert into twitter_trends (stock_id)  values " + idListStr +" on duplicate key update lastUpdate = now() " );
+				ps.executeUpdate();
+
+				ps = connection.prepareStatement("delete from twitter_trends where now() - lastUpdate > ? " );
+				ps.setInt(1, TWITTER_TRENDS_CLEANUP_PERIOD);
+				ps.executeUpdate();
+				
+				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			} catch (SQLException ex) {
+				logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex );
+			} finally {
+				dbMgr.closeResources(connection, ps, rs);
+			}
 		}
 	}
 }

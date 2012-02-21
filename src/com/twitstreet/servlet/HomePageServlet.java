@@ -92,20 +92,7 @@ public class HomePageServlet extends TwitStreetServlet {
 		end = System.currentTimeMillis();
 		
 		logger.info("Init time: " + (end - start));
-		
-		
-//		Twitter twitter = new TwitterFactory().getInstance();
-//		try {
-//			ResponseList<Trends> ts = twitter.getDailyTrends(new Date(), true);
-//			String name =ts.get(0).getTrends()[0].getName();
-//			
-//			queryStockByQuote(request, response);
-//		} catch (TwitterException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-		
+	
 		if (request.getParameter("signout") != null) {
 			request.removeAttribute(User.USER);
 			invalidateCookies(new String[] { CallBackServlet.COOKIE_ID,

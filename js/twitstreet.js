@@ -1,3 +1,9 @@
+
+
+var reloadInterval = 60 * 1000;
+
+
+
 $(document).ready(function() {
 	$("#dashboard-message-field").corner("round 3px");
 
@@ -10,37 +16,47 @@ $(document).ready(function() {
 	
 
 	if ($("#topranks").length > 0) {
-		setInterval(reloadToprank, 20000);
+		setInterval(reloadToprank, reloadInterval);
 	}
 
 	if ($("#currenttransactions").length) {
-		setInterval(reloadCurrentTransactions, 20000);
+		setInterval(reloadCurrentTransactions, reloadInterval);
 	}
 
 	if ($("#balance").length > 0) {
-		setInterval(reloadBalance, 20000);
+		setInterval(reloadBalance, reloadInterval);
 	}
 
 	if ($("#portfolio").length > 0) {
-		setInterval(reloadPortfolio, 20000);
+		setInterval(reloadPortfolio, reloadInterval);
 	}
 	if ($("#user-watch-list").length > 0) {
-		setInterval(reloadWatchList, 20000);
+		setInterval(reloadWatchList, reloadInterval);
 	}
-	if ($("#userprofile").length > 0) {
-		setInterval(reloadUserProfile, 20000);
-	}
+	
 
 });
 
 function calculateSold(total, soldPercentage) {
 	return total * soldPercentage;
 }
+
+
+var portfolioLastUpdate = new Date();
+
+
 function reloadPortfolio() {
+		
+	if (timeToReload(portfolioLastUpdate)) {
+
+		loadPortfolio(true);
+	}	
+
 	
-	loadPortfolio(true);
 }
 function loadPortfolio(reload) {
+	
+	
 	if(!reload){
 		blockElementWithMsg('#portfolio-container');	
 	}
@@ -48,16 +64,28 @@ function loadPortfolio(reload) {
 		type : "get",
 		url : "portfolio",
 		success : function(data) {
+			
+			portfolioLastUpdate = (new Date()).getTime();
+			
 			unblockElement('#portfolio-container');	
-			$("#portfolio-container").empty();
-			$("#portfolio-container").append($(data));
+			if (objectExists(data)) {
+				$("#portfolio-container").empty();
+				$("#portfolio-container").append($(data));
+				
+			}
 
 		}
 	});
 }
+var watchListLastUpdate = new Date();
+
+
 function reloadWatchList() {
-	
-	loadWatchList(true);
+		
+	if (timeToReload(watchListLastUpdate)) {
+
+		loadWatchList(true);
+	}	
 }
 function loadWatchList(reload) {
 	if(!reload){
@@ -67,11 +95,12 @@ function loadWatchList(reload) {
 		type : "get",
 		url : "watchlist",
 		success : function(data) {
-
-		unblockElement("#user-watch-list");
-		
-			$("#user-watch-list").empty();
-			$("#user-watch-list").html($(data).html());
+			watchListLastUpdate = (new Date()).getTime();
+			unblockElement("#user-watch-list");
+			if (objectExists(data)) {				
+				$("#user-watch-list").empty();
+				$("#user-watch-list").html($(data).html());
+			}
 
 		}
 	});
@@ -136,6 +165,9 @@ function getQuote(quote) {
 		});
 	}
 }
+
+
+
 function loadTrendyStocks() {
 	
 	blockElementWithMsg('#column_center', 'Loading');
@@ -173,10 +205,8 @@ function getUser(user) {
 		});
 	}
 }
-function reloadUserProfile() {
-	var userId = $('#userProfileUserId').val();
-	loadUserProfile(userId);
-}
+
+
 function loadUserProfile(userId,reload) {
 	if (userId != null) {
 		
@@ -191,16 +221,26 @@ function loadUserProfile(userId,reload) {
 			data : "user=" + userId,
 			success : function(data) {
 				unblockElement("#column_center");
-				
-				$("#users-container").empty();
-				$("#users-container").append($(data));
+				if (objectExists(data)) {				
+					$("#users-container").empty();
+					$("#users-container").append($(data));
+				}
 			}
 		});
 	}
 }
+
+var currentTransactionsLastUpdate = new Date();
+
+
 function reloadCurrentTransactions() {
-	loadCurrentTransactions(true);	
+		
+	if (timeToReload(currentTransactionsLastUpdate)) {
+
+		loadCurrentTransactions(true);
+	}	
 }
+
 function loadCurrentTransactions(reload) {
 	if(!reload){
 		blockElementWithMsg('#currenttransactions-container');
@@ -210,16 +250,30 @@ function loadCurrentTransactions(reload) {
 		type : "get",
 		url : "/transaction",
 		success : function(data) {
+			
+			currentTransactionsLastUpdate = (new Date()).getTime();
 			unblockElement("#currenttransactions-container");
-			$("#currenttransactions-container").empty();
-			$("#currenttransactions-container").append($(data));
+			if (objectExists(data)) {
+				$("#currenttransactions-container").empty();
+				$("#currenttransactions-container").append($(data));
+			}
 
 		}
 	});
 }
+
+
+var userTransactionsLastUpdate = new Date();
+
+
 function reloadUserTransactions() {
-	loadUserTransactions(true);	
+		
+	if (timeToReload(userTransactionsLastUpdate)) {
+
+		loadUserTransactions(true);
+	}	
 }
+
 function loadUserTransactions(reload) {
 	if(!reload){
 		blockElementWithMsg('#yourtransactions-container');
@@ -230,9 +284,16 @@ function loadUserTransactions(reload) {
 		url : "/transaction",
 		data : "type=user",
 		success : function(data) {
+			
+			userTransactionsLastUpdate = (new Date()).getTime();
 			unblockElement("#yourtransactions-container");
-			$("#yourtransactions-container").empty();
-			$("#yourtransactions-container").append($(data));
+
+						
+			if (objectExists(data)) {
+
+				$("#yourtransactions-container").empty();
+				$("#yourtransactions-container").append($(data));
+			}
 
 
 		}
@@ -331,11 +392,6 @@ function setup() {
 	});
 }
 
-function reloadStock(id){
-	
-	
-	loadStock(id, true);
-}
 function loadStock(id, reload) {
 
 	if(!reload){
@@ -354,6 +410,7 @@ function loadStock(id, reload) {
 			
 			$("#stocks-container").empty();
 			$("#stocks-container").append($(data));
+		
 
 			
 		}
@@ -372,11 +429,19 @@ function toprankNextPage(){
 	toprank(page+1);
 	
 }
-function reloadToprank(){
-	
-	toprank(null, true);
-	
+
+
+var toprankLastUpdate = new Date();
+
+
+function reloadToprank() {
+		
+	if (timeToReload(toprankLastUpdate)) {
+
+		toprank(null, true);
+	}	
 }
+
 function toprank(page,reload) {
 	var pageParam = page;
 	
@@ -393,6 +458,8 @@ function toprank(page,reload) {
 		url : "toprank",
 		data : "page=" + pageParam,
 		success : function(data) {
+			
+			toprankLastUpdate = (new Date()).getTime();
 			unblockElement("#topranks-loading-div");
 			
 			$("#topranks").empty();
@@ -412,9 +479,17 @@ function runScriptsInElement(responseData) {
 	}
 
 }
+
+
+var balanceLastUpdate = new Date();
+
+
 function reloadBalance() {
-	
-	loadBalance(true);
+		
+	if (timeToReload(balanceLastUpdate)) {
+
+		loadBalance(true);
+	}	
 }
 
 function loadBalance(reload) {
@@ -425,9 +500,14 @@ function loadBalance(reload) {
 		type : "get",
 		url : "balance",
 		success : function(data) {
+			
+			balanceLastUpdate = (new Date()).getTime();
 			unblockElement('#balance-container');	
-			$("#balance-container").empty();
-			$("#balance-container").append($(data));
+			if (objectExists(data)) {
+				$("#balance-container").empty();
+				$("#balance-container").append($(data));
+			}
+
 
 		}
 	});
@@ -539,3 +619,8 @@ function showTweetsOfUserInDiv(username, elementId) {
 	}).render().setUser(username).start();
 }
 
+function timeToReload(lastUpdate){
+	
+	return (new Date()).getTime() - lastUpdate > reloadInterval;
+	
+}
