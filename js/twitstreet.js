@@ -621,6 +621,6 @@ function showTweetsOfUserInDiv(username, elementId) {
 
 function timeToReload(lastUpdate){
 	
-	return (new Date()).getTime() - lastUpdate > reloadInterval;
+	return (new Date()).getTime() - lastUpdate.getTime() > reloadInterval;
 	
 }
