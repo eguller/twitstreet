@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -73,7 +74,11 @@ public class HomePageServlet extends TwitStreetServlet {
 	@Override
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		super.doGet(request, response);
+		response.setContentType("text/html;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
 		request.setAttribute("title", "twitstreet - Twitter stock market game");
 		request.setAttribute(
 				"meta-desc",
@@ -92,16 +97,10 @@ public class HomePageServlet extends TwitStreetServlet {
 		end = System.currentTimeMillis();
 		
 		logger.info("Init time: " + (end - start));
-	
-		if (request.getParameter("signout") != null) {
-			request.removeAttribute(User.USER);
-			invalidateCookies(new String[] { CallBackServlet.COOKIE_ID,
-					CallBackServlet.COOKIE_OAUTHTOKEN }, request, response);
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
-			return;
-		}
+		
 
+		loadUser(request);
+		//loadUserFromCookie(request);
 
 		start = System.currentTimeMillis();
 		queryStockById(request, response);
@@ -113,7 +112,7 @@ public class HomePageServlet extends TwitStreetServlet {
 		end = System.currentTimeMillis();
 		logger.info("queryStockByQuote: " + (end - start));
 
-		if (getUser() != null) {
+		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
 		} else {
@@ -125,7 +124,7 @@ public class HomePageServlet extends TwitStreetServlet {
 	public void queryStockById(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String stockIdStr = request.getParameter(STOCK);
-
+		User user = (User) request.getAttribute(User.USER);
 		if (user != null && stockIdStr != null && stockIdStr.length() > 0) {
 			long stockId = Long.parseLong(stockIdStr);
 			TwitterProxy twitterProxy = user == null ? null
@@ -170,7 +169,7 @@ public class HomePageServlet extends TwitStreetServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String twUserName = (String) request.getParameter(QUOTE);
 		if (twUserName != null && twUserName.length() > 0) {
-			User userTmp = getUser() == null ? userMgr.random() : getUser();
+			User userTmp = (User) (request.getAttribute(User.USER) == null ? userMgr.random() : request.getAttribute(User.USER));
 
 			request.setAttribute(QUOTE, twUserName);
 			TwitterProxy twitterProxy = null;
@@ -262,17 +261,7 @@ public class HomePageServlet extends TwitStreetServlet {
 		}
 	}
 
-	private void invalidateCookies(String[] cookieNames,
-			HttpServletRequest request, HttpServletResponse response) {
-		List<String> cookieNameList = Arrays.asList(cookieNames);
-		for (Cookie cookie : request.getCookies()) {
-			if (cookieNameList.contains(cookie.getName())) {
-				cookie.setMaxAge(0);
-				cookie.setValue("");
-				cookie.setPath("/");
-				cookie.setDomain(request.getHeader("host"));
-				response.addCookie(cookie);
-			}
-		}
-	}
+
+	
+
 }

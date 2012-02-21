@@ -9,6 +9,8 @@ import com.twitstreet.twitter.TwitterProxy;
 
 public class User implements DataObjectIF {
 	public static final String USER = "user";
+	public static final String USER_ID = "user-id";
+	
     long id;
     String userName;
     Date firstLogin;

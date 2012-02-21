@@ -20,7 +20,7 @@ import com.twitstreet.util.Util;
 
 @SuppressWarnings("serial")
 @Singleton
-public class SetupServlet extends HttpServlet {
+public class SetupServlet extends TwitStreetServlet {
 	@Inject
 	Twitstreet twitStreet;
 	@Inject
@@ -36,7 +36,7 @@ public class SetupServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		response.setContentType("application/json;charset=utf-8");
+		response.setContentType("text/html;charset=utf-8");
 		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server

@@ -3,6 +3,7 @@ package com.twitstreet.servlet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.db.data.User;
 import com.twitstreet.market.StockMgr;
 
 @SuppressWarnings("serial")
@@ -25,8 +27,16 @@ public class WatchListServlet extends TwitStreetServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		response.setContentType("text/html;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
-		super.doPost(request, response);
+		
+		loadUser(request);
+		//loadUserFromCookie(request);
+		User user = (User) request.getAttribute(User.USER);
+		
 		String operation = request.getParameter(OPERATION);
 		
 		String stockIdStr = request.getParameter(STOCK);
@@ -42,11 +52,9 @@ public class WatchListServlet extends TwitStreetServlet {
 			if (stockId != -1) {
 
 				if (ADD.equalsIgnoreCase(operation)) {
-
-					stockMgr.addStockIntoUserWatchList(stockId, getUser().getId());
-
+					stockMgr.addStockIntoUserWatchList(stockId, user.getId());
 				} else if (REMOVE.equalsIgnoreCase(operation)) {
-					stockMgr.removeStockFromUserWatchList(stockId, getUser().getId());
+					stockMgr.removeStockFromUserWatchList(stockId, user.getId());
 				}
 			}
 

@@ -30,12 +30,10 @@ public class SigninServlet extends TwitStreetServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		
-		response.setContentType("text/html");
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-		response.setDateHeader("Expires", 0); // prevents caching at the proxy server
+		response.setContentType("text/html;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
 
 		Twitter twitter = new TwitterFactory().getInstance();
@@ -51,7 +49,7 @@ public class SigninServlet extends TwitStreetServlet {
 					+ ", Consumer Secret: " + configMgr.getConsumerSecret());
 			RequestToken requestToken = twitter
 					.getOAuthRequestToken(callbackURL.toString());
-			configMgr.setRequestToken(requestToken);
+			request.getSession().setAttribute(CallBackServlet.REQUEST_TOKEN, requestToken);
 			response.sendRedirect(requestToken.getAuthenticationURL());
 			logger.debug("Redirect sent to authentication URL: "
 					+ requestToken.getAuthenticationURL());

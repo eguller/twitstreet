@@ -34,7 +34,7 @@
 					<td>@<span id="username"><%=user.getUserName()%></span></td>
 				</tr>
 				<tr>
-					<td><a href="/?signout=1">Sign out >></a></td>
+					<td><a href="/signout">Sign out >></a></td>
 				</tr>
 			</table>
 		</div>

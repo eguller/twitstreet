@@ -32,7 +32,11 @@ import com.twitstreet.twitter.TwitterProxyFactory;
 public class StockMgrImpl implements StockMgr {
 	
 	
-	private static final int TWITTER_TRENDS_CLEANUP_PERIOD = 24 * 60 ; // minutes
+	private static  int TWITTER_TRENDS_CLEANUP_PERIOD = 24 * 60 ; // minutes
+
+	private static  String TRENDY_STOCK_AVAILABLE_THRESHOLD = "500";
+
+	private static  String TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD = "0.99";
 	
 	private static String SELECT_FROM_STOCK = " select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
 	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
@@ -346,7 +350,7 @@ public class StockMgrImpl implements StockMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement(SELECT_FROM_STOCK +
-							" where  stock_sold(id)<0.9999 and total-(total*stock_sold(id))>1000 and " +
+							" where  stock_sold(id)< "+TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD +" and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +"  and " +
 							"	(" +
 							"	id in (select distinct stock from portfolio) or " +
 							"	id in (select distinct stock_id from twitter_trends)" +

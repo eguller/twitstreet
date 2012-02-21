@@ -32,12 +32,15 @@ public class TransactionServlet extends TwitStreetServlet {
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		super.doPost(request, response);
-		setPageAttributes();
 		response.setContentType("text/html;charset=utf-8");
-		List<TransactionRecord> transactionRecordList = null;
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
 		String type = request.getParameter("type");
-
+		
+		loadUser(request);
+		//loadUserFromCookie(request);
 		try {
 
 			if (USER_TRANSACTIONS.equals(type)) {

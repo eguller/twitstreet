@@ -12,49 +12,56 @@ import com.google.inject.Singleton;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
 import com.twitstreet.market.StockMgr;
+
 @SuppressWarnings("serial")
 @Singleton
 public class StockDetailsServlet extends TwitStreetServlet {
-	@Inject StockMgr stockMgr;
-	
+	@Inject
+	StockMgr stockMgr;
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-	throws ServletException, IOException {
-		super.doGet(request, response);
-		setPageAttributes();
-		response.setContentType("application/json;charset=utf-8");
+			throws ServletException, IOException {
+		response.setContentType("text/html;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
 		String stockIdStr = request.getParameter("stock");
-				
-		if(stockIdStr == null){
+
+		loadUser(request);
+		//loadUserFromCookie(request);
+		
+		if (stockIdStr == null) {
 			response.sendRedirect(response.encodeRedirectURL("/"));
 			return;
 		}
 		Stock stock = stockMgr.getStockById(Long.parseLong(stockIdStr));
-		
-		if(stock!=null){
+
+		if (stock != null) {
 			request.setAttribute("stock", stock);
 			request.setAttribute("title", "Stock details of " + stock.getName());
-			request.setAttribute("meta-desc", "This page show details of a "+stock.getName()+" like available, sold and total number of a followers. Stock distribution shows who has how much "+stock.getName()+".");
-			
-			request.setAttribute(HomePageServlet.QUOTE_DISPLAY,
-					stock.getName());
+			request.setAttribute(
+					"meta-desc",
+					"This page show details of a "
+							+ stock.getName()
+							+ " like available, sold and total number of a followers. Stock distribution shows who has how much "
+							+ stock.getName() + ".");
+
+			request.setAttribute(HomePageServlet.QUOTE_DISPLAY, stock.getName());
 			request.setAttribute(HomePageServlet.STOCK, stock);
 
-			request.setAttribute(HomePageServlet.STOCK_ID,new Long(stock.getId()));
-			
+			request.setAttribute(HomePageServlet.STOCK_ID,
+					new Long(stock.getId()));
+
 		}
-		
-		
-		if (user != null) {
-			getServletContext().getRequestDispatcher(
-			"/WEB-INF/jsp/dashboard.jsp").forward(request, response);
-		}
-		else{
-			getServletContext().getRequestDispatcher(
-			"/WEB-INF/jsp/dashboard.jsp").forward(request, response);
-		}
+
+		getServletContext().getRequestDispatcher("/WEB-INF/jsp/dashboard.jsp")
+				.forward(request, response);
+
 	}
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-	throws ServletException, IOException {
+			throws ServletException, IOException {
 		doGet(request, response);
 	}
 }

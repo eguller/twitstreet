@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -65,9 +66,11 @@ public class GetQuoteServlet extends TwitStreetServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		super.doGet(request, response);
-		setPageAttributes();
-		response.setContentType("text/html");
+		response.setContentType("text/html;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+		
 		request.setAttribute("title", "twitstreet - Twitter stock market game");
 		request.setAttribute(
 				"meta-desc",
@@ -86,6 +89,9 @@ public class GetQuoteServlet extends TwitStreetServlet {
 		end = System.currentTimeMillis();
 
 		logger.info("Init time: " + (end - start));
+		
+		loadUser(request);
+		//loadUserFromCookie(request);
 
 		start = System.currentTimeMillis();
 		queryStockById(request, response);
@@ -97,7 +103,7 @@ public class GetQuoteServlet extends TwitStreetServlet {
 		end = System.currentTimeMillis();
 		logger.info("queryStockByQuote: " + (end - start));
 
-		if (getUser() != null) {
+		if (request.getAttribute(User.USER) != null) {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/dashboard.jsp").forward(request, response);
 		} else {
@@ -109,7 +115,7 @@ public class GetQuoteServlet extends TwitStreetServlet {
 	public void queryStockById(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String stockIdStr = request.getParameter(STOCK);
-
+		User user = (User) request.getAttribute(User.USER);
 		if (user != null && stockIdStr != null && stockIdStr.length() > 0) {
 			long stockId = Long.parseLong(stockIdStr);
 			TwitterProxy twitterProxy = user == null ? null
@@ -151,7 +157,7 @@ public class GetQuoteServlet extends TwitStreetServlet {
 
 	public void queryStockByQuote(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		User userTmp = getUser() == null ? userMgr.random() : getUser();
+		User userTmp = (User)request.getAttribute(User.USER) == null ? userMgr.random() : (User)request.getAttribute(User.USER);
 		String twUserName = (String) request.getParameter(QUOTE);
 		twUserName = new String(twUserName.getBytes("8859_1"), "UTF8");
 		if (twUserName != null && twUserName.length() > 0) {

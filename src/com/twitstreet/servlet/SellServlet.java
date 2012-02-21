@@ -22,28 +22,28 @@ import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
 @Singleton
-public class SellServlet extends TwitStreetServlet {
+public class SellServlet extends TwitStreetServlet{
 	private static Logger logger = Logger.getLogger(SellServlet.class);
 	@Inject UserMgr userMgr;
 	@Inject StockMgr stockMgr;
 	@Inject TwitterProxyFactory twitterProxyFactory = null;
 	@Inject PortfolioMgr portfolioMgr = null;
-	@Inject private final Gson gson = null;
 	
-	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		doPost(request, response);
 	}
 
-	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		super.doPost(request, response);
-		setPageAttributes();
-		response.setContentType("application/json;charset=utf-8");
+		response.setContentType("text/html;charset=utf-8");
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 
-		
+		loadUser(request);
+		//loadUserFromCookie(request);
+		User user = (User) request.getAttribute(User.USER);
 		if(user != null){
 			String stock = request.getParameter("stock");
 			String amount = request.getParameter("amount");

@@ -153,6 +153,6 @@ create table `user_stock_watch` (
 create table `twitter_trends` (  
     `stock_id` bigint not null, 
      primary key (`stock_id`),
-    `lastUpdate` timestamp default now(),
+    `lastUpdate` timestamp not null default now(),
      constraint `fk_twitter_trends_stock` foreign key (`stock_id`) references `stock` (`id`)
 )  engine=innodb default charset=`utf8`;
