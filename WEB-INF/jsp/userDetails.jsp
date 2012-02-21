@@ -42,12 +42,27 @@
 					src="<%=user == null ? "" : user.getPictureUrl()%>"
 					id="dashboard-picture"></td>
 				<td>
+					<table>
+						<tr>
+							
+							<td align="left" style="padding: 2px">
+							<%=user.getRank()%>.
+							</td>
+						</tr>
 					
+						<tr>
+							
+							<td align="left" style="padding: 2px">
+								<%= Util.getRoundedMoneyString(user.getCash()+user.getPortfolio()) %> <%= (user.getProfit()!=0)? Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true):"" %>
+							</td>
+						</tr>
+						
+					</table>
 				</td>
 				<td style="vertical-align: bottom;">
 					<div class="tabs">
 						<a id="user-status-tab" class="youarehere" onClick="showUserProfileTab('#user-status-tab','#userstatus');">
-							Balance & Portfolio</a> 
+							Portfolio</a> 
 					
 						<a id="user-ranking-history-tab"
 							onClick="showUserProfileTab('#user-ranking-history-tab','#user-trend-section');redrawUserRankingHistory();">
@@ -65,57 +80,10 @@
 	
 
 	<div id="userstatus" class="main-div">
-		<div id="userbalance" class="main-div">
-			<h3>Balance
-			</h3>
-<!-- 			<div class="field-white"> -->
-				<table class="datatbl">
-
-					<tr>
-						<td style="width: 15%; text-align: center; font-weight: bolder;">Rank</td>
-						<td style="width: 25%; text-align: center; font-weight: bolder;">Cash</td>
-						<td style="width: 30%; text-align: center; font-weight: bolder;">Portfolio</td>
-						<td style="width: 30%; text-align: center; font-weight: bolder;">Total</td>
-						
-<!-- 						<td style="width: 20%; text-align: center; font-weight: bolder;"></td> -->
-					</tr>
-					<tr>
-				
-						<td id="userProfileRank" style="width: 15%; text-align: center;"><%=user.getRank()%>.
-						</td>
-						<td id="userProfileCash" style="width: 25%; text-align: center;">$<%=Util.commaSep(user.getCash())%>
-						</td>
-						<td id="userProfilePortfolio" style="width: 30%; text-align: center;">$<%=Util.commaSep(user.getPortfolio())%>
-				
-						</td>
-						<td id="userProfileTotal" style="width: 30%; text-align: center;">$<%=Util.commaSep(user.getPortfolio() + user.getCash())%>
-						
-						&nbsp;	<% 
-						if(user.getProfit()>0){
-							out.write("<span class=\"green-profit\">" + Util.getRoundedProfitPerHourString(user.getProfit())+ "</span>");			
-						}
-						else if(user.getProfit()<0){
-							
-							out.write("<span class=\"red-profit\">" + Util.getRoundedProfitPerHourString(user.getProfit())+ "</span>");
-						}
-						
-						%>
-						</td>
-<%--				    <td id="userProfileProfit" style="width: 20%; text-align: center;">
-						
- 					
-						
-						
-						</td>--%>
-				
-					</tr>
-				</table>
-<!-- 			</div> -->
-		</div>
 		
 		<div id="userPortfolio" class="main-div">
 			<h3>
-			Portfolio
+				Portfolio
 			</h3>
 			<table class="datatbl">
 				<%
@@ -135,53 +103,27 @@
 								<td width="58px"><img class="twuser"
 									src="<%=stock.getPictureUrl()%>" />
 								</td>
-								<td><a href='javascript:void(0)' onclick='loadStock(<%=stock.getStockId()%>)' title="<%=stock.getStockName()%>&#39;s stock detail page">
-										<%
-											out.write(stock.getStockName());
-										%>
-								</a> (<%=Util.getShareString(stock.getPercentage())%>)<br> $<%
-		 							out.write(Util.commaSep(stock.getAmount())); %>
+								<td>								
+									<div style="width:170px">
+										<a href='javascript:void(0)' onclick='loadStock(<%=stock.getStockId()%>)' title="<%=stock.getStockName()%>&#39;s stock detail page">
+												<%=stock.getStockName()%>
+										</a> (<%=Util.getShareString(stock.getPercentage())%>)
+										<br> 
+											<%=Util.getNumberFormatted(stock.getAmount(), true, true, false, false, false, false)%>
 		
-		 									<br>
-										
-											<table class="portfolio-stock-tbl">
+										<br>
+								
+										<table class="portfolio-stock-tbl">
 											<tr>
 												<td align="left">
-													<%
-										
-													double profit = 0;
-													
-													double amount = stock.getAmount();
-													double capital = stock.getCapital();
-													
-													profit = amount - capital;
-													if(profit > 0){
-														out.write("<span class=\"green-light\">"+Util.getProfitString(profit) + "</span>"); 
-													}
-													else if(profit < 0){
-														out.write("<span class=\"red-light\">"+Util.getProfitString(profit) + "</span>"); 
-													}
-		// 								else {
-		// 									out.write("<span>$"+Util.getProfitString(profit)+"</span>"); 
-		// 								}
-										%>
+													<%=Util.getNumberFormatted(stock.getAmount()-stock.getCapital(), true, true, false, false, true, false)%>
 												</td>
-												<td align="left">
-														<%
-														String profitPerHour =  Util.getChangePerHourString(stock.getChangePerHour());
-														
-														if (stock.getChangePerHour() > 0) {
-						
-															out.write("<span class=\"green-profit\">" + profitPerHour + "</span>");
-														}
-														else if (stock.getChangePerHour() < 0){
-															out.write("<span class=\"red-profit\">" +  profitPerHour  + "</span>");
-															
-														}
-														%>
+												<td align="right">
+														<%=Util.getNumberFormatted(stock.getChangePerHour(), true, true, true, true, false, true)%>
 												</td>
 											</tr>
 										</table>
+									</div>
 								</td>
 							</tr>
 						</table>

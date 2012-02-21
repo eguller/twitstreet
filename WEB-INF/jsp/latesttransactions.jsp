@@ -13,43 +13,45 @@ TransactionMgr transactionMgr = inj.getInstance(TransactionMgr.class);
 List<TransactionRecord> transactionRecordList = transactionMgr.getCurrentTransactions();
 User user = (User)request.getAttribute(User.USER);
 %>
-<div id="currenttransactions" class="main-div">
-	<h3>Current Transactions</h3>
-	<table class="datatbl" id="current-transactions-table">
-		<% 
-		int i = 0;
-		for(TransactionRecord transactionRecord : transactionRecordList){ 
-		i++;
-		%>
-			<%	if( i%2 == 0){ %>
-				<tr>
-	    	<% }else{ %>
-	    		<tr class="odd">
-	    	<% } %>
-				<td>
-					<% 
-					String requestUrl = request.getRequestURL().toString();
-					
-					if(transactionRecord.getOperation() == TransactionRecord.BUY){  
-						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-							out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+<div id="currenttransactions-container">
+	<div id="currenttransactions" class="main-div">
+		<h3>Current Transactions</h3>
+		<table class="datatbl" id="current-transactions-table">
+			<% 
+			int i = 0;
+			for(TransactionRecord transactionRecord : transactionRecordList){ 
+			i++;
+			%>
+				<%	if( i%2 == 0){ %>
+					<tr>
+		    	<% }else{ %>
+		    		<tr class="odd">
+		    	<% } %>
+					<td>
+						<% 
+						String requestUrl = request.getRequestURL().toString();
+						
+						if(transactionRecord.getOperation() == TransactionRecord.BUY){  
+							if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
+								out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+							}
+							else{
+								out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+							}
 						}
 						else{
-							out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+							if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
+								out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+							}else{
+								out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+							}
 						}
-					}
-					else{
-						if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-							out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
-						}else{
-							out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
-						}
-					}
-					%>
+						%>
+							
 						
-					
-				</td>
-			</tr>
-		<% } %>
-	</table>
+					</td>
+				</tr>
+			<% } %>
+		</table>
+	</div>
 </div>

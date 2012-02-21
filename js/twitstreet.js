@@ -14,15 +14,15 @@ $(document).ready(function() {
 	}
 
 	if ($("#currenttransactions").length) {
-		setInterval(loadCurrentTransactions, 20000);
+		setInterval(reloadCurrentTransactions, 20000);
 	}
 
 	if ($("#balance").length > 0) {
-		setInterval(loadBalance, 20000);
+		setInterval(reloadBalance, 20000);
 	}
 
 	if ($("#portfolio").length > 0) {
-		setInterval(loadPortfolio, 20000);
+		setInterval(reloadPortfolio, 20000);
 	}
 	if ($("#user-watch-list").length > 0) {
 		setInterval(reloadWatchList, 20000);
@@ -36,14 +36,21 @@ $(document).ready(function() {
 function calculateSold(total, soldPercentage) {
 	return total * soldPercentage;
 }
-function loadPortfolio() {
-
+function reloadPortfolio() {
+	
+	loadPortfolio(true);
+}
+function loadPortfolio(reload) {
+	if(!reload){
+		blockElementWithMsg('#portfolio-container');	
+	}
 	$.ajax({
 		type : "get",
 		url : "portfolio",
 		success : function(data) {
-			$("#portfolio").empty();
-			$("#portfolio").html($(data).html());
+			unblockElement('#portfolio-container');	
+			$("#portfolio-container").empty();
+			$("#portfolio-container").append($(data));
 
 		}
 	});
@@ -54,9 +61,7 @@ function reloadWatchList() {
 }
 function loadWatchList(reload) {
 	if(!reload){
-		blockElementWithMsg('#user-watch-list', 'Loading');
-		
-		
+		blockElementWithMsg('#user-watch-list');	
 	}
 	$.ajax({
 		type : "get",
@@ -115,7 +120,7 @@ function getQuote(quote) {
 	if (quote.length > 0) {
 		
 		blockElementWithMsg('#column_center', 'Loading');
-		showTabMain('#stocks-tab','#stocks-container');
+		showTabMain('.stocks-tab','#stocks-container');
 		
 		$.ajax({
 			type : "get",
@@ -151,7 +156,7 @@ function loadTrendyStocks() {
 function getUser(user) {
 	if (user.length > 0) {
 		blockElementWithMsg('#column_center', 'Loading');
-		showTabMain('#users-tab','#users-container');
+		showTabMain('.users-tab','#users-container');
 		
 		
 		$.ajax({
@@ -177,7 +182,7 @@ function loadUserProfile(userId,reload) {
 		
 		if(!reload){
 			blockElementWithMsg('#column_center', 'Loading');
-			showTabMain('#users-tab','#users-container');
+			showTabMain('.users-tab','#users-container');
 			
 		}
 		$.ajax({
@@ -193,27 +198,42 @@ function loadUserProfile(userId,reload) {
 		});
 	}
 }
-
-function loadCurrentTransactions() {
+function reloadCurrentTransactions() {
+	loadCurrentTransactions(true);	
+}
+function loadCurrentTransactions(reload) {
+	if(!reload){
+		blockElementWithMsg('#currenttransactions-container');
+		
+	}
 	$.ajax({
 		type : "get",
 		url : "/transaction",
 		success : function(data) {
-			$("#currenttransactions").empty();
-			$("#currenttransactions").html($(data).html());
+			unblockElement("#currenttransactions-container");
+			$("#currenttransactions-container").empty();
+			$("#currenttransactions-container").append($(data));
 
 		}
 	});
 }
-
-function loadUserTransactions() {
+function reloadUserTransactions() {
+	loadUserTransactions(true);	
+}
+function loadUserTransactions(reload) {
+	if(!reload){
+		blockElementWithMsg('#yourtransactions-container');
+		
+	}
 	$.ajax({
 		type : "get",
 		url : "/transaction",
 		data : "type=user",
 		success : function(data) {
-			$("#yourtransactions").empty();
-			$("#yourtransactions").html($(data).html());
+			unblockElement("#yourtransactions-container");
+			$("#yourtransactions-container").empty();
+			$("#yourtransactions-container").append($(data));
+
 
 		}
 	});
@@ -320,7 +340,7 @@ function loadStock(id, reload) {
 
 	if(!reload){
 		blockElementWithMsg('#column_center', 'Loading');
-		showTabMain('#stocks-tab','#stocks-container');
+		showTabMain('.stocks-tab','#stocks-container');
 		
 	}
 	
@@ -392,21 +412,26 @@ function runScriptsInElement(responseData) {
 	}
 
 }
+function reloadBalance() {
+	
+	loadBalance(true);
+}
 
-function loadBalance() {
-
+function loadBalance(reload) {
+	if(!reload){
+		blockElementWithMsg('#balance-container');	
+	}
 	$.ajax({
 		type : "get",
 		url : "balance",
 		success : function(data) {
-			unblockElement("#topranks-loading-div");
-			
-			$("#balance").empty();
-			$("#balance").html($(data).html());
+			unblockElement('#balance-container');	
+			$("#balance-container").empty();
+			$("#balance-container").append($(data));
+
 		}
 	});
 }
-
 function blockElementWithMsg(elementId, msg) {
 	if(msg==null){
 		msg = 'Loading';
@@ -425,7 +450,7 @@ function blockElementWithMsg(elementId, msg) {
 }
 function unblockElement(elementId) {
 	
-	$(elementId).fadeTo('slow', 1,null);
+	$(elementId).fadeTo('fast', 1,null);
 	
 	// block element
 	$(elementId).unblock();
@@ -513,3 +538,4 @@ function showTweetsOfUserInDiv(username, elementId) {
 		}
 	}).render().setUser(username).start();
 }
+

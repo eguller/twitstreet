@@ -84,9 +84,19 @@
 									<%=(stock.getChangePerHour()!=0)? Util.getRoundedChangePerHourString(stock.getChangePerHour()):"&nbsp;" %>
 								</span>
 									
-								<% } 
+								<% } else{
+									Date date = new Date();
+									
+									int minuteLeft = 15 - (int)(date.getTime() - stock.getLastUpdate().getTime()) / (60 * 1000);
+									
+									minuteLeft=(minuteLeft<1)?1:minuteLeft;
+									String activityMessage = "Calculating the trend of the stock for the next hour.\nIt will be ready in "+minuteLeft+" minute"+((minuteLeft>1)?"s.":".");
 								%>
 								
+								
+									<img alt="<%=activityMessage %>" title="<%=activityMessage %>" src="/images/activity_indicator_16.gif"/>
+								<% }
+								%>
 							
 							</td>
 
@@ -104,19 +114,11 @@
 										<%=(stock.getChangePerHour()!=0)? Util.getPercentageChangePerHourString((double)stock.getChangePerHour()/stock.getTotal()):"&nbsp;" %>
 								
 									</span>
-								<% } else{
-									Date date = new Date();
+								<% }else{%>
 									
-									int minuteLeft = 15 - (int)(date.getTime() - stock.getLastUpdate().getTime()) / (60 * 1000);
-									
-									minuteLeft=(minuteLeft<1)?1:minuteLeft;
-									String activityMessage = "Calculating the trend of the stock for the next hour.\nIt will be ready in "+minuteLeft+" minute"+((minuteLeft>1)?"s.":".");
-								%>
-								
-								
-									<img alt="<%=activityMessage %>" title="<%=activityMessage %>" src="/images/activity_indicator_16.gif"/>
-								<% }
-								%>
+										&nbsp;
+									<% }
+									%>
 							
 								
 							</td>

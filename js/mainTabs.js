@@ -2,8 +2,8 @@
 	mainTabsArray = new Array();
 
 	mainTabContentsArray = new Array();
-	mainTabsArray.push("#users-tab");
-	mainTabsArray.push("#stocks-tab");
+	mainTabsArray.push(".users-tab");
+	mainTabsArray.push(".stocks-tab");
 
 	mainTabContentsArray.push("#stocks-container");
 	mainTabContentsArray.push("#users-container");
@@ -27,7 +27,7 @@ function showTabMain(tabId,tabContentId){
 		
 		if(tabContentId == mainTabContentsArray[i]){
 			
-			$(mainTabContentsArray[i]).show();
+			$(mainTabContentsArray[i]).fadeTo('fast',1,null);
 		}
 		else{
 			
