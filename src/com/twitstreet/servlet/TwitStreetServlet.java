@@ -55,7 +55,7 @@ public class TwitStreetServlet extends HttpServlet {
 				oAuth = cookie.getValue();
 				oAuthFound = true;
 			}
-			if (idFound && oAuthFound && active) {
+			if (idFound && oAuthFound) {
 				try {
 					long id = Long.parseLong(idStr);
 					user = userMgr.getUserById(id);
