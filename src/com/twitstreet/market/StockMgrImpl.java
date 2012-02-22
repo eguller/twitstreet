@@ -317,7 +317,7 @@ public class StockMgrImpl implements StockMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement(SELECT_DISTINCT_FROM_STOCK +" " +
-							" where ((now() - lastUpdate) > (? / 1000) or lastUpdate is null) " +
+							" where (TIMESTAMPDIFF(minute, lastUpdate, now())  > ?  or lastUpdate is null) " +
 							" and (" +
 							"		stock.id in (select distinct stock from portfolio) or " +
 							"  		stock.id in (select distinct stock_id from user_stock_watch ) or " +
@@ -490,7 +490,7 @@ public class StockMgrImpl implements StockMgr {
 				ps = connection.prepareStatement("insert into twitter_trends (stock_id)  values " + idListStr +" on duplicate key update lastUpdate = now() " );
 				ps.executeUpdate();
 
-				ps = connection.prepareStatement("delete from twitter_trends where now() - lastUpdate > ? " );
+				ps = connection.prepareStatement("delete from twitter_trends where TIMESTAMPDIFF(minute, lastUpdate, now()) > ? " );
 				ps.setInt(1, TWITTER_TRENDS_CLEANUP_PERIOD);
 				ps.executeUpdate();
 				

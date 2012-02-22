@@ -29,7 +29,7 @@ public class StockUpdateTask implements Runnable {
 	@Inject
 	TwitterProxyFactory twitterProxyFactory = null;
 	private static Logger logger = Logger.getLogger(StockUpdateTask.class);
-	public static final int LAST_UPDATE_DIFF = 10 * 60 * 1000;
+	public static int LAST_UPDATE_DIFF = 10 ;//minutes
 
 	@Override
 	public void run() {
