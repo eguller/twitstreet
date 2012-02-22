@@ -151,7 +151,7 @@ function buy(stock, amount) {
 	ajaxLoad("a/buy",  "stock=" + stock+ "&amount=" + amount , '#buy-sell-container', '#buy-sell-container',false,buySellCallback);		
 }
 function sell(stock, amount) {
-	ajaxLoad("a/buy",  "stock=" + stock+ "&amount=" + amount , '#buy-sell-container', '#buy-sell-container',false,buySellCallback);
+	ajaxLoad("a/sell",  "stock=" + stock+ "&amount=" + amount , '#buy-sell-container', '#buy-sell-container',false,buySellCallback);
 }
 
 function buySellCallback(){
