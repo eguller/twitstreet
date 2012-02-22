@@ -96,7 +96,7 @@ function loadTrendyStocks() {
 }
 function getUser(user) {	
 	if (user.length > 0) {
-		ajaxLoad("/getuser", "getuser=" + user, "#users-container","#column_center", reload);
+		ajaxLoad("/getuser", "getuser=" + user, "#users-container","#column_center");
 		showTabMain('.users-tab','#users-container');
 	}
 }
