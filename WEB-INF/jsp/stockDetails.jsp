@@ -171,8 +171,9 @@
 	<br>
 	
 	<div id="stock-details-screen">
-
-		<jsp:include page="buySell.jsp" />
+		<div id="buy-sell-container">
+			<jsp:include page="buySell.jsp" />
+		</div>
 		<jsp:include page="stockHistory.jsp" />
 		<jsp:include page="stockDistribution.jsp" />
 

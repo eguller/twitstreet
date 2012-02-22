@@ -13,7 +13,7 @@ TransactionMgr transactionMgr = inj.getInstance(TransactionMgr.class);
 List<TransactionRecord> transactionRecordList = transactionMgr.getCurrentTransactions();
 User user = (User)request.getAttribute(User.USER);
 %>
-<div id="currenttransactions-container">
+
 	<div id="currenttransactions" class="main-div">
 		<h3>Current Transactions</h3>
 		<table class="datatbl" id="current-transactions-table">
@@ -54,4 +54,3 @@ User user = (User)request.getAttribute(User.USER);
 			<% } %>
 		</table>
 	</div>
-</div>

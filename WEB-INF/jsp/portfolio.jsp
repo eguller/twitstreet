@@ -28,7 +28,6 @@
 
 	}
 %>
-<div id="portfolio-container">
 
 	<div id="portfolio" class="main-div">
 		<h3>Portfolio</h3>
@@ -128,4 +127,3 @@
 			</tbody>
 		</table>
 	</div>
-</div>

@@ -84,38 +84,33 @@
 										</tr>
 										<tr>
 											<td id="available" style="width:  <%=100 / col%>%; text-align: center;">
-												<%
-													if (stock != null) {
-														out.write(Util.commaSep(stock.getAvailable()));
-													}
-												%>
+												<%=Util.commaSep(stock.getAvailable())%>												
 											</td>
 											<td id="sold" style="width:  <%=100 / col%>%; text-align: center;">
-												<%
-													if (stock != null) {
-														out.write(Util.commaSep(stock.getTotal() - stock.getAvailable()));
-													}
-												%>
+												<%=Util.commaSep(stock.getTotal() - stock.getAvailable())%>
+									
 											</td>
-											<td id="total" style="width:  <%=100 / col%>%; text-align: center;"><%
-												if (stock != null) {
-													out.write(Util.commaSep(stock.getTotal()));
-												}
-											%>
-											<%
-												String className = "";
-												className = (stock.getChangePerHour() < 0) ? "red-profit" : "green-profit";
-												if(stock.getChangePerHour()!=0){
-																				
-													out.write("<span class='" + className + "'>" + Util.getRoundedChangePerHourString(stock.getChangePerHour()) + "</span>");
-												}
-											%>
+											<td id="total" style="width:  <%=100 / col%>%; text-align: center;">
+												<table class="datatbl2">
+													<tr>
+														<td width="33%">
+														</td>
+														<td width="33%" align="center">
+															<%=Util.commaSep(stock.getTotal())%>
+														</td>
+														<td width="33%" align="right">
+															<%
+																String className = "";
+																className = (stock.getChangePerHour() < 0) ? "red-profit" : "green-profit";
+																if(stock.getChangePerHour()!=0){
+																								
+																	out.write("<span class='" + className + "'>" + Util.getRoundedChangePerHourString(stock.getChangePerHour()) + "</span>");
+																}
+															%>
+														</td>
+													</tr>											
+												</table>
 											</td>
-
-										
-										
-
-
 										</tr>
 									</table>
 								</td>

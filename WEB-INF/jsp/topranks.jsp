@@ -54,29 +54,25 @@ if (userCount > maxRank) {
 	pageCount = (userCount / maxRank) + 1;
 }
 %>
+
+
 <div id="topranks" class="main-div">
-	
 	<table class="datatbl">
-	<tr>
-	<td>
-	<h3>Ranking</h3>
-	</td>
-	<td align="right">
-		<jsp:include page="toprankPagination.jsp">
-	
-			<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
-			<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-			<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-	
-		</jsp:include>
-	
-	</td>
-	</tr>
-	
-	</table>
-	
-	
-	
+		<tr>
+			<td>
+				<h3>Ranking</h3>
+			</td>
+			<td align="right">
+				<jsp:include page="toprankPagination.jsp">
+			
+					<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+					<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+					<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+			
+				</jsp:include>				
+			</td>
+		</tr>		
+	</table>	
 
 	<div id="topranks-loading-div">
 		

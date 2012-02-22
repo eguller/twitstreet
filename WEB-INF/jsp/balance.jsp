@@ -10,7 +10,6 @@ Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.
 User user = (User)request.getAttribute(User.USER);
 %>
 
-<div id="balance-container">
 	<div id="balance" class="main-div">
 		<input id="cash-hidden" type="hidden" value="<%=user.getCash()%>" />
 		<h3>Balance</h3>
@@ -56,4 +55,3 @@ User user = (User)request.getAttribute(User.USER);
 			</tr>
 		</table>
 	</div>
-</div>

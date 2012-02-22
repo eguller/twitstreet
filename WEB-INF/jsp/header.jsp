@@ -21,6 +21,8 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
 
 <script src="/js/twitstreet.js"></script>
+<script src="/js/ajax.js"></script>
+<script src="/js/util.js"></script>
 <script src="/js/stockTabs.js"></script>
 <script src="/js/mainTabs.js"></script>
 <script src="/js/userProfileTabs.js"></script>
