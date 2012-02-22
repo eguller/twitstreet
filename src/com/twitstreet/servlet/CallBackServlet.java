@@ -30,7 +30,6 @@ public class CallBackServlet extends TwitStreetServlet {
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
 
 	private static final int COOKIE_EXPIRE = 30 * 24 * 60 * 60;
-	public static final String COOKIE_ACTIVE = "isActive";
 	@Inject
 	UserMgr userMgr;
 	@Inject
@@ -83,8 +82,8 @@ public class CallBackServlet extends TwitStreetServlet {
 				userMgr.updateUser(user);
 			}
 			request.getSession().setAttribute(User.USER_ID, user.getId());
-			//Cookie cookies[] = createCookie(userId, oauthToken);
-			//writeCookies(response, cookies);
+			Cookie cookies[] = createCookie(userId, oauthToken);
+			writeCookies(response, cookies);
 		} catch (TwitterException e) {
 			throw new ServletException(e);
 		}
@@ -94,11 +93,9 @@ public class CallBackServlet extends TwitStreetServlet {
 	public Cookie[] createCookie(long userId, String oauthToken) {
 		Cookie ck1 = new Cookie(COOKIE_ID, String.valueOf(userId));
 		Cookie ck2 = new Cookie(COOKIE_OAUTHTOKEN, oauthToken);
-		Cookie ck3 = new Cookie(COOKIE_ACTIVE, String.valueOf(true));
 		ck1.setMaxAge(COOKIE_EXPIRE);
 		ck2.setMaxAge(COOKIE_EXPIRE);
-		ck3.setMaxAge(COOKIE_EXPIRE);
-		return new Cookie[] { ck1, ck2, ck3 };
+		return new Cookie[] { ck1, ck2 };
 	}
 
 	public void writeCookies(HttpServletResponse response, Cookie[] cookies) {
