@@ -171,12 +171,13 @@ public class GetQuoteServlet extends TwitStreetServlet {
 
 			SimpleTwitterUser twUser = null;
 			ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
-
+			Stock stock = null;
 			if (twitterProxy != null) {
 				// Get user info from twitter.
 				try {
 					twitter4j.User twitterUser = null;
-					if (Util.isValidTwitterUserName(twUserName)) {
+					stock = stockMgr.getStock(twUserName);
+					if (Util.isValidTwitterUserName(twUserName) && (stock == null || stock.isUpdateRequired())) {
 						twitterUser = twitterProxy.getTwUser(twUserName);
 						if (twitterUser != null) {
 							twUser = new SimpleTwitterUser(twitterUser);
@@ -206,7 +207,7 @@ public class GetQuoteServlet extends TwitStreetServlet {
 				}
 
 				// Get user info from database
-				Stock stock = null;
+				
 				if (twUser != null) {
 					stock = stockMgr.getStockById(twUser.getId());
 
