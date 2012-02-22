@@ -42,7 +42,6 @@ public class TwitStreetServlet extends HttpServlet {
 				: request.getCookies();
 		boolean idFound = false;
 		boolean oAuthFound = false;
-		boolean active = false;
 		String idStr = "";
 		String oAuth = "";
 		User user = null;
