@@ -3,7 +3,6 @@ package com.twitstreet.servlet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,11 +26,13 @@ public class BuyServlet extends TwitStreetServlet {
 	TwitterProxyFactory twitterProxyFactory = null;
 	@Inject
 	PortfolioMgr portfolioMgr = null;
-	@Inject
-	private final Gson gson = null;
 	@Inject StockMgr stockMgr;
 	@Inject UserMgr userMgr;
 
+	
+	public String RESPONSE_NEEDED = "response";
+	
+	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -61,10 +62,13 @@ public class BuyServlet extends TwitStreetServlet {
 							user, stockObj,
 							Integer.parseInt(amount));
 					
-					
-					request.setAttribute(HomePageServlet.STOCK, stockObj);
-					getServletContext().getRequestDispatcher(
-							"/WEB-INF/jsp/buySell.jsp").forward(request, response);
+					String responseNeededString = request.getParameter(RESPONSE_NEEDED);
+				
+					if (!("n".equalsIgnoreCase(responseNeededString))) {
+
+						request.setAttribute(HomePageServlet.STOCK, stockObj);
+						getServletContext().getRequestDispatcher("/WEB-INF/jsp/buySell.jsp").forward(request, response);
+					}
 				}
 			} catch (NumberFormatException e) {
 				logger.error("Servlet: Parsing stock, amount failed. Stock: "

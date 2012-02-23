@@ -40,14 +40,14 @@
 							StockInPortfolio stock = portfolio
 									.getStockInPortfolioList().get(i);
 				%>
-				<tr>
+				<tr onmouseover="$('#portfolio-item-<%=stock.getStockId()%>').show()" onmouseout="$('#portfolio-item-<%=stock.getStockId()%>').hide()">
 					<td width="58px"><img class="twuser"
 						src="<%=stock.getPictureUrl()%>" /></td>
 					<td>
 						<table class="portfolio-stock-tbl">
 							<tr>
 	
-								<td colspan="3" rowspan="1" height="20px" align="left">
+								<td colspan="2" rowspan="1" height="20px" align="left">
 	
 									<div style="float: left">
 	
@@ -62,8 +62,15 @@
 									<div style="float: left"
 										title="The ratio of your share to the whole stock">
 										&nbsp;(<%=Util.getShareString(stock.getPercentage())%>)
-									</div></td>
-	
+									</div>
+								</td>
+								<td colspan="1" rowspan="1">
+									<div id="portfolio-item-<%=stock.getStockId()%>" style="display:none; text-align: right">
+										<a href="#" class="red-profit" onclick="sell(<%=stock.getStockId()%>,<%=Integer.MAX_VALUE%>)">
+											Sell All
+										</a>						
+									</div>
+								</td>
 							</tr>
 	
 							<tr>

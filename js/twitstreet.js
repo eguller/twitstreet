@@ -100,10 +100,18 @@ function getUser(user) {
 		showTabMain('.users-tab','#users-container');
 	}
 }
+
+
+var stockOnScreen = null;
+
+
 function loadStock(id, reload) {
 
 	
 	ajaxLoad("stock", "stock=" + id, '#stocks-container', '#column_center');
+	
+	stockOnScreen = id;
+	
 	showTabMain('.stocks-tab','#stocks-container');
 
 }
@@ -146,18 +154,44 @@ function showQuotePanel(panel) {
 		}
 	}
 }
+
+
 function buy(stock, amount) {
 	
-	ajaxLoad("a/buy",  "stock=" + stock+ "&amount=" + amount , '#buy-sell-container', '#buy-sell-container',false,buySellCallback);		
+	
+	var responseNeeded ="";
+	
+	var containerDiv = '#buy-sell-container';
+	if(stock!=stockOnScreen){		
+		responseNeeded = "&response=n";
+		containerDiv = '';
+	}
+	
+	ajaxLoad("a/buy",  "stock=" + stock+ "&amount=" + amount + responseNeeded, containerDiv, containerDiv,false,buySellCallback,stock);		
 }
 function sell(stock, amount) {
-	ajaxLoad("a/sell",  "stock=" + stock+ "&amount=" + amount , '#buy-sell-container', '#buy-sell-container',false,buySellCallback);
+	
+var responseNeeded ="";
+	
+	var containerDiv = '#buy-sell-container';
+	if(stock!=stockOnScreen){		
+		responseNeeded = "&response=n";
+		containerDiv = '';
+	}
+	
+	
+	ajaxLoad("a/sell",  "stock=" + stock+ "&amount=" + amount + responseNeeded, containerDiv, containerDiv,false,buySellCallback,stock);
 }
 
-function buySellCallback(){
+function buySellCallback(stock){
+
+	if(stock==stockOnScreen){
+		showBuySell();
+	}
 	loadPortfolio();
 	loadBalance();
 	loadUserTransactions();
+	
 }
 
 function setup() {

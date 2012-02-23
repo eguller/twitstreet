@@ -30,7 +30,7 @@ public class StockUpdateTask implements Runnable {
 	TwitterProxyFactory twitterProxyFactory = null;
 	private static Logger logger = Logger.getLogger(StockUpdateTask.class);
 	public static int LAST_UPDATE_DIFF = 10 ;//minutes
-
+	public static int LAST_UPDATE_DIFF_MILISECONDS = LAST_UPDATE_DIFF * 60 * 1000;
 	@Override
 	public void run() {
 
@@ -63,9 +63,9 @@ public class StockUpdateTask implements Runnable {
 			long endTime = System.currentTimeMillis();
 			long diff = endTime - startTime;
 
-			if (diff < LAST_UPDATE_DIFF) {
+			if (diff < LAST_UPDATE_DIFF_MILISECONDS ) {
 				try {
-					Thread.sleep(LAST_UPDATE_DIFF - diff);
+					Thread.sleep(LAST_UPDATE_DIFF_MILISECONDS - diff);
 				} catch (InterruptedException e) {
 
 					e.printStackTrace();

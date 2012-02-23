@@ -21,8 +21,13 @@ function ajaxLoad(url, queryString, containerDiv, loadingDiv, isReload, callback
 			lastUpdateMap[containerDiv] = new Date();
 			unblockElement(loadingDiv);
 			
-			$(containerDiv).empty();
-			$(containerDiv).append($(data))
+			
+			
+			if($(data).length>0){
+				$(containerDiv).empty();
+				$(containerDiv).append($(data))	
+			}
+			
 			
 			if(typeof callbackFunction == 'function'){
 				if(callbackParameters!=null){
