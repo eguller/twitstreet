@@ -146,7 +146,7 @@ public class StockMgrImpl implements StockMgr {
 
 			}else{
 				updateTwitterData(twUser.getId(),twUser.getFollowerCount(), twUser.getPictureUrl(), twUser.getScreenName(),twUser.isVerified());
-				
+				stock = getStockById(twUser.getId());
 			}
 			logger.debug("StockMgr: Stock queried successfully. Stock name:" + stock.getName());
 		} else {
