@@ -89,9 +89,7 @@ public class StockMgrImpl implements StockMgr {
 		}
 		Stock stock = getStock(searchString);
 
-		if (stock != null) {
-			return stock;
-		}
+	
 
 		User userTmp = userMgr.random();
 
@@ -146,6 +144,9 @@ public class StockMgrImpl implements StockMgr {
 				stock.setVerified(twUser.isVerified());
 				saveStock(stock);
 
+			}else{
+				updateTwitterData(twUser.getId(),twUser.getFollowerCount(), twUser.getPictureUrl(), twUser.getScreenName(),twUser.isVerified());
+				
 			}
 			logger.debug("StockMgr: Stock queried successfully. Stock name:" + stock.getName());
 		} else {
