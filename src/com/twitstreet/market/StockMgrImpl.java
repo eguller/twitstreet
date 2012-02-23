@@ -350,11 +350,13 @@ public class StockMgrImpl implements StockMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement(SELECT_FROM_STOCK +
-							" where  stock_sold(id)< "+TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD +" and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +"  and " +
-							"	(" +
-							"	id in (select distinct stock from portfolio) or " +
-							"	id in (select distinct stock_id from twitter_trends)" +
-							"	) " +
+							" where  stock_sold(id)< "+TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD +" and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +
+//							" 	and " +
+//							"	(" +
+//							"	id in (select distinct stock from portfolio) or " +
+//							"	id in (select distinct stock_id from user_watch_list) or " +
+//							"	id in (select distinct stock_id from twitter_trends) " +
+//							"	) " +
 							"	order by (changePerHour/total) desc limit ?;");
 
 			ps.setInt(1, MAX_TRENDS);
