@@ -21,7 +21,6 @@ public class TopRankServlet extends TwitStreetServlet {
 	@Inject
 	UserMgr userMgr;
 	@Inject
-	private final Gson gson = null;
 
 	public static String PAGE = "toprankPage";
 

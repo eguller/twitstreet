@@ -2,10 +2,13 @@ package com.twitstreet.db.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Stock implements DataObjectIF {
 	
+	//If stock is not updated more than 10 minutes, update is required
+	private static final int UPDATE_REQUIRED = 10 * 60 * 1000;
 	
 	long id;
 	String name;
@@ -16,6 +19,8 @@ public class Stock implements DataObjectIF {
 	int changePerHour;
 	boolean changePerHourCalculated;
 	boolean verified;
+	boolean updateRequired = false;
+	
 	public long getId() {
 		return id;
 	}
@@ -110,5 +115,8 @@ public class Stock implements DataObjectIF {
 
 		return false;
 
+	}
+	public boolean isUpdateRequired() {
+		return Calendar.getInstance().getTimeInMillis() - lastUpdate.getTime() > UPDATE_REQUIRED ? true : false;
 	}
 }
