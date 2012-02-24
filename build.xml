@@ -13,7 +13,7 @@
 		<copy todir="${build.dir}/bin">
 		    <fileset dir="resources" includes="**/*"/>
 		</copy>
-		<replace file="${build.dir}/bin/log4j.xml" token="${catalina.home}/logs/twitstreet.txt" value="/var/log/tomcat7/twitstreet.txt"/>
+		<replace file="${build.dir}/bin/log4j.xml" token="${catalina.home}/logs/twitstreet.txt" value="/var/log/tomcat6/twitstreet.txt"/>
 		<war destfile="${user.home}/Desktop/ROOT.war" webxml="WEB-INF/web.xml">
 			<fileset dir=".">
 				<include name="css/*"/>
