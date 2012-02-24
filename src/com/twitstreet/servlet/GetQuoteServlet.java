@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -118,32 +117,30 @@ public class GetQuoteServlet extends TwitStreetServlet {
 		User user = (User) request.getAttribute(User.USER);
 		if (user != null && stockIdStr != null && stockIdStr.length() > 0) {
 			long stockId = Long.parseLong(stockIdStr);
+			
+			Stock stock = stockMgr.getStockById(stockId);
+			if(stock==null){
+				
+				return;
+				
+			}
+			
 			TwitterProxy twitterProxy = user == null ? null
 					: twitterProxyFactory.create(user.getOauthToken(),
 							user.getOauthTokenSecret());
-			Stock stock = stockMgr.getStockById(stockId);
-			if (stock == null) {
-				try {
-					twitter4j.User twUser = twitterProxy.getTwUser(stockId);
-					stock = new Stock();
-					stock.setId(twUser.getId());
-					stock.setName(twUser.getScreenName());
-					stock.setTotal(twUser.getFollowersCount());
-					stock.setPictureUrl(twUser.getProfileImageURL()
-							.toExternalForm());
-					stock.setSold(0.0D);
-					stock.setVerified(twUser.isVerified());
-					stockMgr.saveStock(stock);
-				} catch (TwitterException e) {
-					logger.error("Servlet: Twitter exception occured", e);
-				}
-			}
-
+			
 			ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
 			try {
 				searchResultList = twitterProxy.searchUsers(stock.getName());
+
+
+				// TODO FIX HERE - low priority
+				//Search the name of the stock through the all result list
+				// do not assume that the first one is always the exact match.
+				if (searchResultList != null && searchResultList.size() > 0 && stock.getName().equalsIgnoreCase(searchResultList.get(0).getScreenName())) {
+					searchResultList.remove(0);
+				}
 			} catch (TwitterException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			request.setAttribute(GetQuoteServlet.QUOTE_DISPLAY, stock.getName());
@@ -156,101 +153,74 @@ public class GetQuoteServlet extends TwitStreetServlet {
 	}
 
 	public void queryStockByQuote(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		User userTmp = (User)request.getAttribute(User.USER) == null ? userMgr.random() : (User)request.getAttribute(User.USER);
+ HttpServletResponse response) throws ServletException, IOException {
+		User userTmp = (User) request.getAttribute(User.USER) == null ? userMgr.random() : (User) request.getAttribute(User.USER);
 		String twUserName = (String) request.getParameter(QUOTE);
 		twUserName = new String(twUserName.getBytes("8859_1"), "UTF8");
-		if (twUserName != null && twUserName.length() > 0) {
-			request.setAttribute(QUOTE, twUserName);
+		if (twUserName == null || twUserName.length() < 1) {
 
-			TwitterProxy twitterProxy = null;
-			Response resp = Response.create();
+			logger.warn("Servlet: Empty username");
+			return ;
 
-			twitterProxy = twitterProxyFactory.create(userTmp.getOauthToken(),
-					userTmp.getOauthTokenSecret());
-
-			SimpleTwitterUser twUser = null;
-			ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
-			Stock stock = null;
-			if (twitterProxy != null) {
-				// Get user info from twitter.
-				try {
-					twitter4j.User twitterUser = null;
-					stock = stockMgr.getStock(twUserName);
-					if (Util.isValidTwitterUserName(twUserName) && (stock == null || stock.isUpdateRequired())) {
-						twitterUser = twitterProxy.getTwUser(twUserName);
-						if (twitterUser != null) {
-							twUser = new SimpleTwitterUser(twitterUser);
-						}
-					}
-					searchResultList = twitterProxy.searchUsers(twUserName);
-					if (twUser == null) {
-						if (searchResultList != null
-								&& searchResultList.size() > 0) {
-							twUser = searchResultList.get(0);
-							searchResultList.remove(0);
-						}
-					} else if (searchResultList.size() > 0
-							&& twUser.getScreenName().equalsIgnoreCase(
-									searchResultList.get(0).getScreenName())) {
-
-						searchResultList.remove(0);
-
-					}
-
-					request.setAttribute(OTHER_SEARCH_RESULTS, searchResultList);
-
-				} catch (TwitterException e1) {
-					resp.fail()
-							.reason("Something wrong, we could not connect to Twitter. Working on it.");
-					return;
-				}
-
-				// Get user info from database
-				
-				if (twUser != null) {
-					stock = stockMgr.getStockById(twUser.getId());
-
-					// User info retrieved both from twitter and database.
-					if (stock == null) {
-						// This user was not queried before.
-						logger.debug("Servlet: Stock queried first time. Stock name: "
-								+ twUserName);
-						stock = new Stock();
-						stock.setId(twUser.getId());
-						stock.setName(twUser.getScreenName());
-						stock.setTotal(twUser.getFollowerCount());
-						stock.setPictureUrl(twUser.getPictureUrl());
-						stock.setSold(0.0D);
-						stock.setVerified(twUser.isVerified());
-						stockMgr.saveStock(stock);
-
-					} else {
-						stockMgr.updateTwitterData(stock.getId(),
-								twUser.getFollowerCount(),
-								twUser.getPictureUrl(), twUser.getScreenName(),
-								twUser.isVerified());
-
-					}
-					request.setAttribute(STOCK, stock);
-
-					// request.getParameterMap().put("stock", new String[]{
-					// String.valueOf(stock.getId())});
-					logger.debug("Servlet: Stock queried successfully. Stock name:"
-							+ stock.getName());
-				} else {
-					logger.error("Servlet: User not found. Search string: "
-							+ twUserName);
-					request.setAttribute(RESULT, USER_NOT_FOUND);
-					request.setAttribute(REASON, twUserName + " is not found");
-				}
-
-			} else {
-				logger.error("Servlet: Twitter proxy could not be created. Username: "
-						+ twUserName);
-				resp.fail()
-						.reason("Something wrong, we could not retrieved quote info. Working on it. ");
-			}
 		}
+		request.setAttribute(QUOTE, twUserName);
+
+		TwitterProxy twitterProxy = null;
+		Response resp = Response.create();
+
+		try {
+			twitterProxy = twitterProxyFactory.create(userTmp.getOauthToken(), userTmp.getOauthTokenSecret());
+
+		} catch (Exception ex) {
+			logger.error("Servlet: Twitter proxy could not be created. Username: " + twUserName);
+			resp.fail().reason("Something wrong, we could not retrieved quote info. Working on it. ");
+			return;
+		}
+
+		SimpleTwitterUser twUser = null;
+		ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
+		Stock stock = null;
+
+		// Get user info from twitter.
+		try {
+			if (Util.isValidTwitterUserName(twUserName)) {
+
+				stock = stockMgr.getStock(twUserName);
+			}
+			searchResultList = twitterProxy.searchUsers(twUserName);
+
+			if (searchResultList != null && searchResultList.size() > 0) {
+				if (stock == null) {
+					
+
+					stock = stockMgr.getStockById(searchResultList.get(0).getId());
+					
+					searchResultList.remove(0);
+
+				} else if (stock.getName().equalsIgnoreCase(searchResultList.get(0).getScreenName())) {
+					searchResultList.remove(0);
+				}
+			}
+
+			request.setAttribute(OTHER_SEARCH_RESULTS, searchResultList);
+
+		} catch (TwitterException e1) {
+			resp.fail().reason("Something wrong, we could not connect to Twitter. Working on it.");
+			return;
+		}
+
+		// Get user info from database
+		request.setAttribute(STOCK, stock);
+
+		if (stock != null) {
+			logger.debug("Servlet: Stock queried successfully. Stock name:" + stock.getName());
+		} else {
+			logger.error("Servlet: User not found. Search string: " + twUserName);
+			request.setAttribute(RESULT, USER_NOT_FOUND);
+			request.setAttribute(REASON, twUserName + " is not found");
+
+		}
+
 	}
+	
 }

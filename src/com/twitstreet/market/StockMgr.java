@@ -75,4 +75,10 @@ public interface StockMgr {
 	void removeStockFromUserWatchList(long stockid, long userid);
 
 	void updateTwitterTrends();
+
+	void resetSpeedOfOldStocks();
+
+	void updateStockData(long id);
+
+	void updateStockData(String stockName);
 }

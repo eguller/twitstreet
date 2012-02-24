@@ -103,7 +103,10 @@ public class GetUserServlet extends TwitStreetServlet {
 
 		
 		
-		User user = searchResultUsers.remove(0);
+		User user = null;
+		if(searchResultUsers.size()>0){
+			user = searchResultUsers.remove(0);
+		}
 		
 		
 		

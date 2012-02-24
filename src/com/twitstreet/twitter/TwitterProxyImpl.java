@@ -18,7 +18,7 @@ import com.twitstreet.util.Util;
 
 public class TwitterProxyImpl implements TwitterProxy {
 	private static final int NOT_FOUND = 404;
-
+	private static final int USER_SUSPENDED_OR_RATE_LIMIT_EXCEEDED = 404;
 	private static Logger logger = Logger.getLogger(TwitterProxyImpl.class);
 	@Inject
 	ConfigMgr configMgr = null;
@@ -101,7 +101,11 @@ public class TwitterProxyImpl implements TwitterProxy {
 		} catch (TwitterException e) {
 			if (e.getStatusCode() == NOT_FOUND) {
 				logger.debug("Twitter: User not found. Username: " + twUserName);
-			} else {
+			} 
+//			else if (e.getStatusCode() == USER_SUSPENDED_OR_RATE_LIMIT_EXCEEDED) {
+//				logger.debug("Twitter: User suspended: " + twUserName);
+//			}
+			else{
 				logger.error("Twitter: Error while retrieving twitter user:" + twUserName, e);
 				throw e;
 			}
