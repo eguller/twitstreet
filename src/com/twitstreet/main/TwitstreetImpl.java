@@ -72,7 +72,7 @@ public class TwitstreetImpl implements Twitstreet {
 //		reRankThread.start();
 		
 		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
-		updateFollowerCountThread.setName("Update Follower Count");
+		updateFollowerCountThread.setName("Stock Update Task");
 		updateFollowerCountThread.start();
 		
 		Thread asyncQueryTaskThread = new Thread(asyncQueryTask);
@@ -88,7 +88,7 @@ public class TwitstreetImpl implements Twitstreet {
 		initialized = true;
 		
 		
-		//REMOVE HERE (ADDED FOR DEBUG PURPOSE)
+		//TODO REMOVE HERE (ADDED FOR DEBUG PURPOSE)
 		
 //		User userDO = userMgr.getUserById(324562459);
 //		userMgr.saveUser(userDO);

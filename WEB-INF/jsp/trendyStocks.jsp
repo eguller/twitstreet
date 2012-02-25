@@ -43,7 +43,7 @@
 	<%
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
-	
+	User user = (User) request.getAttribute(User.USER);
 	ArrayList<Stock> trendResults = stockMgr.getTrendyStocks();
 	
 	%>
@@ -68,18 +68,17 @@
 					if (i < trendResults.size()) {
 					
 						Stock stock = trendResults.get(i);
-						String className = "";
-						className = (stock.getChangePerHour()<0)?"red-profit":"green-profit";
+					
 			%>
 
 					<td>
 						<table>
-							<tr>
+							<tr onmouseover="$('#trendy-stocks-watch-item-div-<%=stock.getId()%>').show()" onmouseout="$('#trendy-stocks-watch-item-div-<%=stock.getId()%>').hide()">
 								<td width="60">
 									<img class="twuser"
 									src="<%=stock.getPictureUrl()%>" />
 								</td>
-								<td width="130">
+								<td width="150">
 								<table class="datatbl2">
 									<tr>									
 										<td>	
@@ -90,12 +89,28 @@
 											<% if(stock.isVerified()){ %>
 											<img src="images/verified.png" title="This twitter account is verified"/>
 											<% } %>
+											
+											<div id="trendy-stocks-watch-item-div-<%=stock.getId() %>" style="display:none; float:right; ">
+					
+												<%
+												ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
+												boolean beingWatched = watchList.contains(stock);
+												 %>
+												<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
+													<%=Util.getWatchListIcon(true,15)%>
+													
+												</a>	
+												<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
+													<%=Util.getWatchListIcon(false,15)%>
+													
+												</a>	
+											</div>
 										 	
 										</td>
 									</tr>
 									<tr>									
 										<td>								       
-											<%=Util.commaSep(stock.getAvailable())%> / <%=Util.commaSep(stock.getTotal())%>
+											<%=Util.getNumberFormatted(stock.getAvailable(), false, true, false, false, false, false)%> / <%=Util.getNumberFormatted(stock.getTotal(), false, true, false, false, false, false)%>
 										</td>
 									</tr>
 <!-- 									<tr>									 -->
@@ -104,8 +119,8 @@
 <!-- 										</td> -->
 <!-- 									</tr> -->
 									<tr>									
-										<td align="right" class="<%=className %>">
-											<%=Util.getPercentageChangePerHourString((double)stock.getChangePerHour()/stock.getTotal())%>
+										<td align="right">
+											<%=Util.getPercentageFormatted((double)stock.getChangePerHour()/stock.getTotal(),false,true,true,true,false,true)%>
 										</td>
 									</tr>
 								</table>

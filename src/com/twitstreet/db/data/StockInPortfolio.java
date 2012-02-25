@@ -1,23 +1,23 @@
 package com.twitstreet.db.data;
 
-public class StockInPortfolio {
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class StockInPortfolio implements DataObjectIF{
 	long stockId;
 	String stockName;
 	double amount;
+	private double total;
 	String pictureUrl;
 	double capital;
 	double changePerHour;
+	private double totalChangePerHour;
 	private double percentage;
 	private boolean verified;
-	public StockInPortfolio(long stockId, String stockName, double amount, String pictureUrl, double capital,double changePerHour, double percentage, boolean verified) {
-		this.stockId = stockId;
-		this.stockName = stockName;
-		this.amount = amount;
-		this.pictureUrl = pictureUrl;
-		this.capital = capital;
-		this.changePerHour = changePerHour;
-		this.percentage = percentage;
-		this.verified = verified;
+	private boolean changePerHourCalculated;
+
+	public StockInPortfolio() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public long getStockId() {
@@ -82,5 +82,55 @@ public class StockInPortfolio {
 
 	public void setVerified(boolean verified) {
 		this.verified = verified;
+	}
+
+	@Override
+	public void getDataFromResultSet(ResultSet rs) throws SQLException {
+	
+		setStockId(rs.getLong("stockId"));
+		setStockName(rs.getString("stockName"));
+		setAmount(rs.getDouble("amount"));
+		setPictureUrl(rs.getString("pictureUrl"));
+		setCapital(rs.getDouble("capital"));
+		setChangePerHour(rs.getDouble("changePerHour"));
+		if(rs.wasNull()){
+			
+			changePerHour = 0;
+			changePerHourCalculated = false;
+		}
+		else{
+			
+			changePerHourCalculated = true;
+		}
+		setPercentage(rs.getDouble("percentage"));
+		setVerified(rs.getBoolean("verified"));
+		setTotal(rs.getDouble("total"));	
+		setTotalChangePerHour(rs.getDouble("totalChangePerHour"));		
+		
+		
+	}
+
+	public boolean isChangePerHourCalculated() {
+		return changePerHourCalculated;
+	}
+
+	public void setChangePerHourCalculated(boolean changePerHourCalculated) {
+		this.changePerHourCalculated = changePerHourCalculated;
+	}
+
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
+
+	public double getTotalChangePerHour() {
+		return totalChangePerHour;
+	}
+
+	public void setTotalChangePerHour(double totalChangePerHour) {
+		this.totalChangePerHour = totalChangePerHour;
 	}
 }

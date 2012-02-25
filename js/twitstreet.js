@@ -41,16 +41,16 @@ function reloadBalance() {
 	loadBalance(true);	
 }
 
-function loadBalance(reload) {
-	ajaxLoad("balance", null, '#balance-container', '#balance-container', reload);
+function loadBalance(reload, doNotBlock) {
+	ajaxLoad("balance", null, '#balance-container', '#balance-container', reload,null,null,doNotBlock);
 }
 
 
 function reloadPortfolio() {
 	loadPortfolio(true);
 }
-function loadPortfolio(reload) {
-	ajaxLoad("/portfolio", null, "#portfolio-container","#portfolio-container",reload);
+function loadPortfolio(reload,doNotBlock) {
+	ajaxLoad("/portfolio", null, "#portfolio-container","#portfolio-container",reload,null,null,doNotBlock);
 }
 
 function reloadWatchList() {
@@ -137,9 +137,9 @@ function reloadUserTransactions() {
 	loadUserTransactions(true);	
 }
 
-function loadUserTransactions(reload) {
+function loadUserTransactions(reload, doNotBlock) {
 	
-	ajaxLoad("transaction", "type=user", "#yourtransactions-container","#yourtransactions-container", reload);
+	ajaxLoad("transaction", "type=user", "#yourtransactions-container","#yourtransactions-container", reload,null,null,doNotBlock);
 	
 }
 
@@ -188,9 +188,9 @@ function buySellCallback(stock){
 	if(stock==stockOnScreen){
 		showBuySell();
 	}
-	loadPortfolio();
-	loadBalance();
-	loadUserTransactions();
+	loadPortfolio(false,true);
+	loadBalance(false,true);
+	loadUserTransactions(false,true);
 	
 }
 

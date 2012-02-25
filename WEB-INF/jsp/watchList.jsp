@@ -64,7 +64,7 @@
 							</td>
 							<td align="right">
 								<div id="watch-item-<%=stock.getId()%>" style="display:none">
-									<a href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)"> Remove</a>
+									<a class="red-profit" href="javascript:void(0)" title="Remove from your watch list" onclick="removeFromWatchList(<%=stock.getId()%>)"> Remove</a>
 								</div>
 							</td>
 
@@ -80,14 +80,13 @@
 								<%-- 								$<%=Util.commaSep(stock.getCapital())%> --%></td>
 							<td colspan="1" rowspan="1" align="right">
 								<% if(stock.isChangePerHourCalculated()){ %>
-									<span class="<%=(stock.getChangePerHour()>=0)?"green-profit":"red-profit" %>">
-									<%=(stock.getChangePerHour()!=0)? Util.getRoundedChangePerHourString(stock.getChangePerHour()):"&nbsp;" %>
-								</span>
+									<%=(stock.getChangePerHour()!=0)? Util.getNumberFormatted(stock.getChangePerHour(), false, true, true, true, false, true):"&nbsp;" %>
+								
 									
 								<% } else{
 									Date date = new Date();
 									
-									int minuteLeft = 15 - (int)(date.getTime() - stock.getLastUpdate().getTime()) / (60 * 1000);
+									int minuteLeft = 20 - (int)(date.getTime() - stock.getLastUpdate().getTime()) / (60 * 1000);
 									
 									minuteLeft=(minuteLeft<1)?1:minuteLeft;
 									String activityMessage = "Calculating the trend of the stock for the next hour.\nIt will be ready in "+minuteLeft+" minute"+((minuteLeft>1)?"s.":".");
@@ -110,11 +109,8 @@
 									
 									
 									%>
-									<span class="<%=(stock.getChangePerHour()>=0)?"green-profit":"red-profit" %>">
-										<%=(stock.getChangePerHour()!=0)? Util.getPercentageChangePerHourString((double)stock.getChangePerHour()/stock.getTotal()):"&nbsp;" %>
-								
-									</span>
-								<% }else{%>
+									<%=Util.getPercentageFormatted((double) stock.getChangePerHour() / stock.getTotal(), false, true, true, true, false, true)  %>
+									<% }else{%>
 									
 										&nbsp;
 									<% }

@@ -265,21 +265,26 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			try {
 				connection = dbMgr.getConnection();
 				ps = connection
-						.prepareStatement("select user_stock_profit(portfolio.user_id, portfolio.stock) as changePerHour, portfolio.capital as capital, stock.name as stockName, stock.id as stockId, (stock.total * portfolio.percentage) as amount, stock.pictureUrl as pictureUrl, percentage, stock.verified as verified " +
+						.prepareStatement("select user_stock_profit(portfolio.user_id, portfolio.stock) as changePerHour, " +
+								" portfolio.capital as capital, stock.name as stockName, " +
+								" stock.id as stockId, " +
+								" (stock.total * portfolio.percentage) as amount, " +
+								" stock.pictureUrl as pictureUrl, " +
+								" percentage, " +
+								" stock.verified as verified,  " +
+								" stock.total as total, " +
+								" stock.changePerHour as totalChangePerHour " +
 								"from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ? order by changePerHour desc, stockName asc ");
 				ps.setLong(1, user.getId());
 				rs = ps.executeQuery();
 
 				while (rs.next()) {
-					StockInPortfolio stockInPortfolio = new StockInPortfolio(
-							rs.getLong("stockId"), 
-							rs.getString("stockName"),
-							rs.getDouble("amount"),
-							rs.getString("pictureUrl"),
-							rs.getDouble("capital"),
-							rs.getDouble("changePerHour"), 
-							rs.getDouble("percentage"),
-						    rs.getBoolean("verified"));
+					
+					
+					
+					
+					StockInPortfolio stockInPortfolio = new StockInPortfolio();
+					stockInPortfolio.getDataFromResultSet(rs);
 					portfolio.add(stockInPortfolio);
 				}
 

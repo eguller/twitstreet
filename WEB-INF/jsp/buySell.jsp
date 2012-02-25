@@ -73,22 +73,22 @@
 									%>
 									<table class="datatbl">
 										<tr>
-											<!--class="thead"-->
 											<td style="width: <%=100 / col%>%; text-align: center;"><span
 												class="green-light"><b>Available</b> </span></td>
 											<td style="width: <%=100 / col%>%; text-align: center;"><span
 												class="red-light"><b>Sold</b> </span></td>
 											<td style="width: <%=100 / col%>%; text-align: center;"><b>Total</b>
-											
+											</td>
 											
 										</tr>
 										<tr>
 											<td id="available" style="width:  <%=100 / col%>%; text-align: center;">
-												<%=Util.commaSep(stock.getAvailable())%>												
+												<%=Util.getNumberFormatted(stock.getAvailable(), false, true, false, false, false, false)%>											
 											</td>
 											<td id="sold" style="width:  <%=100 / col%>%; text-align: center;">
-												<%=Util.commaSep(stock.getTotal() - stock.getAvailable())%>
-									
+											
+												<%=Util.getNumberFormatted(stock.getTotal() - stock.getAvailable(), false, true, false, false, false, false)%>
+											
 											</td>
 											<td id="total" style="width:  <%=100 / col%>%; text-align: center;">
 												<table class="datatbl2">
@@ -100,11 +100,9 @@
 														</td>
 														<td width="33%" align="right">
 															<%
-																String className = "";
-																className = (stock.getChangePerHour() < 0) ? "red-profit" : "green-profit";
-																if(stock.getChangePerHour()!=0){
-																								
-																	out.write("<span class='" + className + "'>" + Util.getRoundedChangePerHourString(stock.getChangePerHour()) + "</span>");
+																if (stock.getChangePerHour() != 0) {
+
+																	out.write(Util.getNumberFormatted(stock.getChangePerHour(), false, true, true, true, false, true));
 																}
 															%>
 														</td>

@@ -175,76 +175,7 @@ public class Util {
 		return cphStr;
 		
 	}
-	public static String getFollowerChangePerHourString(int cph,int total){
-		
-		String cphStr = "";
-		cphStr = cphStr + Util.commaSep(cph);
-		if( Math.abs(cph) <0.01 && cph!=0){
-			
-			cphStr = "0.01";
-			
-		}	
-		
-		if (cph > 0) {
 
-			cphStr = cphStr+ "/h" + " ("+getShareString((double) cph/total)+") &#9650; ";
-			
-			
-		}
-		else if (cph < 0){
-			cphStr = cphStr+"/h"+ " ("+getShareString((double) cph/total)+") &#9660; ";
-		}
-		
-		return cphStr;
-		
-	}
-	public static String getFollowerChangeString(int cph){
-		
-		
-		String cphStr = "";
-
-		if (cph > 0) {
-			if (cph != (int) cph) {
-				cph += 1;
-			}
-			
-			int roundedVal = (int) Math.abs(cph);
-			cphStr = cphStr+String.valueOf(roundedVal);
-
-		} else if (cph < 0) {
-			if (cph != (int) cph) {
-				cph = cph - 1;
-			}
-			int roundedVal = (int) Math.abs(cph);
-			cphStr = cphStr+String.valueOf(roundedVal);
-		}
-		
-		return cphStr;
-		
-	}
-	public static String getProfitString(double profit){
-		
-		String cphStr = "$";
-		cphStr = cphStr + Util.commaSep(Util.roundDouble(Math.abs(profit),2));
-		if( Math.abs(profit) <0.01 && profit!=0){
-			
-			cphStr = "$0.01";
-			
-		}	
-
-		if (profit > 0) {
-
-			cphStr = cphStr.replace("$", "+$");
-			
-			
-		}
-		else if (profit < 0){
-			cphStr = cphStr.replace("-", "").replace("$", "-$");
-		}
-		
-		return cphStr;
-		
-	}
 
 	public static String getRoundedChangePerHourString(double cph){
 		
@@ -418,6 +349,80 @@ public class Util {
 		moneyStr = (getInSpan)?getTextInSpan(moneyStr, spanClass):moneyStr;
 		
 		return moneyStr;
+	}
+	
+public static String getPercentageFormatted(double percentage, boolean rounded,boolean percentSign, boolean perHour, boolean arrow, boolean appendPlusIfPositive, boolean getInSpan){
+		
+		percentage = percentage * 100;
+		
+		percentage = Util.roundDouble(Math.abs(percentage),2);
+	
+		String percentageStr = "";
+				
+		if (rounded) {
+			if (percentage > 0) {
+				if (percentage != (int) percentage) {
+					percentage += 1;					
+				}
+			} else if (percentage < 0) {
+				if (percentage != (int) percentage) {
+					percentage = percentage - 1;
+				}
+			}
+			int roundedVal = (int) Math.abs(percentage);
+			percentageStr = percentageStr + Util.commaSep(roundedVal);			
+		}else{			
+			percentageStr =  percentageStr + Util.commaSep(percentage);
+		}
+		
+		String arrowStr = "";
+		String plusMinus = "";
+		String spanClass = "";
+		if(percentage>0){
+			arrowStr="&#9650;";
+			plusMinus = "+";
+			spanClass = "green-profit";
+					
+			
+		}
+		else if(percentage<0){
+			arrowStr="&#9660;";
+			plusMinus = "-";
+			spanClass = "red-profit";
+		}
+		
+
+		percentageStr = (percentSign)?percentageStr+"%":percentageStr;
+		percentageStr = (appendPlusIfPositive)?plusMinus+percentageStr:percentageStr;
+		
+		percentageStr = (perHour)?percentageStr+"/h":percentageStr;
+		percentageStr = (arrow)?percentageStr+arrowStr:percentageStr;
+
+		percentageStr = (getInSpan)?getTextInSpan(percentageStr, spanClass):percentageStr;
+		
+		return percentageStr;
+	}
+
+	public static String getWatchListIcon(boolean add, int height){
+		String imgElement = "";
+		
+		String styleString = "";
+		
+		if(height>0){
+			
+			styleString = "style = 'height:"+height+"px;' ";
+			
+		}
+		if(add){
+			
+			imgElement = "<img "+styleString+" alt='Add to your watch list' title='Add to your watch list' src='images/eyeGreen.png'>";
+		}else{
+			
+			imgElement = "<img "+styleString+" alt='Remove from your watch list' title='Remove from your watch list' src='images/eyeRed.png'>";
+			
+		}
+		
+		return imgElement;
 	}
 
 }

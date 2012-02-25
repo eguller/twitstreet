@@ -47,7 +47,7 @@
 						<table class="portfolio-stock-tbl">
 							<tr>
 	
-								<td colspan="2" rowspan="1" height="20px" align="left">
+								<td colspan="3" rowspan="1" height="20px" align="left">
 	
 									<div style="float: left">
 	
@@ -63,16 +63,16 @@
 										title="The ratio of your share to the whole stock">
 										&nbsp;(<%=Util.getShareString(stock.getPercentage())%>)
 									</div>
-								</td>
-								<td colspan="1" rowspan="1">
-									<div id="portfolio-item-<%=stock.getStockId()%>" style="display:none; text-align: right">
-										<a href="#" class="red-profit" onclick="sell(<%=stock.getStockId()%>,<%=Integer.MAX_VALUE%>)">
+								
+						
+									<div id="portfolio-item-<%=stock.getStockId()%>" style="display:none; float:right; text-align: right">
+										<a href="javascript:void(0)" class="red-profit" onclick="sell(<%=stock.getStockId()%>,<%=Integer.MAX_VALUE%>)">
 											Sell All
 										</a>						
 									</div>
 								</td>
 							</tr>
-	
+				
 							<tr>
 	
 								<td colspan="1" rowspan="1">
@@ -82,6 +82,16 @@
 								<td colspan="1" rowspan="1">
 									<%-- 								$<%=Util.commaSep(stock.getCapital())%> --%></td>
 								<td colspan="1" rowspan="1" align="right">
+						
+										<%=Util.getNumberFormatted(stock.getChangePerHour(), true, true, true, true, false, true)	%>
+								
+						
+						
+								</td>
+	
+							</tr>
+							<tr>
+								<td colspan="1" rowspan="1" align="left">
 									<%
 										double profit = 0;
 	
@@ -91,38 +101,35 @@
 												profit = amount - capital;
 												if (profit > 0) {
 													out.write("<div title=\"Your profit from this stock\">"
-															+ Util.getProfitString(profit) + "</div>");
+															+ Util.getNumberFormatted(profit, true, true, false,false , true, false)+ "</div>");
 												} else if (profit < 0) {
 													out.write("<div title=\"Your loss from this stock\">"
-															+ Util.getProfitString(profit) + "</div>");
+															+ Util.getNumberFormatted(profit, true, true, false,false , true, false) + "</div>");
 												} else {
 													out.write("<div style=\"float:left;\"></div>");
 												}
 									%>
+								
+								
 								</td>
-	
-							</tr>
-							<tr>
-								<td colspan="1" rowspan="1" align="left"></td>
 								<td colspan="1" rowspan="1"></td>
-								<td colspan="1" rowspan="1">
-									<%
-										String profitPerHour = Util.getChangePerHourString(stock
-														.getChangePerHour());
-												if (stock.getChangePerHour() > 0) {
-													out.write("<div title=\"Your estimated profit from this stock for the next hour\" style=\"float:left;\" class=\"green-profit\">"
-															+ profitPerHour + "</div");
-												} else if (stock.getChangePerHour() < 0) {
-													out.write("<div title=\"Your estimated loss from this stock for the next hour\" style=\"float:left;\" class=\"red-profit\">"
-															+ profitPerHour + "</div");
-												} else {
-													out.write("<div style=\"float:left;\">&nbsp;<div>");
-	
-												}
+								<td colspan="1" rowspan="1" align="right">
+									<% if(stock.isChangePerHourCalculated() && stock.getChangePerHour()!=0){ 
+									
+										
 									%>
+					
+										<%=Util.getPercentageFormatted((double) stock.getTotalChangePerHour() / stock.getTotal(), false, true, true, true, false, true)  %>
+					
+									<% }
+									
+									
+									%>
+									
 								</td>
 							</tr>
-						</table></td>
+						</table>
+					</td>
 				</tr>
 				<%
 					}

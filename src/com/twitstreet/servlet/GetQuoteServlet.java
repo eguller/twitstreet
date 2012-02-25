@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import twitter4j.TwitterException;
-
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.Stock;
@@ -57,40 +55,36 @@ public class GetQuoteServlet extends TwitStreetServlet {
 
 	private static Logger logger = Logger.getLogger(GetQuoteServlet.class);
 
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=utf-8");
-		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-		response.setHeader("Pragma","no-cache"); //HTTP 1.0
-		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
-		
+		response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+		response.setDateHeader("Expires", 0); // prevents caching at the proxy
+												// server
+
 		request.setAttribute("title", "twitstreet - Twitter stock market game");
-		request.setAttribute(
-				"meta-desc",
-				"Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
+		request.setAttribute("meta-desc", "Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
 
 		long start = 0;
 		long end = 0;
 		start = System.currentTimeMillis();
 
 		if (!twitstreet.isInitialized()) {
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp")
-					.forward(request, response);
+			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp").forward(request, response);
 			return;
 		}
 
 		end = System.currentTimeMillis();
 
 		logger.info("Init time: " + (end - start));
-		
+
 		loadUser(request);
-		//loadUserFromCookie(request);
+		// loadUserFromCookie(request);
 
 		start = System.currentTimeMillis();
 		queryStockById(request, response);
@@ -103,64 +97,54 @@ public class GetQuoteServlet extends TwitStreetServlet {
 		logger.info("queryStockByQuote: " + (end - start));
 
 		if (request.getAttribute(User.USER) != null) {
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/dashboard.jsp").forward(request, response);
+			getServletContext().getRequestDispatcher("/WEB-INF/jsp/dashboard.jsp").forward(request, response);
 		} else {
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/dashboard.jsp").forward(request, response);
+			getServletContext().getRequestDispatcher("/WEB-INF/jsp/dashboard.jsp").forward(request, response);
 		}
 	}
 
-	public void queryStockById(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	public void queryStockById(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String stockIdStr = request.getParameter(STOCK);
 		User user = (User) request.getAttribute(User.USER);
 		if (user != null && stockIdStr != null && stockIdStr.length() > 0) {
 			long stockId = Long.parseLong(stockIdStr);
-			
+
 			Stock stock = stockMgr.getStockById(stockId);
-			if(stock==null){
-				
+			if (stock == null) {
+
 				return;
-				
+
 			}
-			
-			TwitterProxy twitterProxy = user == null ? null
-					: twitterProxyFactory.create(user.getOauthToken(),
-							user.getOauthTokenSecret());
-			
+
+			TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
+
 			ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
-			try {
-				searchResultList = twitterProxy.searchUsers(stock.getName());
 
+			searchResultList = twitterProxy.searchUsers(stock.getName());
 
-				// TODO FIX HERE - low priority
-				//Search the name of the stock through the all result list
-				// do not assume that the first one is always the exact match.
-				if (searchResultList != null && searchResultList.size() > 0 && stock.getName().equalsIgnoreCase(searchResultList.get(0).getScreenName())) {
-					searchResultList.remove(0);
-				}
-			} catch (TwitterException e) {
-				e.printStackTrace();
+			// TODO FIX HERE - low priority
+			// Search the name of the stock through the all result list
+			// do not assume that the first one is always the exact match.
+			if (searchResultList != null && searchResultList.size() > 0 && stock.getName().equalsIgnoreCase(searchResultList.get(0).getScreenName())) {
+				searchResultList.remove(0);
 			}
+
 			request.setAttribute(GetQuoteServlet.QUOTE_DISPLAY, stock.getName());
 			request.setAttribute(STOCK, stock);
 
 			request.setAttribute(STOCK_ID, new Long(stock.getId()));
-			request.setAttribute(GetQuoteServlet.OTHER_SEARCH_RESULTS,
-					searchResultList);
+			request.setAttribute(GetQuoteServlet.OTHER_SEARCH_RESULTS, searchResultList);
 		}
 	}
 
-	public void queryStockByQuote(HttpServletRequest request,
- HttpServletResponse response) throws ServletException, IOException {
+	public void queryStockByQuote(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User userTmp = (User) request.getAttribute(User.USER) == null ? userMgr.random() : (User) request.getAttribute(User.USER);
 		String twUserName = (String) request.getParameter(QUOTE);
 		twUserName = new String(twUserName.getBytes("8859_1"), "UTF8");
 		if (twUserName == null || twUserName.length() < 1) {
 
 			logger.warn("Servlet: Empty username");
-			return ;
+			return;
 
 		}
 		request.setAttribute(QUOTE, twUserName);
@@ -177,37 +161,30 @@ public class GetQuoteServlet extends TwitStreetServlet {
 			return;
 		}
 
-		SimpleTwitterUser twUser = null;
 		ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
 		Stock stock = null;
 
 		// Get user info from twitter.
-		try {
-			if (Util.isValidTwitterUserName(twUserName)) {
 
-				stock = stockMgr.getStock(twUserName);
-			}
-			searchResultList = twitterProxy.searchUsers(twUserName);
+		if (Util.isValidTwitterUserName(twUserName)) {
 
-			if (searchResultList != null && searchResultList.size() > 0) {
-				if (stock == null) {
-					
-
-					stock = stockMgr.getStockById(searchResultList.get(0).getId());
-					
-					searchResultList.remove(0);
-
-				} else if (stock.getName().equalsIgnoreCase(searchResultList.get(0).getScreenName())) {
-					searchResultList.remove(0);
-				}
-			}
-
-			request.setAttribute(OTHER_SEARCH_RESULTS, searchResultList);
-
-		} catch (TwitterException e1) {
-			resp.fail().reason("Something wrong, we could not connect to Twitter. Working on it.");
-			return;
+			stock = stockMgr.getStock(twUserName);
 		}
+		searchResultList = twitterProxy.searchUsers(twUserName);
+
+		if (searchResultList != null && searchResultList.size() > 0) {
+			if (stock == null) {
+
+				stock = stockMgr.getStockById(searchResultList.get(0).getId());
+
+				searchResultList.remove(0);
+
+			} else if (stock.getName().equalsIgnoreCase(searchResultList.get(0).getScreenName())) {
+				searchResultList.remove(0);
+			}
+		}
+
+		request.setAttribute(OTHER_SEARCH_RESULTS, searchResultList);
 
 		// Get user info from database
 		request.setAttribute(STOCK, stock);
@@ -222,5 +199,5 @@ public class GetQuoteServlet extends TwitStreetServlet {
 		}
 
 	}
-	
+
 }

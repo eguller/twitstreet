@@ -3,12 +3,12 @@
 var reloadInterval = 60 * 1000;
 
 var lastUpdateMap = new Object();
-function ajaxLoad(url, queryString, containerDiv, loadingDiv, isReload, callbackFunction,callbackParameters){
+function ajaxLoad(url, queryString, containerDiv, loadingDiv, isReload, callbackFunction,callbackParameters, doNotBlock){
 	
-	if(!isReload){
+	if(!isReload && !doNotBlock){
 		blockElementWithMsg(loadingDiv);		
 	}
-	else if(!timeToReload(lastUpdateMap[containerDiv])){
+	else if(isReload && !timeToReload(lastUpdateMap[containerDiv])){
 		return;
 	}
 	$.ajax({

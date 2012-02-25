@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import twitter4j.ResponseList;
+import twitter4j.Trend;
+import twitter4j.Trends;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -17,14 +19,19 @@ import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.util.Util;
 
 public class TwitterProxyImpl implements TwitterProxy {
-	private static final int NOT_FOUND = 404;
-	private static final int USER_SUSPENDED_OR_RATE_LIMIT_EXCEEDED = 404;
+
+	private static int UNAUTHORIZED = 401;
+	private static int NOT_FOUND = 404;
+	private static int USER_SUSPENDED = 403;
+	private static int RATE_LIMIT_EXCEEDED = 420;
+	private static int TWITTER_SERVERS_OVERLOADED = 503;
 	private static Logger logger = Logger.getLogger(TwitterProxyImpl.class);
 	@Inject
 	ConfigMgr configMgr = null;
 	private Twitter twitter;
 	String consumerKey;
 	String consumerSecret;
+
 
 	@Inject
 	public TwitterProxyImpl(ConfigMgr configMgr,
@@ -40,7 +47,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	@Override
-	public int getFollowerCount(String name) throws TwitterException {
+	public int getFollowerCount(String name){
 		int followerCount = 0;
 		try {
 			
@@ -50,16 +57,14 @@ public class TwitterProxyImpl implements TwitterProxy {
 					+ ", Follower: " + followerCount);
 
 		} catch (TwitterException e) {
-			logger.error(
-					"Twitter: Retrieving follower count failed for username: "
-							+ name, e);
-			throw e;
+
+			handleError(e,name);
 		}
 		return followerCount;
 	}
 
 	@Override
-	public int getFollowerCount(long id) throws TwitterException {
+	public int getFollowerCount(long id){
 		int followerCount = 0;
 		try {
 			User user = twitter.showUser(id);
@@ -68,10 +73,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 					+ ", Follower: " + followerCount);
 
 		} catch (TwitterException e) {
-			logger.error(
-					"Twitter: Retrieving follower count failed for username: "
-							+ id, e);
-			throw e;
+			handleError(e, id);
 		}
 		return followerCount;
 	}
@@ -93,37 +95,27 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	@Override
-	public User getTwUser(String twUserName) throws TwitterException {
+	public User getTwUser(String twUserName){
 		User user = null;
 		try {
 			user = twitter.showUser(twUserName);
 			logger.debug("Twitter: User retrieved successfully. Username: " + twUserName);
 		} catch (TwitterException e) {
-			if (e.getStatusCode() == NOT_FOUND) {
-				logger.debug("Twitter: User not found. Username: " + twUserName);
-			} 
-//			else if (e.getStatusCode() == USER_SUSPENDED_OR_RATE_LIMIT_EXCEEDED) {
-//				logger.debug("Twitter: User suspended: " + twUserName);
-//			}
-			else{
-				logger.error("Twitter: Error while retrieving twitter user:" + twUserName, e);
-				throw e;
-			}
+
+			handleError(e, twUserName);
 		}
 		return user;
 	}
 
 	@Override
-	public User getTwUser(long userId) throws TwitterException {
+	public User getTwUser(long userId){
 		User user = null;
 		try {
 			user = twitter.showUser(userId);
 			logger.debug("Twitter: User retrieved successfully. Username: "
 					+ userId);
 		} catch (TwitterException e) {
-			logger.error("Twitter: Error while retrieving twitter user:"
-					+ userId, e);
-			throw e;
+			handleError(e, userId);
 		}
 		catch(Exception ex){
 			logger.error(ex);
@@ -142,8 +134,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	@Override
-	public ArrayList<SimpleTwitterUser> searchUsers(String user)
-			throws TwitterException {
+	public ArrayList<SimpleTwitterUser> searchUsers(String user){
 		ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
 		ResponseList<User> userResponseList = null;
 
@@ -161,11 +152,10 @@ public class TwitterProxyImpl implements TwitterProxy {
 		try {
 			userResponseList = twitter.searchUsers(query, 1);
 		} catch (TwitterException e) {
-			logger.error("Twitter: User search failed for query: " + query, e);
-			throw e;
+			handleError(e, user);
 		}
 		if (userResponseList == null || userResponseList.size() < 1) {
-			logger.error("Twitter: No results found for user search: " + query);
+		
 		} else {
 			for (int i = 0; i < userResponseList.size(); i++) {
 				searchResultList.add( new SimpleTwitterUser(userResponseList.get(i)));
@@ -173,5 +163,102 @@ public class TwitterProxyImpl implements TwitterProxy {
 		}
 		return searchResultList;
 	}
+	private void handleError(TwitterException e, Object param){
+		
+		ArrayList<Object> params = null;
+		if(param!=null){		
+		  	params = new ArrayList<Object>();
+		  	
+		  	params.add(param);
+		}
+		handleError(e, params);
+			
+	}	
+	private void handleError(TwitterException e){
+		handleError(e, null);		
+	}
+	private void handleError(TwitterException e, ArrayList<Object> params){
+		
+		String paramsStr = "";
+		
+		if (params != null) {
 
+			for (Object obj : params) {
+				paramsStr = paramsStr + obj.toString()+", ";
+			}
+
+		}
+		
+		if (e.getStatusCode() == NOT_FOUND) {
+			logger.info("Twitter: User not found. Params: " + paramsStr);
+		} 
+		else if (e.getStatusCode() == USER_SUSPENDED) {
+			logger.info("Twitter: User suspended. Params: " + paramsStr);
+		}
+		else if (e.getStatusCode() == TWITTER_SERVERS_OVERLOADED) {
+			logger.info("Twitter: The Twitter servers are up, but overloaded with requests. Try again later.");
+		}else if (e.getStatusCode() == RATE_LIMIT_EXCEEDED) {
+			logger.error("Twitter: Rate limit exceeded.");
+		}else if (e.getStatusCode() == UNAUTHORIZED) {
+			logger.error("Twitter: Authentication credentials were missing or incorrect. Twitter Proxy: "+twitter.toString());
+		}
+		else{
+			logger.error("Twitter: Unhandled twitter exception.",e);
+			
+		}
+		
+		
+	}
+
+	@Override
+	public ArrayList<Trend> getTrends() {
+		Trends ts = null;
+		try {
+			ts = twitter.getLocationTrends(1);
+		} catch (TwitterException e) {
+			handleError(e);
+		}
+		ArrayList<Trend> trendList = new ArrayList<Trend>();
+		if(ts!=null){
+			Trend[] trends = ts.getTrends();
+			
+			if(trends!=null){
+				for(Trend trend: trends){
+					
+					trendList.add(trend);
+				}
+				
+			}
+		}
+		return trendList;
+		
+	}
+
+	
+	@Override
+	public long searchAndGetFirstResult(String searchString) {
+		if (searchString == null || searchString.length() < 1) {
+			return -1;
+		}
+		long id = -1L;
+	
+		SimpleTwitterUser twUser = null;
+		ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
+
+
+		searchResultList = searchUsers(searchString);
+		if (searchResultList != null && searchResultList.size() > 0) {
+			twUser = searchResultList.get(0);
+			searchResultList.remove(0);
+		}
+
+		if (twUser != null) {
+			id = twUser.getId();
+		}
+
+		return id;
+
+	}
+
+	
 }

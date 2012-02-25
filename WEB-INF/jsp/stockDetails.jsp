@@ -80,11 +80,11 @@
 						boolean beingWatched = watchList.contains(stock);
 						 %>
 						<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
-							Add to Watch List
+							<%=Util.getWatchListIcon(true,20)%>
 							
 						</a>	
 						<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
-							Remove from Watch List
+							<%=Util.getWatchListIcon(false,20)%>
 							
 						</a>	
 					</div>
@@ -114,33 +114,10 @@
 					<% if(stock.isChangePerHourCalculated() && stock.getChangePerHour()!=0){ 
 					
 						
-						String colorClass = (stock.getChangePerHour()>0)?"green-profit":"red-profit";
-						String arrow = (stock.getChangePerHour()>0)?"&#9650;":"&#9660;";
 					%>
-					<div class="<%= colorClass %>">
-					
-					
-					
-						<table class="stock-change-per-hour">
-							<tr>
-								<td>
-									<span>
-										<%=Util.getPercentageChangeString((double) stock.getChangePerHour() / stock.getTotal()) %>
-									</span>																		
-								</td>							
-								<td rowspan="1"  >
-									/h 
-								</td>
-								<td rowspan="1">
-									<%= arrow %>
-								</td>
-							</tr>
-					
-						
-						</table>
-				
-					</div>
-				
+	
+						<%=Util.getPercentageFormatted((double) stock.getChangePerHour() / stock.getTotal(), false, true, true, true, false, true)  %>
+	
 					<% }
 					
 					

@@ -1,6 +1,8 @@
 <%@page import="com.twitstreet.servlet.UserProfileServlet"%>
 <%@page import="com.twitstreet.db.data.StockInPortfolio"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
+<%@page import="com.twitstreet.market.StockMgr"%>
+<%@ page import="com.twitstreet.db.data.Stock"%>
 <%@page import="com.twitstreet.db.data.User"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
@@ -8,6 +10,7 @@
 <%@ page import="com.twitstreet.util.Util"%>
 <%@ page import="com.twitstreet.market.PortfolioMgr"%>
 <%@ page import="com.twitstreet.db.data.Portfolio"%>
+<%@page import="java.util.ArrayList"%>
 
 <%
 	Injector inj = (Injector) pageContext.getServletContext()
@@ -19,6 +22,8 @@
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
 	
+	StockMgr stockMgr = inj.getInstance(StockMgr.class);
+	User sessionUser = (User) request.getAttribute(User.USER);
 	 
 	user = (user == null) ? (User) request.getAttribute(UserProfileServlet.USER_PROFILE_USER) : user;
 	user = (user == null && parameterUser != null) ? userMgr.getUserById(Long.valueOf(parameterUser)) : user;
@@ -99,7 +104,7 @@
 		
 					<td>
 						<table class="datatbl">
-							<tr>
+							<tr onmouseover="$('#user-portfolio-item-watch-div-<%=stock.getStockId() %>').show()" onmouseout="$('#user-portfolio-item-watch-div-<%=stock.getStockId() %>').hide()">
 								<td width="58px"><img class="twuser"
 									src="<%=stock.getPictureUrl()%>" />
 								</td>
@@ -108,6 +113,23 @@
 										<a href='javascript:void(0)' onclick='loadStock(<%=stock.getStockId()%>)' title="<%=stock.getStockName()%>&#39;s stock detail page">
 												<%=stock.getStockName()%>
 										</a> (<%=Util.getShareString(stock.getPercentage())%>)
+										
+											<div id="user-portfolio-item-watch-div-<%=stock.getStockId() %>" style="display:none; float:right; ">
+					
+												<%
+												ArrayList<Stock> watchList = stockMgr.getUserWatchList(sessionUser.getId());
+												boolean beingWatched = watchList.contains(stock);
+												 %>
+												<a class="add-to-watch-list-link-<%=stock.getStockId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getStockId()%>)">
+													<%=Util.getWatchListIcon(true,15)%>
+													
+												</a>	
+												<a class="remove-from-watch-list-link-<%=stock.getStockId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getStockId()%>)">
+													<%=Util.getWatchListIcon(false,15)%>
+													
+												</a>	
+											</div>
+											
 										<br> 
 											<%=Util.getNumberFormatted(stock.getAmount(), true, true, false, false, false, false)%>
 		

@@ -10,10 +10,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import twitter4j.Trend;
-import twitter4j.Trends;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 
 import com.google.inject.Inject;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
@@ -25,23 +21,21 @@ import com.twitstreet.db.data.StockHistoryData;
 import com.twitstreet.db.data.User;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.StockUpdateTask;
-import com.twitstreet.twitter.SimpleTwitterUser;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 
 public class StockMgrImpl implements StockMgr {
-	
-	
-	private static  int TWITTER_TRENDS_CLEANUP_PERIOD = 24 * 60 ; // minutes
 
-	private static  String TRENDY_STOCK_AVAILABLE_THRESHOLD = "500";
+	private static int TWITTER_TRENDS_CLEANUP_PERIOD = 24 * 60; // minutes
 
-	private static  String TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD = "0.99";
-	
+	private static String TRENDY_STOCK_AVAILABLE_THRESHOLD = "500";
+
+	private static String TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD = "0.99";
+
 	private static String SELECT_FROM_STOCK = " select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
 	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
 	private static int MAX_TRENDS = 10;
-	
+
 	@Inject
 	private UserMgr userMgr;
 
@@ -50,9 +44,9 @@ public class StockMgrImpl implements StockMgr {
 	@Inject
 	private DBMgr dbMgr;
 	private static Logger logger = Logger.getLogger(StockMgrImpl.class);
-	
+
 	public static int STOCK_TREND_IN_MINUTES = 60;
-	
+
 	public Stock notifyBuy(String stock, double amount) {
 		return null;
 	}
@@ -65,8 +59,7 @@ public class StockMgrImpl implements StockMgr {
 		try {
 			connection = dbMgr.getConnection();
 
-			ps = connection
-					.prepareStatement(SELECT_FROM_STOCK +"  where name = ?");
+			ps = connection.prepareStatement(SELECT_FROM_STOCK + "  where name = ?");
 			ps.setString(1, name);
 			rs = ps.executeQuery();
 			if (rs.next()) {
@@ -74,51 +67,40 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.getDataFromResultSet(rs);
 
 				if (stockDO.isUpdateRequired()) {
-						updateStockData(name);
-					
-						//stockdo shall not require an update due to the update above
-						//so getStockById should go with the else block this time
-						stockDO = getStockById(stockDO.getId());
-					
+					updateStockData(name);
 
-				}					
-				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());					
-				
-			
-			}else{
-				
-				User user = userMgr.random();
-				TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
+					// stockdo shall not require an update due to the update
+					// above
+					// so getStockById should go with the else block this time
+					stockDO = getStockById(stockDO.getId());
 
-				try {
-					twitter4j.User twUser = twitterProxy.getTwUser(name);
-					
-					if(twUser!=null){
-						stockDO = new Stock();
-						stockDO.setId(twUser.getId());
-						stockDO.setName(twUser.getScreenName());
-						stockDO.setTotal(twUser.getFollowersCount());
-						stockDO.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
-						stockDO.setSold(0.0D);
-						stockDO.setVerified(twUser.isVerified());
-						saveStock(stockDO);
-
-						// stockdo shall not require an update due to the update
-						// above
-						// so getStockById should go with the else block this time
-						stockDO = getStockById(stockDO.getId());
-						
-						
-					}
-					else{
-
-						logger.error("Invalid name: "+name);	
-					}
-					
-				} catch (TwitterException e) {
-					logger.error("Twitter exception occured", e);
 				}
-				
+				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+
+			} else {
+
+				twitter4j.User twUser = getTwitterProxy().getTwUser(name);
+
+				if (twUser != null) {
+					stockDO = new Stock();
+					stockDO.setId(twUser.getId());
+					stockDO.setName(twUser.getScreenName());
+					stockDO.setTotal(twUser.getFollowersCount());
+					stockDO.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
+					stockDO.setSold(0.0D);
+					stockDO.setVerified(twUser.isVerified());
+					saveStock(stockDO);
+
+					// stockdo shall not require an update due to the update
+					// above
+					// so getStockById should go with the else block this time
+					stockDO = getStockById(stockDO.getId());
+
+				} else {
+
+					logger.error("Invalid name: " + name);
+				}
+
 			}
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
@@ -128,46 +110,8 @@ public class StockMgrImpl implements StockMgr {
 		}
 		return stockDO;
 	}
-	public Stock searchStockThroughTwitter(String searchString) {
-		if (searchString == null || searchString.length() < 1) {
-			return null;
-		}
-		Stock stock = null;
-		User userTmp = userMgr.random();
 
-		TwitterProxy twitterProxy = null;
-		twitterProxy = twitterProxyFactory.create(userTmp.getOauthToken(), userTmp.getOauthTokenSecret());
-
-		SimpleTwitterUser twUser = null;
-		ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
-
-		if (twitterProxy == null) {
-			logger.error("StockMgr: Twitter proxy could not be created.");
-			return null;
-		}
-		// Get user info from twitter.
-
-		try {
-			searchResultList = twitterProxy.searchUsers(searchString);
-			if (searchResultList != null && searchResultList.size() > 0) {
-				twUser = searchResultList.get(0);
-				searchResultList.remove(0);
-			}
-		} catch (TwitterException e1) {
-			logger.error("Something wrong... Could not connect to Twitter.");
-		}
-		
-
-		if (twUser != null) {
-			stock = getStockById(twUser.getId());			
-			logger.debug("StockMgr: Stock queried successfully. Stock name:" + stock.getName());
-		} else {
-			logger.error("StockMgr: User not found. Search string: " + searchString);
-		}
-
-		return stock;
-
-	}
+	
 
 	public Stock getStockById(long id) {
 		Connection connection = null;
@@ -190,37 +134,29 @@ public class StockMgrImpl implements StockMgr {
 				}
 				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 			} else {
-				User user = userMgr.random();
-				TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
+		
+				twitter4j.User twUser = getTwitterProxy().getTwUser(id);
 
-				try {
-					twitter4j.User twUser = twitterProxy.getTwUser(id);
-					
-					if(twUser!=null){
-						stockDO = new Stock();
-						stockDO.setId(twUser.getId());
-						stockDO.setName(twUser.getScreenName());
-						stockDO.setTotal(twUser.getFollowersCount());
-						stockDO.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
-						stockDO.setSold(0.0D);
-						stockDO.setVerified(twUser.isVerified());
-						saveStock(stockDO);
+				if (twUser != null) {
+					stockDO = new Stock();
+					stockDO.setId(twUser.getId());
+					stockDO.setName(twUser.getScreenName());
+					stockDO.setTotal(twUser.getFollowersCount());
+					stockDO.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
+					stockDO.setSold(0.0D);
+					stockDO.setVerified(twUser.isVerified());
+					saveStock(stockDO);
 
-						// stockdo shall not require an update due to the update
-						// above
-						// so getStockById should go with the else block this time
-						stockDO = getStockById(id);
-						
-						
-					}
-					else{
+					// stockdo shall not require an update due to the update
+					// above
+					// so getStockById should go with the else block this time
+					stockDO = getStockById(id);
 
-						logger.error("Invalid ID: "+id);	
-					}
-					
-				} catch (TwitterException e) {
-					logger.error("Twitter exception occured", e);
+				} else {
+
+					logger.debug("Invalid ID: " + id);
 				}
+
 			}
 
 		} catch (SQLException ex) {
@@ -231,38 +167,34 @@ public class StockMgrImpl implements StockMgr {
 		return stockDO;
 	}
 
-	@Override
-	public void updateStockData(long id){
-		User user = userMgr.random();
-		TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
-
-		try {
-			twitter4j.User twUser = twitterProxy.getTwUser(id);
-			if (twUser != null) {
-				updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(), twUser.isVerified());
-			}
 	
-		} catch (TwitterException e) {
-			logger.error("Twitter exception occured", e);
-		}
-
-		
-	}
-	@Override
-	public void updateStockData(String stockName){
+	private TwitterProxy getTwitterProxy(){
 		User user = userMgr.random();
 		TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
-
-		try {
-			twitter4j.User twUser = twitterProxy.getTwUser(stockName);
-
-			updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(), twUser.isVerified());
-		} catch (TwitterException e) {
-			logger.error("Twitter exception occured", e);
-		}
-
+		return twitterProxy;
+		
 		
 	}
+	
+	@Override
+	public void updateStockData(long id) {
+		
+		twitter4j.User twUser = getTwitterProxy().getTwUser(id);
+		if (twUser != null) {
+			updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(), twUser.isVerified());
+		}
+
+	}
+
+	@Override
+	public void updateStockData(String stockName) {
+	
+		twitter4j.User twUser = getTwitterProxy().getTwUser(stockName);
+
+		updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(), twUser.isVerified());
+
+	}
+
 	public StockHistoryData getStockHistory(long id) {
 
 		Connection connection = null;
@@ -271,16 +203,7 @@ public class StockMgrImpl implements StockMgr {
 		StockHistoryData stockHistoryData = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("(" +
-										    " select distinct stock_history.lastUpdate as lastUpdate, stock.id, stock.name, stock_history.total " + "" +
-												" from stock_history,stock " + 
-												" where stock_history.stock = ? and stock.id =  stock_history.stock " +
-											" )" +
-											" union  " +
-											" (" +
-											" select lastUpdate as lastUpdate, id, name, total from stock where  stock.id =  ?" +
-											" )  " +
-											" order by lastUpdate asc ");
+			ps = connection.prepareStatement("(" + " select distinct stock_history.lastUpdate as lastUpdate, stock.id, stock.name, stock_history.total " + "" + " from stock_history,stock " + " where stock_history.stock = ? and stock.id =  stock_history.stock " + " )" + " union  " + " (" + " select lastUpdate as lastUpdate, id, name, total from stock where  stock.id =  ?" + " )  " + " order by lastUpdate asc ");
 			ps.setLong(1, id);
 			ps.setLong(2, id);
 			rs = ps.executeQuery();
@@ -295,75 +218,61 @@ public class StockMgrImpl implements StockMgr {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 		return stockHistoryData;
-		
-		
-		
-		
+
 	}
 
-	public void updateStockHistory(){
+	public void updateStockHistory() {
 		Connection connection = null;
 		PreparedStatement ps = null;
 
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("insert ignore into stock_history(stock, total, date, hour, lastUpdate) " +
-											" select id, total, DATE(lastUpdate), HOUR(lastUpdate), lastUpdate from stock ");
-		
+			ps = connection.prepareStatement("insert ignore into stock_history(stock, total, date, hour, lastUpdate) " + " select id, total, DATE(lastUpdate), HOUR(lastUpdate), lastUpdate from stock ");
+
 			ps.executeUpdate();
-				
+
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		}catch(MySQLIntegrityConstraintViolationException ex){
-			
+		} catch (MySQLIntegrityConstraintViolationException ex) {
+
 			logger.debug(DBConstants.RECORD_ALREADY_EXISTS + ps.toString());
-			
-		}
-		catch (SQLException ex) {
+
+		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
 			dbMgr.closeResources(connection, ps, null);
 		}
-		
-		
+
 	}
 
-	
-	public void updateTwitterData(long id, int total, String pictureUrl,
-			String screenName, boolean verified) {
+	public void updateTwitterData(long id, int total, String pictureUrl, String screenName, boolean verified) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ?, verified = ? where id = ?");
-			
+			ps = connection.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ?, verified = ? where id = ?");
+
 			ps.setInt(1, total);
 			ps.setString(2, pictureUrl);
 			ps.setString(3, screenName);
 			ps.setBoolean(4, verified);
 			ps.setLong(5, id);
 			ps.executeUpdate();
-			
-			//This query should be called right after the stock update, 
-			// since the get_stock_trend_for_x_minutes requires an up to date stock table
-			ps = connection
-					.prepareStatement("update stock set changePerHour = get_stock_trend_for_x_minutes(?,?) where id = ?");
-			
+
+			// This query should be called right after the stock update,
+			// since the get_stock_trend_for_x_minutes requires an up to date
+			// stock table
+			ps = connection.prepareStatement("update stock set changePerHour = get_stock_trend_for_x_minutes(?,?) where id = ?");
+
 			ps.setLong(1, id);
 			ps.setInt(2, STOCK_TREND_IN_MINUTES);
 			ps.setLong(3, id);
 			ps.executeUpdate();
 
-			ps = connection
-					.prepareStatement("insert ignore into stock_history(stock, total, date, hour, lastUpdate) " +
-											" select id, total, DATE(NOW()), HOUR(NOW()), lastUpdate from stock where id = ?");
+			ps = connection.prepareStatement("insert ignore into stock_history(stock, total, date, hour, lastUpdate) " + " select id, total, DATE(NOW()), HOUR(NOW()), lastUpdate from stock where id = ?");
 			ps.setLong(1, id);
 			ps.executeUpdate();
-				
-			
-			
+
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
@@ -378,8 +287,7 @@ public class StockMgrImpl implements StockMgr {
 		PreparedStatement ps = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("insert into stock(id, name, total, pictureUrl, lastUpdate, verified) values(?, ?, ?, ?, now(), ?)");
+			ps = connection.prepareStatement("insert into stock(id, name, total, pictureUrl, lastUpdate, verified) values(?, ?, ?, ?, now(), ?)");
 			ps.setLong(1, stock.getId());
 			ps.setString(2, stock.getName());
 			ps.setInt(3, stock.getTotal());
@@ -389,8 +297,7 @@ public class StockMgrImpl implements StockMgr {
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (MySQLIntegrityConstraintViolationException e) {
-			logger.warn("DB: Stock already exist - Stock Id:" + stock.getId()
-					+ " User Name: " + stock.getName() + " - " + e.getMessage());
+			logger.warn("DB: Stock already exist - Stock Id:" + stock.getId() + " User Name: " + stock.getName() + " - " + e.getMessage());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
@@ -406,14 +313,7 @@ public class StockMgrImpl implements StockMgr {
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement(SELECT_DISTINCT_FROM_STOCK +" " +
-							" where (TIMESTAMPDIFF(minute, lastUpdate, now())  > ?  or lastUpdate is null) " +
-							" and (" +
-							"		stock.id in (select distinct stock from portfolio) or " +
-							"  		stock.id in (select distinct stock_id from user_stock_watch ) or " +
-							"		stock.id in (select stock_id from twitter_trends )" +
-							"		)");
+			ps = connection.prepareStatement(SELECT_DISTINCT_FROM_STOCK + " " + " where (TIMESTAMPDIFF(minute, lastUpdate, now())  > ?  or lastUpdate is null) " + " and (" + "		stock.id in (select distinct stock from portfolio) or " + "  		stock.id in (select distinct stock_id from user_stock_watch ) or " + "		stock.id in (select stock_id from twitter_trends )" + "		)");
 
 			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
 			rs = ps.executeQuery();
@@ -426,36 +326,32 @@ public class StockMgrImpl implements StockMgr {
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			dbMgr.closeResources(connection, ps, rs);			
+			dbMgr.closeResources(connection, ps, rs);
 		}
 		return stockList;
 	}
-	
+
 	@Override
-	public void resetSpeedOfOldStocks(){
+	public void resetSpeedOfOldStocks() {
 
 		Connection connection = null;
 		PreparedStatement ps = null;
 
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("update stock set changePerHour = NULL" +
-										" where TIMESTAMPDIFF(minute, lastUpdate,now()) > ?");
-			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES * 2 );
+			ps = connection.prepareStatement("update stock set changePerHour = NULL" + " where TIMESTAMPDIFF(minute, lastUpdate,now()) > ?");
+			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES * 3);
 			ps.executeUpdate();
-						
+
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
 			dbMgr.closeResources(connection, ps, null);
 		}
-	
-		
-		
+
 	}
-	
+
 	@Override
 	public ArrayList<Stock> getTrendyStocks() {
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
@@ -464,16 +360,14 @@ public class StockMgrImpl implements StockMgr {
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement(SELECT_FROM_STOCK +
-							" where changePerHour is not null and stock_sold(id)< "+TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD +" and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +
-//							" 	and " +
-//							"	(" +
-//							"	id in (select distinct stock from portfolio) or " +
-//							"	id in (select distinct stock_id from user_watch_list) or " +
-//							"	id in (select distinct stock_id from twitter_trends) " +
-//							"	) " +
-							"	order by (changePerHour/total) desc limit ?;");
+			ps = connection.prepareStatement(SELECT_FROM_STOCK + " where changePerHour is not null and stock_sold(id)< " + TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD + " and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +
+			// " 	and " +
+			// "	(" +
+			// "	id in (select distinct stock from portfolio) or " +
+			// "	id in (select distinct stock_id from user_watch_list) or " +
+			// "	id in (select distinct stock_id from twitter_trends) " +
+			// "	) " +
+			"	order by (changePerHour/total) desc limit ?;");
 
 			ps.setInt(1, MAX_TRENDS);
 			rs = ps.executeQuery();
@@ -486,11 +380,11 @@ public class StockMgrImpl implements StockMgr {
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			dbMgr.closeResources(connection, ps, rs);			
+			dbMgr.closeResources(connection, ps, rs);
 		}
 		return stockList;
 	}
-	
+
 	@Override
 	public ArrayList<Stock> getUserWatchList(long userid) {
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
@@ -499,8 +393,7 @@ public class StockMgrImpl implements StockMgr {
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement(SELECT_FROM_STOCK + " where id in (select stock_id from user_stock_watch where user_id=?)");
+			ps = connection.prepareStatement(SELECT_FROM_STOCK + " where id in (select stock_id from user_stock_watch where user_id=?)");
 
 			ps.setLong(1, userid);
 			rs = ps.executeQuery();
@@ -513,10 +406,11 @@ public class StockMgrImpl implements StockMgr {
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			dbMgr.closeResources(connection, ps, rs);			
+			dbMgr.closeResources(connection, ps, rs);
 		}
 		return stockList;
 	}
+
 	@Override
 	public void addStockIntoUserWatchList(long stockid, long userid) {
 		Connection connection = null;
@@ -524,22 +418,21 @@ public class StockMgrImpl implements StockMgr {
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("insert ignore into user_stock_watch(user_id,stock_id) VALUES  (?,?) ");
+			ps = connection.prepareStatement("insert ignore into user_stock_watch(user_id,stock_id) VALUES  (?,?) ");
 
 			ps.setLong(1, userid);
 
 			ps.setLong(2, stockid);
 			ps.executeUpdate();
-			
+
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			dbMgr.closeResources(connection, ps, rs);			
+			dbMgr.closeResources(connection, ps, rs);
 		}
 	}
-	
+
 	@Override
 	public void removeStockFromUserWatchList(long stockid, long userid) {
 		Connection connection = null;
@@ -547,74 +440,75 @@ public class StockMgrImpl implements StockMgr {
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("delete from user_stock_watch where user_id=? and stock_id=? ");
+			ps = connection.prepareStatement("delete from user_stock_watch where user_id=? and stock_id=? ");
 
 			ps.setLong(1, userid);
 
 			ps.setLong(2, stockid);
 			ps.executeUpdate();
-			
+
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
-			dbMgr.closeResources(connection, ps, rs);			
+			dbMgr.closeResources(connection, ps, rs);
 		}
 	}
 
-	@Override
-	public void updateTwitterTrends() {
-		Connection connection = null;
-		PreparedStatement ps = null;
-		
-		
-		ResultSet rs = null;
-		
-
-		Twitter twitter = new TwitterFactory().getInstance();
+	
+	private ArrayList<Long> getTwitterTrendsAndSaveAsStock(){
 		
 		ArrayList<Long> idList = new ArrayList<Long>();
-		try {
-			Trends ts = twitter.getLocationTrends(1);
-			
-			Trend[] trends = ts.getTrends();
-			
-			
-			if(trends!=null){
-				
-				for(Trend trend: trends){
+
+		ArrayList<Trend> trends = getTwitterProxy().getTrends();
+
+		if (trends != null) {
+
+			for (Trend trend : trends) {
+
+				String name = trend.getName();
+
+				Stock stock = getStockById(getTwitterProxy().searchAndGetFirstResult(name));
+
+				if (stock != null) {
+					idList.add(stock.getId());
+				}
+				else{
+					logger.info("Twitter trend is not related to any twitter user. Trend: " + name);
 					
-					String name =trend.getQuery();
-					
-					
-					Stock stock = searchStockThroughTwitter(name);
-					
-					if(stock!=null){
-						idList.add(stock.getId());				
-					}
 				}
 			}
-			
-		} catch (TwitterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+		return idList;
+	}
+	
+	@Override
+	public void updateTwitterTrends() {
+	
+		
+		//stock id list
+		ArrayList<Long> idList = getTwitterTrendsAndSaveAsStock();
 
 		if (idList.size() > 0) {
+			
+			Connection connection = null;
+			PreparedStatement ps = null;
+
+			ResultSet rs = null;
+			
 			String idListStr = DBMgrImpl.getIdListAsCommaSeparatedString(idList);
 			try {
 				connection = dbMgr.getConnection();
-				ps = connection.prepareStatement("insert into twitter_trends (stock_id)  values " + idListStr +" on duplicate key update lastUpdate = now() " );
+				ps = connection.prepareStatement("insert into twitter_trends (stock_id)  values " + idListStr + " on duplicate key update lastUpdate = now() ");
 				ps.executeUpdate();
 
-				ps = connection.prepareStatement("delete from twitter_trends where TIMESTAMPDIFF(minute, lastUpdate, now()) > ? " );
+				ps = connection.prepareStatement("delete from twitter_trends where TIMESTAMPDIFF(minute, lastUpdate, now()) > ? ");
 				ps.setInt(1, TWITTER_TRENDS_CLEANUP_PERIOD);
 				ps.executeUpdate();
-				
+
 				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 			} catch (SQLException ex) {
-				logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex );
+				logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 			} finally {
 				dbMgr.closeResources(connection, ps, rs);
 			}
