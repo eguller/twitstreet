@@ -46,7 +46,7 @@ List<TransactionRecord> transactionRecordList = transactionMgr.queryTransactionR
 								out.write("You <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#stock-"+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
 							}
 							else{
-								out.write("You<a href='#stock-"+transactionRecord.getStockId()+"'  <a href='#stock-"+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
+								out.write("You <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#stock-"+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
 							}
 						}
 						%>
