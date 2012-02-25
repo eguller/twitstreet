@@ -183,7 +183,7 @@ var responseNeeded ="";
 	ajaxLoad("a/sell",  "stock=" + stock+ "&amount=" + amount + responseNeeded, containerDiv, containerDiv,false,buySellCallback,stock);
 }
 
-function buySellCallback(stock){
+function buySellCallback(params){
 
 	if(stock==stockOnScreen){
 		showBuySell();

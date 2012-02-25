@@ -110,7 +110,7 @@
 								</td>
 								<td>								
 									<div style="width:170px">
-										<a href='javascript:void(0)' onclick='loadStock(<%=stock.getStockId()%>)' title="<%=stock.getStockName()%>&#39;s stock detail page">
+										<a href='#stock-<%=stock.getStockId()%>' title="<%=stock.getStockName()%>&#39;s stock detail page">
 												<%=stock.getStockName()%>
 										</a> (<%=Util.getShareString(stock.getPercentage())%>)
 										

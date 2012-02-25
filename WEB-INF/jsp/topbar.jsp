@@ -31,7 +31,7 @@
 				<tr>
 					<td rowspan="2"><img class="twuser"
 						src="<%=user.getPictureUrl()%>" /></td>
-					<td><span id="username"><a href="javascript:void(0)" onclick="loadUserProfile(<%=user.getId()%>)"
+					<td><span id="username"><a href="#user-<%=user.getId()%>"
 						title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a></span></td>
 				</tr>
 				<tr>

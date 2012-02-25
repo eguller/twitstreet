@@ -19,7 +19,7 @@
 				<td>
 					<div class="h3-right-top">
 						<div class="stocks-tab-right-content" style="display:none; text-align:right;float:right; text-size:20px; height:20px">		
-							<a id="trendy-stocks-id" href="javascript:void(0)" onclick="loadTrendyStocks()" >
+							<a id="trendy-stocks-id" href="#trendystocks" >
 										Trendy Stocks 
 							</a>
 						</div>

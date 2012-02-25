@@ -33,17 +33,17 @@ User user = (User)request.getAttribute(User.USER);
 						
 						if(transactionRecord.getOperation() == TransactionRecord.BUY){  
 							if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-								out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+								out.write("<a href=\"#user-"+transactionRecord.getUserId()+"\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#stock-"+transactionRecord.getStockId()+"' title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 							}
 							else{
-								out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+								out.write("<a href=\"#user-"+transactionRecord.getUserId()+"\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#stock-"+transactionRecord.getStockId()+"' title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 							}
 						}
 						else{
 							if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-								out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+								out.write("<a href=\"#user-"+transactionRecord.getUserId()+"\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#stock-"+transactionRecord.getStockId()+"' title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 							}else{
-								out.write("<a href=\"javascript:void(0)\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\" onclick=\"loadUserProfile("+ transactionRecord.getUserId()+");\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='"+"javascript:void(0)"+"' onclick=loadStock("+transactionRecord.getStockId()+") title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
+								out.write("<a href=\"#user-"+transactionRecord.getUserId()+"\" title=\""+transactionRecord.getUserName()+"&#39;s profile page.\">"+transactionRecord.getUserName()+"</a> <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#stock-"+transactionRecord.getStockId()+"' title=\"Goes to "+transactionRecord.getStockName()+"'s stock details page.\">"+ transactionRecord.getStockName() +"</a>");
 							}
 						}
 						%>

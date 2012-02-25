@@ -51,7 +51,8 @@
 		<div>
 			<input type="text" class="textbox" id="getUserTextboxId" value="<%=getUserText%>"
 				name="getUserText" /> <input type="button" id="getUserButtonId"
-				onclick="getUser($('#getUserTextboxId').val())" value="Search">
+				onclick="window.location = '#searchuser-'+$('#getUserTextboxId').val()" value="Search">
+			
 		</div>
 		<input type="hidden" id="getUserTextHiddenId" value="<%=getUserText%>" /> 
 		<input type="hidden" id="getUserIdHiddenId"

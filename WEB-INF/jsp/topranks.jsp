@@ -111,8 +111,7 @@ if (userCount > maxRank) {
 					
 					<td class="rank-number"><%=user.getRank()%>.</td>
 					<td><img class="twuser" src="<%=user.getPictureUrl()%>" /></td>
-					<td><a href="javascript:void(0)" onclick="loadUserProfile(<%=user.getId()%>)"
-						title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
+					<td><a href="#user-<%=user.getId()%>" title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
 						<br> <%=Util.getNumberFormatted(total, true, true, false, false, false, false)%> <%
 									String className = null; 
 									String profitPerHour = Util.getRoundedProfitPerHourString(user.getProfit());

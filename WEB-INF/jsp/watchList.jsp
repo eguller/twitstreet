@@ -53,9 +53,7 @@
 
 								<div style="float: left">
 
-									<a href='javascript:void(0)'
-										onclick='loadStock(<%=stock.getId()%>)'
-										title="Loads <%=stock.getName()%>'s stock details"><%=stock.getName()%>
+									<a href='#stock-<%=stock.getId()%>' title="Loads <%=stock.getName()%>'s stock details"><%=stock.getName()%>
 									</a>
 									<% if(stock != null && stock.isVerified()){ %>
 										<img src="images/verified.png" title="This twitter account is verified"/>

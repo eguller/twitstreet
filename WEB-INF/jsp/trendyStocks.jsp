@@ -82,8 +82,7 @@
 								<table class="datatbl2">
 									<tr>									
 										<td>	
-											<a href="javascript:void(0)" onclick="loadStock(<%=stock.getId()%>)"
-																title="Loads <%=stock.getName()%>'s stock details">
+											<a href="#stock-<%=stock.getId()%>"  title="Loads <%=stock.getName()%>'s stock details">
 											<%=stock.getName()%>
 											</a> 
 											<% if(stock.isVerified()){ %>

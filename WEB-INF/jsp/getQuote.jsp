@@ -53,7 +53,7 @@
 		<div>
 			<input type="text" class="textbox" id="getQuoteTextboxId" value="<%=quote%>"
 				name="quote" /> <input type="button" id="getQuoteButton"
-				onclick="getQuote($('#getQuoteTextboxId').val())" value="Search">
+				onclick="window.location = '#searchstock-'+$('#getQuoteTextboxId').val()" value="Search">
 		</div>
 	
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input

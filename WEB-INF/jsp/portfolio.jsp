@@ -51,8 +51,7 @@
 	
 									<div style="float: left">
 	
-										<a href='javascript:void(0)'
-											onclick='loadStock(<%=stock.getStockId()%>)'
+										<a href='#stock-<%=stock.getStockId()%>' 
 											title="Loads <%=stock.getStockName()%>'s stock details"><%=stock.getStockName()%>
 										</a>
 										<% if(stock != null && stock.isVerified()){ %>
