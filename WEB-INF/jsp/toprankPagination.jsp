@@ -25,7 +25,7 @@
 	}
 %>
 
-<div class="h3" style="width: 100%" align="right">
+<div class="h3" style="width: 100%; padding-right:5px" align="right">
 
 	<%if(currPage!=1){%><span class="paginationLink"><a href="javascript:void(0)" onclick="toprankPrevPage()">Prev</a></span>
 	<%}else{%><span class="paginationDisabledLink">Prev</span><%}%>
