@@ -19,6 +19,7 @@ import com.twitstreet.db.base.DBMgrImpl;
 import com.twitstreet.db.data.Group;
 import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
+import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.util.Util;
 
 public class UserMgrImpl implements UserMgr {
@@ -393,15 +394,11 @@ public class UserMgrImpl implements UserMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement("insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank) " +
-											" select user_id, cash, portfolio,  lastUpdate, rank from ranking ");
-		
+											" select user_id, cash, portfolio,  lastUpdate, rank from ranking");
+	
 			ps.executeUpdate();
 				
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		}catch(MySQLIntegrityConstraintViolationException ex){
-			
-			logger.debug(DBConstants.RECORD_ALREADY_EXISTS + ps.toString());
-			
 		}
 		catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);

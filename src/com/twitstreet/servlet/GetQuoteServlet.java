@@ -81,7 +81,7 @@ public class GetQuoteServlet extends TwitStreetServlet {
 
 		end = System.currentTimeMillis();
 
-		logger.info("Init time: " + (end - start));
+		//logger.info("Init time: " + (end - start));
 
 		loadUser(request);
 		// loadUserFromCookie(request);
@@ -89,12 +89,20 @@ public class GetQuoteServlet extends TwitStreetServlet {
 		start = System.currentTimeMillis();
 		queryStockById(request, response);
 		end = System.currentTimeMillis();
-		logger.info("queryStockById: " + (end - start));
+		logger.debug("queryStockById: " + (end - start));
 
-		start = System.currentTimeMillis();
 		queryStockByQuote(request, response);
 		end = System.currentTimeMillis();
-		logger.info("queryStockByQuote: " + (end - start));
+		
+		long seconds =  (end - start)/1000;
+		
+		if(seconds>2){
+			logger.info("queryStockByQuote: " +(end - start)+" milliseconds");
+			
+		}else{
+
+			logger.debug("queryStockByQuote: " +(end - start)+" milliseconds");
+		}
 
 		if (request.getAttribute(User.USER) != null) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/dashboard.jsp").forward(request, response);

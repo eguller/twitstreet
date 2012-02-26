@@ -29,7 +29,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script src="/js/userProfileTabs.js"></script>
 <script src="/js/charts.js"></script>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 	$(function(){
 	  
 	  // Bind an event to window.onhashchange that, when the hash changes, gets the

@@ -471,11 +471,12 @@ public class StockMgrImpl implements StockMgr {
 			for (Trend trend : trends) {
 
 				String name = trend.getName();
-
+				logger.info("Twitter trend: " + name);
 				Stock stock = getStockById(getTwitterProxy().searchAndGetFirstResult(name));
 
 				if (stock != null) {
 					idList.add(stock.getId());
+					logger.info("Stock: "+stock.getName());
 				}
 				else{
 					logger.info("Twitter trend is not related to any twitter user. Trend: " + name);

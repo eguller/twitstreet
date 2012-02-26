@@ -76,12 +76,8 @@ public class GetUserServlet extends TwitStreetServlet {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp").forward(request, response);
 			return;
 		}
-		end = System.currentTimeMillis();
-
-		logger.info("Init time: " + (end - start));
-
-		start = System.currentTimeMillis();
-
+		
+	
 		loadUser(request);
 		// loadUserFromCookie(request);
 
@@ -92,8 +88,19 @@ public class GetUserServlet extends TwitStreetServlet {
 		searchResultUsers.removeAll(Collections.singleton(null));
 
 		end = System.currentTimeMillis();
-		logger.info("queryStockByQuote: " + (end - start));
 
+
+		long seconds =  (end - start)/1000;
+		
+		if(seconds>2){
+			logger.info("queryUser: " +(end - start)+" milliseconds");
+			
+		}else{
+
+			logger.debug("queryUser: " +(end - start)+" milliseconds");
+		}
+
+		
 		User user = null;
 		if (searchResultUsers.size() > 0) {
 			user = searchResultUsers.remove(0);

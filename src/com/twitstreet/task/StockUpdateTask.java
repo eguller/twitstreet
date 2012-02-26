@@ -38,25 +38,37 @@ public class StockUpdateTask implements Runnable {
 
 			try {
 				
-				logger.debug("Twitter trends update - begin.");
+				logger.info("Twitter trends update - begin.");
 				stockMgr.updateTwitterTrends();
-				logger.debug("Twitter trends update - end.");
+				logger.info("Twitter trends update - end.");
 
-				logger.debug("Stock list update - begin.");
-				updateStocks();
-				logger.debug("Stock list update - end.");
+				logger.info("Stock list update - begin.");
+				List<Stock> stockList = updateStocks();
+				String users = "";
+				if (stockList != null) {
+					users ="Updated "+stockList.size()+ " users. \n";
+					for (Stock stock : stockList) {
 
-				logger.debug("Reset speed of stocks - begin.");
+						users = users + stock.getName() + "\n";
+
+					}
+				}else{
+					users = "No stock found to update";
+					
+				}
+				logger.info("Stock list update - end. "+users);
+
+				logger.info("Reset speed of stocks - begin.");
 				stockMgr.resetSpeedOfOldStocks();
-				logger.debug("Reset speed of stocks - end.");
+				logger.info("Reset speed of stocks - end.");
 
-				logger.debug("Re-rank begin.");
+				logger.info("Re-rank begin.");
 				userMgr.rerank();
-				logger.debug("Re-rank end.");
+				logger.info("Re-rank end.");
 
-				logger.debug("Rank history update - begin.");
+				logger.info("Rank history update - begin.");
 				userMgr.updateRankingHistory();
-				logger.debug("Rank history update - end.");
+				logger.info("Rank history update - end.");
 
 			} catch (Throwable ex) {
 				logger.error("Someone tried to kill our precious. He says: ", ex);
@@ -64,9 +76,9 @@ public class StockUpdateTask implements Runnable {
 			long endTime = System.currentTimeMillis();
 			long diff = endTime - startTime;
 
-			if (diff < LAST_UPDATE_DIFF_MILISECONDS) {
+			if (diff < LAST_UPDATE_DIFF_MILISECONDS/2) {
 				try {
-					Thread.sleep(LAST_UPDATE_DIFF_MILISECONDS - diff);
+					Thread.sleep(LAST_UPDATE_DIFF_MILISECONDS/2 - diff);
 				} catch (InterruptedException e) {
 
 					e.printStackTrace();
@@ -75,7 +87,7 @@ public class StockUpdateTask implements Runnable {
 		}
 	}
 
-	public void updateStocks() {
+	public List<Stock> updateStocks() {
 
 		List<Stock> stockList = stockMgr.getUpdateRequiredStocks();
 
@@ -83,7 +95,7 @@ public class StockUpdateTask implements Runnable {
 
 			stockMgr.updateStockData(stock.getId());
 		}
-
+		return stockList;
 	}
 
 }
