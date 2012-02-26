@@ -360,7 +360,10 @@ public class StockMgrImpl implements StockMgr {
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_STOCK + " where changePerHour is not null and stock_sold(id)< " + TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD + " and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +
+			ps = connection.prepareStatement(SELECT_FROM_STOCK + " where changePerHour is not null " +
+												" and stock_sold(id)< " + TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD + " " +
+												" and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +
+												" and (TIMESTAMPDIFF(minute, lastUpdate, now())  < ?) "  +
 			// " 	and " +
 			// "	(" +
 			// "	id in (select distinct stock from portfolio) or " +
@@ -369,7 +372,8 @@ public class StockMgrImpl implements StockMgr {
 			// "	) " +
 			"	order by (changePerHour/total) desc limit ?;");
 
-			ps.setInt(1, MAX_TRENDS);
+			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
+			ps.setInt(2, MAX_TRENDS);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				Stock stockDO = new Stock();
