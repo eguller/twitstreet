@@ -42,6 +42,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 		twitter.setOAuthConsumer(configMgr.getConsumerKey(),
 				configMgr.getConsumerSecret());
 		AccessToken accessToken = new AccessToken(ouathToken, oauthTokenSecret);
+		
 		twitter.setOAuthAccessToken(accessToken);
 		this.setTwitter(twitter);
 	}
@@ -200,7 +201,12 @@ public class TwitterProxyImpl implements TwitterProxy {
 		}else if (e.getStatusCode() == RATE_LIMIT_EXCEEDED) {
 			logger.error("Twitter: Rate limit exceeded.");
 		}else if (e.getStatusCode() == UNAUTHORIZED) {
-			logger.error("Twitter: Authentication credentials were missing or incorrect. Twitter Proxy: "+twitter.toString());
+			try {
+				logger.error("Twitter: Authentication credentials were missing or incorrect. Twitter proxy user: "+twitter.getOAuthAccessToken().getScreenName());
+			} catch (TwitterException e1) {
+
+				logger.error("Twitter: Unhandled twitter exception in 401-unauthorized error handling.",e);
+			}
 		}
 		else{
 			logger.error("Twitter: Unhandled twitter exception.",e);
