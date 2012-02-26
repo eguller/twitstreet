@@ -73,8 +73,7 @@
 											<td><img class="twuser"
 												src="<%=searchResults.get(i).getPictureUrl()%>" />
 											</td>
-											<td><a href="javascript:void(0)" onclick="getQuote('<%=searchResults.get(i).getUserName()%>')"
-												title="Loads <%=searchResults.get(i).getUserName()%>'s stock details">
+											<td><a href="#user-<%=searchResults.get(i).getId()%>" title="Loads <%=searchResults.get(i).getUserName()%>'s stock details">
 													<%
 														out.write(searchResults.get(i).getUserName());
 													%> </a> 
