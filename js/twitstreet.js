@@ -286,3 +286,9 @@ function getCookie(c_name) {
 }
 
 
+function isLocationEqualTo(url){
+	
+	
+	return window.location.hash==url;
+	
+}
