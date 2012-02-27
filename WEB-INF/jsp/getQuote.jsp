@@ -57,7 +57,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<div>
 			<input type="text" class="textbox" id="getQuoteTextboxId" value="<%=quote%>"
 				name="quote" /> <input type="button" id="getQuoteButton"
-				onclick="window.location = '#searchstock-'+$('#getQuoteTextboxId').val()" value="<%=lutil.get("shared.search", lang) %>">
+				onclick="window.location = '#searchstock-'+$('#getQuoteTextboxId').val(); reloadIfHashIs('#searchstock-'+$('#getQuoteTextboxId').val())"  value="<%=lutil.get("shared.search", lang) %>">
 		</div>
 	
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input

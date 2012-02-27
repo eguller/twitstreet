@@ -15,6 +15,7 @@
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.TwitStreetServlet"%>
 <%@ page import="java.util.*"%>
+<%@page import="com.twitstreet.util.GUIUtil"%>
 
 
 <%
@@ -61,7 +62,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 									<a href='#stock-<%=stock.getId()%>'  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("stock.details.tip", lang,stock.getName())%>"><%=stock.getName()%>
 									</a>
 									<% if(stock != null && stock.isVerified()){ %>
-										<img src="images/verified.png" title="This twitter account is verified"/>
+										<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
 									<% } %>
 								</div>
 							</td>

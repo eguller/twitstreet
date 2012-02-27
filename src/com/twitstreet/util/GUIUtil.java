@@ -8,7 +8,8 @@ import com.twitstreet.localization.LocalizationUtil;
 public class GUIUtil {
 
 	private static GUIUtil instance = new GUIUtil();
-
+	private LocalizationUtil lutil = LocalizationUtil.getInstance();
+	
 	private GUIUtil() {
 
 	}
@@ -34,5 +35,11 @@ public class GUIUtil {
 	 
 	
 		
+	}
+	
+	public String getVerifiedIcon(String lang){
+		
+		
+		return "<img src='images/verified.png' title='"+lutil.get("stock.verified", lang)+"'/>";
 	}
 }

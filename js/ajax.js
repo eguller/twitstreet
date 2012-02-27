@@ -104,19 +104,20 @@ function performOperation(command){
 	    	var searchString = command.split('-')[1];
 	    	getUser(searchString);
 	    }
-	    else if(itemType== 'lang'){
-
-	    	 var lang = command.split('-')[1];
-	    	ajaxLoad("/", 'lang='+lang, null, null, false, reloadPage, null, true);
-	    	
-	    	
-	    }
-	
+//	    else if(itemType== 'lang'){
+//
+//	    	 var lang = command.split('-')[1];
+//	    	  
+//	    	 
+//	    	
+//	    	
+//	    	
+//	    }
+//	
 	
 }
 function loadLanguage(lang){
-	
-	ajaxLoad("/", 'lang='+lang, null, null, false, reloadPage, null, true);
+	ajaxLoad("/lang", 'lang='+lang, null, "body", false, reloadPage);
 	
 }
 function reloadPage(){
@@ -129,5 +130,19 @@ function reloadIfHashIsMyHref(element){
 	
 	if(isLocationEqualTo($(element).attr('href'))) performLastOperation();
 	
+	
+}
+
+function reloadIfHashIs(hash){
+	
+	if(isLocationEqualTo(hash)) performLastOperation();
+	
+	
+}
+
+function isLocationEqualTo(url){
+	
+	
+	return window.location.hash==url;
 	
 }

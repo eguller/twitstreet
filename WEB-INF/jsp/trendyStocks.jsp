@@ -41,6 +41,7 @@
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
+<%@page import="com.twitstreet.util.GUIUtil"%>
 	<%
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
@@ -85,11 +86,11 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 								<table class="datatbl2">
 									<tr>									
 										<td>	
-											<a href="#stock-<%=stock.getId()%>"  onclick="reloadIfHashIsMyHref(this)"  title="Loads <%=stock.getName()%>'s stock details">
+											<a href="#stock-<%=stock.getId()%>"  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("stock.details.tip", lang, stock.getName())%>">
 											<%=stock.getName()%>
 											</a> 
 											<% if(stock.isVerified()){ %>
-											<img src="images/verified.png" title="This twitter account is verified"/>
+												<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
 											<% } %>
 											
 											<div id="trendy-stocks-watch-item-div-<%=stock.getId() %>" style="display:none; float:right; ">

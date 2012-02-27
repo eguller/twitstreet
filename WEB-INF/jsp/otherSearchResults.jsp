@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.util.GUIUtil"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
@@ -79,7 +80,7 @@
 											out.write(searchResults.get(i).getScreenName());
 										%> </a> 
 										<% if(searchResults.get(i).isVerified()){ %>
-											<img src="images/verified.png" title="This twitter account is verified"/>
+											<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
 											<% } %>
 										<br>
 										<%

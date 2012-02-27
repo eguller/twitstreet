@@ -21,6 +21,7 @@
 <%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
+<%@page import="com.twitstreet.util.GUIUtil"%>
 <%
 
 LocalizationUtil lutil = LocalizationUtil.getInstance();
@@ -74,7 +75,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 							title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page"
 							target="_blank"><%=stock == null ? "" : stock.getName()%></a>
 							<% if(stock != null && stock.isVerified()){ %>
-								<img src="images/verified.png" title="This twitter account is verified"/>
+								<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
 							<% } %>
 					</h3>
 				</td>

@@ -11,7 +11,7 @@
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 <%@ page import="com.twitstreet.servlet.TwitStreetServlet"%>
-
+<%@page import="com.twitstreet.util.GUIUtil"%>
 
 <%
 	Injector inj = (Injector) pageContext.getServletContext()
@@ -58,7 +58,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 												title="<%=lutil.get("stock.details.tip", lang,stock.getStockName())%>"><%=stock.getStockName()%>
 											</a>
 											<% if(stock != null && stock.isVerified()){ %>
-												<img src="images/verified.png" title="This twitter account is verified"/>
+												<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
 											<% } %>
 										</div>
 										<div style="float: left"

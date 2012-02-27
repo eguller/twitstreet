@@ -83,7 +83,7 @@ function removeFromWatchListCallback(stockid){
 
 function getQuote(quote) {
 	if (quote.length > 0) {
-		ajaxLoad("/getquote", "quote=" + quote, "#stocks-container","#stocks-container");
+		ajaxLoad("/getquote", "quote=" + quote, "#stocks-container",'#column_center');
 		showTabMain('.stocks-tab','#stocks-container');
 	}	
 }
@@ -284,9 +284,3 @@ function getCookie(c_name) {
 }
 
 
-function isLocationEqualTo(url){
-	
-	
-	return window.location.hash==url;
-	
-}

@@ -115,7 +115,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 								</td>
 								<td>								
 									<div style="width:170px">
-										<a href='#stock-<%=stock.getStockId()%>'  onclick="reloadIfHashIsMyHref(this)"  title="<%=stock.getStockName()%>&#39;s stock detail page">
+										<a href='#stock-<%=stock.getStockId()%>'  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("stock.details.tip", lang, stock.getStockName())%>">
 												<%=stock.getStockName()%>
 										</a> (<%=Util.getShareString(stock.getPercentage())%>)
 										
