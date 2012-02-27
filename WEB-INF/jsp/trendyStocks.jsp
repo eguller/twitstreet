@@ -40,12 +40,15 @@
 <%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 	<%
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	User user = (User) request.getAttribute(User.USER);
 	ArrayList<Stock> trendResults = stockMgr.getTrendyStocks();
-	
+
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 	%>
 <div id="trendy-stocks">
 			
@@ -56,7 +59,7 @@
 		
 	%>
 	
-	<h3>Trendy Stocks</h3>
+	<h3><%=lutil.get("trendystocks.header", lang) %></h3>
 	<table class="datatbl" style="margin-top: 10px;">
 		
 		<%
@@ -82,7 +85,7 @@
 								<table class="datatbl2">
 									<tr>									
 										<td>	
-											<a href="#stock-<%=stock.getId()%>"  title="Loads <%=stock.getName()%>'s stock details">
+											<a href="#stock-<%=stock.getId()%>"  onclick="reloadIfHashIsMyHref(this)"  title="Loads <%=stock.getName()%>'s stock details">
 											<%=stock.getName()%>
 											</a> 
 											<% if(stock.isVerified()){ %>
@@ -96,11 +99,11 @@
 												boolean beingWatched = watchList.contains(stock);
 												 %>
 												<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
-													<%=Util.getWatchListIcon(true,15)%>
+													<%=Util.getWatchListIcon(true,15,lutil.get("watchlist.add", lang))%>
 													
 												</a>	
 												<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
-													<%=Util.getWatchListIcon(false,15)%>
+													<%=Util.getWatchListIcon(false,15,lutil.get("watchlist.remove", lang))%>
 													
 												</a>	
 											</div>

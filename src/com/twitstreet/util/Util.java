@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 
 import com.google.inject.Inject;
+import com.twitstreet.localization.LocalizationUtil;
 import com.twitstreet.session.UserMgr;
 
 public class Util {
@@ -403,7 +404,7 @@ public static String getPercentageFormatted(double percentage, boolean rounded,b
 		return percentageStr;
 	}
 
-	public static String getWatchListIcon(boolean add, int height){
+	public static String getWatchListIcon(boolean add, int height,String title){
 		String imgElement = "";
 		
 		String styleString = "";
@@ -415,14 +416,16 @@ public static String getPercentageFormatted(double percentage, boolean rounded,b
 		}
 		if(add){
 			
-			imgElement = "<img "+styleString+" alt='Add to your watch list' title='Add to your watch list' src='images/eyeGreen.png'>";
+			imgElement = "<img "+styleString+" alt='"+title+"' title='"+title+"' src='images/eyeGreen.png'>";
 		}else{
 			
-			imgElement = "<img "+styleString+" alt='Remove from your watch list' title='Remove from your watch list' src='images/eyeRed.png'>";
+			imgElement = "<img "+styleString+" alt='"+title+"' title='"+title+"' src='images/eyeRed.png'>";
 			
 		}
 		
 		return imgElement;
 	}
+	
+	
 
 }

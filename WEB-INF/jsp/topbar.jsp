@@ -1,5 +1,8 @@
 <%@ page import="com.twitstreet.db.data.User"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 <%
+LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 	User user = (User) request.getAttribute(User.USER);
 %>
 <div id="topbar">
@@ -7,6 +10,9 @@
 	
 	<div id="top_left_div">
 		<a id="home" href="/">TwitStreet</a>
+		<br>
+		<a href="javascript:void(0)"  onclick="loadLanguage('en')" >English</a>
+		<a href="javascript:void(0)" onclick="loadLanguage('tr')" >Türkçe</a>
 	</div>
 
 
@@ -32,10 +38,10 @@
 					<td rowspan="2"><img class="twuser"
 						src="<%=user.getPictureUrl()%>" /></td>
 					<td><span id="username"><a href="#user-<%=user.getId()%>"
-						title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a></span></td>
+						 onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("user.details.tip", lang, user.getUserName()) %>"> <%=user.getUserName()%></a></span></td>
 				</tr>
 				<tr>
-					<td><a onclick="signout();" href="javascript:void(0)">Sign out >></a></td>
+					<td><a onclick="signout();" href="javascript:void(0)"><%=lutil.get("signout", lang)%> &gt;&gt;</a></td>
 				</tr>
 			</table>
 		</div>

@@ -91,7 +91,7 @@ function getQuote(quote) {
 function loadTrendyStocks() {
 	
 	
-	ajaxLoad("/trendystocks", null, "#stockdetails","#stockdetails");
+	ajaxLoad("/trendystocks", null, "#stocks-screen","#stocks-screen");
 
 }
 function getUser(user) {	
@@ -102,16 +102,14 @@ function getUser(user) {
 }
 
 
-var stockOnScreen = null;
+var stockOnScreen = "#hiddenStockDetailsStockId";
 
 
 function loadStock(id, reload) {
 
 	
 	ajaxLoad("stock", "stock=" + id, '#stocks-container', '#column_center');
-	
-	stockOnScreen = id;
-	
+		
 	showTabMain('.stocks-tab','#stocks-container');
 
 }
@@ -162,7 +160,7 @@ function buy(stock, amount) {
 	var responseNeeded ="";
 	
 	var containerDiv = '#buy-sell-container';
-	if(stock!=stockOnScreen){		
+	if(stock!=$(stockOnScreen).val()){		
 		responseNeeded = "&response=n";
 		containerDiv = '';
 	}
@@ -174,7 +172,7 @@ function sell(stock, amount) {
 var responseNeeded ="";
 	
 	var containerDiv = '#buy-sell-container';
-	if(stock!=stockOnScreen){		
+	if(stock!=$(stockOnScreen).val()){		
 		responseNeeded = "&response=n";
 		containerDiv = '';
 	}
@@ -185,7 +183,7 @@ var responseNeeded ="";
 
 function buySellCallback(stock){
 
-	if(stock==stockOnScreen){
+	if(stock==$(stockOnScreen).val()){
 		showBuySell();
 	}
 	loadPortfolio(false,true);

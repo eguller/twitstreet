@@ -70,50 +70,23 @@
 	<jsp:include page="getQuote.jsp" />
 
 
-	<jsp:include page="stockDetails.jsp" />
-
-
+<div id="stocks-screen">
+<%if(stock!=null){
 	
-
-	<div id="hasnofollowers">
-
-		<%
-			if (quote.length() > 0 && stock != null && stock.getTotal() == 0) {
-		%>
-		<div id="dashboard-message-field" style="margin-top: 6px;"
-			class="field-white">
-			<p style="margin-top: 10px; margin-bottom: 10px;">
-				<%
-					out.write(stock.getName() + " has 0 followers. Please try something else.");
-				%>
-			</p>
-		</div>
-		<%
-			}
-		%>
-	</div>
-
-
-	
-
-	<%
-		if (quote.length() > 0){
-			%>
-			<jsp:include page="otherSearchResults.jsp" />
-			
-			
-			<%
-			if(stock == null) {
-			%>	
-			
-				<div id="searchnoresult"><p>No results found.</p></div>
-		<%	}
-		%>
-
-			
-
-	<%
-		}
 	%>
+	
+	<jsp:include page="stockDetails.jsp" />
+<%	
+}else{
+%>
+<jsp:include page="trendyStocks.jsp" />
+
+<%
+
+}%>	
+</div>
+
+	
+
 
 </div>

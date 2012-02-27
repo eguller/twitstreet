@@ -20,8 +20,12 @@
 <%@ page import="java.text.DecimalFormat"%>
 <%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
-
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 <%
+
+LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	User user = (User) request.getAttribute(User.USER);
@@ -47,19 +51,21 @@
 
 	}
 
-	
+	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
+	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);
+
 %>
 
 	
 <div id="stockdetails" class="main-div">
 	
 	
-				
 	
 	<%
 		if (stock != null) {
 	%>
 	
+		<input id="hiddenStockDetailsStockId" type="hidden" value="<%=stock.getId() %>"/>
 		<table class="datatbl">
 			<tr>
 				<td>
@@ -80,11 +86,11 @@
 						boolean beingWatched = watchList.contains(stock);
 						 %>
 						<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
-							<%=Util.getWatchListIcon(true,20)%>
+							<%=Util.getWatchListIcon(true,20,lutil.get("watchlist.add", lang))%>
 							
 						</a>	
 						<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
-							<%=Util.getWatchListIcon(false,20)%>
+							<%=Util.getWatchListIcon(false,20,lutil.get("watchlist.remove", lang))%>
 							
 						</a>	
 					</div>
@@ -133,11 +139,11 @@
 				<td style="vertical-align: bottom; width:330px">
 					<div class="tabs">
 						<a id="buy-sell-tab" class="youarehere" onClick="showBuySell();">
-							Buy/Sell</a> <a id="stock-history-tab" onClick="showStockHistory();">
-							History</a> <a id="stock-distribution-tab"
+							<%=lutil.get("stockdetails.buysell", lang) %></a> <a id="stock-history-tab" onClick="showStockHistory();">
+							<%=lutil.get("stockdetails.history", lang) %></a> <a id="stock-distribution-tab"
 							onClick="showStockDistribution(<%=stock.getId()%>);">
-							Distribution </a> <a id="tweets-of-user-tab"
-							onClick="showTweetsOfUser();"> Tweets </a>
+							<%=lutil.get("stockdetails.distribution", lang) %> </a> <a id="tweets-of-user-tab"
+							onClick="showTweetsOfUser();"> <%=lutil.get("stockdetails.tweets", lang) %> </a>
 					</div>
 				</td>
 			</tr>
@@ -161,7 +167,46 @@
 		}
 	%>
 
+	<div id="hasnofollowers">
 
+		<%
+			if (quote.length() > 0 && stock != null && stock.getTotal() == 0) {
+		%>
+		<div id="dashboard-message-field" style="margin-top: 6px;"
+			class="field-white">
+			<p style="margin-top: 10px; margin-bottom: 10px;">
+				<%
+					out.write(stock.getName() + " has 0 followers. Please try something else.");
+				%>
+			</p>
+		</div>
+		<%
+			}
+		%>
+	</div>
+
+
+	
+
+	<%
+		if (quote.length() > 0){
+			%>
+			<jsp:include page="otherSearchResults.jsp" />
+			
+			
+			<%
+			if(stock == null) {
+			%>	
+			
+				<div id="searchnoresult"><p><%=lutil.get("shared.noresults", lang) %></p></div>
+		<%	}
+		%>
+
+			
+
+	<%
+		}
+	%>
 
 </div>
 

@@ -30,8 +30,7 @@ public class UserProfileServlet extends TwitStreetServlet {
 		//loadUserFromCookie(request);
 		User user = (User) request.getAttribute(User.USER);
 		
-		request.setAttribute("title", "User profile of " + user.getUserName());
-		request.setAttribute("meta-desc", "This page shows profile of "+user.getUserName()+". You can find details of "+user.getUserName()+" like rank, portfolio, cash and portfolio details.");
+if(user==null) return;
 		
 		if (request.getParameter(User.USER) != null) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);

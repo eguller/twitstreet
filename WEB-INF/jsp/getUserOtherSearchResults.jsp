@@ -41,7 +41,10 @@
 <%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 	<%
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
+	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 		String getUserText = request.getParameter(GetUserServlet.GET_USER_PARAM) == null ? "" : (String) request.getParameter(GetUserServlet.GET_USER_PARAM);
 		String getUserTextDisplay = request.getAttribute(GetUserServlet.GET_USER_DISPLAY) == null ? "" : (String) request.getParameter(GetUserServlet.GET_USER_DISPLAY);
 		
@@ -55,7 +58,7 @@
 				if (getUserText.length()>0 && searchResults != null && searchResults.size() > 0) {
 			%>
 			
-			<h3>Other Results for "<%=getUserText%>"</h3>
+			<h3><%=lutil.get("otherresults.header", lang,getUserText) %></h3>
 			<table class="datatbl" style="margin-top: 10px;">
 				
 				<%
@@ -73,7 +76,7 @@
 											<td><img class="twuser"
 												src="<%=searchResults.get(i).getPictureUrl()%>" />
 											</td>
-											<td><a href="#user-<%=searchResults.get(i).getId()%>" title="Loads <%=searchResults.get(i).getUserName()%>'s stock details">
+											<td><a href="#user-<%=searchResults.get(i).getId()%>" onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("user.details.tip", lang, searchResults.get(i).getUserName()) %>">
 													<%
 														out.write(searchResults.get(i).getUserName());
 													%> </a> 

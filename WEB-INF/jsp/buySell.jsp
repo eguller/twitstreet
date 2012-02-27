@@ -22,8 +22,12 @@
 <%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="com.twitstreet.servlet.TwitStreetServlet"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 
 <%
+LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	User user = (User) request.getAttribute(User.USER);
@@ -74,10 +78,10 @@
 									<table class="datatbl">
 										<tr>
 											<td style="width: <%=100 / col%>%; text-align: center;"><span
-												class="green-light"><b>Available</b> </span></td>
+												class="green-light"><b><%=lutil.get("stock.available", lang) %></b> </span></td>
 											<td style="width: <%=100 / col%>%; text-align: center;"><span
-												class="red-light"><b>Sold</b> </span></td>
-											<td style="width: <%=100 / col%>%; text-align: center;"><b>Total</b>
+												class="red-light"><b><%=lutil.get("stock.sold", lang) %></b> </span></td>
+											<td style="width: <%=100 / col%>%; text-align: center;"><b><%=lutil.get("stock.total", lang) %></b>
 											</td>
 											
 										</tr>
@@ -137,15 +141,15 @@
 							style="width: 100%; text-align: center; margin-top: 10px; margin-bottom: 10px; padding-top: 5px; padding-bottom: 5px;">
 							<span id="user-stock"> <%
  	if (userStock == null) {
- 		out.write("You don't have any " + stock.getName());
+ 		out.write(lutil.get("stock.youdonthave", lang,stock.getName()) +"<br>");
  	} else {
  		int amount = (int) (userStock.getPercent() * stock.getTotal());
  		String commaSep = Util.commaSep(amount);
- 		out.write("You have <b>" + commaSep + "</b> " + stock.getName());
+ 		out.write(lutil.get("stock.youhave", lang,new Object[]{commaSep, stock.getName()})+"<br>");
  	}
 
- 	if (user.getCash() < 1) {
- 		out.write("<br><br>You do not have enough cash to buy " + stock.getName());
+ 	if (user.getCash() < 1 && stock.getAvailable()>0) {
+ 		out.write(lutil.get("stock.notenoughcash", lang,stock.getName()));
  	}
  %> </span>
 						</p>
@@ -192,8 +196,14 @@
 							%>
 							<tr>
 								<td colspan="3" style="text-align: center; padding-top: 10px;">
-									<p style="margin-bottom: 10px;">Twitstreet gets 1%
-										commission on every sale!
+									<p style="margin-bottom: 10px;">
+									
+									
+									
+									<%=lutil.get("stockdetails.commission", lang) %>
+									
+									
+									
 									<p>
 								</td>
 							</tr>
@@ -205,7 +215,7 @@
 										out.write("<td>");
 										if (i < buyValues.size() && stock.getTotal() > configMgr.getMinFollower()) {
 											out.write("<button class=\"buy-button\" onclick=\"buy(" + stock.getId() + "," + buyValues.get(i) + ");\">");
-											out.write("Buy<br>");
+											out.write(lutil.get("stockdetails.buy", lang)+"<br>");
 											out.write(Util.commaSep(buyValues.get(i).intValue()));
 											out.write("</button>");
 										}
@@ -213,7 +223,7 @@
 										out.write("<td>");
 										if (i < sellValues.size()) {
 											out.write("<button class=\"sell-button\" onclick=\"sell(" + stock.getId() + "," + sellValues.get(i) + ");\">");
-											out.write("Sell<br>");
+											out.write(lutil.get("stockdetails.sell", lang)+"<br>");
 											out.write(Util.commaSep(sellValues.get(i).intValue()));
 											out.write("</button>");
 										}

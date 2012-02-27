@@ -15,9 +15,12 @@
 <%@page import="com.twitstreet.config.ConfigMgr"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 
-<%@page import="com.twitstreet.session.UserMgr"%>
-<%
+
+<%	LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 
@@ -51,7 +54,7 @@
 		<div>
 			<input type="text" class="textbox" id="getUserTextboxId" value="<%=getUserText%>"
 				name="getUserText" /> <input type="button" id="getUserButtonId"
-				onclick="window.location = '#searchuser-'+$('#getUserTextboxId').val()" value="Search">
+				onclick="window.location = '#searchuser-'+$('#getUserTextboxId').val()" value="<%=lutil.get("shared.search", lang) %>">
 			
 		</div>
 		<input type="hidden" id="getUserTextHiddenId" value="<%=getUserText%>" /> 

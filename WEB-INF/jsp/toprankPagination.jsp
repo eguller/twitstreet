@@ -27,8 +27,8 @@
 
 <div class="h3" style="width: 100%; padding-right:5px" align="right">
 
-	<%if(currPage!=1){%><span class="paginationLink"><a href="javascript:void(0)" onclick="toprankPrevPage()">Prev</a></span>
-	<%}else{%><span class="paginationDisabledLink">Prev</span><%}%>
+	<%if(currPage!=1){%><span class="paginationLink"><a href="javascript:void(0)" onclick="toprankPrevPage()">&lt;&lt;</a></span>
+	<%}else{%><span class="paginationDisabledLink">&lt;&lt;</span><%}%>
 	
 	
 	<select  class="topRankSelect" onchange="toprank($(this).val())">
@@ -46,8 +46,8 @@
 		}		
 		%>
 	</select>
-	<%if(currPage!=pageCount){%><span class="paginationLink"><a href="javascript:void(0)" onclick="toprankNextPage()">Next</a></span>
-	<%}else{%><span class="paginationDisabledLink">Next</span><%}%>
+	<%if(currPage!=pageCount){%><span class="paginationLink"><a href="javascript:void(0)" onclick="toprankNextPage()">&gt;&gt;</a></span>
+	<%}else{%><span class="paginationDisabledLink">&gt;&gt;</span><%}%>
 	
 </div>
 

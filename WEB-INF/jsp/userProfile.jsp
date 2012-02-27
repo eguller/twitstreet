@@ -9,8 +9,13 @@
 <%@ page import="com.twitstreet.util.Util"%>
 <%@ page import="com.twitstreet.market.PortfolioMgr"%>
 <%@ page import="com.twitstreet.db.data.Portfolio"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 
 <%
+
+LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
@@ -55,7 +60,7 @@
 	<%
 		} else if (getUserText.length() > 0) {
 	%>	
-			<div id="searchusernoresult"><p>No results found.</p></div>
+			<div id="searchusernoresult"><p><%=lutil.get("shared.noresults", lang) %></p></div>
 	<%
 		}
 	%>

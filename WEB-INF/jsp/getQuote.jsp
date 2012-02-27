@@ -15,12 +15,16 @@
 <%@page import="com.twitstreet.config.ConfigMgr"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
+	
 
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 	Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
 	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);
@@ -53,7 +57,7 @@
 		<div>
 			<input type="text" class="textbox" id="getQuoteTextboxId" value="<%=quote%>"
 				name="quote" /> <input type="button" id="getQuoteButton"
-				onclick="window.location = '#searchstock-'+$('#getQuoteTextboxId').val()" value="Search">
+				onclick="window.location = '#searchstock-'+$('#getQuoteTextboxId').val()" value="<%=lutil.get("shared.search", lang) %>">
 		</div>
 	
 		<input type="hidden" id="quote-hidden" value="<%=quote%>" /> <input

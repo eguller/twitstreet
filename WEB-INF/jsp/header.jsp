@@ -30,50 +30,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script src="/js/charts.js"></script>
 
 <script type="text/javascript">
-	$(function(){
-	  
-	  // Bind an event to window.onhashchange that, when the hash changes, gets the
-	  // hash and adds the class "selected" to any matching nav link.
-	  $(window).hashchange( function(){
-	    var hash = location.hash;
-	    
-	    // Set the page title based on the hash.
-	    var command =  hash.replace( /^#/, '' );
-	    
-	    var itemType = command.split('-')[0];
-	   
-	    
-	    if(itemType == 'stock'){
-	    	 var id = command.split('-')[1];
-	    	loadStock(id);
-	    	
-	    }else if(itemType == 'user'){
-	    	 var id = command.split('-')[1];
-	    	loadUserProfile(id);
-	    }
-		else if(itemType == 'trendystocks'){
-	    	
-	    	loadTrendyStocks();
-	    }else if(itemType == 'searchstock'){
-
-	    	var searchString = command.split('-')[1];
-	    	getQuote(searchString);
-	    }
-	    else if(itemType == 'searchuser'){
-
-	    	var searchString = command.split('-')[1];
-	    	getUser(searchString);
-	    }
-	    
-	    
-	 
-	  })
-	  
-	  // Since the event is only triggered when the hash changes, we need to trigger
-	  // the event now, to handle the hash the page may have loaded with.
-	  $(window).hashchange();
-	  
-	});
+	
 	google.load('visualization', '1.0', {'packages':['corechart']});
 	google.load('visualization', '1', {packages: ['annotatedtimeline']});
 </script>

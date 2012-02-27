@@ -1,4 +1,5 @@
 <%@page import="com.twitstreet.db.data.TransactionRecord"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 <%@page import="com.twitstreet.market.TransactionMgr"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
@@ -13,11 +14,13 @@ Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.
 User sessionUser = (User)request.getAttribute(User.USER);
 TransactionMgr transactionMgr = inj.getInstance(TransactionMgr.class);
 List<TransactionRecord> transactionRecordList = transactionMgr.queryTransactionRecord(sessionUser.getId());
+LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 
 %>
 
 	<div id="yourtransactions" class="main-div">
-		<h3>Your Transactions</h3>
+		<h3><%=lutil.get("yourtransactions.header",lang) %></h3>
 		<table class="datatbl" id="your-transactions-table">
 			<% 
 			int i = 0;
@@ -30,26 +33,27 @@ List<TransactionRecord> transactionRecordList = transactionMgr.queryTransactionR
 		    		<tr class="odd">
 		    	<% } %>
 					<td>
-						<% 
-							String requestUrl = request.getRequestURL().toString();
-							if(transactionRecord.getOperation() == TransactionRecord.BUY){  
+								<% 
+						String requestUrl = request.getRequestURL().toString();
+						String operation = "";
+						String spanClass = "";
+						if(transactionRecord.getOperation() == TransactionRecord.BUY){  
+							spanClass = "green";
+							operation = "&#9664;";											
 							
-							if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-								out.write("You <span class=\"green\">bought</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#stock-"+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
-							}
-							else{
-								out.write("You <span class=\"green\">bought</span> " + Util.commaSep( transactionRecord.getAmount()) + " <a href='#stock-"+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
-							}
 						}
 						else{
-							if(requestUrl != null && (requestUrl.endsWith("homeAuth.jsp") || requestUrl.endsWith("homeUnAuth.jsp"))){
-								out.write("You <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#stock-"+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
-							}
-							else{
-								out.write("You <span class=\"red\">sold</span> " + Util.commaSep(transactionRecord.getAmount()) + " <a href='#stock-"+transactionRecord.getStockId()+"' title=\""+transactionRecord.getStockName()+"&#39;s stock details page.\">"+transactionRecord.getStockName()+"</a>");
-							}
+							spanClass = "red";
+							operation = "&#9654;";	
 						}
 						%>
+
+						<span class="<%=spanClass%>"> <%=operation%></span>
+						<%=Util.commaSep(transactionRecord.getAmount())%>
+						<a href="#stock-<%=transactionRecord.getStockId()%>" title="<%=lutil.get("stock.details.tip", lang,transactionRecord.getStockName())%>">
+							<%= transactionRecord.getStockName()%>
+						</a>
+						
 					</td>
 				</tr>
 			<% } %>

@@ -1,3 +1,5 @@
+
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 <%@page import="com.twitstreet.db.data.StockInPortfolio"%>
 <%@page import="com.twitstreet.db.data.Stock"%>
 <%@page import="com.twitstreet.db.data.Portfolio"%>
@@ -8,6 +10,7 @@
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="com.twitstreet.util.GUIUtil"%>
 <%@ page import="com.twitstreet.util.Util"%>
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.TwitStreetServlet"%>
@@ -19,7 +22,9 @@
 			.getAttribute(Injector.class.getName());
 	User user = (User) request.getAttribute(User.USER);
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
-	
+
+LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 
 	 
 	
@@ -28,7 +33,7 @@
 
 %>
 <div id="user-watch-list" class="main-div">
-<h3>Watch List</h3>
+<h3><%=lutil.get("watchlist.header",lang) %></h3>
 <%
 				if (watchList!=null) {
 			%>
@@ -53,7 +58,7 @@
 
 								<div style="float: left">
 
-									<a href='#stock-<%=stock.getId()%>' title="Loads <%=stock.getName()%>'s stock details"><%=stock.getName()%>
+									<a href='#stock-<%=stock.getId()%>'  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("stock.details.tip", lang,stock.getName())%>"><%=stock.getName()%>
 									</a>
 									<% if(stock != null && stock.isVerified()){ %>
 										<img src="images/verified.png" title="This twitter account is verified"/>
@@ -62,7 +67,7 @@
 							</td>
 							<td align="right">
 								<div id="watch-item-<%=stock.getId()%>" style="display:none">
-									<a class="red-profit" href="javascript:void(0)" title="Remove from your watch list" onclick="removeFromWatchList(<%=stock.getId()%>)"> Remove</a>
+									<a class="red-profit" href="javascript:void(0)" title="<%=lutil.get("watchlist.remove", lang,stock.getName())%>" onclick="removeFromWatchList(<%=stock.getId()%>)"> <%=lutil.get("shared.remove", lang)%></a>
 								</div>
 							</td>
 
@@ -78,20 +83,10 @@
 								<%-- 								$<%=Util.commaSep(stock.getCapital())%> --%></td>
 							<td colspan="1" rowspan="1" align="right">
 								<% if(stock.isChangePerHourCalculated()){ %>
-									<%=(stock.getChangePerHour()!=0)? Util.getNumberFormatted(stock.getChangePerHour(), false, true, true, true, false, true):"&nbsp;" %>
-								
-									
-								<% } else{
-									Date date = new Date();
-									
-									int minuteLeft = 20 - (int)(date.getTime() - stock.getLastUpdate().getTime()) / (60 * 1000);
-									
-									minuteLeft=(minuteLeft<1)?1:minuteLeft;
-									String activityMessage = "Calculating the trend of the stock for the next hour.\nIt will be ready in "+minuteLeft+" minute"+((minuteLeft>1)?"s.":".");
+									<%=(stock.getChangePerHour()!=0)? Util.getNumberFormatted(stock.getChangePerHour(), false, true, true, true, false, true):"&nbsp;" %>																	
+								<% } else{									
 								%>
-								
-								
-									<img alt="<%=activityMessage %>" title="<%=activityMessage %>" src="/images/activity_indicator_16.gif"/>
+									<%=GUIUtil.getInstance().getSpeedCalculation(stock,lang) %>
 								<% }
 								%>
 							
@@ -103,17 +98,14 @@
 							<td colspan="1" rowspan="1"></td>
 							<td colspan="1" rowspan="1" align="right">
 								<% if(stock.isChangePerHourCalculated()){
-									
-									
-									
-									%>
+										%>
 									<%=Util.getPercentageFormatted((double) stock.getChangePerHour() / stock.getTotal(), false, true, true, true, false, true)  %>
-									<% }else{%>
-									
+								<% }else{%>
+								
 										&nbsp;
-									<% }
-									%>
-							
+								<% }
+								%>
+						
 								
 							</td>
 						</tr>
@@ -122,9 +114,9 @@
 			<%
 					}
 				} else {
-					out.write("<tr><td>" + Util.NO_RECORDS_FOUND_HTML
-							+ "</td></tr>");
-				}
+					%>
+					<tr><td align="center"><%=lutil.get("shared.empty", lang) %></td></tr>
+			<%	}
 			%>
 		</tbody>
 	</table>

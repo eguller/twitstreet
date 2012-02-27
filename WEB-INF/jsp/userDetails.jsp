@@ -11,8 +11,12 @@
 <%@ page import="com.twitstreet.market.PortfolioMgr"%>
 <%@ page import="com.twitstreet.db.data.Portfolio"%>
 <%@page import="java.util.ArrayList"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 
 <%
+LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+
 	Injector inj = (Injector) pageContext.getServletContext()
 			.getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
@@ -38,6 +42,7 @@
 		
 		portfolio = portfolioMgr.getUserPortfolio(user);
 	%>
+	<input id="hiddenUserDetailsUserId" type="hidden" value="<%=user.getId() %>"/>
 	<div id="user-profile-menu" class="subheader main-div" style="height:54px">
 
 		<table class="datatbl">
@@ -67,14 +72,14 @@
 				<td style="vertical-align: bottom;">
 					<div class="tabs">
 						<a id="user-status-tab" class="youarehere" onClick="showUserProfileTab('#user-status-tab','#userstatus');">
-							Portfolio</a> 
+							<%=lutil.get("userdetails.portfolio", lang) %></a> 
 					
 						<a id="user-ranking-history-tab"
 							onClick="showUserProfileTab('#user-ranking-history-tab','#user-trend-section');redrawUserRankingHistory();">
-							History </a> 
+							<%=lutil.get("userdetails.history", lang)%> </a> 
 						<a id="user-tweets-tab"
 							onClick="showUserProfileTab('#user-tweets-tab','#usertweets');">
-							Tweets </a> 
+							<%=lutil.get("userdetails.tweets", lang)%> </a> 
 			
 					</div>
 				</td>
@@ -88,7 +93,7 @@
 		
 		<div id="userPortfolio" class="main-div">
 			<h3>
-				Portfolio
+				<%=lutil.get("userdetails.portfolio", lang) %>
 			</h3>
 			<table class="datatbl">
 				<%
@@ -110,7 +115,7 @@
 								</td>
 								<td>								
 									<div style="width:170px">
-										<a href='#stock-<%=stock.getStockId()%>' title="<%=stock.getStockName()%>&#39;s stock detail page">
+										<a href='#stock-<%=stock.getStockId()%>'  onclick="reloadIfHashIsMyHref(this)"  title="<%=stock.getStockName()%>&#39;s stock detail page">
 												<%=stock.getStockName()%>
 										</a> (<%=Util.getShareString(stock.getPercentage())%>)
 										
@@ -121,11 +126,11 @@
 												boolean beingWatched = watchList.contains(stock);
 												 %>
 												<a class="add-to-watch-list-link-<%=stock.getStockId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getStockId()%>)">
-													<%=Util.getWatchListIcon(true,15)%>
+													<%=Util.getWatchListIcon(true,15,lutil.get("watchlist.add", lang))%>
 													
 												</a>	
 												<a class="remove-from-watch-list-link-<%=stock.getStockId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getStockId()%>)">
-													<%=Util.getWatchListIcon(false,15)%>
+													<%=Util.getWatchListIcon(false,15,lutil.get("watchlist.remove", lang))%>
 													
 												</a>	
 											</div>

@@ -5,8 +5,12 @@
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="com.twitstreet.util.Util"%>
-
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
+	
 <%
+LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 User sessionUser = (User)request.getAttribute(User.USER);
 UserMgr userMgr = inj.getInstance(UserMgr.class);
@@ -60,7 +64,7 @@ if (userCount > maxRank) {
 	<table class="datatbl">
 		<tr>
 			<td>
-				<h3>Ranking</h3>
+				<h3><%=lutil.get("ranking.header", lang) %></h3>
 			</td>
 			<td align="right">
 				<jsp:include page="toprankPagination.jsp">
@@ -111,7 +115,7 @@ if (userCount > maxRank) {
 					
 					<td class="rank-number"><%=user.getRank()%>.</td>
 					<td><img class="twuser" src="<%=user.getPictureUrl()%>" /></td>
-					<td><a href="#user-<%=user.getId()%>" title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
+					<td><a href="#user-<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=user.getUserName()%>&#39;s profile page."> <%=user.getUserName()%></a>
 						<br> <%=Util.getNumberFormatted(total, true, true, false, false, false, false)%> <%
 									String className = null; 
 									String profitPerHour = Util.getRoundedProfitPerHourString(user.getProfit());

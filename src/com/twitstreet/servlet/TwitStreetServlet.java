@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Inject;
 import com.twitstreet.db.data.User;
+import com.twitstreet.localization.LocalizationUtil;
 import com.twitstreet.session.UserMgr;
 
 public class TwitStreetServlet extends HttpServlet {
@@ -17,6 +18,7 @@ public class TwitStreetServlet extends HttpServlet {
 	UserMgr userMgr;
 
 	public void loadUser(HttpServletRequest request) {
+		getLanguage(request);
 		if (request.getAttribute(User.USER) != null) {
 			return;
 		}
@@ -32,6 +34,20 @@ public class TwitStreetServlet extends HttpServlet {
 		}
 	}
 
+	
+	public void getLanguage(HttpServletRequest request) {
+	String langParam = request.getParameter(LocalizationUtil.LANGUAGE) ;
+	
+		if (langParam!= null && langParam.length()>0){
+			
+			request.getSession().setAttribute(LocalizationUtil.LANGUAGE, langParam);
+		}
+			
+			
+		
+	}
+
+	
 	public void loadUserFromCookie(HttpServletRequest request) {
 
 		if (request.getAttribute(User.USER) != null) {
