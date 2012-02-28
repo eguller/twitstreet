@@ -72,7 +72,7 @@
 					<td>
 						<table>
 							<tr>
-								<td><img class="twuser"
+								<td><img class="twuser" width="48" height="48" 
 									src="<%=searchResults.get(i).getPictureUrl()%>" />
 								</td>
 								<td><a href="#stock-<%=searchResults.get(i).getId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("stock.details.tip", lang, searchResults.get(i).getScreenName()) %>">

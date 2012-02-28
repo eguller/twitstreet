@@ -49,7 +49,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						Stock stock = watchList.get(i);
 			%>
 			<tr  onmouseover="$('#watch-item-<%=stock.getId()%>').show()" onmouseout="$('#watch-item-<%=stock.getId()%>').hide()">
-				<td width="58px"><img class="twuser"
+				<td width="58px"><img class="twuser" width="48" height="48" 
 					src="<%=stock.getPictureUrl()%>" /></td>
 				<td>
 					<table class="portfolio-stock-tbl">

@@ -79,7 +79,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						<table>
 							<tr onmouseover="$('#trendy-stocks-watch-item-div-<%=stock.getId()%>').show()" onmouseout="$('#trendy-stocks-watch-item-div-<%=stock.getId()%>').hide()">
 								<td width="60">
-									<img class="twuser"
+									<img class="twuser" width="48" height="48" 
 									src="<%=stock.getPictureUrl()%>" />
 								</td>
 								<td width="150">
