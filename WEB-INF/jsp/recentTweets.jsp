@@ -1,14 +1,15 @@
 <div id="recent-tweets" style="margin-top: 5px;">
 <h3>
-@twitstreet_game
+Tweets about us
 </h3>
 	<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
 	<script>
 		new TWTR.Widget({
 			version : 2,
-			type : 'profile',
+			type : 'search',
+			search: 'twitstreet OR twitstreet_game OR #twitstreet OR from:twitstreet_game',
 			rpp : 5,
-			interval : 30000,
+			interval : 6000,
 			width : 260,
 			height : 300,
 			theme : {
@@ -23,11 +24,15 @@
 				}
 			},
 			features : {
-				scrollbar : false,
-				loop : false,
-				live : false,
+			    scrollbar: false,
+			    loop: true,
+			    live: true,
+			    hashtags: true,
+			    timestamp: true,
+			    avatars: true,
+			    toptweets: true,
 				behavior : 'all'
 			}
-		}).render().setUser('twitstreet_game').start();
+		}).render().start();
 	</script>
 </div>
