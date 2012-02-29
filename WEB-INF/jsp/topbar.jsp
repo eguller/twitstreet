@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.util.GUIUtil"%>
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 <%
@@ -9,10 +10,26 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 	
 	<div id="top_left_div">
-		<a id="home" href="/">TwitStreet</a>
-		<br>
-		<a href="javascript:void(0)"  onclick="loadLanguage('en')" >English</a>
-		<a href="javascript:void(0)" onclick="loadLanguage('tr')" >Türkçe</a>
+	
+		<div id="twitstreet-header-container" style="width:150px">
+			<div id="twitstreet-header"  style="float:left">
+				<a id="home" href="/">TwitStreet</a>
+			</div>
+			<div id="twitstreet-share-main" style="float:right">
+				<%=GUIUtil.getInstance().getTwitterShareButton("", "twitter.share.main",lang)%>
+			</div>
+		</div>
+	
+	<br>
+	<br>
+	
+		<div id="twitstreet-languages" >
+		
+			<a href="javascript:void(0)"  onclick="loadLanguage('en')" >English</a>
+			<a href="javascript:void(0)" onclick="loadLanguage('tr')" >Türkçe</a>
+		</div>
+	
+	
 	</div>
 
 

@@ -37,6 +37,9 @@ function ajaxLoad(url, queryString, containerDiv, loadingDiv, isReload, callback
 					callbackFunction(data);	
 				}
 			};
+			
+			
+			widgetLoad();
 		}
 	});
 	
@@ -144,5 +147,15 @@ function isLocationEqualTo(url){
 	
 	
 	return window.location.hash==url;
+	
+}
+
+
+function widgetLoad(){
+	if(twttr.widgets){
+		twttr.widgets.load();
+	}
+	
+	
 	
 }

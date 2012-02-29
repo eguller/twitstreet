@@ -1,3 +1,5 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.twitstreet.util.GUIUtil"%>
 <%@page import="com.twitstreet.servlet.UserProfileServlet"%>
 <%@page import="com.twitstreet.servlet.GetUserServlet"%>
 <%@page import="com.twitstreet.db.data.StockInPortfolio"%>
@@ -42,13 +44,24 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			String userIdStr = String.valueOf(user.getId());
 			
 	%>
-	
-			<h3>
-				<a style="color:#000000"  href="http://twitter.com/#!/<%=user == null ? "" : user.getUserName()%>"
-					title="<%=user == null ? "" : user.getUserName()%>&#39;s twitter page"
-					target="_blank"><%=user == null ? "" : user.getUserName()%></a>
+			<table class="datatbl">
+			<tr>
+				<td>
+					<div class="h3"  style="vertical-align: top">
+						<a style="vertical-align: top"  href="http://twitter.com/#!/<%=user.getUserName()%>"
+							title="<%=lutil.get("twitter.link.tip", lang, user.getUserName())%>"
+						target="_blank"><%=user.getUserName()%></a>
+						&nbsp;&nbsp;&nbsp;
+						
+						<%=GUIUtil.getInstance().getTwitterShareButton("#user-"+ user.getId(), "twitter.share.user", lang, user.getUserName())%>
+						
+					</div>					
+				</td>
 				
-			</h3>
+			</tr>
+			
+		</table>
+		
 			<jsp:include page="userDetails.jsp" />
 			
 			<script type="text/javascript">initUserProfileTabs()</script>

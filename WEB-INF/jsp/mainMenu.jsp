@@ -11,7 +11,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	<table class="datatbl">
 			<tr>
 				<td>
-					<div class="main-tabs h3">			 
+					<div class="main-tabs">			 
 						<a class="stocks-tab youarehere"
 							onclick="showTabMain('.stocks-tab','#stocks-container');">
 							<%=lutil.get("stocks", lang) %>
