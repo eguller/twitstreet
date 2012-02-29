@@ -59,7 +59,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 	
 <div id="stockdetails" class="main-div">
-	
+					
 	
 	
 	<%
@@ -70,14 +70,18 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<table class="datatbl">
 			<tr>
 				<td>
-					<h3 >
-						<a style="color:#000000" href="http://twitter.com/#!/<%=stock == null ? "" : stock.getName()%>"
-							title="<%=stock == null ? "" : stock.getName()%>&#39;s twitter page"
-							target="_blank"><%=stock == null ? "" : stock.getName()%></a>
-							<% if(stock != null && stock.isVerified()){ %>
-								<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
-							<% } %>
-					</h3>
+					<div class="h3"  style="vertical-align: top">
+						<a style="vertical-align: top;" href="http://twitter.com/#!/<%=stock.getName()%>"
+						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>"
+						target="_blank"><%=stock == null ? "" : stock.getName()%></a>
+							<% if(stock.isVerified()){ %>
+						<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
+						<% } %>
+						&nbsp;&nbsp;&nbsp;
+						
+						<%=GUIUtil.getInstance().getTwitterShareButton("#stock-"+ stock.getId(), "twitter.share.stock", lang, stock.getName())%>
+						
+					</div>					
 				</td>
 				<td>
 					<div class="h3-right-top">
@@ -98,7 +102,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 				</td>
 			</tr>
 			
-	</table>
+		</table>
 		
 			
 			
@@ -118,6 +122,8 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					
 					</td>
 				<td>
+						
+				<br>
 					<% if(stock.isChangePerHourCalculated() && stock.getChangePerHour()!=0){ 
 					
 						

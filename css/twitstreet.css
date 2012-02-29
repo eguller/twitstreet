@@ -41,11 +41,12 @@ h3 {
 	font-size: 12px;
 	font-weight: bolder;
 
+	padding: 4px 8px 4px 5px;
 	margin-bottom: 10px;
 	background-color: #F2F2F2;
 	border-bottom: 1px solid #D9D9D9;
 	border-top: 1px solid #E5E5E5;
-	height:26px;	
+	height:18px;	
 	
 }
 .h3-right-top {
@@ -576,6 +577,14 @@ margin-bottom: 5px;
 	float: left;
 	font-weight: bold;
 	width:100%;
+	font-size: 12px;
+	font-weight: bolder;
+
+	margin-bottom: 10px;
+	background-color: #F2F2F2;
+	border-bottom: 1px solid #D9D9D9;
+	border-top: 1px solid #E5E5E5;
+	height:26px;	
 }
 
 .main-tabs a.youarehere {

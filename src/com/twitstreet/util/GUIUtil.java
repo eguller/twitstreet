@@ -1,17 +1,22 @@
 package com.twitstreet.util;
 
 import java.util.Date;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.localization.LocalizationUtil;
 
 public class GUIUtil {
-
+	ResourceBundle propertiesFile;
 	private static GUIUtil instance = new GUIUtil();
 	private LocalizationUtil lutil = LocalizationUtil.getInstance();
 	
 	private GUIUtil() {
+		String propFileStr = this.getClass().getName();
 
+		propertiesFile = PropertyResourceBundle.getBundle(propFileStr);
+		
 	}
 
 	public static GUIUtil getInstance() {
@@ -40,6 +45,39 @@ public class GUIUtil {
 	public String getVerifiedIcon(String lang){
 		
 		
-		return "<img src='images/verified.png' title='"+lutil.get("stock.verified", lang)+"'/>";
+		return "<img src='images/verified.png'  style=\"vertical-align: top\" title='"+lutil.get("stock.verified", lang)+"'/>";
+	}
+	
+	public String getTwitterShareButton(String relativeUrl, String initialText, String lang){
+
+		return getTwitterShareButton(relativeUrl, initialText, lang, null);	
+	}
+	public String getTwitterShareButton(String relativeUrl, String initialText, String lang, Object param){
+
+		return getTwitterShareButton(relativeUrl, initialText, lang, new Object[]{param});	
+	}
+	
+	public String getTwitterShareButton(String relativeUrl, String shareText, String lang, Object[] params){
+		String buttonStr = propertiesFile.getString("twitter.share.button");
+		buttonStr = buttonStr.replace("{0}", relativeUrl);
+		
+		
+		String shareString = lutil.get(shareText, lang);
+		if (params != null && params.length > 0) {
+			int i = 0;
+			for (Object obj : params) {
+
+				String iStr = "{" + i + "}";
+
+				shareString = shareString.replace(iStr, obj.toString());
+
+				i++;
+
+			}
+		}
+
+		buttonStr = buttonStr.replace("{1}", shareString);
+		
+		return buttonStr;	
 	}
 }
