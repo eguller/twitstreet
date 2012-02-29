@@ -52,7 +52,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<div id="logoutbox">
 			<table>
 				<tr>
-					<td rowspan="2"><img class="twuser"
+					<td rowspan="2"><img class="twuser" width="48" height="48" 
 						src="<%=user.getPictureUrl()%>" /></td>
 					<td><span id="username"><a href="#user-<%=user.getId()%>"
 						 onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("user.details.tip", lang, user.getUserName()) %>"> <%=user.getUserName()%></a></span></td>

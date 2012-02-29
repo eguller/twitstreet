@@ -113,7 +113,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<table class="datatbl">
 			<tr>
 				<td>
-					<img class="twuser"
+					<img class="twuser" width="48" height="48" 
 					src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 					id="dashboard-picture">
 					

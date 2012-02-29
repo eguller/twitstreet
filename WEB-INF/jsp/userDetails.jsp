@@ -48,7 +48,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<table class="datatbl">
 			<tr>
 				<td>
-					<img class="twuser"
+					<img class="twuser" width="48" height="48" 
 					src="<%=user == null ? "" : user.getPictureUrl()%>"
 					id="dashboard-picture"></td>
 				<td>
@@ -110,7 +110,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					<td>
 						<table class="datatbl">
 							<tr onmouseover="$('#user-portfolio-item-watch-div-<%=stock.getStockId() %>').show()" onmouseout="$('#user-portfolio-item-watch-div-<%=stock.getStockId() %>').hide()">
-								<td width="58px"><img class="twuser"
+								<td width="58px"><img class="twuser" width="48" height="48" 
 									src="<%=stock.getPictureUrl()%>" />
 								</td>
 								<td>								
