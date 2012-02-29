@@ -23,7 +23,10 @@ public class ConfigMgrImpl implements ConfigMgr{
 	private static Logger logger = Logger.getLogger(ConfigMgrImpl.class);
 	@Inject DBMgr dbMgr;
 	private HashMap<String, Config> configMap = new HashMap<String, Config>();
-	private RequestToken requestToken;
+	
+	int serverCount;
+	int serverId;
+
 	
 	@Inject public ConfigMgrImpl(DBMgr dbMgr) {
 		this.dbMgr = dbMgr;
@@ -87,5 +90,25 @@ public class ConfigMgrImpl implements ConfigMgr{
 	@Override
 	public int getComissionTreshold() {
 		return Integer.parseInt(get(ConfigMgr.COMISSION_TRESHOLD));
+	}
+
+	@Override
+	public int getServerCount() {
+		return serverCount;
+	}
+
+	@Override
+	public int getServerId() {
+		return serverId;
+	}
+
+	@Override
+	public void setServerCount(int serverCount) {
+		this.serverCount = serverCount;
+	}
+
+	@Override
+	public void setServerId(int serverId) {
+		this.serverId = serverId;
 	}
 }

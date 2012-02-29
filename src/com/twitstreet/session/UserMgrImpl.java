@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -496,11 +497,7 @@ public class UserMgrImpl implements UserMgr {
 							"portfolio_value(id) as portfolio " + 
 							"from users,ranking where ranking.user_id = users.id and users.id in ("+listStr+")");
 			
-//			for(int i = 0; i<idList.size(); i++){
-//				
-//				ps.setLong(i+1, idList.get(i));
-//				
-//			}
+
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				userDO = new User();
@@ -559,5 +556,109 @@ public class UserMgrImpl implements UserMgr {
 		int a = (rank+rpp)/rpp;
 		
 		return a;
+	}
+	@Override
+	public List<User> getAll() {
+		List<User> userList = new ArrayList<User>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select " + 
+							"id, " + 
+							"userName, " + 
+							"lastLogin, " + 
+							"firstLogin, " + 
+							"users.cash as cash, " + 
+							"lastIp, " + 
+							"oauthToken, " +
+							"oauthTokenSecret, " + 
+							"user_profit(users.id) as changePerHour," +
+							"rank, " +
+							"oldRank, " + 
+							"direction, " + 
+							"pictureUrl, " + 
+							"portfolio_value(id) as portfolio " + 
+							"from users,ranking where ranking.user_id = users.id");
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
+	@Override
+	public void updateTwitterData(User user) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set userName = ?, pictureUrl = ? where id = ?");
+			ps.setString(1, user.getUserName());
+			ps.setString(2, user.getPictureUrl());
+			ps.setLong(3, user.getId());
+
+			ps.executeUpdate();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
+	@Override
+	public List<User> getUserListByServerId(int serverId) {
+		List<User> userList = new ArrayList<User>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select " + 
+							"id, " + 
+							"userName, " + 
+							"lastLogin, " + 
+							"firstLogin, " + 
+							"users.cash as cash, " + 
+							"lastIp, " + 
+							"oauthToken, " +
+							"oauthTokenSecret, " + 
+							"user_profit(users.id) as changePerHour," +
+							"rank, " +
+							"oldRank, " + 
+							"direction, " + 
+							"pictureUrl, " + 
+							"portfolio_value(id) as portfolio " + 
+							"from users,ranking where ranking.user_id = users.id and mod(id, ?) = ?");
+			ps.setInt(1, configMgr.getServerCount());
+			ps.setInt(2, configMgr.getServerId());
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
 	}
 }
