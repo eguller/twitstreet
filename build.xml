@@ -18,6 +18,13 @@
 		<copy todir="${build.dir}/bin/com/twitstreet/localization/">
 		    <fileset dir="src/com/twitstreet/localization/" includes="**/*.properties"/>
 		</copy>
+	   
+	   <!-- Copy gui utility files -->
+		<copy todir="${build.dir}/bin/com/twitstreet/util/">
+		    <fileset dir="src/com/twitstreet/util/" includes="**/*.properties"/>
+		</copy>
+		       
+		       
 		<replace file="${build.dir}/bin/log4j.xml" token="${catalina.home}/logs/twitstreet.txt" value="/var/log/tomcat6/twitstreet.txt"/>
 		<war destfile="${user.home}/Desktop/ROOT.war" webxml="WEB-INF/web.xml">
 			<fileset dir=".">
