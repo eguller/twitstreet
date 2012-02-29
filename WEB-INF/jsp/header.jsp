@@ -37,7 +37,6 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 
 <link rel="stylesheet" type="text/css" href="/css/cssreset-min.css" />
 <link rel="stylesheet" type="text/css" href="/css/twitstreet.css" />
-<link rel="stylesheet" type="text/css" href="/css/rankingDropDown.css" />
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
