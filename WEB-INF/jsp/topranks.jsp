@@ -55,7 +55,10 @@ userList = (userList==null)? new ArrayList<User>(): userList;
 int maxRank = userMgr.getRecordPerPage();
 if (userCount > maxRank) {
 	// we should add 1 because of integer conversion
-	pageCount = (userCount / maxRank) + 1;
+	pageCount = (userCount / maxRank);
+	if(userCount%maxRank!=0){
+		pageCount++;
+	}
 }
 %>
 
