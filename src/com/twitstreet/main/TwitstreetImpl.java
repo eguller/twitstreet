@@ -19,6 +19,7 @@ import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.AsyncQuery;
 import com.twitstreet.task.StockUpdateTask;
+import com.twitstreet.task.UserInfoUpdateTask;
 
 
 @Singleton
@@ -53,6 +54,10 @@ public class TwitstreetImpl implements Twitstreet {
 		String dbPassword = properties.getProperty(Twitstreet.DB_PASSWORD);
 		String dbName = properties.getProperty(Twitstreet.DATABASE);
 		String dbPortStr = properties.getProperty(Twitstreet.DB_PORT);
+		
+		int serverCount = properties.getProperty(ConfigMgr.SERVER_COUNT) == null ? 1 : Integer.parseInt(properties.getProperty(ConfigMgr.SERVER_COUNT));
+		int serverId = properties.getProperty(ConfigMgr.SERVER_ID) == null ? 0 : Integer.parseInt(properties.getProperty(ConfigMgr.SERVER_ID));
+		
 		int dbPort = Integer.parseInt(dbPortStr);
 		
 		dbMgr.setDbHost(dbHost);
@@ -62,9 +67,13 @@ public class TwitstreetImpl implements Twitstreet {
 		dbMgr.setDbPort(dbPort);
 		dbMgr.init();
 		configMgr.load();
+		configMgr.setServerCount(serverCount);
+		configMgr.setServerId(serverId);
+		
 		
 //		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
+		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);
 		//StockHistoryUpdateTask stockHistoryUpdateTask = injector.getInstance(StockHistoryUpdateTask.class);
 		
 //		Thread reRankThread = new Thread(reRankTask);
@@ -79,6 +88,10 @@ public class TwitstreetImpl implements Twitstreet {
 		asyncQueryTaskThread.setName("Async query task");
 		asyncQueryTaskThread.start();
 		
+		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
+		updateUserInfoThread.setName("User Info Update Task");
+		updateUserInfoThread.start();
+		
 		//Thread stockHistoryUpdateThread = new Thread (stockHistoryUpdateTask);
 		///stockHistoryUpdateThread.setName("Update Stock History");
 		//stockHistoryUpdateThread.start();
@@ -87,24 +100,7 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		initialized = true;
 		
-		
-		//TODO REMOVE HERE (ADDED FOR DEBUG PURPOSE)
-		
-//		User userDO = userMgr.getUserById(324562459);
-//		userMgr.saveUser(userDO);
-//		groupMgr.addUserToDefaultGroup(userDO);
-//		Group group = groupMgr.getGroup(1);
-//		long id1 = groupMgr.createGroup("grup");
-//	
-//		long id2 = groupMgr.createGroupForUser("user_group", userDO);
-//		ArrayList<Group> groups = groupMgr.getGroupsForUser(userDO);
-//		groupMgr.removeUserFromGroup(userDO,groups.get(1).getId());
-//		
-//		group = groupMgr.getGroup(1);
-//		group.setName("Overall");
-//		groupMgr.updateGroup(group);
-//		groupMgr.deleteGroup(id1);
-//		groupMgr.deleteGroup(id2);
+
 	}
 	public boolean isInitialized(){
 		return initialized;

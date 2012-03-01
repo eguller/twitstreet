@@ -1,6 +1,7 @@
 package com.twitstreet.session;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
@@ -38,4 +39,10 @@ public interface UserMgr {
 	ArrayList<User> searchUser(String searchText);
 	
 	public int getPageOfRank(int rank);
+	
+	public List<User> getAll();
+	
+	public void updateTwitterData(User user);
+	
+	public List<User> getUserListByServerId(int serverId);
 }
