@@ -364,7 +364,7 @@ public class StockMgrImpl implements StockMgr {
 												" and stock_sold(id)< " + TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD + " " +
 												" and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +
 												" and (TIMESTAMPDIFF(minute, lastUpdate, now())  < ?) "  +
-												" and stock_sold > 0 "  +
+												" and stock_sold(id) > 0 "  +
 			// " 	and " +
 			// "	(" +
 			// "	id in (select distinct stock from portfolio) or " +
