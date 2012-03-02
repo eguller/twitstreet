@@ -19,7 +19,6 @@ import com.twitstreet.market.StockMgrImpl;
 
 @Singleton
 public class ConfigMgrImpl implements ConfigMgr{
-	private static final double INITIAL_MONEY = 10000;
 	private static Logger logger = Logger.getLogger(ConfigMgrImpl.class);
 	@Inject DBMgr dbMgr;
 	private HashMap<String, Config> configMap = new HashMap<String, Config>();
@@ -84,7 +83,7 @@ public class ConfigMgrImpl implements ConfigMgr{
 
 	@Override
 	public double getInitialMoney() {
-		return INITIAL_MONEY;
+		return Double.parseDouble(get(ConfigMgr.INITIAL_MONEY));
 	}
 
 	@Override
