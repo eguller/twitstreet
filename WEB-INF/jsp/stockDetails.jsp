@@ -31,6 +31,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	User user = (User) request.getAttribute(User.USER);
 
+	
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 
@@ -46,11 +47,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 		}
 	}
-	UserStock userStock = null;
-	if (user != null && stock != null) {
-		userStock = portfolioMgr.getStockInPortfolio(user.getId(), stock.getId());
-
-	}
+	
 
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
 	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);
@@ -84,21 +81,27 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					</div>					
 				</td>
 				<td>
-					<div class="h3-right-top">
+								<%
+												if(user!=null){
+											 %>
+												<div id="user-portfolio-item-watch-div-<%=stock.getId() %>" style="display:none; float:right; ">
 					
-						<%
-						ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
-						boolean beingWatched = watchList.contains(stock);
-						 %>
-						<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
-							<%=Util.getWatchListIcon(true,20,lutil.get("watchlist.add", lang))%>
-							
-						</a>	
-						<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
-							<%=Util.getWatchListIcon(false,20,lutil.get("watchlist.remove", lang))%>
-							
-						</a>	
-					</div>
+												<%
+												ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
+												boolean beingWatched = watchList.contains(stock);
+												 %>
+												<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
+													<%=Util.getWatchListIcon(true,15,lutil.get("watchlist.add", lang))%>
+													
+												</a>	
+												<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
+													<%=Util.getWatchListIcon(false,15,lutil.get("watchlist.remove", lang))%>
+													
+												</a>	
+												</div>
+											<%
+												}
+											 %>
 				</td>
 			</tr>
 			

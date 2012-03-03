@@ -67,11 +67,13 @@
 	
 <div id="dashboard" class="main-div">
 
+				
 	<jsp:include page="getQuote.jsp" />
 
 
 <div id="stocks-screen">
-<%if(stock!=null){
+<%
+if(stock!=null){
 	
 	%>
 	
@@ -79,7 +81,7 @@
 <%	
 }else{
 %>
-<jsp:include page="trendyStocks.jsp" />
+	<jsp:include page="trendyStocks.jsp" />
 
 <%
 

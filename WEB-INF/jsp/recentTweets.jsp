@@ -1,6 +1,16 @@
+
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
+
+<%
+LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+%>
+
+
+
 <div id="recent-tweets" style="margin-top: 5px;">
 <h3>
-Tweets about us
+<%= lutil.get("tweetsaboutus", lang) %>
 </h3>
 	<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
 	<script>

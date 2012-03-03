@@ -118,8 +118,10 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 										<a href='#stock-<%=stock.getStockId()%>'  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("stock.details.tip", lang, stock.getStockName())%>">
 												<%=stock.getStockName()%>
 										</a> (<%=Util.getShareString(stock.getPercentage())%>)
-										
-											<div id="user-portfolio-item-watch-div-<%=stock.getStockId() %>" style="display:none; float:right; ">
+											<%
+												if(sessionUser!=null){
+											 %>
+												<div id="user-portfolio-item-watch-div-<%=stock.getStockId() %>" style="display:none; float:right; ">
 					
 												<%
 												ArrayList<Stock> watchList = stockMgr.getUserWatchList(sessionUser.getId());
@@ -133,8 +135,10 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 													<%=Util.getWatchListIcon(false,15,lutil.get("watchlist.remove", lang))%>
 													
 												</a>	
-											</div>
-											
+												</div>
+											<%
+												}
+											 %>
 										<br> 
 											<%=Util.getNumberFormatted(stock.getAmount(), true, true, false, false, false, false)%>
 		

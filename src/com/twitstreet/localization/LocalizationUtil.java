@@ -1,12 +1,15 @@
 package com.twitstreet.localization;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 public class LocalizationUtil {
 
-	private static String DEFAULT_LANGUAGE = "en";
+	public static String DEFAULT_LANGUAGE = "en";
 
 
 
@@ -36,7 +39,48 @@ public class LocalizationUtil {
 	
 		
 	}
+	public ArrayList<String> getStartsWith(String key, String lang){
+		
+		ArrayList<String> valueList = new ArrayList<String>();
+
+		if(lang==null|| lang.length()==0){
+			
+			lang = DEFAULT_LANGUAGE;
+			
+		}
+		
 	
+		try {
+			ArrayList<String> keyList = new ArrayList<String>();
+			 Enumeration<String> strList = setOfDictionaries.get(lang).getKeys();
+			 
+			 while(strList.hasMoreElements()){
+				 String aKey = strList.nextElement();
+				 
+				 if(aKey.startsWith(key)){
+					 keyList.add(aKey);
+					
+				 }
+				 
+			 }
+			 
+			 Collections.sort(keyList);
+			 
+			 for(String sortedKey: keyList){
+				 
+				 valueList.add(setOfDictionaries.get(lang).getString(sortedKey));
+			 }
+			 
+			 
+			
+		
+		} catch (Exception ex) {
+
+		}
+		
+		return valueList;
+		
+	}	
 	public String get(String key, String lang){
 		
 		return get(key, lang, null);

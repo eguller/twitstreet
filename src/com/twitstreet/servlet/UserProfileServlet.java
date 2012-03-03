@@ -30,7 +30,6 @@ public class UserProfileServlet extends TwitStreetServlet {
 		//loadUserFromCookie(request);
 		User user = (User) request.getAttribute(User.USER);
 		
-if(user==null) return;
 		
 		if (request.getParameter(User.USER) != null) {
 			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);

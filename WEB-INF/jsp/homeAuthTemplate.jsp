@@ -44,8 +44,8 @@
 
 				<script type="text/javascript">showTabMain('.stocks-tab','#stocks-container')</script>
 
-				<template:get name="howtoplay"></template:get>
-				<template:get name="signup"></template:get>
+		
+			
 			</div>
 			<div id="column_right">
 				<div id="topranks-container">

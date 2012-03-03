@@ -46,6 +46,8 @@
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	User user = (User) request.getAttribute(User.USER);
+	
+	
 	ArrayList<Stock> trendResults = stockMgr.getTrendyStocks();
 
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
@@ -92,8 +94,10 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 											<% if(stock.isVerified()){ %>
 												<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
 											<% } %>
-											
-											<div id="trendy-stocks-watch-item-div-<%=stock.getId() %>" style="display:none; float:right; ">
+											<%
+												if(user!=null){
+											 %>
+												<div id="user-portfolio-item-watch-div-<%=stock.getId() %>" style="display:none; float:right; ">
 					
 												<%
 												ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
@@ -107,7 +111,10 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 													<%=Util.getWatchListIcon(false,15,lutil.get("watchlist.remove", lang))%>
 													
 												</a>	
-											</div>
+												</div>
+											<%
+												}
+											 %>
 										 	
 										</td>
 									</tr>

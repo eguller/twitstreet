@@ -28,7 +28,7 @@ public class StockMgrImpl implements StockMgr {
 
 	private static int TWITTER_TRENDS_CLEANUP_PERIOD = 24 * 60; // minutes
 
-	private static String TRENDY_STOCK_AVAILABLE_THRESHOLD = "500";
+	private static String TRENDY_STOCK_AVAILABLE_THRESHOLD = "5";
 
 	private static String TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD = "0.99";
 
