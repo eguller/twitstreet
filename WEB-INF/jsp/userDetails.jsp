@@ -171,9 +171,15 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 				</tr>
 				<%
 					}
-				}else{
-					out.write(Util.NO_RECORDS_FOUND_HTML);
-				}
+				}else{%>
+				<tr><td align="center">
+				<%
+					out.write(lutil.get("shared.empty", lang));
+				 %>
+				 </td></tr>
+				 
+				 
+				 <%}
 				%>
 			</table>
 		</div>

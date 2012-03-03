@@ -20,6 +20,7 @@ import com.twitstreet.util.Util;
 
 public class TwitterProxyImpl implements TwitterProxy {
 
+	private static int INVALID_REQUEST = 400;
 	private static int UNAUTHORIZED = 401;
 	private static int NOT_FOUND = 404;
 	private static int USER_SUSPENDED = 403;
@@ -194,7 +195,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 		
 		if (e.getStatusCode() == NOT_FOUND) {
 			logger.debug("Twitter: User not found. Params: " + paramsStr);
-		} 
+		}
 		else if (e.getStatusCode() == USER_SUSPENDED) {
 			logger.info("Twitter: User suspended. Params: " + paramsStr);
 		}
@@ -205,6 +206,10 @@ public class TwitterProxyImpl implements TwitterProxy {
 		}else if (e.getStatusCode() == UNAUTHORIZED) {
 		
 			logger.error("Twitter: Authentication credentials were missing or incorrect. Twitter proxy user: "+accessToken.getScreenName());
+			
+		}else if (e.getStatusCode() == INVALID_REQUEST) {
+		
+			logger.error("Twitter: The request was invalid. Possible reason: Query string may be including empty character. ");
 			
 		}
 		else{
