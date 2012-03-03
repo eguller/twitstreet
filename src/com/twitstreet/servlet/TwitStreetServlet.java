@@ -35,8 +35,9 @@ public class TwitStreetServlet extends HttpServlet {
 	}
 
 	
-	public void getLanguage(HttpServletRequest request) {
-	String langParam = request.getParameter(LocalizationUtil.LANGUAGE) ;
+	
+	public String getLanguage(HttpServletRequest request) {
+		String langParam = request.getParameter(LocalizationUtil.LANGUAGE) ;
 	
 		if (langParam!= null && langParam.length()>0){
 			
@@ -49,6 +50,7 @@ public class TwitStreetServlet extends HttpServlet {
 
 		}
 
+		return (String) request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 	}
 
 	

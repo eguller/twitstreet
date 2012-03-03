@@ -47,13 +47,14 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			<table class="datatbl">
 			<tr>
 				<td>
-					<div class="h3"  style="vertical-align: top">
+					<div class="h3 big"  style="vertical-align: top">
 						<a style="vertical-align: top"  href="http://twitter.com/#!/<%=user.getUserName()%>"
 							title="<%=lutil.get("twitter.link.tip", lang, user.getUserName())%>"
 						target="_blank"><%=user.getUserName()%></a>
 						&nbsp;&nbsp;&nbsp;
 						
 						<%=GUIUtil.getInstance().getTwitterShareButton("#user-"+ user.getId(), "twitter.share.user", lang, user.getUserName())%>
+						<%=GUIUtil.getInstance().getTwitterFollowButton(user.getUserName(), lang)%>
 						
 					</div>					
 				</td>

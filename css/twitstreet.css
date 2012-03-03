@@ -633,7 +633,8 @@ margin-bottom: 5px;
 	height: 32px;
 	font-size: 14px;
 	font-weight: bolder;
-	padding: 4px 5px;
+	padding-top: 15px;
+	padding-bottom: 5px;
 	margin-bottom: 10px;
 	padding-left: 10px;
 	padding-right: 10px;
@@ -641,4 +642,12 @@ margin-bottom: 5px;
 	border-bottom: 1px solid #D9D9D9;
 	border-top: 1px solid #E5E5E5;
 	text-align: center;
+}
+
+.big{
+	
+	font-size: 16px;
+	font-weight: bolder;
+	line-height: 16px;
+	
 }

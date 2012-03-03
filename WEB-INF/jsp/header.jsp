@@ -15,6 +15,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="description" content="<%=request.getAttribute("meta-desc") %>" >
+<meta property="og:image" content="http://twitstreet.com/images/TwitStreet_logo1.png"/> 
 
 <script src="/js/jquery-1.6.4.min.js"></script>
 <script src="/js/jquery-corner.js"></script>

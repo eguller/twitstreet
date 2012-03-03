@@ -77,6 +77,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						&nbsp;&nbsp;&nbsp;
 						
 						<%=GUIUtil.getInstance().getTwitterShareButton("#stock-"+ stock.getId(), "twitter.share.stock", lang, stock.getName())%>
+						<%=GUIUtil.getInstance().getTwitterFollowButton(stock.getName(), lang)%>
 						
 					</div>					
 				</td>

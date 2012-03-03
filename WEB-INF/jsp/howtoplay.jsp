@@ -10,10 +10,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 <div id="howtoplay" class="main-div">
 	<div class="field-white" style="height:30px"> 
-		<a style="line-height: 30px" href="javascript:void(0)" onclick="if($('#howtoplay-text').css('display') == 'none') $('#howtoplay-text').fadeTo('slow',1.0); else $('#howtoplay-text').hide(); "><strong><%=lutil.get("howtoplay.header", lang) %></strong></a>
-	
-	
-		
+		<a style="line-height: 30px" href="javascript:void(0)" onclick="if($('#howtoplay-text').css('display') == 'none') $('#howtoplay-text').fadeTo('slow',1.0); else $('#howtoplay-text').hide(); "><strong><%=lutil.get("howtoplay.header", lang) %></strong></a>	
 	</div>
 
 	<div id="howtoplay-text" style="display: none">
@@ -55,7 +52,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		%>
 	
 			</ul>
-		<div style="float:right; margin-bottom:20px; height:70px" id="signup">
+		<div style="text-align:center; margin-bottom:20px; height:70px" id="signup">
 			
 			<a href="/signin"><img  src="/images/twitter-big.png"></img>
 			</a>

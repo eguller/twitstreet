@@ -120,13 +120,18 @@ function performOperation(command){
 	
 }
 function loadLanguage(lang){
+	
 	ajaxLoad("/lang", 'lang='+lang, null, "body", false, reloadPage);
 	
 }
-function reloadPage(){
+function reloadPage(data){
 	
 	location.reload(true);
-	
+	if(data!=null && data.length>0){
+		
+
+		blockElementWithMsg("body", data);
+	}
 }
 
 function reloadIfHashIsMyHref(element){

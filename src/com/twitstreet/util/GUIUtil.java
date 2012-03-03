@@ -77,7 +77,38 @@ public class GUIUtil {
 		}
 
 		buttonStr = buttonStr.replace("{1}", shareString);
+		buttonStr = buttonStr.replace("{2}", lang);
 		
+		return buttonStr;	
+	}
+	
+	public String getTwitterFollowButton(String userToFollow, String lang){
+		String buttonStr = propertiesFile.getString("twitter.follow.button");
+	
+	
+		buttonStr = buttonStr.replace("{0}", userToFollow);
+		buttonStr = buttonStr.replace("{1}", lang);
+		//buttonStr = buttonStr.replace("{2}", userToFollow);
+		return buttonStr;	
+	}
+	
+	public String getTwitterHashButton(String hashTag, String lang){
+		String buttonStr = propertiesFile.getString("twitter.hash.button");
+	
+	
+		buttonStr = buttonStr.replace("{0}", hashTag);
+		buttonStr = buttonStr.replace("{1}", lang);
+		//buttonStr = buttonStr.replace("{2}", userToFollow);
+		return buttonStr;	
+	}
+	
+	public String getTwitterMentionButton(String mention, String lang){
+		String buttonStr = propertiesFile.getString("twitter.mention.button");
+	
+	
+		buttonStr = buttonStr.replace("{0}", mention);
+		buttonStr = buttonStr.replace("{1}", lang);
+		//buttonStr = buttonStr.replace("{2}", userToFollow);
 		return buttonStr;	
 	}
 }

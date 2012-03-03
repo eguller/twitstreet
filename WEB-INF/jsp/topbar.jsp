@@ -6,27 +6,80 @@ LocalizationUtil lutil = LocalizationUtil.getInstance();
 String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 	User user = (User) request.getAttribute(User.USER);
 %>
-<div id="topbar">
+<div id="topbar" style="overflow: hidden">
 
 	
 	<div id="top_left_div">
 	
-		<div id="twitstreet-header-container" style="width:150px">
-			<div id="twitstreet-header"  style="float:left">
-				<a id="home" href="/">TwitStreet</a>
-			</div>
-			<div id="twitstreet-share-main" style="float:right">
-				<%=GUIUtil.getInstance().getTwitterShareButton("", "twitter.share.main",lang)%>
-			</div>
-		</div>
+		<div id="twitstreet-header-container">
+			<table class="datatbl2">
+				<tbody>
+					<tr>
+					
+						<td colspan=3>
+							<div id="twitstreet-header"  style="float:left">
+								<a id="home" href="/">TwitStreet</a>
+							</div>
+						
+						</td>
+					</tr>
+					<tr>
+				
+						<td style="float:left; margin-right: 5px">
+							<div id="twitstreet-share-main" style="float:left">
+								<%=GUIUtil.getInstance().getTwitterShareButton("", "twitter.share.main",lang)%>
+							</div>
+					
+						</td>
+						<td  style="float:left; margin-right: 5px">
+							<div id="twitstreet-share-main" style="float:left">
+								<%=GUIUtil.getInstance().getTwitterFollowButton("twitstreet_game",lang)%>
+							</div>
+					
+						</td>
+						<td style="float:left">
+							<div style="float:left" class="fb-like" data-href="http://www.twitstreet.com/" data-send="false" data-layout="button_count" data-width="10" data-show-faces="false" data-font="trebuchet ms"></div>
+					
+						</td>
+					</tr>
+					<tr>
+						<td>
+						
+					
+						</td>
+						<td>
+							
+					
+						</td>
+						<td>
+							<div id="twitstreet-languages" style="text-align: right" >
+								<%if(!"en".equalsIgnoreCase(lang)){%>
+									<a href="javascript:void(0)"  onclick="loadLanguage('en')" >English</a>
+									
+								<%}else{%>
+									<span>English</span>
+								<%}%>
+												
+								<%if(!"tr".equalsIgnoreCase(lang)){%>
+									<a href="javascript:void(0)"  onclick="loadLanguage('tr')" >Türkçe</a>
+									
+								<%}else{%>
+									<span>Türkçe</span>
+								<%}%>						
+														
+							</div>
+						
+						
+					
+						</td>
+					
+					</tr>
+				</tbody>
+			
+			</table>
+				
 	
-	<br>
-	<br>
-	
-		<div id="twitstreet-languages" >
-		
-			<a href="javascript:void(0)"  onclick="loadLanguage('en')" >English</a>
-			<a href="javascript:void(0)" onclick="loadLanguage('tr')" >Türkçe</a>
+			
 		</div>
 	
 	
