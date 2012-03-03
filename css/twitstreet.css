@@ -628,3 +628,17 @@ margin-bottom: 5px;
 	margin-bottom: 2px;
 	background-color: #ff6666;
 }
+
+.footer-bar {
+	height: 32px;
+	font-size: 14px;
+	font-weight: bolder;
+	padding: 4px 5px;
+	margin-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #F2F2F2;
+	border-bottom: 1px solid #D9D9D9;
+	border-top: 1px solid #E5E5E5;
+	text-align: center;
+}

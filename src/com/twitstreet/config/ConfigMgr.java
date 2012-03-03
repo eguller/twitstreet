@@ -9,6 +9,7 @@ public interface ConfigMgr {
 	public static final String COMISSION_TRESHOLD = "comissionTreshold";
 	public static final String SERVER_COUNT = "server-count";
 	public static final String SERVER_ID = "server-id";
+	public static final String INITIAL_MONEY = "initialMoney";
 	
 	public void load();
 	public String get(String parm);
