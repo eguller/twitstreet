@@ -109,7 +109,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		
 					<td>
 						<table class="datatbl">
-							<tr onmouseover="$('#user-portfolio-item-watch-div-<%=stock.getStockId() %>').show()" onmouseout="$('#user-portfolio-item-watch-div-<%=stock.getStockId() %>').hide()">
+							<tr onmouseover="$('.user-portfolio-item-watch-div-<%=stock.getStockId() %>').show()" onmouseout="$('.user-portfolio-item-watch-div-<%=stock.getStockId() %>').hide()">
 								<td width="58px"><img class="twuser" width="48" height="48" 
 									src="<%=stock.getPictureUrl()%>" />
 								</td>
@@ -121,7 +121,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 											<%
 												if(sessionUser!=null){
 											 %>
-												<div id="user-portfolio-item-watch-div-<%=stock.getStockId() %>" style="display:none; float:right; ">
+												<div class="user-portfolio-item-watch-div-<%=stock.getStockId() %>" style="display:none; float:right; ">
 					
 												<%
 												ArrayList<Stock> watchList = stockMgr.getUserWatchList(sessionUser.getId());

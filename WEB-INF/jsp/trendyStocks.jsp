@@ -97,7 +97,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 											<%
 												if(user!=null){
 											 %>
-												<div id="user-portfolio-item-watch-div-<%=stock.getId() %>" style="display:none; float:right; ">
+												<div class="user-portfolio-item-watch-div-<%=stock.getId() %>" style="float:right; ">
 					
 												<%
 												ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());

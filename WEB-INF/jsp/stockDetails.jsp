@@ -67,7 +67,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<table class="datatbl">
 			<tr>
 				<td>
-					<div class="h3"  style="vertical-align: top">
+					<div class="h3 big"  style="vertical-align: top">
 						<a style="vertical-align: top;" href="http://twitter.com/#!/<%=stock.getName()%>"
 						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>"
 						target="_blank"><%=stock == null ? "" : stock.getName()%></a>
@@ -85,7 +85,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 								<%
 												if(user!=null){
 											 %>
-												<div id="user-portfolio-item-watch-div-<%=stock.getId() %>" style="display:none; float:right; ">
+												<div class="h3 user-portfolio-item-watch-div-<%=stock.getId() %>" style="width:100%;float:right; text-align:right ">
 					
 												<%
 												ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
