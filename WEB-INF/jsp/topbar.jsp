@@ -16,13 +16,15 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 				<tbody>
 					<tr>
 					
-						<td colspan=3>
+						<td colspan=3 style="vertical-align: middle">
 							<div id="twitstreet-header"  style="float:left">
 								<a id="home" href="/">TwitStreet</a>
 							</div>
+							<img height="35" width="35" alt="" src="/images/twitstreet_logo_50.png">
 						
-						</td>
+						
 					</tr>
+				
 					<tr>
 				
 						<td style="float:left; margin-right: 5px">
@@ -37,22 +39,9 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 							</div>
 					
 						</td>
-						<td style="float:left">
-							<div style="float:left" class="fb-like" data-href="http://www.twitstreet.com/" data-send="false" data-layout="button_count" data-width="10" data-show-faces="false" data-font="trebuchet ms"></div>
 					
-						</td>
-					</tr>
-					<tr>
-						<td>
-						
-					
-						</td>
-						<td>
-							
-					
-						</td>
-						<td>
-							<div id="twitstreet-languages" style="text-align: right" >
+						<td  style="float:right; margin-left: 5px">
+								<div id="twitstreet-languages" style="text-align: right" >
 								<%if(!"en".equalsIgnoreCase(lang)){%>
 									<a href="javascript:void(0)"  onclick="loadLanguage('en')" >English</a>
 									
@@ -68,11 +57,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 								<%}%>						
 														
 							</div>
-						
-						
-					
 						</td>
-					
 					</tr>
 				</tbody>
 			
