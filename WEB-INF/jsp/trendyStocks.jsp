@@ -68,7 +68,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<%
 			for (int i = 0; i < trendResults.size();) {
 		%>
-		<tr onmouseover="$('#trendy-stocks-watch-item-div-<%=stock.getId()%>').show()" onmouseout="$('#trendy-stocks-watch-item-div-<%=stock.getId()%>').hide()">
+		<tr>
 			<%
 				for (int j = 0; j < 2; j++) {
 					if (i < trendResults.size()) {
@@ -79,14 +79,14 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 					<td>
 						<table>
-							<tr>
+							<tr onmouseover="$('.user-portfolio-item-watch-div-<%=stock.getId() %>').show()" onmouseout="$('.user-portfolio-item-watch-div-<%=stock.getId() %>').hide()">
 								<td width="60">
 									<img class="twuser" width="48" height="48" 
 									src="<%=stock.getPictureUrl()%>" />
 								</td>
 								<td width="175">
 								<table class="datatbl2">
-									<tr onmouseover="$('.user-portfolio-item-watch-div-<%=stock.getId() %>').show()" onmouseout="$('.user-portfolio-item-watch-div-<%=stock.getId() %>').hide()">									
+									<tr>									
 										<td colspan="2">	
 											<a href="#stock-<%=stock.getId()%>"  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("stock.details.tip", lang, stock.getName())%>">
 											<%=stock.getName()%>
