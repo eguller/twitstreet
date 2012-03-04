@@ -7,7 +7,7 @@ Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.
 ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 %>
 
-<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="/images/twitstreet_logo_50.png">
 
 <title>
 <%= request.getAttribute("title")%>
