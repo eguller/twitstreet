@@ -84,10 +84,10 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 									<img class="twuser" width="48" height="48" 
 									src="<%=stock.getPictureUrl()%>" />
 								</td>
-								<td width="150">
+								<td width="175">
 								<table class="datatbl2">
-									<tr>									
-										<td>	
+									<tr onmouseover="$('.user-portfolio-item-watch-div-<%=stock.getId() %>').show()" onmouseout="$('.user-portfolio-item-watch-div-<%=stock.getId() %>').hide()">									
+										<td colspan="2">	
 											<a href="#stock-<%=stock.getId()%>"  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("stock.details.tip", lang, stock.getName())%>">
 											<%=stock.getName()%>
 											</a> 
@@ -97,7 +97,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 											<%
 												if(user!=null){
 											 %>
-												<div class="user-portfolio-item-watch-div-<%=stock.getId() %>" style="float:right; ">
+												<div class="user-portfolio-item-watch-div-<%=stock.getId() %>" style="display:none;float:right; ">
 					
 												<%
 												ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
@@ -119,17 +119,18 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 										</td>
 									</tr>
 									<tr>									
-										<td>								       
+										<td align="left">								       
 											<%=Util.getNumberFormatted(stock.getAvailable(), false, true, false, false, false, false)%> / <%=Util.getNumberFormatted(stock.getTotal(), false, true, false, false, false, false)%>
 										</td>
-									</tr>
-<!-- 									<tr>									 -->
-<%-- 										<td align="right" class="<%=className %>"> --%>
-<%-- 											<%=Util.getChangePerHourString(stock.getChangePerHour())%> --%>
-<!-- 										</td> -->
-<!-- 									</tr> -->
-									<tr>									
 										<td align="right">
+											<%=Util.getNumberFormatted((double)stock.getChangePerHour(),false,true,true,true,false,true)%>
+										</td>
+									</tr>
+									<tr>									
+ 										
+									</tr>
+									<tr>									
+										<td colspan="2" align="right">
 											<%=Util.getPercentageFormatted((double)stock.getChangePerHour()/stock.getTotal(),false,true,true,true,false,true)%>
 										</td>
 									</tr>
