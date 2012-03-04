@@ -33,7 +33,7 @@
 				</div>
 
 				<template:get name="recentTweets"></template:get>
-
+				
 			</div>
 			<div id="column_center">
 
@@ -43,7 +43,7 @@
 				<template:get name="users"></template:get>
 
 				<script type="text/javascript">showTabMain('.stocks-tab','#stocks-container')</script>
-
+				<script type="text/javascript">showTabPortfolio('.portfolio-tab','#portfolio-container')</script>
 		
 			
 			</div>
