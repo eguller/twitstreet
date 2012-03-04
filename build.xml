@@ -31,7 +31,6 @@
 				<include name="css/*"/>
 				<include name="images/*"/>
 				<include name="js/*"/>
-				<include name="favicon.ico" />
 				<exclude name="images/Thumbs.db"/>
 			</fileset>
 			<lib dir="WEB-INF/lib" />
