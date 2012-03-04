@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.servlet.UserProfileServlet"%>
 <%@page import="com.twitstreet.servlet.GetUserServlet"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.HashSet"%>
@@ -118,3 +119,14 @@
 			<%
 				}
 			%>
+			
+			<%
+			User user = (User) request.getAttribute(UserProfileServlet.USER_PROFILE_USER);
+
+		if (user==null && getUserText.length() > 0) {
+	%>	
+			<div id="searchusernoresult"><p><%=lutil.get("shared.noresults", lang) %></p></div>
+	<%
+		}
+	%>
+	

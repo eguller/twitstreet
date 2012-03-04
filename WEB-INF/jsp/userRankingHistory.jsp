@@ -59,7 +59,7 @@
 	
 	if(user!=null){
 		
-		rhd = userMgr.getRankingHistoryForUser(user.getId());
+		rhd = userMgr.getRankingHistoryForUser(user.getId(),null);
 		
 		
 	}

@@ -16,11 +16,11 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 				<tbody>
 					<tr>
 					
-						<td colspan=3 style="vertical-align: middle">
+						<td colspan=3 style="vertical-align: top">
 							<div id="twitstreet-header"  style="float:left">
-								<a id="home" href="/">TwitStreet</a>
+								<a id="home" style="vertical-align: top; line-height: 30px; height:30px" href="/">TwitStreet<img height="35" width="35" alt="" src="/images/twitstreet_logo_50.png"></a>
 							</div>
-							<img height="35" width="35" alt="" src="/images/twitstreet_logo_50.png">
+							
 						
 						
 					</tr>

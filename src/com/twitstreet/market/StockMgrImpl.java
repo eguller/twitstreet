@@ -36,6 +36,12 @@ public class StockMgrImpl implements StockMgr {
 	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
 	private static int MAX_TRENDS = 10;
 
+	private static StockMgrImpl instance = new StockMgrImpl();
+	
+	public static StockMgr getInstance(){
+		
+		return instance;
+	}
 	@Inject
 	private UserMgr userMgr;
 

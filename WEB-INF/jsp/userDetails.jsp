@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.util.GUIUtil"%>
 <%@page import="com.twitstreet.servlet.UserProfileServlet"%>
 <%@page import="com.twitstreet.db.data.StockInPortfolio"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
@@ -36,6 +37,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	
 %>
 
+			
 <div id="userdetails" class="main-div">
 	<%
 	if (user != null) {
@@ -43,6 +45,27 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		portfolio = portfolioMgr.getUserPortfolio(user);
 	%>
 	<input id="hiddenUserDetailsUserId" type="hidden" value="<%=user.getId() %>"/>
+	
+	<table class="datatbl">
+			<tr>
+				<td>
+					<div class="h3 big"  style="vertical-align: top">
+						<a style="vertical-align: top"  href="http://twitter.com/#!/<%=user.getUserName()%>"
+							title="<%=lutil.get("twitter.link.tip", lang, user.getUserName())%>"
+						target="_blank"><%=user.getUserName()%></a>
+						&nbsp;&nbsp;&nbsp;
+						
+						<%=GUIUtil.getInstance().getTwitterShareButton("#user-"+ user.getId(), "twitter.share.user", lang, user.getUserName())%>
+						<%=GUIUtil.getInstance().getTwitterFollowButton(user.getUserName(), lang)%>
+						
+					</div>					
+				</td>
+				
+			</tr>
+			
+		</table>
+		
+		
 	<div id="user-profile-menu" class="subheader main-div" style="height:54px">
 
 		<table class="datatbl">
@@ -55,7 +78,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					<table>
 						<tr>
 							
-							<td align="left" style="padding: 2px">
+							<td colspan="2" align="left" style="padding: 2px">
 							<%=user.getRank()%>.
 							</td>
 						</tr>
@@ -63,7 +86,11 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						<tr>
 							
 							<td align="left" style="padding: 2px">
-								<%= Util.getRoundedMoneyString(user.getCash()+user.getPortfolio()) %> <%= (user.getProfit()!=0)? Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true):"" %>
+								<%= Util.getRoundedMoneyString(user.getCash()+user.getPortfolio()) %>
+							</td>
+						
+							<td align="right" style="padding: 2px">
+							 	|  <%= (user.getProfit()!=0)? Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true):"" %>
 							</td>
 						</tr>
 						

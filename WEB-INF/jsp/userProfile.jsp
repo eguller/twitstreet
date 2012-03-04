@@ -38,46 +38,28 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 <div id="userprofile" class="main-div" > 
 	<jsp:include page="getUser.jsp" />
 	
+	<div id="users-screen">
 	<%
-		if (user != null) {
-			portfolio = portfolioMgr.getUserPortfolio(user);
-			String userIdStr = String.valueOf(user.getId());
+		if(user!=null || getUserText!=null && getUserText.length()>0){
 			
-	%>
-			<table class="datatbl">
-			<tr>
-				<td>
-					<div class="h3 big"  style="vertical-align: top">
-						<a style="vertical-align: top"  href="http://twitter.com/#!/<%=user.getUserName()%>"
-							title="<%=lutil.get("twitter.link.tip", lang, user.getUserName())%>"
-						target="_blank"><%=user.getUserName()%></a>
-						&nbsp;&nbsp;&nbsp;
-						
-						<%=GUIUtil.getInstance().getTwitterShareButton("#user-"+ user.getId(), "twitter.share.user", lang, user.getUserName())%>
-						<%=GUIUtil.getInstance().getTwitterFollowButton(user.getUserName(), lang)%>
-						
-					</div>					
-				</td>
-				
-			</tr>
+			%>
 			
-		</table>
-		
 			<jsp:include page="userDetails.jsp" />
-			
-			<script type="text/javascript">initUserProfileTabs()</script>
-	
 			<jsp:include page="getUserOtherSearchResults.jsp" />
+			<script type="text/javascript">initUserProfileTabs()</script>
+			<%	
+		}else{
+		%>
+			<jsp:include page="trendyUsers.jsp" />
+		
+		<%
+		
+		}%>	
+	</div>
+	
 
 
 
-	<%
-		} else if (getUserText.length() > 0) {
-	%>	
-			<div id="searchusernoresult"><p><%=lutil.get("shared.noresults", lang) %></p></div>
-	<%
-		}
-	%>
 	
 	
 	

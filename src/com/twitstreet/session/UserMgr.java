@@ -1,6 +1,7 @@
 package com.twitstreet.session;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.twitstreet.db.data.RankingHistoryData;
@@ -32,7 +33,7 @@ public interface UserMgr {
 	public ArrayList<User> getTopRank(int pageNumber);
 	
 	public int count();
-	public RankingHistoryData getRankingHistoryForUser(long id);
+	public RankingHistoryData getRankingHistoryForUser(long id, String since);
 	public void updateRankingHistory();
 
 	public void rerank();
@@ -45,4 +46,5 @@ public interface UserMgr {
 	public void updateTwitterData(User user);
 	
 	public List<User> getUserListByServerId(int serverId);
+	public ArrayList<User> getTopGrossingUsers(int limit);
 }

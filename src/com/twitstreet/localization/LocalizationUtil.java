@@ -25,6 +25,22 @@ public class LocalizationUtil {
 
 	String[] languages = {"tr","en"};
 	
+	
+	public boolean checkLanguageIsValid(String lang){
+		
+		for(String lan : languages){
+			
+			if(lan.equalsIgnoreCase(lang)){
+				return true;
+				
+			}
+			
+			
+		}
+		return false;
+		
+	}
+	
 	private LocalizationUtil() {		
 		
 		for(String language : languages){

@@ -42,28 +42,12 @@
 	
 
 
-		<div id="stock-trend-chart-div" style="height: 200px; width: 500px;"></div>
-		<script type="text/javascript">
-			var dateArray = new Array();
-			var valueArray = new Array();
-			var stockName =
-		<%out.write("'" + shd.getName() + "';\n");
-
-				LinkedHashMap<Date, Integer> dvm = shd.getDateValueMap();
-
-				out.write("dateArray.push(new Date(" + stock.getLastUpdate().getTime() + "));\n");
-
-				out.write("valueArray.push(" + stock.getTotal() + ");\n");
-
-				for (Date date : dvm.keySet()) {
-					out.write("dateArray.push(new Date(" + date.getTime() + "));\n");
-
-					out.write("valueArray.push(" + dvm.get(date) + ");\n");
-				}%>
-			drawStockHistory('#stock-trend-chart-div', dateArray, valueArray,
-					stockName);
-		</script>
-
+		<div id="detail-stock<%=stock.getId()%>" style="height: 200px; width: 500px;">
+			<% request.setAttribute("chartStock", stock); %>
+			<jsp:include page="stockTimeLineChart.jsp">										
+				<jsp:param name="divId" value="#detail-stock"/>						
+			</jsp:include>
+		</div>
 	
 
 	<%

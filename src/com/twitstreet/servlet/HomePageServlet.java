@@ -101,6 +101,8 @@ public class HomePageServlet extends TwitStreetServlet {
 
 		loadUser(request);
 
+		
+		
 		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);

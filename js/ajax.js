@@ -82,42 +82,32 @@ function performLastOperation(){
 	performOperation(lastCommand);
 }
 function performOperation(command){
-	 var itemType = command.split('-')[0];
-	   
-	    
-	    
-	    if(itemType == 'stock'){
-	    	 var id = command.split('-')[1];
-	    	loadStock(id);
-	    	
-	    }else if(itemType == 'user'){
-	    	 var id = command.split('-')[1];
-	    	loadUserProfile(id);
-	    }
-		else if(itemType == 'trendystocks'){
-	    	
-	    	loadTrendyStocks();
-	    }else if(itemType == 'searchstock'){
+	var itemType = command.split('-')[0];
+		    
+    if(itemType == 'stock'){
+    	 var id = command.split('-')[1];
+    	loadStock(id);
+    	
+    }else if(itemType == 'user'){
+    	 var id = command.split('-')[1];
+    	loadUserProfile(id);
+    }
+	else if(itemType == 'suggestedstocks'){
+    	
+    	loadTrendyStocks();
+    }else if(itemType == 'topgrossingusers'){
+    	
+    	loadTrendyUsers();
+    }else if(itemType == 'searchstock'){
 
-	    	var searchString = command.split('-')[1];
-	    	getQuote(searchString);
-	    }
-	    else if(itemType == 'searchuser'){
+    	var searchString = command.split('-')[1];
+    	getQuote(searchString);
+    }
+    else if(itemType == 'searchuser'){
 
-	    	var searchString = command.split('-')[1];
-	    	getUser(searchString);
-	    }
-//	    else if(itemType== 'lang'){
-//
-//	    	 var lang = command.split('-')[1];
-//	    	  
-//	    	 
-//	    	
-//	    	
-//	    	
-//	    }
-//	
-	
+    	var searchString = command.split('-')[1];
+    	getUser(searchString);
+    }
 }
 function loadLanguage(lang){
 	

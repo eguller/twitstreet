@@ -18,41 +18,31 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<table style="float:right;margin-bottom:20px; height:40px; width:50px">
 			<tbody>
 				<tr>
-				
 					<td style="vertical-align: middle">
-					
-					<a style="vertical-align: middle;" href="javascript:void(0)" onclick="$('#howtoplay-text').hide()"><%=lutil.get("shared.hide", lang) %>
-			</a>
+						<a style="vertical-align: middle;" href="javascript:void(0)" onclick="$('#howtoplay-text').hide()"><%=lutil.get("shared.hide", lang) %>
+						</a>
 					</td>
 				</tr>
-				
-			
 			</tbody>
-			
 		</table>
-<!-- 	<div style="float:center; margin-bottom:20px; height:70px"> -->
-			
-			
+
+		<ul style="line-height: 40px; list-style: circle; list-style-position: inside; list-style-type: square;">
+
+		<%
+	ArrayList<String> paragraphList = lutil.getStartsWith("howtoplay.text", lang);
+
+	for(String paragraph : paragraphList){
+	%>		
+		<li>
 		
-<!-- 		</div> -->
+		<%=paragraph %>
+		</li>
+		
+	<%		
+	}
+	%>
 
-<ul style="line-height: 40px">
-
-			<%
-		ArrayList<String> paragraphList = lutil.getStartsWith("howtoplay.text", lang);
-	
-		for(String paragraph : paragraphList){
-		%>		
-			<li style="list-style: circle; list-style-position: inside; list-style-type: square;">
-			
-			<%=paragraph %>
-			</li>
-			
-		<%		
-		}
-		%>
-	
-			</ul>
+		</ul>
 		<div style="text-align:center; margin-bottom:20px; height:70px" id="signup">
 			
 			<a href="/signin"><img  src="/images/twitter-big.png"></img>

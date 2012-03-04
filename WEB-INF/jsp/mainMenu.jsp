@@ -25,15 +25,15 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 				<td>
 					<div class="h3-right-top">
 						<div class="stocks-tab-right-content" style="display:none; text-align:right;float:right; text-size:20px; height:20px">		
-							<a id="trendy-stocks-id" href="#trendystocks" onclick="reloadIfHashIsMyHref(this)" >
+							<a id="trendy-stocks-id" href="#suggestedstocks" onclick="reloadIfHashIsMyHref(this)" >
 										<%=lutil.get("trendystocks.header", lang) %> 
 							</a>
 						</div>
-<!-- 						<div class="users-tab-right-content" style="display:none; text-align:right;float:right; text-size:20px; height:20px">		 -->
-<!-- 							<a id="trendy-users-id" href="javascript:void(0)" onclick="loadTrendyUsers()" > -->
-<!-- 										Trendy Users  -->
-<!-- 							</a> -->
-<!-- 						</div> -->
+						<div class="users-tab-right-content" style="display:none; text-align:right;float:right; text-size:20px; height:20px">		
+							<a id="trendy-users-id" href="#topgrossingusers" onclick="reloadIfHashIsMyHref(this)" >
+										<%=lutil.get("topgrossingusers.header", lang) %>
+							</a>
+						</div>
 					</div>
 				</td>
 			</tr>

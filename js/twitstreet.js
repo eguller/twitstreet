@@ -92,7 +92,15 @@ function loadTrendyStocks() {
 	
 	
 	ajaxLoad("/trendystocks", null, "#stocks-screen","#stocks-screen");
+	showTabMain('.stocks-tab','#stocks-container');
+	
 
+}
+function loadTrendyUsers() {
+	
+	
+	ajaxLoad("/trendyusers", null, "#users-screen","#users-screen");
+	showTabMain('.users-tab','#users-container');
 }
 function getUser(user) {	
 	if (user.length > 0) {
