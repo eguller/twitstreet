@@ -61,20 +61,20 @@ function reloadWatchList() {
 	}
 }
 function loadWatchList(reload) {
-	
 	ajaxLoad("/watchlist", null, "#portfolio-content","#portfolio-content",reload);
 }
 
 function addToWatchList(stockid) {
 	ajaxLoad("/watchlist", "stock="+stockid+"&operation=add", "#portfolio-content","#portfolio-content",false,addToWatchListCallback,stockid);	
+	showTabPortfolio('.watchlist-tab','#watchlist-content');
 }
 function addToWatchListCallback(stockid){
 	$(".add-to-watch-list-link-"+stockid).hide();
 	$(".remove-from-watch-list-link-"+stockid).show();	
 }
 function removeFromWatchList(stockid) {
-
 	ajaxLoad("/watchlist", "stock="+stockid+"&operation=remove", "#portfolio-content","#portfolio-content",false,removeFromWatchListCallback,stockid);	
+	showTabPortfolio('.watchlist-tab','#watchlist-content');
 }
 
 function removeFromWatchListCallback(stockid){
@@ -176,7 +176,8 @@ function buy(stock, amount) {
 		containerDiv = '';
 	}
 	
-	ajaxLoad("a/buy",  "stock=" + stock+ "&amount=" + amount + responseNeeded, containerDiv, containerDiv,false,buySellCallback,stock);		
+	ajaxLoad("a/buy",  "stock=" + stock+ "&amount=" + amount + responseNeeded, containerDiv, containerDiv,false,buySellCallback,stock);	
+	showTabPortfolio('.portfolio-tab','#portfolio-content');
 }
 function sell(stock, amount) {
 	
@@ -190,6 +191,7 @@ var responseNeeded ="";
 	
 	
 	ajaxLoad("a/sell",  "stock=" + stock+ "&amount=" + amount + responseNeeded, containerDiv, containerDiv,false,buySellCallback,stock);
+	showTabPortfolio('.portfolio-tab','#portfolio-content');
 }
 
 function buySellCallback(stock){
