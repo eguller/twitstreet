@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -21,6 +22,7 @@ import com.twitstreet.db.data.StockHistoryData;
 import com.twitstreet.db.data.User;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.StockUpdateTask;
+import com.twitstreet.twitter.TwitstreetAnnouncer;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 
@@ -30,6 +32,7 @@ public class StockMgrImpl implements StockMgr {
 
 	private static String TRENDY_STOCK_AVAILABLE_THRESHOLD = "5";
 
+	private static String TRENDY_STOCK_TOTAL_THRESHOLD = "500";
 	private static String TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD = "0.99";
 
 	private static String SELECT_FROM_STOCK = " select id, name, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
@@ -311,8 +314,20 @@ public class StockMgrImpl implements StockMgr {
 		}
 	}
 
+	
+	public boolean sendMessage(String toUser, String message){
+		User user = userMgr.getUserById(273572038);
+		TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
+		twitterProxy.sendMessage(toUser, message);
+		
+		
+		return true;
+	}
+	
+	
 	@Override
 	public List<Stock> getUpdateRequiredStocks() {
+	
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -369,15 +384,10 @@ public class StockMgrImpl implements StockMgr {
 			ps = connection.prepareStatement(SELECT_FROM_STOCK + " where changePerHour is not null " +
 												" and stock_sold(id)< " + TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD + " " +
 												" and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +
-												" and (TIMESTAMPDIFF(minute, lastUpdate, now())  < ?) "  +
-												" and stock_sold(id) > 0 "  +
-			// " 	and " +
-			// "	(" +
-			// "	id in (select distinct stock from portfolio) or " +
-			// "	id in (select distinct stock_id from user_watch_list) or " +
-			// "	id in (select distinct stock_id from twitter_trends) " +
-			// "	) " +
-			"	order by (changePerHour/total) desc limit ?;");
+												" and total >= " + TRENDY_STOCK_TOTAL_THRESHOLD +
+												" and (TIMESTAMPDIFF(minute, lastUpdate, now())  < ?) "  +												
+												//" and stock_sold(id) > 0 "  +		
+												" order by (changePerHour/total) desc limit ?;");
 
 			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
 			ps.setInt(2, MAX_TRENDS);
