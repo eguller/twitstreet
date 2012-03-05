@@ -63,7 +63,7 @@ public class WatchListServlet extends TwitStreetServlet {
 	
 
 		try {
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/watchList.jsp").forward(request, response);
+			getServletContext().getRequestDispatcher("/WEB-INF/jsp/watchListContent.jsp").forward(request, response);
 		} catch (ServletException e) {
 			logger.error("Servlet: Dispatch error", e);
 		}
