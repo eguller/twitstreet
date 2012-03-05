@@ -47,23 +47,26 @@ function loadBalance(reload, doNotBlock) {
 
 
 function reloadPortfolio() {
-	loadPortfolio(true);
+	if($(".portfolio-tab").hasClass("youarehere")){
+		loadPortfolio(true);
+	}
 }
 function loadPortfolio(reload,doNotBlock) {
-	ajaxLoad("/portfolio", null, "#portfolio-container","#portfolio-container",reload,null,null,doNotBlock);
+	ajaxLoad("/portfolio", null, "#portfolio-content","#portfolio-content",reload,null,null,doNotBlock);
 }
 
 function reloadWatchList() {
-
-	loadWatchList(true);
+	if($(".watchlist-tab").hasClass("youarehere")){
+		loadWatchList(true);
+	}
 }
 function loadWatchList(reload) {
 	
-	ajaxLoad("/watchlist", null, "#watchlist-container","#watchlist-container",reload);
+	ajaxLoad("/watchlist", null, "#portfolio-content","#portfolio-content",reload);
 }
 
 function addToWatchList(stockid) {
-	ajaxLoad("/watchlist", "stock="+stockid+"&operation=add", "#watchlist-container","#watchlist-container",false,addToWatchListCallback,stockid);	
+	ajaxLoad("/watchlist", "stock="+stockid+"&operation=add", "#portfolio-content","#portfolio-content",false,addToWatchListCallback,stockid);	
 }
 function addToWatchListCallback(stockid){
 	$(".add-to-watch-list-link-"+stockid).hide();
@@ -71,7 +74,7 @@ function addToWatchListCallback(stockid){
 }
 function removeFromWatchList(stockid) {
 
-	ajaxLoad("/watchlist", "stock="+stockid+"&operation=remove", "#watchlist-container","#watchlist-container",false,removeFromWatchListCallback,stockid);	
+	ajaxLoad("/watchlist", "stock="+stockid+"&operation=remove", "#portfolio-content","#portfolio-content",false,removeFromWatchListCallback,stockid);	
 }
 
 function removeFromWatchListCallback(stockid){

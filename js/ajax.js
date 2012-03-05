@@ -25,7 +25,7 @@ function ajaxLoad(url, queryString, containerDiv, loadingDiv, isReload, callback
 			
 			if($(data).length>0){
 				$(containerDiv).empty();
-				$(containerDiv).append($(data))	
+				$(containerDiv).append($(data));
 			}
 			
 			

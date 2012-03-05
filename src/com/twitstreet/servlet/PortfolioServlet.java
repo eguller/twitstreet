@@ -31,7 +31,7 @@ public class PortfolioServlet extends TwitStreetServlet{
 		//loadUserFromCookie(request);
 		try {
 			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/portfolio.jsp").forward(request, response);
+					"/WEB-INF/jsp/portfolioContent.jsp").forward(request, response);
 		} catch (ServletException e) {
 			logger.error("Servlet: Dispatch error", e);
 		}

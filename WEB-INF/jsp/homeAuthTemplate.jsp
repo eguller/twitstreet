@@ -20,10 +20,6 @@
 					<template:get name="portfolio"></template:get>
 				</div>
 
-				<div id="watchlist-container">
-					<template:get name="watchlist"></template:get>
-				</div>
-
 				<div id="yourtransactions-container">
 					<template:get name="yourtransactions"></template:get>
 				</div>
@@ -43,9 +39,6 @@
 				<template:get name="users"></template:get>
 
 				<script type="text/javascript">showTabMain('.stocks-tab','#stocks-container')</script>
-				<script type="text/javascript">showTabPortfolio('.portfolio-tab','#portfolio-container')</script>
-		
-			
 			</div>
 			<div id="column_right">
 				<div id="topranks-container">

@@ -5,7 +5,6 @@
   <template:put name='stocks' content='stocks.jsp' />
   <template:put name='users' content='users.jsp'/>
   <template:put name='mainmenu' content='mainMenu.jsp'/>  
-  <template:put name='watchlist' content='watchList.jsp' />
   <template:put name='portfolio' content='portfolio.jsp' />
   <template:put name='balance' content='balance.jsp' />
   <template:put name='yourtransactions' content='yourtransactions.jsp' />

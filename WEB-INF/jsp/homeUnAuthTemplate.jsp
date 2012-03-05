@@ -21,11 +21,6 @@
 				<div id="portfolio-container">
 					<template:get name="portfolio"></template:get>
 				</div>
-
-				<div id="watchlist-container">
-					<template:get name="watchlist"></template:get>
-				</div>
-
 				<div id="yourtransactions-container">
 					<template:get name="yourtransactions"></template:get>
 				</div>

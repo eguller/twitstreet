@@ -1,12 +1,11 @@
-
 	portfolioTabsArray = new Array();
 
 	portfolioTabContentsArray = new Array();
 	portfolioTabsArray.push(".portfolio-tab");
 	portfolioTabsArray.push(".watchlist-tab");
 
-	portfolioTabContentsArray.push("#portfolio-container");
-	portfolioTabContentsArray.push("#watchlist-container");
+	portfolioTabContentsArray.push("#portfolio-content");
+	portfolioTabContentsArray.push("#watchlist-content");
 
 
 function showTabPortfolio(tabId,tabContentId){

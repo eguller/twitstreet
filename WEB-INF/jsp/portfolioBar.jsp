@@ -6,8 +6,8 @@
 %>
 <div class="main-tabs">
 	<a class="portfolio-tab youarehere"
-		onclick="showTabPortfolio('.portfolio-tab','#portfolio-container');">
+		onclick="showTabPortfolio('.portfolio-tab','#portfolio-content'); loadPortfolio(false);">
 		<%=lutil.get("portfolio.header", lang)%> </a> <a class="watchlist-tab"
-		onclick="showTabPortfolio('.watchlist-tab','#watchlist-container');">
+		onclick="showTabPortfolio('.watchlist-tab','#watchlist-content'); loadWatchList(false);">
 		<%=lutil.get("watchlist.header", lang)%> </a>
 </div>
