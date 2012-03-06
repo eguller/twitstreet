@@ -90,7 +90,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 							</td>
 						
 							<td align="right" style="padding: 2px">
-							 	|  <%= (user.getProfit()!=0)? Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true):"" %>
+							 	 <%= (user.getProfit()!=0)? " | "+Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true):"" %>
 							</td>
 						</tr>
 						
