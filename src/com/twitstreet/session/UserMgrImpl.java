@@ -393,13 +393,11 @@ public class UserMgrImpl implements UserMgr {
 		ResultSet rs = null;
 		
 		String sinceStr =" TIMESTAMP('"+SEASON_START+"') " ;
-		if(since!=null){
-			
-			sinceStr =" TIMESTAMP('" + since+"') " ;
-			
+		
+		if(since!=null){			
+			sinceStr =" TIMESTAMP('" + since+"') " ;			
 		}
 		
-	
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection

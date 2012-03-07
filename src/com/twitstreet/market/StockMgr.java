@@ -45,7 +45,7 @@ public interface StockMgr {
      * @param total - total
 	 * @return 
 	 */
-	public void updateTwitterData(long stockId, int total, String pictureUrl, String screenName, boolean verified);
+	public void updateTwitterData(long stockId, int total, String pictureUrl, String screenName,String longName, boolean verified);
 	
 	/**
 	 * Returns stock sold percentage by name
@@ -64,7 +64,7 @@ public interface StockMgr {
 	 */
 	public void updateStockHistory();
 	
-	public StockHistoryData getStockHistory(long id);
+	public StockHistoryData getStockHistory(long id, String since);
 
 	ArrayList<Stock> getTrendyStocks();
 
@@ -81,4 +81,7 @@ public interface StockMgr {
 	void updateStockData(long id);
 
 	void updateStockData(String stockName);
+
+	StockHistoryData getStockHistory(long id);
+	StockHistoryData getStockHistory(long id, int forMinutes);
 }

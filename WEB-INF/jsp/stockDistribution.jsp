@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
@@ -29,6 +30,9 @@
 
 
 	<%
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
+	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	
@@ -91,13 +95,14 @@
 				%>
 	<!--STOCK DISTRIBUTION TABLE -->
 
+<%-- 	<div class="h3" style="text-align: center"><%=lutil.get("stockdistribution.details", lang)  %></div> --%>
 	<table class="datatbl" style="margin-top: 10px;">
 		<thead>
 			<tr class="thead">
-				<td style="width: 120px"><b>Stock Distribution</b></td>
-				<td>User Name</td>
-				<td>Value</td>
-				<td>Share</td>
+				<td style="width: 120px">&nbsp;</td>
+				<td><%=lutil.get("user", lang) %></td>
+				<td><%=lutil.get("stockdistribution.share", lang) %></td>
+				<td><%=lutil.get("stockdistribution.value", lang) %></td>
 			</tr>
 		</thead>
 
@@ -122,10 +127,10 @@
 			<td><img class='twuser'
 				style="margin-top: 2px; margin-bottom: 2px;"
 				src="<%=stockDetail.getUserPictureUrl()%>" /></td>
-			<td><a href="#user-<%=stockDetail.getUserId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=stockDetail.getUserName()%>&#39;s user profile page"><%=stockDetail.getUserName()%></a>
+			<td><a href="#user-<%=stockDetail.getUserId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%= lutil.get("user.details.tip", lang, stockDetail.getUserName())%>"><%=stockDetail.getUserName()%></a>
 			</td>
-			<td>$<%=Util.commaSep((int) (stockDetail.getPercent() * stockDetail.getStockTotal()))%></td>
 			<td><%=Util.getShareString(stockDetail.getPercent()) %></td>
+			<td>$<%=Util.commaSep((int) (stockDetail.getPercent() * stockDetail.getStockTotal()))%></td>
 		</tr>
 		<%
 				i++;

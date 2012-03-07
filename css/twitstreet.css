@@ -618,6 +618,23 @@ margin-bottom: 5px;
     cursor: pointer;
 }
 
+.hr-pink-class{
+	
+	background-color: #FCD8EA;
+	color:  #FCD8EA;
+	height:2px;	
+	border:none;
+}
+.hr-blue-class{
+	
+	background-color: #C0DBF8;
+	color:  #C0DBF8;
+	height:2px;	
+	border:none;
+}
+
+
+
 .buy-button {
 	width : 98%;
 	margin-bottom: 2px;

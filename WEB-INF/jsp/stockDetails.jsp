@@ -70,15 +70,20 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					<div class="h3 big"  style="vertical-align: top">
 						<a style="vertical-align: top;" href="http://twitter.com/#!/<%=stock.getName()%>"
 						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>"
-						target="_blank"><%=stock == null ? "" : stock.getName()%></a>
-							<% if(stock.isVerified()){ %>
+						target="_blank"><%=stock.getName()%></a> 	
+						<a style="vertical-align: top; font-size: 12px; color: #999;" href="http://twitter.com/#!/<%=stock.getName()%>"
+						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>"
+						target="_blank"><%=(stock.getLongName()!=null)?" ("+stock.getLongName()+")":""%></a> 
+						<%if(stock.isVerified()){ %>
 						<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
 						<% } %>
-						&nbsp;&nbsp;&nbsp;
-						
 						<%=GUIUtil.getInstance().getTwitterShareButton("#stock-"+ stock.getId(), "twitter.share.stock", lang, stock.getName())%>
 						<%=GUIUtil.getInstance().getTwitterFollowButton(stock.getName(), lang)%>
+				
+					
+						&nbsp;&nbsp;&nbsp;
 						
+					
 					</div>					
 				</td>
 				<td>
@@ -112,11 +117,11 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			
 	
 	<div id="stock-details-menu" class="subheader">
-
 			
 		<table class="datatbl">
+			
 			<tr>
-				<td>
+				<td width="55">
 					<img class="twuser" width="48" height="48" 
 					src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 					id="dashboard-picture">
@@ -124,7 +129,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 <!-- 					<img src="/images/activity_indicator_32.gif" /> -->
 															
 					
-					</td>
+				</td>
 				<td>
 						
 				<br>

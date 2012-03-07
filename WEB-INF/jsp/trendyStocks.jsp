@@ -64,7 +64,7 @@
 							<td width="60"><img class="twuser" width="48" height="48"
 								src="<%=stock.getPictureUrl()%>" />
 							</td>
-							<td width="140"
+							<td width="170"
 								onmouseover="$('.user-portfolio-item-watch-div-<%=stock.getId()%>').show()"
 								onmouseout="$('.user-portfolio-item-watch-div-<%=stock.getId()%>').hide()">
 								<table class="datatbl2">
@@ -124,24 +124,30 @@
 											/ stock.getTotal(), false, true,
 									true, true, false, true)%></td>
 									</tr>
-								</table> <br>
+								</table> 
 							</td>
 							<td width="30">&nbsp;</td>
 							<td>
 								<div id="trendy-stock<%=stock.getId()%>"
-									style="width: 260px; height: 120px">
+									style="width: 230px; height: 120px">
 
 									<%
 										request.setAttribute("chartStock", stock);
 									%>
 									<jsp:include page="stockTimeLineChart.jsp">
 										<jsp:param name="divId" value="#trendy-stock" />
-										<jsp:param name="format" value="lastSixHours" />
+										<jsp:param name="format" value="simple,240" />							
+										<jsp:param name="forMinutes" value="360"/>	
 									</jsp:include>
 								</div>
 							</td>
 						</tr>
 					</table>
+					
+<!-- 							<br> -->
+<!-- 						<hr class="hr-blue-class"> -->
+						
+						
 				</td>
 				<%
 					} else {

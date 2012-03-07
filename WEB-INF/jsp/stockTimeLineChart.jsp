@@ -48,13 +48,17 @@
 	User user = (User) request.getAttribute(User.USER);
 	
 	String divId = request.getParameter("divId");
+	
 	String format = request.getParameter("format");
 	
+	String since = request.getParameter("since");
 	
+	String forMinutes = request.getParameter("forMinutes");
 	
 	Stock stock = (Stock) request.getAttribute("chartStock");
 
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
+	
 	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 	%>
 
@@ -67,9 +71,14 @@
 	
 	
 			StockHistoryData shd = null;
-
-			shd = stockMgr.getStockHistory(stock.getId());
-
+			if(since!=null){
+						shd = stockMgr.getStockHistory(stock.getId(),since);
+			}
+			else if(forMinutes!=null){
+				shd = stockMgr.getStockHistory(stock.getId(),Integer.valueOf(forMinutes));
+			}else{
+				shd = stockMgr.getStockHistory(stock.getId());
+			}
 			out.write("'" + shd.getName() + "';\n");
 
 			LinkedHashMap<Date, Integer> dvm = shd.getDateValueMap();
