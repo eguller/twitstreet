@@ -366,7 +366,9 @@ public class UserMgrImpl implements UserMgr {
 											    "select distinct user_id from ranking r where " +
 											       " 15< TIMESTAMPDIFF(minute,( " +
 											           " select distinct rh.lastUpdate from ranking_history rh where rh.user_id=r.user_id order by rh.lastUpdate desc limit 1" +
-											         "   ), now())" +
+											         "   ), now()) " +
+											         " OR " +
+											         " 1 > (select count(*) from ranking_history rh where rh.user_id = r.user_id ) " +
 											" )");
 											
 	

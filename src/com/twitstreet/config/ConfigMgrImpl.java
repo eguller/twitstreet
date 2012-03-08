@@ -47,6 +47,7 @@ public class ConfigMgrImpl implements ConfigMgr{
 				config.setVal(rs.getString(Config.VAL));
 				configMap.put(config.getParm(), config);
 			}
+			
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + stmt.toString());
 			logger.debug("Config manager initialized successfully.");
 
@@ -57,8 +58,6 @@ public class ConfigMgrImpl implements ConfigMgr{
 		finally{
 			dbMgr.closeResources(connection, stmt, rs);
 		}
-		
-		
 	}
 	public String get(String parm){
 		Config config = configMap.get(parm);

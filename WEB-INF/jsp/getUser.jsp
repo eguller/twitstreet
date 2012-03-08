@@ -55,7 +55,13 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			<input type="text" class="textbox" id="getUserTextboxId" value="<%=getUserText%>"
 				name="getUserText" /> <input type="button" id="getUserButtonId"
 				onclick=" reloadIfHashIs('#searchuser-'+$('#getUserTextboxId').val()); window.location = '#searchuser-'+$('#getUserTextboxId').val();" value="<%=lutil.get("shared.search", lang) %>">
+				<script>
 			
+					jQuery('#getUserTextboxId').click(function() {
+						selectAllText(jQuery(this))
+					});
+					
+				</script>
 		</div>
 		<input type="hidden" id="getUserTextHiddenId" value="<%=getUserText%>" /> 
 		<input type="hidden" id="getUserIdHiddenId"

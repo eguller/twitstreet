@@ -64,22 +64,22 @@ if (userCount > maxRank) {
 
 
 <div id="topranks" class="main-div">
-	<table class="datatbl">
-		<tr>
-			<td>
-				<h3><%=lutil.get("ranking.header", lang) %></h3>
-			</td>
-			<td align="right">
-				<jsp:include page="toprankPagination.jsp">
+	<div style="padding-top:0px; height:22px" class="h3">
+	
+		<div align="left" style="float: left;padding-top:4px">
+			<%=lutil.get("ranking.header", lang) %>
+		</div>
+		<div align="right" style="float: right">
+			<jsp:include page="toprankPagination.jsp">
+		
+				<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+				<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+				<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+		
+			</jsp:include>				
+		</div>
 			
-					<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
-					<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-					<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-			
-				</jsp:include>				
-			</td>
-		</tr>		
-	</table>	
+	</div>	
 
 	<div id="topranks-loading-div">
 		
@@ -144,13 +144,14 @@ if (userCount > maxRank) {
 			%>
 			</table>
 	
-	
-		<jsp:include page="toprankPagination.jsp">
-	
-			<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
-			<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-			<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-	
-		</jsp:include>
+		<div style="padding-top:0px; height:22px" class="h3" align="right">
+			<jsp:include page="toprankPagination.jsp">
+		
+				<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+				<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+				<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+		
+			</jsp:include>
+		</div>
 	</div>
 </div>
