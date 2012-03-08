@@ -3,14 +3,11 @@ package com.twitstreet.servlet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.twitstreet.db.data.User;
 import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
@@ -28,14 +25,7 @@ public class UserProfileServlet extends TwitStreetServlet {
 		
 		loadUser(request);
 		//loadUserFromCookie(request);
-		User user = (User) request.getAttribute(User.USER);
-		
-		
-		if (request.getParameter(User.USER) != null) {
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);
-		} else {
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);
-		}
+		getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);
 
 	}
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
