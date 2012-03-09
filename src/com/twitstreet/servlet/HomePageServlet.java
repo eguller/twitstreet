@@ -55,6 +55,8 @@ public class HomePageServlet extends TwitStreetServlet {
 	public static final String STOCK_DETAIL_LIST = "stockDetailList";
 	public static final String QUOTE = "quote";
 	public static final String QUOTE_DISPLAY = "quotedisplay";
+	public static final String REFERENCE_ID = "reference-id";
+	public static final String REF = "ref";
 	
 	public static final String OTHER_SEARCH_RESULTS = "other-search-results";
 
@@ -107,6 +109,10 @@ public class HomePageServlet extends TwitStreetServlet {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
 		} else {
+			String referenceId = request.getParameter(REF);
+			if(referenceId != null){
+				request.getSession().setAttribute(REFERENCE_ID, referenceId);
+			}
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
 		}
