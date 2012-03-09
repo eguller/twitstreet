@@ -349,17 +349,22 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank) "
-							+ " select user_id, cash, portfolio,  lastUpdate, rank from ranking where "
-							+ "ranking.user_id in"
-							+ "("
-							+ "select distinct user_id from ranking r where "
-							+ " 15< TIMESTAMPDIFF(minute,( "
-							+ " select distinct rh.lastUpdate from ranking_history rh where rh.user_id=r.user_id order by rh.lastUpdate desc limit 1"
-							+ "   ), now())" + " )");
 
-			int rowChanged = ps.executeUpdate();
-
+					.prepareStatement("insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank) " +
+											" select user_id, cash, portfolio,  lastUpdate, rank from ranking where " +
+											"ranking.user_id in" +
+											 "(" +
+											    "select distinct user_id from ranking r where " +
+											       " 15< TIMESTAMPDIFF(minute,( " +
+											           " select distinct rh.lastUpdate from ranking_history rh where rh.user_id=r.user_id order by rh.lastUpdate desc limit 1" +
+											         "   ), now()) " +
+											         " OR " +
+											         " 1 > (select count(*) from ranking_history rh where rh.user_id = r.user_id ) " +
+											" )");
+											
+	
+		   int rowChanged=	ps.executeUpdate();
+				
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
@@ -376,14 +381,10 @@ public class UserMgrImpl implements UserMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-
-		String sinceStr = " TIMESTAMP('" + SEASON_START + "') ";
-		if (since != null) {
-
-			sinceStr = " TIMESTAMP('" + since + "') ";
-
+		String sinceStr =" TIMESTAMP('"+SEASON_START+"') " ;
+		if(since!=null){			
+			sinceStr =" TIMESTAMP('" + since+"') " ;			
 		}
-
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection.prepareStatement(" select "

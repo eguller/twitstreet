@@ -1,6 +1,7 @@
 package com.twitstreet.twitter;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -219,9 +220,24 @@ public class TwitterProxyImpl implements TwitterProxy {
 		
 		
 	}
+	
+	
+	@Override
+	public boolean sendMessage(String toUser, String message){
+		try {
+			twitter.sendDirectMessage(toUser,message);
+		} catch (TwitterException e) {
+			logger.error("sendMessage:" +toUser+" "+message );
+		}
+		
+		
+		
+		return true;
+	}
 
 	@Override
 	public ArrayList<Trend> getTrends() {
+				
 		Trends ts = null;
 		try {
 			ts = twitter.getLocationTrends(1);

@@ -10,23 +10,18 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 <div id="howtoplay" class="main-div">
 
-	<div class="field-white" style="height:30px; cursor: pointer;"  onclick="if($('#howtoplay-text').css('display') == 'none') $('#howtoplay-text').fadeTo('slow',1.0); else $('#howtoplay-text').hide(); "> 
-		<a style="line-height: 30px" href="javascript:void(0)"><strong><%=lutil.get("howtoplay.header", lang) %></strong></a>	
+	<div class="field-white" style="height:50px; cursor: pointer;"  onclick="if($('#howtoplay-text').css('display') == 'none') $('#howtoplay-text').fadeTo('slow',1.0); else $('#howtoplay-text').hide(); "> 
+		<a style="line-height: 50px; font-size: 20px" href="javascript:void(0)"><%=lutil.get("howtoplay.header", lang) %></a>	
 	</div>
 
-	<div id="howtoplay-text" style="display: none">
-		<table style="float:right;margin-bottom:20px; height:40px; width:50px">
-			<tbody>
-				<tr>
-					<td style="vertical-align: middle">
+	<div id="howtoplay-text" style="display: none; margin-left:20px">
+		<div style="clear: both; text-align: right; margin:5px;padding:5px;">
 						<a style="vertical-align: middle;" href="javascript:void(0)" onclick="$('#howtoplay-text').hide()"><%=lutil.get("shared.hide", lang) %>
 						</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		</div>
+		
 
-		<ul style="line-height: 40px; list-style: circle; list-style-position: inside; list-style-type: square;">
+		<ul style="line-height: 40px; list-style: circle; list-style-type: square;">
 
 		<%
 	ArrayList<String> paragraphList = lutil.getStartsWith("howtoplay.text", lang);

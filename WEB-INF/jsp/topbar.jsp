@@ -30,7 +30,8 @@
 									href="/">TwitStreet<img height="35" width="35" alt=""
 									src="/images/twitstreet_logo_50.png">
 								</a>
-							</div>
+								</div>
+							</td>
 					</tr>
 
 					<tr>

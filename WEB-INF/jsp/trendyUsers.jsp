@@ -47,7 +47,7 @@
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	
-	ArrayList<User> trendResults = userMgr.getTopGrossingUsers(5);
+	ArrayList<User> trendResults = userMgr.getTopGrossingUsers(6);
 
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
@@ -77,13 +77,14 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			%>
 
 					<td>
+					
 						<table>
 							<tr>
 								<td width="60">
 									<img class="twuser" width="48" height="48" 
 									src="<%=user.getPictureUrl()%>" />
 								</td>
-								<td width="140">
+								<td width="170">
 								<table class="datatbl2">
 									<tr>									
 										<td colspan="2">	
@@ -114,24 +115,29 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 								</table>
 								
 									
-									<br>
 								</td>
 								<td  width="30">
 									&nbsp;
 								</td>
 								<td>
-									<div id="trendy-user<%=user.getId()%>" style="width:260px; height:120px">
+									<div id="trendy-user<%=user.getId()%>" style="width:230px; height:120px">
 									
 									<% request.setAttribute("chartUser", user); %>
 										<jsp:include page="userTimeLineChart.jsp">										
 											<jsp:param name="divId" value="#trendy-user"/>
-											<jsp:param name="format" value="lastSixHours"/>							
+											<jsp:param name="format" value="simple"/>							
 										</jsp:include>
 									
 									</div>
 								</td>
 							</tr>
 						</table>
+						
+<!-- 						<br> -->
+						
+<!-- 						<hr class="hr-pink-class"> -->
+						
+						
 					</td>
 					<%
 						} else {

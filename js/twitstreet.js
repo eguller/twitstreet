@@ -4,12 +4,7 @@
 $(document).ready(function() {
 	$("#dashboard-message-field").corner("round 3px");
 
-	jQuery('#getQuoteTextboxId').click(function() {
-		selectAllText(jQuery(this))
-	});
-	jQuery('#getUserTextboxId').click(function() {
-		selectAllText(jQuery(this))
-	});
+	
 	
 
 	if ($("#topranks").length > 0) {

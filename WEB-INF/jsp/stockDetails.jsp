@@ -70,15 +70,21 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					<div class="h3 big"  style="vertical-align: top">
 						<a style="vertical-align: top;" href="http://twitter.com/#!/<%=stock.getName()%>"
 						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>"
-						target="_blank"><%=stock == null ? "" : stock.getName()%></a>
-							<% if(stock.isVerified()){ %>
+						target="_blank"><%=stock.getName()%></a> 	
+							<%if(stock.isVerified()){ %>
 						<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
 						<% } %>
-						&nbsp;&nbsp;&nbsp;
-						
+						<a style="vertical-align: top; font-size: 12px; color: #999;" href="http://twitter.com/#!/<%=stock.getName()%>"
+						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>"
+						target="_blank"><%=(stock.getLongName()!=null)?" ("+stock.getLongName()+")":""%></a> 
+					
 						<%=GUIUtil.getInstance().getTwitterShareButton("#stock-"+ stock.getId(), "twitter.share.stock", lang, stock.getName())%>
 						<%=GUIUtil.getInstance().getTwitterFollowButton(stock.getName(), lang)%>
+				
+					
+						&nbsp;&nbsp;&nbsp;
 						
+					
 					</div>					
 				</td>
 				<td>
@@ -112,11 +118,11 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			
 	
 	<div id="stock-details-menu" class="subheader">
-
 			
 		<table class="datatbl">
+			
 			<tr>
-				<td>
+				<td width="55">
 					<img class="twuser" width="48" height="48" 
 					src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 					id="dashboard-picture">
@@ -124,7 +130,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 <!-- 					<img src="/images/activity_indicator_32.gif" /> -->
 															
 					
-					</td>
+				</td>
 				<td>
 						
 				<br>
@@ -164,7 +170,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	
 	<br>
 	
-	<div id="stock-details-screen">
+	<div id="stock-details-screen" class="main-div">
 		<div id="buy-sell-container">
 			<jsp:include page="buySell.jsp" />
 		</div>
@@ -178,11 +184,12 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		}
 	%>
 
-	<div id="hasnofollowers">
-
+	
 		<%
 			if (quote.length() > 0 && stock != null && stock.getTotal() == 0) {
 		%>
+		<div id="hasnofollowers">
+		
 		<div id="dashboard-message-field" style="margin-top: 6px;"
 			class="field-white">
 			<p style="margin-top: 10px; margin-bottom: 10px;">
@@ -191,10 +198,11 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 				%>
 			</p>
 		</div>
+			</div>
+		
 		<%
 			}
 		%>
-	</div>
 
 
 	

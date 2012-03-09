@@ -12,6 +12,7 @@ public class Stock implements DataObjectIF {
 	
 	long id;
 	String name;
+	String longName;
 	int total;
 	double sold;
 	String pictureUrl;
@@ -76,6 +77,7 @@ public class Stock implements DataObjectIF {
 	public void getDataFromResultSet(ResultSet rs) throws SQLException {
 		this.setId(rs.getLong("id"));
 		this.setName(rs.getString("name"));
+		this.setLongName(rs.getString("longName"));
 		this.setTotal(rs.getInt("total"));
 		this.setSold(rs.getDouble("sold"));
 		this.setPictureUrl(rs.getString("pictureUrl"));
@@ -118,5 +120,11 @@ public class Stock implements DataObjectIF {
 	}
 	public boolean isUpdateRequired() {
 		return Calendar.getInstance().getTimeInMillis() - lastUpdate.getTime() > UPDATE_REQUIRED ? true : false;
+	}
+	public String getLongName() {
+		return longName;
+	}
+	public void setLongName(String longName) {
+		this.longName = longName;
 	}
 }

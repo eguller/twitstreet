@@ -20,4 +20,5 @@ public interface TwitterProxy {
 
 	public ArrayList<Trend> getTrends();
 	public long searchAndGetFirstResult(String searchString);
+	boolean sendMessage(String toUser, String message);
 }
