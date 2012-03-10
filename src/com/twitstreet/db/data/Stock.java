@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.twitstreet.localization.LocalizationUtil;
+
 public class Stock implements DataObjectIF {
 	
 	//If stock is not updated more than 10 minutes, update is required
@@ -16,6 +18,7 @@ public class Stock implements DataObjectIF {
 	int total;
 	double sold;
 	String pictureUrl;
+	String language;
 	Date lastUpdate;
 	int changePerHour;
 	boolean changePerHourCalculated;
@@ -78,6 +81,7 @@ public class Stock implements DataObjectIF {
 		this.setId(rs.getLong("id"));
 		this.setName(rs.getString("name"));
 		this.setLongName(rs.getString("longName"));
+		this.setLanguage(rs.getString("language"));
 		this.setTotal(rs.getInt("total"));
 		this.setSold(rs.getDouble("sold"));
 		this.setPictureUrl(rs.getString("pictureUrl"));
@@ -126,5 +130,19 @@ public class Stock implements DataObjectIF {
 	}
 	public void setLongName(String longName) {
 		this.longName = longName;
+	}
+	public String getLanguage() {
+		return language;
+	}
+	public void setLanguage(String language) {
+		
+		if(LocalizationUtil.getInstance().getLanguages().contains(language)){
+		
+			this.language = language;
+		}
+		else{
+			this.language = LocalizationUtil.DEFAULT_LANGUAGE;
+			
+		}
 	}
 }

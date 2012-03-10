@@ -1,6 +1,7 @@
 package com.twitstreet.localization;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -25,6 +26,13 @@ public class LocalizationUtil {
 
 	String[] languages = {"tr","en"};
 	
+	
+	public ArrayList<String> getLanguages(){
+		
+		
+		return new ArrayList<String>(Arrays.asList(languages));
+		
+	}
 	
 	public boolean checkLanguageIsValid(String lang){
 		

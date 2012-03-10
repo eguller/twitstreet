@@ -19,6 +19,7 @@ import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.base.DBMgrImpl;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.StockHistoryData;
+import com.twitstreet.db.data.TrendyStock;
 import com.twitstreet.db.data.User;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.StockUpdateTask;
@@ -34,8 +35,12 @@ public class StockMgrImpl implements StockMgr {
 	private static String TRENDY_STOCK_TOTAL_THRESHOLD = "500";
 	private static String TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD = "0.99";
 
-	private static String SELECT_FROM_STOCK = " select id, name, longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
-	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name,longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified from stock ";
+	private static String SELECT_FROM_STOCK = " select id, name, longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified, language from stock ";
+	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name,longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified, language from stock ";
+	
+	
+	
+	
 	private static int MAX_TRENDS = 6;
 
 	private static StockMgrImpl instance = new StockMgrImpl();
@@ -98,6 +103,7 @@ public class StockMgrImpl implements StockMgr {
 					stockDO.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 					stockDO.setSold(0.0D);
 					stockDO.setVerified(twUser.isVerified());
+					stockDO.setLanguage(twUser.getLang());
 					saveStock(stockDO);
 
 					// stockdo shall not require an update due to the update
@@ -155,6 +161,7 @@ public class StockMgrImpl implements StockMgr {
 					stockDO.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 					stockDO.setSold(0.0D);
 					stockDO.setVerified(twUser.isVerified());
+					stockDO.setLanguage(twUser.getLang());
 					saveStock(stockDO);
 
 					// stockdo shall not require an update due to the update
@@ -191,7 +198,7 @@ public class StockMgrImpl implements StockMgr {
 		
 		twitter4j.User twUser = getTwitterProxy().getTwUser(id);
 		if (twUser != null) {
-			updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified());
+			updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang());
 		}
 
 	}
@@ -201,7 +208,7 @@ public class StockMgrImpl implements StockMgr {
 	
 		twitter4j.User twUser = getTwitterProxy().getTwUser(stockName);
 
-		updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified());
+		updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang());
 
 	}
 	
@@ -302,20 +309,21 @@ public class StockMgrImpl implements StockMgr {
 
 	}
 
-	public void updateTwitterData(long id, int total, String pictureUrl, String screenName,String longName, boolean verified) {
+	public void updateTwitterData(long id, int total, String pictureUrl, String screenName,String longName, boolean verified,String language) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ?,longName = ?, verified = ? where id = ?");
+			ps = connection.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ?,longName = ?, verified = ?,language = ? where id = ?");
 
 			ps.setInt(1, total);
 			ps.setString(2, pictureUrl);
 			ps.setString(3, screenName);
 			ps.setString(4, longName);
 			ps.setBoolean(5, verified);
-			ps.setLong(6, id);
+			ps.setString(6, language);
+			ps.setLong(7, id);
 			ps.executeUpdate();
 
 			// This query should be called right after the stock update,
@@ -346,7 +354,7 @@ public class StockMgrImpl implements StockMgr {
 		PreparedStatement ps = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("insert into stock(id, name, longName, total, pictureUrl, lastUpdate, verified) values(?, ?,?, ?, ?, now(), ?)");
+			ps = connection.prepareStatement("insert into stock(id, name, longName, total, pictureUrl, lastUpdate, verified,language) values(?, ?,?, ?, ?, now(), ?, ?)");
 			ps.setLong(1, stock.getId());
 			ps.setString(2, stock.getName());
 			ps.setString(3, stock.getLongName());
@@ -354,6 +362,7 @@ public class StockMgrImpl implements StockMgr {
 			ps.setString(5, stock.getPictureUrl());
 			
 			ps.setBoolean(6, stock.isVerified());
+			ps.setString(7, stock.getLanguage());
 
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -367,18 +376,10 @@ public class StockMgrImpl implements StockMgr {
 	}
 
 	
-	public boolean sendMessage(String toUser, String message){
-		User user = userMgr.getUserById(273572038);
-		TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
-		twitterProxy.sendMessage(toUser, message);
-		
-		
-		return true;
-	}
-	
-	
 	@Override
 	public List<Stock> getUpdateRequiredStocks() {
+		
+		
 	
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
 		Connection connection = null;
@@ -404,6 +405,49 @@ public class StockMgrImpl implements StockMgr {
 		return stockList;
 	}
 
+	@Override
+	public List<TrendyStock> getTopGrossingStocks(int forhours){
+		
+		ArrayList<TrendyStock> stockList = new ArrayList<TrendyStock>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(
+			" select s.*, sh.total as oldValue, sh.lastUpdate as oldUpdate from stock_history sh,stock s "+
+			"  where "+
+			
+			"   TIMESTAMPDIFF(minute,s.lastUpdate,now()) <= ? " +
+			"   and TIMESTAMPDIFF(minute,sh.lastUpdate,s.lastUpdate)  >= ? " +
+			"   and TIMESTAMPDIFF(minute,sh.lastUpdate,s.lastUpdate)  <= ? " +
+			"   and sh.stock = s.id "+
+			"   and s.total > ? " +
+			"  order by (s.total-sh.total)/sh.total desc limit 1; ");
+			
+			ps.setInt(1, 2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
+			ps.setInt(2, (forhours * 60) - (2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES) );
+			ps.setInt(3, (forhours * 60) + (2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES) );
+			//TODO create constant
+			ps.setInt(4, 500 );
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				TrendyStock stockDO = new TrendyStock();
+				stockDO.getDataFromResultSet(rs);
+				stockDO.setTrendDuration(forhours);
+				stockList.add(stockDO);
+			}
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return stockList;
+	}
+	
 	@Override
 	public void resetSpeedOfOldStocks() {
 

@@ -28,6 +28,8 @@ import com.twitstreet.task.AsyncQuery;
 import com.twitstreet.task.AsyncQueryTask;
 import com.twitstreet.task.ReRankTask;
 import com.twitstreet.task.StockUpdateTask;
+import com.twitstreet.twitter.TwitstreetAnnouncer;
+import com.twitstreet.twitter.TwitstreetAnnouncerImpl;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 import com.twitstreet.twitter.TwitterProxyImpl;
@@ -37,6 +39,7 @@ public class TSModule extends AbstractModule {
 	@Override
 	protected void configure() {
 
+		bind(TwitstreetAnnouncer.class).to(TwitstreetAnnouncerImpl.class).in(Scopes.SINGLETON);
 		bind(GroupMgr.class).to(GroupMgrImpl.class).in(Scopes.SINGLETON);
 		bind(Twitstreet.class).to(TwitstreetImpl.class).in(Scopes.SINGLETON);
 		bind(UserMgr.class).to(UserMgrImpl.class);

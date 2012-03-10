@@ -84,7 +84,7 @@ public class CallBackServlet extends TwitStreetServlet {
 					logger.error("Parsing reference id failed: " + referenceId);
 				}
 				if(referenceLong > -1){
-					userMgr.invite(Long.parseLong(referenceId), user.getId());
+					userMgr.invite(referenceLong, user.getId());
 				}
 				request.getSession().removeAttribute(HomePageServlet.REFERENCE_ID);
 				

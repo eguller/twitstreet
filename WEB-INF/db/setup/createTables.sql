@@ -7,6 +7,7 @@ create table `users`(
     `firstLogin` datetime not null,
     `lastLogin` datetime not null,
     `cash` decimal(11,2) not null default 1000,
+    `language` varchar(10) not null default 'en',
     `lastIp` varchar(45) not null,
     `oauthToken` varchar(100) not null,
     `oauthTokenSecret` varchar(100) not null,
@@ -156,4 +157,12 @@ create table `twitter_trends` (
      primary key (`stock_id`),
     `lastUpdate` timestamp not null default now(),
      constraint `fk_twitter_trends_stock` foreign key (`stock_id`) references `stock` (`id`)
+)  engine=innodb default charset=`utf8`;
+
+-- announcement table
+create table `announcement` (  
+    `stock_id` bigint not null, 
+     primary key (`stock_id`),
+    `timeSent` timestamp not null default now(),
+     constraint `fk_announcement_stock` foreign key (`stock_id`) references `stock` (`id`)
 )  engine=innodb default charset=`utf8`;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.StockHistoryData;
+import com.twitstreet.db.data.TrendyStock;
 
 /**
  * Manages a cache of "percent available" of stocks.
@@ -45,7 +46,7 @@ public interface StockMgr {
      * @param total - total
 	 * @return 
 	 */
-	public void updateTwitterData(long stockId, int total, String pictureUrl, String screenName,String longName, boolean verified);
+	public void updateTwitterData(long stockId, int total, String pictureUrl, String screenName,String longName, boolean verified,String lang);
 	
 	/**
 	 * Returns stock sold percentage by name
@@ -84,4 +85,6 @@ public interface StockMgr {
 
 	StockHistoryData getStockHistory(long id);
 	StockHistoryData getStockHistory(long id, int forMinutes);
+
+	List<TrendyStock> getTopGrossingStocks(int forhours);
 }

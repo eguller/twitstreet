@@ -51,6 +51,9 @@ public class TwitterProxyImpl implements TwitterProxy {
 		this.setTwitter(twitter);
 	}
 
+	
+
+	
 	@Override
 	public int getFollowerCount(String name){
 		int followerCount = 0;
@@ -219,20 +222,6 @@ public class TwitterProxyImpl implements TwitterProxy {
 		}
 		
 		
-	}
-	
-	
-	@Override
-	public boolean sendMessage(String toUser, String message){
-		try {
-			twitter.sendDirectMessage(toUser,message);
-		} catch (TwitterException e) {
-			logger.error("sendMessage:" +toUser+" "+message );
-		}
-		
-		
-		
-		return true;
 	}
 
 	@Override

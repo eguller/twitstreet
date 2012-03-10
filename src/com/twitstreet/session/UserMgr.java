@@ -1,7 +1,6 @@
 package com.twitstreet.session;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.twitstreet.db.data.RankingHistoryData;
