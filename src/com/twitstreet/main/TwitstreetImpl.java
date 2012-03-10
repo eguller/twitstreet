@@ -92,10 +92,8 @@ public class TwitstreetImpl implements Twitstreet {
 		updateUserInfoThread.setName("User Info Update Task");
 		updateUserInfoThread.start();
 		
-		//Thread stockHistoryUpdateThread = new Thread (stockHistoryUpdateTask);
-		///stockHistoryUpdateThread.setName("Update Stock History");
-		//stockHistoryUpdateThread.start();
 		
+	
 		transactionCache.load();
 		
 		initialized = true;

@@ -28,8 +28,7 @@ public class UserInfoUpdateTask implements Runnable {
 
 		while (true) {
 			long start = System.currentTimeMillis();
-			List<User> userList = userMgr.getUserListByServerId(configMgr
-					.getServerId());
+			List<User> userList = userMgr.getUserListByServer();
 			for (User user : userList) {
 				TwitterProxy twitterProxy = twitterProxyFactory.create(
 						user.getOauthToken(), user.getOauthTokenSecret());

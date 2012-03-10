@@ -93,7 +93,7 @@
 		<% if(user != null){ %>
 		<div>
 			<p style="text-align: center">
-				Intive your friends with this link, <br><b>http://www.twitstreet.com/?ref=<%=user.getId() %></b><br> win <span class="green">$<%=(int)(configMgr.getInitialMoney() * UserMgr.INVITE_MONEY_RATE)%></span> more
+				<%=lutil.get("topbar.invite", lang, new Object[]{ user.getId(), (int)( Math.sqrt(user.getCash() + user.getPortfolio()) * UserMgr.INVITE_MONEY_RATE ) }) %>
 			</p>
 		</div>
 		<%} %>
