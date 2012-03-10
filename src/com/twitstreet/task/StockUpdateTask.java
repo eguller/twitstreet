@@ -89,7 +89,7 @@ public class StockUpdateTask implements Runnable {
 
 	public List<Stock> updateStocks() {
 
-		List<Stock> stockList = stockMgr.getUpdateRequiredStocks();
+		List<Stock> stockList = stockMgr.getUpdateRequiredStocksByServer();
 
 		for (Stock stock : stockList) {
 
