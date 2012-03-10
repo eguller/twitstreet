@@ -84,4 +84,5 @@ public interface StockMgr {
 
 	StockHistoryData getStockHistory(long id);
 	StockHistoryData getStockHistory(long id, int forMinutes);
+	public List<Stock> getUpdateRequiredStocksByServer();
 }

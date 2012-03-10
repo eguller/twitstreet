@@ -581,7 +581,7 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	@Override
-	public List<User> getUserListByServerId(int serverId) {
+	public List<User> getUserListByServer() {
 		List<User> userList = new ArrayList<User>();
 		Connection connection = null;
 		PreparedStatement ps = null;
