@@ -157,3 +157,18 @@ create table `twitter_trends` (
     `lastUpdate` timestamp not null default now(),
      constraint `fk_twitter_trends_stock` foreign key (`stock_id`) references `stock` (`id`)
 )  engine=innodb default charset=`utf8`;
+
+create table `invite` (
+  `id` bigint(20) not null auto_increment,
+  `invitor` bigint(20) not null,
+  `invited` bigint(20) not null,
+  `invite_date` datetime default null,
+  primary key (`id`),
+  unique key `invited_unique` (`invitor`),
+  key `fk_invited` (`invited`),
+  key `fk_invitor` (`invited`),
+  constraint `fk_invitor` foreign key (`invitor`) references `users` (`id`) on delete no action on update no action,
+  constraint `fk_invited` foreign key (`invited`) references `users` (`id`) on delete no action on update no action
+) engine=innodb auto_increment=3 default charset=utf8;
+
+
