@@ -29,7 +29,7 @@ create table `admin`(
 create table `stock`(
     `id` bigint not null auto_increment,
     `name` varchar(45) not null,
-    `longName` varchar(45),
+    `longName` varchar(255),
     `total` int not null,
     `pictureUrl` varchar(255),
     `lastUpdate` timestamp,
@@ -169,6 +169,6 @@ create table `invite` (
   key `fk_invitor` (`invited`),
   constraint `fk_invitor` foreign key (`invitor`) references `users` (`id`) on delete no action on update no action,
   constraint `fk_invited` foreign key (`invited`) references `users` (`id`) on delete no action on update no action
-) engine=innodb auto_increment=3 default charset=utf8;
+) engine=innodb default charset=utf8;
 
 

@@ -273,6 +273,26 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, null);
 		}
 	}
+	
+	@Override
+	public void addInviteMoney(long userId){
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set cash = (cash + (sqrt(cash + portfolio_value(id)) * ?)) where id = ?");
+			ps.setDouble(1, UserMgr.INVITE_MONEY_RATE);
+			ps.setLong(2, userId);
+
+			ps.executeUpdate();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
 
 	@Override
 	public void updateCash(long userId, double amount) {
@@ -638,7 +658,7 @@ public class UserMgrImpl implements UserMgr {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
 			dbMgr.closeResources(connection, ps, null);
-			increaseCash(invitor, configMgr.getInitialMoney() * INVITE_MONEY_RATE);
+			addInviteMoney(invitor);
 		}
 
 	}
