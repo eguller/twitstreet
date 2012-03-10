@@ -382,12 +382,7 @@ public class StockMgrImpl implements StockMgr {
 	
 	@Override
 	public List<Stock> getUpdateRequiredStocks() {
-<<<<<<< HEAD
-		
-		
-	
-=======
->>>>>>> branch 'master' of git@github.com:bisanthe/twitstreet.git
+
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -412,8 +407,6 @@ public class StockMgrImpl implements StockMgr {
 		return stockList;
 	}
 	
-	@Override
-	public List<Stock> getUpdateRequiredStocksByServer() {
 	@Override
 	public List<Stock> getUpdateRequiredStocksByServer() {
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
