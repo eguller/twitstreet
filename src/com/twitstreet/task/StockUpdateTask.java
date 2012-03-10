@@ -76,7 +76,7 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Rank history update - end. "); 
 				
 				try{
-					TrendyStock ts = stockMgr.getTopGrossingStocks(1).get(0);
+					TrendyStock ts = stockMgr.getTopGrossingStocks(2).get(0);
 					twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage()));
 					twitstreetAnnouncer.mention(ts,ts.getAnnouncementStockDetail(ts.getLanguage())+ " http://www.twitstreet.com/#stock-"+String.valueOf(ts.getId()));
 					
