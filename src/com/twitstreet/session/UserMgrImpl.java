@@ -38,7 +38,7 @@ public class UserMgrImpl implements UserMgr {
 	private static int MAX_RECORD_PER_PAGE = 20;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 
-	private static String SEASON_START = "2012-03-01 00:35:00";
+	private static String SEASON_START = "2012-03-12 00:06:00";
 	
 	private static String SELECT_FROM_USERS_RANKING = "select " + "id, "
 			+ "userName, " + "lastLogin, " + "firstLogin, "
