@@ -455,9 +455,9 @@ public class StockMgrImpl implements StockMgr {
 			"   and s.total > ? " +
 			"  order by (s.total-sh.total)/sh.total desc limit 1; ");
 			
-			ps.setInt(1, 2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
-			ps.setInt(2, (forhours * 60) - (2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES) );
-			ps.setInt(3, (forhours * 60) + (2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES) );
+			ps.setInt(1, 35);
+			ps.setInt(2, (forhours * 60) -35 );
+			ps.setInt(3, (forhours * 60) +35 );
 			//TODO create constant
 			ps.setInt(4, 500 );
 			rs = ps.executeQuery();
