@@ -19,9 +19,8 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 
-
 public class TwitstreetAnnouncerImpl implements TwitstreetAnnouncer {
-	
+
 	private Twitter twitter = null;
 
 	@Inject
@@ -29,55 +28,59 @@ public class TwitstreetAnnouncerImpl implements TwitstreetAnnouncer {
 	@Inject
 	DBMgr dbMgr;
 
-	private static Logger logger = Logger.getLogger(TwitstreetAnnouncerImpl.class);
-	
+	private static Logger logger = Logger
+			.getLogger(TwitstreetAnnouncerImpl.class);
+
 	@Override
-	public boolean mention(Stock stock, String message){
+	public boolean mention(Stock stock, String message) {
 
 		if (addStockIntoAnnouncement(stock.getId())) {
 
 			twitter = new TwitterFactory().getInstance();
-			twitter.setOAuthConsumer(configMgr.getAnnouncerConsumerKey(), configMgr.getAnnouncerConsumerSecret());
+			twitter.setOAuthConsumer(configMgr.getAnnouncerConsumerKey(),
+					configMgr.getAnnouncerConsumerSecret());
 
-			twitter.setOAuthAccessToken(new AccessToken(configMgr.getAnnouncerAccessToken(), configMgr.getAnnouncerAccessSecret()));
+			twitter.setOAuthAccessToken(new AccessToken(configMgr
+					.getAnnouncerAccessToken(), configMgr
+					.getAnnouncerAccessSecret()));
 
 			try {
 				twitter.updateStatus("@" + stock.getName() + " " + message );
+
 			} catch (TwitterException e) {
 				logger.error("sendMessage:" + stock.getName() + " " + message);
 			}
 
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-	
+
 	public boolean addStockIntoAnnouncement(long stockid) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("insert into announcement(stock_id) VALUES  (?) ");
+			ps = connection
+					.prepareStatement("insert into announcement(stock_id) VALUES  (?) ");
 			ps.setLong(1, stockid);
 			ps.executeUpdate();
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-			
+
 			return true;
-//		} catch (MySQLIntegrityConstraintViolationException ex) {
-//			
-//			return false;
+			// } catch (MySQLIntegrityConstraintViolationException ex) {
+			//
+			// return false;
 		} catch (SQLException e) {
-			
+
 			return false;
 		} finally {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 	}
-
 
 	@Override
 	public void removeOldRecords(int removeOlderThanMinutes) {
@@ -86,7 +89,8 @@ public class TwitstreetAnnouncerImpl implements TwitstreetAnnouncer {
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(" delete from announcement where timestampdiff(minute,timeSent,now()) > ? ");
+			ps = connection
+					.prepareStatement(" delete from announcement where timestampdiff(minute,timeSent,now()) > ? ");
 			ps.setInt(1, removeOlderThanMinutes);
 			ps.executeUpdate();
 
@@ -94,12 +98,33 @@ public class TwitstreetAnnouncerImpl implements TwitstreetAnnouncer {
 
 		} catch (SQLException e) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), e);
-		
+
 		} finally {
 			dbMgr.closeResources(connection, ps, rs);
 		}
-		
 	}
 
+	@Override
+	public void removeOldRecordsByServer(int removeOlderThanMinutes) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement(" delete from announcement where timestampdiff(minute,timeSent,now()) > ? and mod(stock_id, ?) = ?");
+			ps.setInt(1, removeOlderThanMinutes);
+			ps.setInt(2, configMgr.getServerCount());
+			ps.setInt(3, configMgr.getServerId());
+			ps.executeUpdate();
 
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+
+		} catch (SQLException e) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), e);
+
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+	}
 }

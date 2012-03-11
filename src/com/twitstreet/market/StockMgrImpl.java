@@ -479,8 +479,51 @@ public class StockMgrImpl implements StockMgr {
 	}
 	
 	@Override
+	public List<TrendyStock> getTopGrossingStocksByServer(int forhours){
+		
+		ArrayList<TrendyStock> stockList = new ArrayList<TrendyStock>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(
+			" select s.*, sh.total as oldValue, sh.lastUpdate as oldUpdate from stock_history sh,stock s "+
+			"  where "+
+			
+			"   TIMESTAMPDIFF(minute,s.lastUpdate,now()) <= ? " +
+			"   and TIMESTAMPDIFF(minute,sh.lastUpdate,s.lastUpdate)  >= ? " +
+			"   and TIMESTAMPDIFF(minute,sh.lastUpdate,s.lastUpdate)  <= ? " +
+			"   and sh.stock = s.id "+
+			"   and s.total > ? and mod(s.id, ?) = ?" +
+			"  order by (s.total-sh.total)/sh.total desc limit 1; ");
+			
+			ps.setInt(1, 2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
+			ps.setInt(2, (forhours * 60) - (2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES) );
+			ps.setInt(3, (forhours * 60) + (2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES) );
+			ps.setInt(4, 500 );
+			ps.setInt(5, configMgr.getServerCount());
+			ps.setInt(6, configMgr.getServerId());
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				TrendyStock stockDO = new TrendyStock();
+				stockDO.getDataFromResultSet(rs);
+				stockDO.setTrendDuration(forhours);
+				stockList.add(stockDO);
+			}
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return stockList;
+	}
+	
+	@Override
 	public void resetSpeedOfOldStocks() {
-
 		Connection connection = null;
 		PreparedStatement ps = null;
 
@@ -496,7 +539,28 @@ public class StockMgrImpl implements StockMgr {
 		} finally {
 			dbMgr.closeResources(connection, ps, null);
 		}
+	}
+	
 
+	@Override
+	public void resetSpeedOfOldStocksByServer() {
+		Connection connection = null;
+		PreparedStatement ps = null;
+
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement("update stock set changePerHour = NULL" + " where TIMESTAMPDIFF(minute, lastUpdate,now()) > ? and mod(id, ?) = ?");
+			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES * 3);
+			ps.setInt(2, configMgr.getServerCount());
+			ps.setInt(3, configMgr.getServerId());
+			ps.executeUpdate();
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
 	}
 
 	@Override

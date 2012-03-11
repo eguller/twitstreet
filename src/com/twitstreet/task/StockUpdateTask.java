@@ -64,7 +64,7 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Stock list update - end. "+users);
 
 				logger.info("Reset speed of stocks - begin.");
-				stockMgr.resetSpeedOfOldStocks();
+				stockMgr.resetSpeedOfOldStocksByServer();
 				logger.info("Reset speed of stocks - end.");
 
 				logger.info("Re-rank begin.");
@@ -76,10 +76,11 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Rank history update - end. "); 
 				
 				try{
+
 					TrendyStock ts = stockMgr.getTopGrossingStocks(24).get(0);
+
 					twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage()));
 					twitstreetAnnouncer.mention(ts,ts.getAnnouncementStockDetail(ts.getLanguage())+ " http://www.twitstreet.com/#stock-"+String.valueOf(ts.getId()));
-					
 				}
 				catch(Exception ex){
 					
@@ -90,7 +91,7 @@ public class StockUpdateTask implements Runnable {
 				logger.error("Someone tried to kill our precious. He says: ", ex);
 			}
 			
-			twitstreetAnnouncer.removeOldRecords(60 * 24);
+			twitstreetAnnouncer.removeOldRecordsByServer(60 * 24);
 			
 			
 			

@@ -16,6 +16,8 @@ public interface ConfigMgr {
 	public static  String ANNOUNCER_ACCESS_TOKEN = "announcerAccessToken";
 	public static  String ANNOUNCER_ACCESS_SECRET = "announcerAccessSecret";
 	
+	public static final int MASTER_SERVER_ID = 0;
+	
 	public void load();
 	public String get(String parm);
 	public String getConsumerKey();

@@ -89,4 +89,6 @@ public interface StockMgr {
 	List<TrendyStock> getTopGrossingStocks(int forhours);
 
 	public List<Stock> getUpdateRequiredStocksByServer();
+	public void resetSpeedOfOldStocksByServer();
+	public List<TrendyStock> getTopGrossingStocksByServer(int forhours);
 }

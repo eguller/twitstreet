@@ -11,5 +11,6 @@ public interface TwitstreetAnnouncer {
 	public boolean mention(Stock user, String message);
 
 	public void removeOldRecords(int removeOlderThanMinutes);
+	public void removeOldRecordsByServer(int removeOlderThanMinutes);
 	
 }
