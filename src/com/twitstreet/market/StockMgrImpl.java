@@ -495,7 +495,7 @@ public class StockMgrImpl implements StockMgr {
 			"   and TIMESTAMPDIFF(minute,sh.lastUpdate,s.lastUpdate)  >= ? " +
 			"   and TIMESTAMPDIFF(minute,sh.lastUpdate,s.lastUpdate)  <= ? " +
 			"   and sh.stock = s.id "+
-			"   and s.total > ? and mod(id, ?) = ?" +
+			"   and s.total > ? and mod(s.id, ?) = ?" +
 			"  order by (s.total-sh.total)/sh.total desc limit 1; ");
 			
 			ps.setInt(1, 2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
