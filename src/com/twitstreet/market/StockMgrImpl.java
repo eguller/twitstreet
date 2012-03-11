@@ -504,8 +504,6 @@ public class StockMgrImpl implements StockMgr {
 			ps.setInt(4, 500 );
 			ps.setInt(5, configMgr.getServerCount());
 			ps.setInt(6, configMgr.getServerId());
-			//TODO create constant
-			ps.setInt(4, 500 );
 			rs = ps.executeQuery();
 			
 			while (rs.next()) {
