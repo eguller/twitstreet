@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -313,7 +312,7 @@ public class StockMgrImpl implements StockMgr {
 
 	}
 
-	public void updateTwitterData(long id, int total, String pictureUrl, String screenName,String longName, boolean verified,String language) {
+	private void updateTwitterData(long id, int total, String pictureUrl, String screenName,String longName, boolean verified,String language) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 
