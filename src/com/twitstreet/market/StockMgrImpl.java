@@ -501,8 +501,9 @@ public class StockMgrImpl implements StockMgr {
 			ps.setInt(1, 2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
 			ps.setInt(2, (forhours * 60) - (2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES) );
 			ps.setInt(3, (forhours * 60) + (2 * StockUpdateTask.LAST_UPDATE_DIFF_MINUTES) );
-			ps.setInt(4, configMgr.getServerCount());
-			ps.setInt(5, configMgr.getServerId());
+			ps.setInt(4, 500 );
+			ps.setInt(5, configMgr.getServerCount());
+			ps.setInt(6, configMgr.getServerId());
 			//TODO create constant
 			ps.setInt(4, 500 );
 			rs = ps.executeQuery();
