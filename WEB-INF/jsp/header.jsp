@@ -32,6 +32,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script src="/js/userProfileTabs.js"></script>
 <script src="/js/charts.js"></script>
 <script src="/js/portfolioTab.js"></script>
+<script src="/js/transactionTab.js"></script>
 
 <script type="text/javascript">
 	google.load('visualization', '1.0', {'packages':['corechart']});

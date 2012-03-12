@@ -77,8 +77,8 @@ public class StockUpdateTask implements Runnable {
 				
 				try{
 					TrendyStock ts = stockMgr.getTopGrossingStocksByServer(2).get(0);
-					twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage()));
-					twitstreetAnnouncer.mention(ts,ts.getAnnouncementStockDetail(ts.getLanguage())+ " http://www.twitstreet.com/#stock-"+String.valueOf(ts.getId()));
+					//twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage()));
+					//twitstreetAnnouncer.mention(ts,ts.getAnnouncementStockDetail(ts.getLanguage())+ " http://www.twitstreet.com/#stock-"+String.valueOf(ts.getId()));
 				}
 				catch(Exception ex){
 					

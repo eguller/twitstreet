@@ -45,11 +45,11 @@ public class TransactionServlet extends TwitStreetServlet {
 
 			if (USER_TRANSACTIONS.equals(type)) {
 
-				getServletContext().getRequestDispatcher("/WEB-INF/jsp/yourtransactions.jsp").forward(request, response);
+				getServletContext().getRequestDispatcher("/WEB-INF/jsp/yourTransactionsContent.jsp").forward(request, response);
 
 			} else {
 
-				getServletContext().getRequestDispatcher("/WEB-INF/jsp/latesttransactions.jsp").forward(request, response);
+				getServletContext().getRequestDispatcher("/WEB-INF/jsp/currentTransactionsContent.jsp").forward(request, response);
 
 			}
 
