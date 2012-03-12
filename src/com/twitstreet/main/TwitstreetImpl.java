@@ -11,7 +11,6 @@ import javax.servlet.ServletContext;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import com.twitstreet.cache.TransactionCache;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.market.StockMgr;
@@ -30,7 +29,6 @@ public class TwitstreetImpl implements Twitstreet {
 	ServletContext servletContext;
 	Injector injector;
 	@Inject AsyncQuery asyncQueryTask;
-	@Inject TransactionCache transactionCache;
 	@Inject GroupMgr groupMgr;
 	@Inject UserMgr userMgr;
 	@Inject StockMgr stockMgr;
@@ -91,11 +89,6 @@ public class TwitstreetImpl implements Twitstreet {
 		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
 		updateUserInfoThread.setName("User Info Update Task");
 		updateUserInfoThread.start();
-		
-		
-	
-		transactionCache.load();
-		
 		initialized = true;
 		
 

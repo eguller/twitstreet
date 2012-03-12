@@ -195,6 +195,7 @@ function buySellCallback(stock) {
 	loadPortfolio(false, true);
 	loadBalance(false, true);
 	loadUserTransactions(false, true);
+	loadCurrentTransactions(false);
 
 }
 

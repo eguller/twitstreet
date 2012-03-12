@@ -4,8 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Scopes;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.twitstreet.cache.TransactionCache;
-import com.twitstreet.cache.TransactionCacheImpl;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.config.ConfigMgrProvider;
 import com.twitstreet.db.base.DBMgr;
@@ -53,7 +51,6 @@ public class TSModule extends AbstractModule {
 		bind(StockUpdateTask.class).in(Scopes.SINGLETON);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class).in(Scopes.SINGLETON);
 		bind(AsyncQuery.class).to(AsyncQueryTask.class).in(Scopes.SINGLETON);
-		bind(TransactionCache.class).to(TransactionCacheImpl.class).in(Scopes.SINGLETON);
 		install(new FactoryModuleBuilder()
 	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
 	     .build(TwitterProxyFactory.class));

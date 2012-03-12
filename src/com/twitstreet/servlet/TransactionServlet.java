@@ -1,19 +1,14 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.twitstreet.cache.TransactionCache;
-import com.twitstreet.db.data.TransactionRecord;
-import com.twitstreet.db.data.User;
 import com.twitstreet.market.TransactionMgr;
 
 @SuppressWarnings("serial")
@@ -22,8 +17,6 @@ public class TransactionServlet extends TwitStreetServlet {
 	private static String USER_TRANSACTIONS = "user";
 	@Inject
 	TransactionMgr transactionMgr;
-	@Inject
-	TransactionCache transactionRecordCache;
 	@Inject
 	private final Gson gson = null;
 
