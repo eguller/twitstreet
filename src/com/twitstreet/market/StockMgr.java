@@ -37,16 +37,6 @@ public interface StockMgr {
 	 */
 	public Stock getStockById(long id);
 	
-	/**
-	 * Update total follower count.
-	 * Do not call makePersistenUpdate directly,
-	 * if there is a sold/buy request
-	 * we do not want to sold stock count.
-	 * @param stockId - stockId.
-     * @param total - total
-	 * @return 
-	 */
-	public void updateTwitterData(long stockId, int total, String pictureUrl, String screenName,String longName, boolean verified,String lang);
 	
 	/**
 	 * Returns stock sold percentage by name

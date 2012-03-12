@@ -45,8 +45,8 @@ public class TwitstreetAnnouncerImpl implements TwitstreetAnnouncer {
 					.getAnnouncerAccessSecret()));
 
 			try {
-				twitter.updateStatus("@" + stock.getName() + " " + message
-						+ " #twitstreet");
+				twitter.updateStatus("@" + stock.getName() + " " + message );
+
 			} catch (TwitterException e) {
 				logger.error("sendMessage:" + stock.getName() + " " + message);
 			}

@@ -76,9 +76,13 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Rank history update - end. "); 
 				
 				try{
-					TrendyStock ts = stockMgr.getTopGrossingStocksByServer(2).get(0);
+					//TrendyStock ts = stockMgr.getTopGrossingStocksByServer(2).get(0);
 					//twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage()));
 					//twitstreetAnnouncer.mention(ts,ts.getAnnouncementStockDetail(ts.getLanguage())+ " http://www.twitstreet.com/#stock-"+String.valueOf(ts.getId()));
+
+					TrendyStock ts = stockMgr.getTopGrossingStocks(24).get(0);
+
+					twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage())+ "twitstreet.com/#stock-"+ts.getId());
 				}
 				catch(Exception ex){
 					
@@ -109,7 +113,7 @@ public class StockUpdateTask implements Runnable {
 
 	public List<Stock> updateStocks() {
 
-		List<Stock> stockList = stockMgr.getUpdateRequiredStocksByServer();
+		List<Stock> stockList = stockMgr.getUpdateRequiredStocks();
 
 		for (Stock stock : stockList) {
 
