@@ -90,13 +90,13 @@
 
 
 	<div id="top_center_div">
-		<% if(user != null){ %>
-		<div>
-			<p style="text-align: center">
-				<%=lutil.get("topbar.invite", lang, new Object[]{ user.getId(), (int)( Math.sqrt(user.getCash() + user.getPortfolio()) * UserMgr.INVITE_MONEY_RATE ) }) %>
-			</p>
+		<div align="center">
+		
+			<h1><b><%=lutil.get("season.info", lang) %></b></h1>
+		
+			<h1><b><%=lutil.get("season.time", lang) %></b></h1>
+			
 		</div>
-		<%} %>
 	</div>
 
 	<div id="top_right_div">
