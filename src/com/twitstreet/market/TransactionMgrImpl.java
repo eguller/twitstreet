@@ -17,12 +17,9 @@ import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.TransactionRecord;
 import com.twitstreet.db.data.User;
-import com.twitstreet.task.AsyncQuery;
 
 @Singleton
 public class TransactionMgrImpl implements TransactionMgr {
-	@Inject
-	AsyncQuery asyncQuery;
 	@Inject
 	DBMgr dbMgr;
 	private static Logger logger = Logger.getLogger(TransactionMgrImpl.class);
