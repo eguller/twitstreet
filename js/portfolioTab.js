@@ -22,7 +22,7 @@ function showTabPortfolio(tabId,tabContentId){
 	
 	for(i=0; i<portfolioTabContentsArray.length; i++){
 		if(tabContentId == portfolioTabContentsArray[i]){
-			$(portfolioTabContentsArray[i]).fadeTo('fast',1,null);
+			$(portfolioTabContentsArray[i]).show();
 		}
 		else{
 			$(portfolioTabContentsArray[i]).hide();

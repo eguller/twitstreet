@@ -7,7 +7,6 @@
   <template:put name='mainmenu' content='mainMenu.jsp'/>  
   <template:put name='portfolio' content='portfolio.jsp' />
   <template:put name='balance' content='balance.jsp' />
-  <template:put name='yourtransactions' content='yourtransactions.jsp' />
   <template:put name='transactions' content='transactions.jsp' />
   <template:put name='recentTweets' content='recentTweets.jsp' />
   <template:put name='topranks' content='topranks.jsp' />

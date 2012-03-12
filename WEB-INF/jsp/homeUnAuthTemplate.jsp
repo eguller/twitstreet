@@ -21,16 +21,10 @@
 				<div id="portfolio-container">
 					<template:get name="portfolio"></template:get>
 				</div>
-				<div id="yourtransactions-container">
-					<template:get name="yourtransactions"></template:get>
+				<div id="transactions-container">
+					<template:get name="transactions"></template:get>
 				</div>
-
-				<div id="latesttransactions-container">
-					<template:get name="latesttransactions"></template:get>
-				</div>
-
 				<template:get name="recentTweets"></template:get>
-
 			</div>
 			<div id="column_center">
 				

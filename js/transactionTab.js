@@ -5,7 +5,7 @@
 	transactionsTabsArray.push(".yourtransactions-tab");
 
 	transactionsTabContentsArray.push("#currenttransactions-content");
-	transactionsTabContentsArray.push("#currenttransactions-content");
+	transactionsTabContentsArray.push("#yourtransactions-content");
 
 
 function showTabTransactions(tabId,tabContentId){
@@ -22,7 +22,7 @@ function showTabTransactions(tabId,tabContentId){
 	
 	for(i=0; i<transactionsTabContentsArray.length; i++){
 		if(tabContentId == transactionsTabContentsArray[i]){
-			$(transactionsTabContentsArray[i]).fadeTo('fast',1,null);
+			$(transactionsTabContentsArray[i]).show();
 		}
 		else{
 			$(transactionsTabContentsArray[i]).hide();

@@ -76,9 +76,10 @@
 		<%
 						if (user != null) {
 					%>
-					<div class="field-white" style="overflow: hidden; height:20px" onmouseover="$(this).height(75)" onmouseout="$(this).height(20)">
+					<div class="field-white">
 						<p style="text-align: center">
 							<%=lutil.get("topbar.invite", lang, new Object[] { user.getId(), (int) (Math.sqrt(user.getCash() + user.getPortfolio()) * UserMgr.INVITE_MONEY_RATE) })%>
+						<br>
 						<%=GUIUtil.getInstance().getTwitterShareButton("?ref="+user.getId(), "twitter.share.main", lang)%></p>
 					</div> <%
 					 	}

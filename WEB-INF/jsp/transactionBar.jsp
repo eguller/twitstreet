@@ -6,8 +6,8 @@
 %>
 <div class="main-tabs">
 	<a class="currenttransactions-tab youarehere"
-		onclick="showTabPortfolio('.currenttransactions-tab','#currenttransactions-content'); loadCurrentTransactions(false);">
+		onclick="showTabTransactions('.currenttransactions-tab','#currenttransactions-content'); loadCurrentTransactions(false);">
 		<%=lutil.get("transaction.all", lang)%> </a> <a class="yourtransactions-tab"
-		onclick="showTabPortfolio('.yourtransactions-tab','#yourtransactions-content'); loadUserTransactions(false,true);">
+		onclick="showTabTransactions('.yourtransactions-tab','#yourtransactions-content'); loadUserTransactions(false,false);">
 		<%=lutil.get("transaction.your", lang)%> </a>
 </div>

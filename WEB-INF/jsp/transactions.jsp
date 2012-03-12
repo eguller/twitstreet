@@ -1,4 +1,4 @@
-<div id="transaction" class="main-div">
+<div id="transactions" class="main-div">
 	<table class="datatbl">
 		<tr>
 			<td>
@@ -7,7 +7,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div id="transaction-content">
+				<div id="transactions-content">
 					<jsp:include page="currentTransactionsContent.jsp"></jsp:include>
 				</div>
 			</td>

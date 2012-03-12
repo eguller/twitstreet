@@ -11,7 +11,7 @@ $(document).ready(function() {
 		setInterval(reloadToprank, reloadInterval);
 	}
 
-	if ($("#currenttransactions").length) {
+	if ($("#transactions").length) {
 		setInterval(reloadCurrentTransactions, reloadInterval);
 	}
 
@@ -22,7 +22,7 @@ $(document).ready(function() {
 	if ($("#portfolio").length > 0) {
 		setInterval(reloadPortfolio, reloadInterval);
 	}
-	if ($("#user-watch-list").length > 0) {
+	if ($("#portfolio").length > 0) {
 		setInterval(reloadWatchList, reloadInterval);
 	}
 	
@@ -128,11 +128,13 @@ function loadUserProfile(userId,reload) {
 }
 
 function reloadCurrentTransactions() {
-	loadCurrentTransactions(true);
+	if($(".currenttransactions-tab").hasClass("youarehere")){
+		loadCurrentTransactions(true);
+	}
 }
 
 function loadCurrentTransactions(reload) {
-	ajaxLoad("transaction", null, "#latesttransactions-container","#latesttransactions-container", reload);
+	ajaxLoad("transaction", null, "#transactions-content","#transactions-content", reload);
 	
 }
 
@@ -143,7 +145,7 @@ function reloadUserTransactions() {
 
 function loadUserTransactions(reload, doNotBlock) {
 	
-	ajaxLoad("transaction", "type=user", "#yourtransactions-container","#yourtransactions-container", reload,null,null,doNotBlock);
+	ajaxLoad("transaction", "type=user", "#transactions-content","#transactions-content", reload,null,null,doNotBlock);
 	
 }
 
