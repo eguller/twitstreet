@@ -1,11 +1,6 @@
 
-
-
 $(document).ready(function() {
 	$("#dashboard-message-field").corner("round 3px");
-
-	
-	
 
 	if ($("#topranks").length > 0) {
 		setInterval(reloadToprank, reloadInterval);
@@ -25,128 +20,130 @@ $(document).ready(function() {
 	if ($("#portfolio").length > 0) {
 		setInterval(reloadWatchList, reloadInterval);
 	}
-	
 
 });
 
-
-
 function reloadBalance() {
 
-	loadBalance(true);	
+	loadBalance(true);
 }
 
 function loadBalance(reload, doNotBlock) {
-	ajaxLoad("balance", null, '#balance-container', '#balance-container', reload,null,null,doNotBlock);
+	ajaxLoad("balance", null, '#balance-container', '#balance-container',
+			reload, null, null, doNotBlock);
 }
 
-
 function reloadPortfolio() {
-	if($(".portfolio-tab").hasClass("youarehere")){
+	if ($(".portfolio-tab").hasClass("youarehere")) {
 		loadPortfolio(true);
 	}
 }
-function loadPortfolio(reload,doNotBlock) {
-	ajaxLoad("/portfolio", null, "#portfolio-content","#portfolio-content",reload,null,null,doNotBlock);
+function loadPortfolio(reload, doNotBlock) {
+	ajaxLoad("/portfolio", null, "#portfolio-content", "#portfolio-content",
+			reload, null, null, doNotBlock);
 }
 
 function reloadWatchList() {
-	if($(".watchlist-tab").hasClass("youarehere")){
+	if ($(".watchlist-tab").hasClass("youarehere")) {
 		loadWatchList(true);
 	}
 }
 function loadWatchList(reload) {
-	ajaxLoad("/watchlist", null, "#portfolio-content","#portfolio-content",reload);
+	ajaxLoad("/watchlist", null, "#portfolio-content", "#portfolio-content",
+			reload);
 }
 
 function addToWatchList(stockid) {
-	ajaxLoad("/watchlist", "stock="+stockid+"&operation=add", "#portfolio-content","#portfolio-content",false,addToWatchListCallback,stockid);	
-	showTabPortfolio('.watchlist-tab','#watchlist-content');
+	ajaxLoad("/watchlist", "stock=" + stockid + "&operation=add",
+			"#portfolio-content", "#portfolio-content", false,
+			addToWatchListCallback, stockid);
+	showTabPortfolio('.watchlist-tab', '#watchlist-content');
 }
-function addToWatchListCallback(stockid){
-	$(".add-to-watch-list-link-"+stockid).hide();
-	$(".remove-from-watch-list-link-"+stockid).show();	
+function addToWatchListCallback(stockid) {
+	$(".add-to-watch-list-link-" + stockid).hide();
+	$(".remove-from-watch-list-link-" + stockid).show();
 }
 function removeFromWatchList(stockid) {
-	ajaxLoad("/watchlist", "stock="+stockid+"&operation=remove", "#portfolio-content","#portfolio-content",false,removeFromWatchListCallback,stockid);	
-	showTabPortfolio('.watchlist-tab','#watchlist-content');
+	ajaxLoad("/watchlist", "stock=" + stockid + "&operation=remove",
+			"#portfolio-content", "#portfolio-content", false,
+			removeFromWatchListCallback, stockid);
+	showTabPortfolio('.watchlist-tab', '#watchlist-content');
 }
 
-function removeFromWatchListCallback(stockid){
-	
-	$(".remove-from-watch-list-link-"+stockid).hide();
-	$(".add-to-watch-list-link-"+stockid).show();
-	
+function removeFromWatchListCallback(stockid) {
+
+	$(".remove-from-watch-list-link-" + stockid).hide();
+	$(".add-to-watch-list-link-" + stockid).show();
+
 }
 
 function getQuote(quote) {
 	if (quote.length > 0) {
-		ajaxLoad("/getquote", "quote=" + quote, "#stocks-container",'#column_center');
-		showTabMain('.stocks-tab','#stocks-container');
-	}	
-}
-
-function loadTrendyStocks() {
-	
-	
-	ajaxLoad("/trendystocks", null, "#stocks-screen","#stocks-screen");
-	showTabMain('.stocks-tab','#stocks-container');
-	
-
-}
-function loadTrendyUsers() {
-	
-	
-	ajaxLoad("/trendyusers", null, "#users-screen","#users-screen");
-	showTabMain('.users-tab','#users-container');
-}
-function getUser(user) {	
-	if (user.length > 0) {
-		ajaxLoad("/getuser", "getuser=" + user, "#users-container","#column_center");
-		showTabMain('.users-tab','#users-container');
+		ajaxLoad("/getquote", "quote=" + quote, "#stocks-container",
+				'#column_center');
+		showTabMain('.stocks-tab', '#stocks-container');
 	}
 }
 
+function loadTrendyStocks() {
+
+	ajaxLoad("/trendystocks", null, "#stocks-screen", "#stocks-screen");
+	showTabMain('.stocks-tab', '#stocks-container');
+
+}
+function loadTrendyUsers() {
+
+	ajaxLoad("/trendyusers", null, "#users-screen", "#users-screen");
+	showTabMain('.users-tab', '#users-container');
+}
+function getUser(user) {
+	if (user.length > 0) {
+		ajaxLoad("/getuser", "getuser=" + user, "#users-container",
+				"#column_center");
+		showTabMain('.users-tab', '#users-container');
+	}
+}
 
 var stockOnScreen = "#hiddenStockDetailsStockId";
 
-
 function loadStock(id, reload) {
 
-	
 	ajaxLoad("stock", "stock=" + id, '#stocks-container', '#column_center');
-		
-	showTabMain('.stocks-tab','#stocks-container');
+
+	showTabMain('.stocks-tab', '#stocks-container');
 
 }
 
-function loadUserProfile(userId,reload) {
+function loadUserProfile(userId, reload) {
 	if (userId != null) {
-		ajaxLoad("/user", "user=" + userId, "#users-container","#column_center", reload);
-		showTabMain('.users-tab','#users-container');		
+		ajaxLoad("/user", "user=" + userId, "#users-container",
+				"#column_center", reload);
+		showTabMain('.users-tab', '#users-container');
 	}
 }
 
 function reloadCurrentTransactions() {
-	if($(".currenttransactions-tab").hasClass("youarehere")){
+	if ($(".currenttransactions-tab").hasClass("youarehere")) {
 		loadCurrentTransactions(true);
 	}
 }
 
 function loadCurrentTransactions(reload) {
-	ajaxLoad("transaction", null, "#transactions-content","#transactions-content", reload);
-	
+	ajaxLoad("transaction", null, "#transactions-content",
+			"#transactions-content", reload);
+
 }
 
 function reloadUserTransactions() {
 
-	loadUserTransactions(true);	
+	loadUserTransactions(true);
 }
 
 function loadUserTransactions(reload, doNotBlock) {
-	
-	ajaxLoad("transaction", "type=user", "#transactions-content","#transactions-content", reload,null,null,doNotBlock);
-	
+	if ($(".yourtransactions-tab").hasClass("youarehere")) {
+		ajaxLoad("transaction", "type=user", "#transactions-content",
+				"#transactions-content", reload, null, null, doNotBlock);
+	}
 }
 
 function showQuotePanel(panel) {
@@ -161,45 +158,44 @@ function showQuotePanel(panel) {
 	}
 }
 
-
 function buy(stock, amount) {
-	
-	
-	var responseNeeded ="";
-	
+
+	var responseNeeded = "";
+
 	var containerDiv = '#buy-sell-container';
-	if(stock!=$(stockOnScreen).val()){		
+	if (stock != $(stockOnScreen).val()) {
 		responseNeeded = "&response=n";
 		containerDiv = '';
 	}
-	
-	ajaxLoad("a/buy",  "stock=" + stock+ "&amount=" + amount + responseNeeded, containerDiv, containerDiv,false,buySellCallback,stock);	
-	showTabPortfolio('.portfolio-tab','#portfolio-content');
+
+	ajaxLoad("a/buy", "stock=" + stock + "&amount=" + amount + responseNeeded,
+			containerDiv, containerDiv, false, buySellCallback, stock);
+	showTabPortfolio('.portfolio-tab', '#portfolio-content');
 }
 function sell(stock, amount) {
-	
-var responseNeeded ="";
-	
+
+	var responseNeeded = "";
+
 	var containerDiv = '#buy-sell-container';
-	if(stock!=$(stockOnScreen).val()){		
+	if (stock != $(stockOnScreen).val()) {
 		responseNeeded = "&response=n";
 		containerDiv = '';
 	}
-	
-	
-	ajaxLoad("a/sell",  "stock=" + stock+ "&amount=" + amount + responseNeeded, containerDiv, containerDiv,false,buySellCallback,stock);
-	showTabPortfolio('.portfolio-tab','#portfolio-content');
+
+	ajaxLoad("a/sell", "stock=" + stock + "&amount=" + amount + responseNeeded,
+			containerDiv, containerDiv, false, buySellCallback, stock);
+	showTabPortfolio('.portfolio-tab', '#portfolio-content');
 }
 
-function buySellCallback(stock){
+function buySellCallback(stock) {
 
-	if(stock==$(stockOnScreen).val()){
+	if (stock == $(stockOnScreen).val()) {
 		showBuySell();
 	}
-	loadPortfolio(false,true);
-	loadBalance(false,true);
-	loadUserTransactions(false,true);
-	
+	loadPortfolio(false, true);
+	loadBalance(false, true);
+	loadUserTransactions(false, true);
+
 }
 
 function setup() {
@@ -239,38 +235,37 @@ function setup() {
 	});
 }
 
+function toprankPrevPage() {
 
-function toprankPrevPage(){
-	
 	var page = parseInt($(".topRankSelect:first").val());
-	toprank(page-1);
-	
-}
-function toprankNextPage(){
-	
-	var page = parseInt($(".topRankSelect:first").val());
-	toprank(page+1);
-	
-}
+	toprank(page - 1);
 
+}
+function toprankNextPage() {
+
+	var page = parseInt($(".topRankSelect:first").val());
+	toprank(page + 1);
+
+}
 
 function reloadToprank() {
 	toprank(null, true);
-	
+
 }
 
-function toprank(page,reload) {
+function toprank(page, reload) {
 	var pageParam = page;
-	
-	if(pageParam==null){
-		pageParam = $('.topRankSelect:first').val();	
-		
+
+	if (pageParam == null) {
+		pageParam = $('.topRankSelect:first').val();
+
 	}
-	
-	ajaxLoad("toprank", "page=" + pageParam, "#topranks-container", '#topranks-loading-div', reload);
+
+	ajaxLoad("toprank", "page=" + pageParam, "#topranks-container",
+			'#topranks-loading-div', reload);
 }
 
-function signout(){
+function signout() {
 	deletecookie("id");
 	deletecookie("oauthtoken");
 	document.location = "/signout";
@@ -292,5 +287,3 @@ function getCookie(c_name) {
 	}
 	return "";
 }
-
-
