@@ -5,8 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import com.twitstreet.task.asyncquery.TransactionParams;
-
 public class TransactionRecord  implements DataObjectIF{
 
 	public static final int BUY = 1;
