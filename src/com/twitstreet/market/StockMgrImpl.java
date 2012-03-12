@@ -35,8 +35,8 @@ public class StockMgrImpl implements StockMgr {
 	private static String TRENDY_STOCK_TOTAL_THRESHOLD = "500";
 	private static String TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD = "0.99";
 
-	private static String SELECT_FROM_STOCK = " select id, name, longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified, language from stock ";
-	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name,longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified, language from stock ";
+	private static String SELECT_FROM_STOCK = " select id, name, longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified, language, description  from stock ";
+	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name,longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified, language, description from stock ";
 	
 	
 	
@@ -201,7 +201,7 @@ public class StockMgrImpl implements StockMgr {
 		
 		twitter4j.User twUser = getTwitterProxy().getTwUser(id);
 		if (twUser != null) {
-			updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang());
+			updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang(),twUser.getDescription());
 		}
 
 	}
@@ -211,7 +211,7 @@ public class StockMgrImpl implements StockMgr {
 	
 		twitter4j.User twUser = getTwitterProxy().getTwUser(stockName);
 
-		updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang());
+		updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang(),twUser.getDescription());
 
 	}
 	
@@ -312,13 +312,13 @@ public class StockMgrImpl implements StockMgr {
 
 	}
 
-	private void updateTwitterData(long id, int total, String pictureUrl, String screenName,String longName, boolean verified,String language) {
+	private void updateTwitterData(long id, int total, String pictureUrl, String screenName,String longName, boolean verified,String language, String description) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ?,longName = ?, verified = ?,language = ? where id = ?");
+			ps = connection.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ?,longName = ?, verified = ?,language = ?,description = ?  where id = ?");
 
 			ps.setInt(1, total);
 			ps.setString(2, pictureUrl);
@@ -326,7 +326,8 @@ public class StockMgrImpl implements StockMgr {
 			ps.setString(4, longName);
 			ps.setBoolean(5, verified);
 			ps.setString(6, language);
-			ps.setLong(7, id);
+			ps.setString(7, description);
+			ps.setLong(8, id);
 			ps.executeUpdate();
 
 			// This query should be called right after the stock update,
@@ -357,15 +358,16 @@ public class StockMgrImpl implements StockMgr {
 		PreparedStatement ps = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("insert into stock(id, name, longName, total, pictureUrl, lastUpdate, verified,language) values(?, ?,?, ?, ?, now(), ?, ?)");
+			ps = connection.prepareStatement("insert into stock(id, name, longName, description, total, pictureUrl, lastUpdate, verified,language) values(?, ?,?,?, ?, ?, now(), ?, ?)");
 			ps.setLong(1, stock.getId());
 			ps.setString(2, stock.getName());
 			ps.setString(3, stock.getLongName());
-			ps.setInt(4, stock.getTotal());
-			ps.setString(5, stock.getPictureUrl());
+			ps.setString(4, stock.getDescription());
+			ps.setInt(5, stock.getTotal());
+			ps.setString(6, stock.getPictureUrl());
 			
-			ps.setBoolean(6, stock.isVerified());
-			ps.setString(7, stock.getLanguage());
+			ps.setBoolean(7, stock.isVerified());
+			ps.setString(8, stock.getLanguage());
 
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());

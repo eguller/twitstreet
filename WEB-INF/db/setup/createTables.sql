@@ -31,6 +31,7 @@ create table `stock`(
     `id` bigint not null auto_increment,
     `name` varchar(45) not null,
     `longName` varchar(255),
+    `description` varchar(255),
     `total` int not null,
     `pictureUrl` varchar(255),
     `lastUpdate` timestamp,

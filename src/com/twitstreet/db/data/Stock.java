@@ -15,6 +15,7 @@ public class Stock implements DataObjectIF {
 	long id;
 	String name;
 	String longName;
+	private String description;
 	int total;
 	double sold;
 	String pictureUrl;
@@ -81,6 +82,7 @@ public class Stock implements DataObjectIF {
 		this.setId(rs.getLong("id"));
 		this.setName(rs.getString("name"));
 		this.setLongName(rs.getString("longName"));
+		this.setDescription(rs.getString("description"));
 		this.setLanguage(rs.getString("language"));
 		this.setTotal(rs.getInt("total"));
 		this.setSold(rs.getDouble("sold"));
@@ -144,5 +146,11 @@ public class Stock implements DataObjectIF {
 			this.language = LocalizationUtil.DEFAULT_LANGUAGE;
 			
 		}
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

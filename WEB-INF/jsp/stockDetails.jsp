@@ -87,6 +87,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					
 					</div>					
 				</td>
+			
 				<td>
 								<%
 												if(user!=null){
@@ -94,17 +95,17 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 												<div class="h3 user-portfolio-item-watch-div-<%=stock.getId() %>" style="width:100%;float:right; text-align:right ">
 					
 												<%
-												ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
-												boolean beingWatched = watchList.contains(stock);
-												 %>
-												<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
-													<%=Util.getWatchListIcon(true,15,lutil.get("watchlist.add", lang))%>
-													
-												</a>	
-												<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
-													<%=Util.getWatchListIcon(false,15,lutil.get("watchlist.remove", lang))%>
-													
-												</a>	
+													ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
+													boolean beingWatched = watchList.contains(stock);
+													 %>
+													<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
+														<%=Util.getWatchListIcon(true,15,lutil.get("watchlist.add", lang))%>
+														
+													</a>	
+													<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
+														<%=Util.getWatchListIcon(false,15,lutil.get("watchlist.remove", lang))%>
+														
+													</a>	
 												</div>
 											<%
 												}
@@ -118,40 +119,30 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			
 	
 	<div id="stock-details-menu" class="subheader">
-			
+		
 		<table class="datatbl">
 			
 			<tr>
-				<td width="55">
+				<td rowspan="2" width="55">
 					<img class="twuser" width="48" height="48" 
 					src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 					id="dashboard-picture">
 					
 <!-- 					<img src="/images/activity_indicator_32.gif" /> -->
-															
+													
 					
 				</td>
+				<td colspan="2">
+					<span class="gray-small"><%=(stock.getDescription()!=null)?stock.getDescription():""%></span> 
+				</td>
+			</tr>
+			<tr>
 				<td>
-						
-				<br>
 					<% if(stock.isChangePerHourCalculated() && stock.getChangePerHour()!=0){ 
-					
-						
 					%>
-	
 						<%=Util.getPercentageFormatted((double) stock.getChangePerHour() / stock.getTotal(), false, true, true, true, false, true)  %>
-	
 					<% }
-					
-					
-					%>
-					
-					
-			
-											
-						
-				
-					
+					%>					
 				</td>
 				<td style="vertical-align: bottom; width:330px">
 					<div class="tabs">
