@@ -80,7 +80,11 @@
 									<%=lutil.get("portfolio.sellall", lang)%> </a>
 							</div></td>
 					</tr>
-
+					<tr class="gray-small">
+							<td colspan="3">
+							<%=(stock.getStockLongName()!=null)?stock.getStockLongName():""%>
+						 </td>
+					</tr>
 					<tr>
 
 						<td colspan="1" rowspan="1">

@@ -27,11 +27,12 @@
 							<div id="twitstreet-header" style="float: left">
 								<a id="home"
 									style="vertical-align: top; line-height: 30px; height: 30px"
-									href="/">TwitStreet<img height="35" width="35" alt=""
-									src="/images/twitstreet_logo_50.png">
+									href="/">TwitStreet
 								</a>
-								</div>
-							</td>
+								<img height="35" width="35" alt="twitstreet.com" title="twitstreet.com"
+								src="/images/twitstreet_logo_50.png" onclick="http://www.twitstreet.com/">
+							</div>
+						</td>
 					</tr>
 
 					<tr>
@@ -39,12 +40,12 @@
 						<td style="float: left; margin-right: 5px">
 							<div id="twitstreet-share-main" style="float: left">
 								<%=GUIUtil.getInstance().getTwitterShareButton("",
-					"twitter.share.main", lang)%>
+									"twitter.share.main", lang)%>
 							</div></td>
 						<td style="float: left; margin-right: 5px">
 							<div id="twitstreet-share-main" style="float: left">
 								<%=GUIUtil.getInstance().getTwitterFollowButton(
-					"twitstreet_game", lang)%>
+									"twitstreet_game", lang)%>
 							</div></td>
 
 						<td style="float: right; margin-left: 5px">

@@ -68,19 +68,18 @@
 								onmouseover="$('.user-portfolio-item-watch-div-<%=stock.getId()%>').show()"
 								onmouseout="$('.user-portfolio-item-watch-div-<%=stock.getId()%>').hide()">
 								<table class="datatbl2">
+									
 									<tr>
 										<td colspan="2"><a href="#stock-<%=stock.getId()%>"
 											onclick="reloadIfHashIsMyHref(this)"
-											title="<%=lutil.get("stock.details.tip", lang,
-									stock.getName())%>">
+											title="<%=lutil.get("stock.details.tip", lang, stock.getName())%>">
 												<%=stock.getName()%> </a> <%
- 	if (stock.isVerified()) {
- %> <%=GUIUtil.getInstance()
-										.getVerifiedIcon(lang)%> <%
- 	}
- %> <%
- 	if (user != null) {
- %>
+												 	if (stock.isVerified()) {
+												 %> <%=GUIUtil.getInstance().getVerifiedIcon(lang)%> <%
+												 	}
+												 %> <%
+												 	if (user != null) {
+												 %>
 											<div class="user-portfolio-item-watch-div-<%=stock.getId()%>"
 												style="display: none; float: right;">
 
@@ -103,6 +102,11 @@
 											</div> <%
  	}
  %>
+										</td>
+									</tr>
+									<tr class="gray-small">
+										<td>
+											<%=(stock.getLongName()!=null)?stock.getLongName():""%>
 										</td>
 									</tr>
 									<tr>
