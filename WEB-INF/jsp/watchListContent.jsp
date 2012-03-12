@@ -69,6 +69,7 @@
 									%>
 								</div>
 							</td>
+							
 							<td align="right">
 								<div id="watch-item-<%=stock.getId()%>" style="display: none">
 									<a class="red-profit" href="javascript:void(0)"
@@ -79,7 +80,11 @@
 							</td>
 
 						</tr>
-
+						<tr class="gray-small">
+								<td colspan="3">
+								<%=(stock.getLongName()!=null)?stock.getLongName():""%>
+							 </td>
+						</tr>
 						<tr>
 
 							<td colspan="1" rowspan="1"><%=Util.commaSep(stock.getAvailable())%>

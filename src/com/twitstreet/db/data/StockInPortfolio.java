@@ -6,6 +6,7 @@ import java.sql.SQLException;
 public class StockInPortfolio implements DataObjectIF{
 	long stockId;
 	String stockName;
+	private String stockLongName;
 	double amount;
 	private double total;
 	String pictureUrl;
@@ -89,6 +90,7 @@ public class StockInPortfolio implements DataObjectIF{
 	
 		setStockId(rs.getLong("stockId"));
 		setStockName(rs.getString("stockName"));
+		setStockLongName(rs.getString("stockLongName"));
 		setAmount(rs.getDouble("amount"));
 		setPictureUrl(rs.getString("pictureUrl"));
 		setCapital(rs.getDouble("capital"));
@@ -132,5 +134,13 @@ public class StockInPortfolio implements DataObjectIF{
 
 	public void setTotalChangePerHour(double totalChangePerHour) {
 		this.totalChangePerHour = totalChangePerHour;
+	}
+
+	public String getStockLongName() {
+		return stockLongName;
+	}
+
+	public void setStockLongName(String stockLongName) {
+		this.stockLongName = stockLongName;
 	}
 }
