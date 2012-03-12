@@ -173,9 +173,9 @@ create table `invite` (
   `invited` bigint(20) not null,
   `invite_date` datetime default null,
   primary key (`id`),
-  unique key `invited_unique` (`invitor`),
+  unique key `invited_unique` (`invited`),
   key `fk_invited` (`invited`),
-  key `fk_invitor` (`invited`),
+  key `fk_invitor` (`invitor`),
   constraint `fk_invitor` foreign key (`invitor`) references `users` (`id`) on delete no action on update no action,
   constraint `fk_invited` foreign key (`invited`) references `users` (`id`) on delete no action on update no action
 ) engine=innodb default charset=utf8;
