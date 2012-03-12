@@ -37,7 +37,8 @@ create table `stock`(
     `lastUpdate` timestamp,
     `changePerHour` int,
     `verified` bit(1) DEFAULT b'0',
-     primary key (`id`)
+     primary key (`id`),
+     KEY `idx_name` (`name`)
 )  engine=innodb default charset=`utf8`;
 
 -- portfolio table
@@ -71,7 +72,8 @@ create  table `transactions` (
   `amount` decimal(11,2) null,
   `t_action` tinyint null,
   `t_date` timestamp,
-  primary key (`id`) 
+  primary key (`id`),
+  KEY `idx_user_stock` (`user_id`,`stock`)
 ) engine=innodb default charset=`utf8`;
 
 -- stock_history table
