@@ -82,7 +82,7 @@ public class StockUpdateTask implements Runnable {
 
 					TrendyStock ts = stockMgr.getTopGrossingStocks(24).get(0);
 
-					twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage())+ "www.twitstreet.com/#stock-"+ts.getId());
+					twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage())+ "www.twitstreet.com/#!stock="+ts.getId());
 				}
 				catch(Exception ex){
 					
