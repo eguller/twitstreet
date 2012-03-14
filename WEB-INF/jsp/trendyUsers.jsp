@@ -91,16 +91,12 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 											<a href="#!user=<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("user.details.tip", lang, user.getUserName())%>">
 											<%=user.getUserName()%>
 											</a> 
-										
-											
-										 	
 										</td>
 									</tr>
 									<tr>									
 										<td colspan="2"  align="left">								       
 											<%=Util.getNumberFormatted(user.getPortfolio()+user.getCash(), true, true, false, false, false, false)%>
 										</td>
-										
 									</tr>
 									<tr>									
  										<td colspan="2"  align="right">
@@ -113,15 +109,12 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 										</td>
 									</tr>
 								</table>
-								
-									
 								</td>
 								<td  width="30">
 									&nbsp;
 								</td>
 								<td>
 									<div id="trendy-user<%=user.getId()%>" style="width:230px; height:120px">
-									
 									<% request.setAttribute("chartUser", user); %>
 										<jsp:include page="userTimeLineChart.jsp">										
 											<jsp:param name="divId" value="#trendy-user"/>
@@ -132,12 +125,6 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 								</td>
 							</tr>
 						</table>
-						
-<!-- 						<br> -->
-						
-<!-- 						<hr class="hr-pink-class"> -->
-						
-						
 					</td>
 					<%
 						} else {
@@ -154,7 +141,6 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		%>
 	</table>
 	<%
-		
 	}
 	%>
 </div>

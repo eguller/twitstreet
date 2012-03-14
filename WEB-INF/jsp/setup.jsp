@@ -4,4 +4,5 @@
   <template:put name='topbar' content='topbar.jsp' />
   <template:put name='setupConfig' content='setupConfig.jsp' />
   <template:put name='footer' content='footer.jsp' />
+  <template:put name="scripts" content="scripts.jsp" />
 </template:insert>

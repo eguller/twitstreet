@@ -10,4 +10,5 @@
   <template:put name='transactions' content='transactions.jsp' />
   <template:put name='recentTweets' content='recentTweets.jsp' />
   <template:put name='footer' content='footer.jsp' />
+  <template:put name="scripts" content="scripts.jsp" />
 </template:insert>

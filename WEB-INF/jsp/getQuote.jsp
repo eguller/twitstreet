@@ -24,7 +24,7 @@
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
-String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 	Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
 	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);

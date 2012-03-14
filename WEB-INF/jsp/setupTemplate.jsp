@@ -23,6 +23,7 @@
 			<template:get name="footer" />
 		</div>
 	</div>
+	<template:get name="scripts"></template:get>
 </body>
 </html>
 

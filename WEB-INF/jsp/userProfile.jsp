@@ -37,7 +37,6 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 %>
 <div id="userprofile" class="main-div" > 
 	<jsp:include page="getUser.jsp" />
-	
 	<div id="users-screen">
 	<%
 		if(user!=null || getUserText!=null && getUserText.length()>0){
@@ -56,12 +55,4 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		
 		}%>	
 	</div>
-	
-
-
-
-	
-	
-	
-	
 </div>

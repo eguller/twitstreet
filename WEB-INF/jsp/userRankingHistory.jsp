@@ -42,26 +42,17 @@
 <%@ page import="java.text.DecimalFormat"%>
 	
 <div id="user-trend-section">
-	
 	<%
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
-	
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
-	
 	user = (user == null) ? (User) request.getAttribute(UserProfileServlet.USER_PROFILE_USER) : user;
 	user = (user == null && parameterUser != null) ? userMgr.getUserById(Long.valueOf(parameterUser)) : user;
 	request.setAttribute(UserProfileServlet.USER_PROFILE_USER, user);
-			
-	
 	RankingHistoryData rhd = null;
-	
 	if(user!=null){
-		
 		rhd = userMgr.getRankingHistoryForUser(user.getId(),null);
-		
-		
 	}
 	
 	if (rhd != null && rhd.getRankingHistory().size() > 0) {
@@ -81,45 +72,24 @@
 		double totalNow = user.getCash()+ user.getPortfolio();
 		Date date = new Date();
 		out.write("dateArray.push(new Date(" + date.getTime()+ "));\n");
-
 		out.write("rankArray.push(" + user.getRank() + ");\n");
-		
 		out.write("valueArray.push("  + totalNow  + ");\n");
-		
 		for(RankingData rd : rhd.getRankingHistory()){
-				
-					
 					out.write("dateArray.push(new Date(" + rd.getLastUpdate().getTime()+ "));\n");
-
 					out.write("rankArray.push(" + rd.getRank() + ");\n");
-					
 					out.write("valueArray.push(" + rd.getTotal() + ");\n");
-					
-				
-					
 		}		
-					
 					%>
 			drawUserValueHistory('#user-value-chart-div', dateArray, valueArray, userName);
 		</script>
-
-	
-
 	<%
 	}else if(user!=null){%>
-	
-	
-		
 		<div>
 		<p>
 		No history data available for <%=user.getUserName()%> yet.
 		</p>
 		</div>
-	
-	
 	<%			
 	}
 	%>
-		
 </div>
-	

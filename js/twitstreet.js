@@ -20,6 +20,8 @@ $(document).ready(function() {
 	if ($("#portfolio").length > 0) {
 		setInterval(reloadWatchList, reloadInterval);
 	}
+	
+	showTabMain(".stocks-tab");
 
 });
 
