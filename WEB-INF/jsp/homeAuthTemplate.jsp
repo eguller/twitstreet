@@ -20,32 +20,18 @@
 					<template:get name="portfolio"></template:get>
 				</div>
 
-				<div id="watchlist-container">
-					<template:get name="watchlist"></template:get>
+				<div id="transactions-container">
+					<template:get name="transactions"></template:get>
 				</div>
-
-				<div id="yourtransactions-container">
-					<template:get name="yourtransactions"></template:get>
-				</div>
-
-				<div id="latesttransactions-container">
-					<template:get name="latesttransactions"></template:get>
-				</div>
-
 				<template:get name="recentTweets"></template:get>
-
+				
 			</div>
 			<div id="column_center">
 
 
 				<template:get name="mainmenu"></template:get>
-				<template:get name="stocks"></template:get>
-				<template:get name="users"></template:get>
+				
 
-				<script type="text/javascript">showTabMain('.stocks-tab','#stocks-container')</script>
-
-				<template:get name="howtoplay"></template:get>
-				<template:get name="signup"></template:get>
 			</div>
 			<div id="column_right">
 				<div id="topranks-container">

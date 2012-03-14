@@ -268,6 +268,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 						.prepareStatement("select user_stock_profit(portfolio.user_id, portfolio.stock) as changePerHour, " +
 								" portfolio.capital as capital, stock.name as stockName, " +
 								" stock.id as stockId, " +
+								" stock.longName as stockLongName, " +
 								" (stock.total * portfolio.percentage) as amount, " +
 								" stock.pictureUrl as pictureUrl, " +
 								" percentage, " +

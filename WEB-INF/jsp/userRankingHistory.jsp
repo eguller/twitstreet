@@ -59,7 +59,7 @@
 	
 	if(user!=null){
 		
-		rhd = userMgr.getRankingHistoryForUser(user.getId());
+		rhd = userMgr.getRankingHistoryForUser(user.getId(),null);
 		
 		
 	}
@@ -67,7 +67,7 @@
 	if (rhd != null && rhd.getRankingHistory().size() > 0) {
 		%>
 	
-	<h3>Asset History</h3>
+<!-- 	<h3>Asset History</h3> -->
 	<div id="user-value-chart-div" style="height: 200px; width: 500px;"></div>
 	<br>
 <!-- 	<h3>Ranking History</h3> -->
@@ -100,7 +100,6 @@
 		}		
 					
 					%>
-			//drawUserRankingHistory('#user-trend-chart-div', dateArray, rankArray, userName);
 			drawUserValueHistory('#user-value-chart-div', dateArray, valueArray, userName);
 		</script>
 

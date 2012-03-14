@@ -7,7 +7,7 @@ import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
 
 public interface UserMgr {
-	
+	public static final double INVITE_MONEY_RATE = 4;
 
     /**
      * Return user by given twitter id
@@ -32,7 +32,7 @@ public interface UserMgr {
 	public ArrayList<User> getTopRank(int pageNumber);
 	
 	public int count();
-	public RankingHistoryData getRankingHistoryForUser(long id);
+	public RankingHistoryData getRankingHistoryForUser(long id, String since);
 	public void updateRankingHistory();
 
 	public void rerank();
@@ -44,5 +44,9 @@ public interface UserMgr {
 	
 	public void updateTwitterData(User user);
 	
-	public List<User> getUserListByServerId(int serverId);
+	public List<User> getUserListByServer();
+	public ArrayList<User> getTopGrossingUsers(int limit);
+	
+	public void invite(long invitor, long invited);
+	public void addInviteMoney(long userId);
 }

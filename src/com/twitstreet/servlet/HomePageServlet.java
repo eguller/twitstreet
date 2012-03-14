@@ -55,6 +55,8 @@ public class HomePageServlet extends TwitStreetServlet {
 	public static final String STOCK_DETAIL_LIST = "stockDetailList";
 	public static final String QUOTE = "quote";
 	public static final String QUOTE_DISPLAY = "quotedisplay";
+	public static final String REFERENCE_ID = "reference-id";
+	public static final String REF = "ref";
 	
 	public static final String OTHER_SEARCH_RESULTS = "other-search-results";
 
@@ -79,11 +81,46 @@ public class HomePageServlet extends TwitStreetServlet {
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
-		request.setAttribute("title", "twitstreet - Twitter stock market game");
+		request.setAttribute("title", "TwitStreet - Twitter Stock Market Game");
 		request.setAttribute(
 				"meta-desc",
 				"Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
 
+		String command = request.getParameter("_escaped_fragment_");
+		
+		try{
+			if(command.startsWith("suggestedstocks")){
+				//Do nothing... Default behavior is already Suggested Stocks 
+			}
+
+			else if(command.startsWith("stock=")){
+				long stockId =Long.valueOf(command.split("stock=")[1]);
+				Stock stock = stockMgr.getStockById(stockId);
+				request.setAttribute(STOCK, stock);
+			}
+			else if(command.startsWith("user=")){
+				long stockId =Long.valueOf(command.split("user=")[1]);
+				User user = userMgr.getUserById(stockId);
+				request.setAttribute(GetUserServlet.GET_USER, user);
+				request.setAttribute("selectedTab", "'.users-tab'");
+			}
+			else if(command.startsWith("topgrossingusers")){
+				
+				request.setAttribute("selectedTab", "'.users-tab'");
+				
+				
+			}
+			else if(command.startsWith("")){
+				
+			}
+			
+			
+		}catch(Exception ex){
+			
+			
+			
+		}
+		
 		long start = 0;
 		long end = 0;
 		start = System.currentTimeMillis();
@@ -101,10 +138,16 @@ public class HomePageServlet extends TwitStreetServlet {
 
 		loadUser(request);
 
+		
+		
 		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
 		} else {
+			String referenceId = request.getParameter(REF);
+			if(referenceId != null){
+				request.getSession().setAttribute(REFERENCE_ID, referenceId);
+			}
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
 		}

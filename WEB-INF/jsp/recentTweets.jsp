@@ -1,17 +1,31 @@
-<div id="recent-tweets" style="margin-top: 5px;">
+
+<%@page import="com.twitstreet.util.GUIUtil"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
+
+<%
+LocalizationUtil lutil = LocalizationUtil.getInstance();
+String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+%>
+
+
+
+<div id="recent-tweets">
 <h3>
-Tweets about us
+<%= lutil.get("tweetsaboutus", lang) %>
 </h3>
+
+
+<div  style="margin-top: 5px; height:350px; overflow-y : hidden; overflow-x : hidden;" onmouseover="$(this).css('overflow-y', 'scroll')" onmouseout="$(this).css('overflow-y', 'hidden')">
 	<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
 	<script>
 		new TWTR.Widget({
 			version : 2,
 			type : 'search',
 			search: 'twitstreet OR twitstreet_game OR #twitstreet OR from:twitstreet_game',
-			rpp : 5,
+			rpp : 20,
 			interval : 6000,
-			width : 260,
-			height : 300,
+			width : 250,
+			height : 1500,
 			theme : {
 				shell : {
 					background : '#f2f2f2',
@@ -35,4 +49,10 @@ Tweets about us
 			}
 		}).render().start();
 	</script>
+	</div>
+	<br>
+	<div style="text-align:center">
+	<%= GUIUtil.getInstance().getTwitterHashButton("twitstreet", lang) %>
+</div>
+	
 </div>

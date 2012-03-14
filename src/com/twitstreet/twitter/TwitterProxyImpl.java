@@ -20,6 +20,8 @@ import com.twitstreet.util.Util;
 
 public class TwitterProxyImpl implements TwitterProxy {
 
+	public static int USER_COUNT_FOR_UPDATE = 100;
+	private static int INVALID_REQUEST = 400;
 	private static int UNAUTHORIZED = 401;
 	private static int NOT_FOUND = 404;
 	private static int USER_SUSPENDED = 403;
@@ -49,6 +51,9 @@ public class TwitterProxyImpl implements TwitterProxy {
 		this.setTwitter(twitter);
 	}
 
+	
+
+	
 	@Override
 	public int getFollowerCount(String name){
 		int followerCount = 0;
@@ -126,6 +131,42 @@ public class TwitterProxyImpl implements TwitterProxy {
 		return user;
 	}
 
+
+	@Override
+	public ArrayList<User> getTwUsers(ArrayList<Long> idList){
+		
+		
+		
+		
+		ResponseList<User> users  = null;
+		ArrayList<User> userList = new ArrayList<User>();
+		try {
+			
+			long[] idArray = new long[idList.size()];
+			int i =0;
+			for(Long id: idList){
+
+				idArray[i] = id;
+				i++;
+			}
+			
+			users = twitter.lookupUsers(idArray);
+	
+		} catch (TwitterException e) {
+			handleError(e, idList);
+		}
+		catch(Exception ex){
+			logger.error(ex);
+		}
+		
+		if(users!=null){
+			
+			userList = new ArrayList<User>(users);
+		}
+		
+		return userList;
+	}
+	
 	@Override
 	public void setTwitter(Twitter twitter) {
 		this.twitter = twitter;
@@ -180,6 +221,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 	private void handleError(TwitterException e){
 		handleError(e, null);		
 	}
+	
 	private void handleError(TwitterException e, ArrayList<Object> params){
 		
 		String paramsStr = "";
@@ -194,7 +236,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 		
 		if (e.getStatusCode() == NOT_FOUND) {
 			logger.debug("Twitter: User not found. Params: " + paramsStr);
-		} 
+		}
 		else if (e.getStatusCode() == USER_SUSPENDED) {
 			logger.info("Twitter: User suspended. Params: " + paramsStr);
 		}
@@ -205,6 +247,10 @@ public class TwitterProxyImpl implements TwitterProxy {
 		}else if (e.getStatusCode() == UNAUTHORIZED) {
 		
 			logger.error("Twitter: Authentication credentials were missing or incorrect. Twitter proxy user: "+accessToken.getScreenName());
+			
+		}else if (e.getStatusCode() == INVALID_REQUEST) {
+		
+			logger.error("Twitter: The request was invalid. Possible reason: Query string may be including empty character. ");
 			
 		}
 		else{
@@ -217,6 +263,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 
 	@Override
 	public ArrayList<Trend> getTrends() {
+				
 		Trends ts = null;
 		try {
 			ts = twitter.getLocationTrends(1);

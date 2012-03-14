@@ -10,10 +10,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.User;
 import com.twitstreet.session.UserMgr;
+import com.twitstreet.session.UserMgrImpl;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -24,6 +27,7 @@ import twitter4j.auth.RequestToken;
 @SuppressWarnings("serial")
 @Singleton
 public class CallBackServlet extends TwitStreetServlet {
+	private static Logger logger = Logger.getLogger(CallBackServlet.class);
 	public static final String COOKIE_ID = "id";
 	public static final String COOKIE_OAUTHTOKEN = "oauthtoken";
 	public static final String REQUEST_TOKEN = "requestToken";
@@ -58,6 +62,7 @@ public class CallBackServlet extends TwitStreetServlet {
 			User user = null;
 			user = userMgr.getUserById(userId);
 			twitter4j.User twUser = twitter.showUser(userId);
+			//new user
 			if (user == null) {
 				user = new User();
 				user.setId(userId);
@@ -70,7 +75,21 @@ public class CallBackServlet extends TwitStreetServlet {
 				user.setCash(configMgr.getInitialMoney());
 				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 				userMgr.saveUser(user);
+				String referenceId = (String) request.getSession().getAttribute(HomePageServlet.REFERENCE_ID);
+				long referenceLong = -1;
+				try {
+					referenceLong = Long.parseLong(referenceId);
+				}
+				catch (NumberFormatException e) {
+					logger.error("Parsing reference id failed: " + referenceId);
+				}
+				if(referenceLong > -1){
+					userMgr.invite(referenceLong, user.getId());
+				}
+				request.getSession().removeAttribute(HomePageServlet.REFERENCE_ID);
+				
 			} else {
+				//existing user logging in again
 				user = new User();
 				user.setId(userId);
 				user.setLastLogin(Calendar.getInstance().getTime());

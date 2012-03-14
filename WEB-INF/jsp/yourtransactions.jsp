@@ -50,7 +50,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 						<span class="<%=spanClass%>"> <%=operation%></span>
 						<%=Util.commaSep(transactionRecord.getAmount())%>
-						<a href="#stock-<%=transactionRecord.getStockId()%>" title="<%=lutil.get("stock.details.tip", lang,transactionRecord.getStockName())%>">
+						<a href="#!stock=<%=transactionRecord.getStockId()%>" title="<%=lutil.get("stock.details.tip", lang,transactionRecord.getStockName())%>">
 							<%= transactionRecord.getStockName()%>
 						</a>
 						

@@ -7,7 +7,7 @@ Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.
 ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 %>
 
-<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="/images/twitstreet_logo_50.png">
 
 <title>
 <%= request.getAttribute("title")%>
@@ -15,6 +15,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="description" content="<%=request.getAttribute("meta-desc") %>" >
+<meta property="og:image" content="http://twitstreet.com/images/TwitStreet_logo1.png"/> 
 
 <script src="/js/jquery-1.6.4.min.js"></script>
 <script src="/js/jquery-corner.js"></script>
@@ -30,6 +31,8 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script src="/js/mainTabs.js"></script>
 <script src="/js/userProfileTabs.js"></script>
 <script src="/js/charts.js"></script>
+<script src="/js/portfolioTab.js"></script>
+<script src="/js/transactionTab.js"></script>
 
 <script type="text/javascript">
 	google.load('visualization', '1.0', {'packages':['corechart']});

@@ -1,7 +1,6 @@
 
-function drawVisualization(){
-		
-	drawStockHistory(drawStockHistoryDivId, drawStockHistoryDateArray, drawStockHistoryValueArray, drawStockHistoryStockName);
+function drawVisualization(divId){
+	drawStockHistory(drawStockHistoryDivId[divId], drawStockHistoryDateArray[divId], drawStockHistoryValueArray[divId], drawStockHistoryStockName[divId]);
 	drawStockDistribution(drawStockDistributionDivId,drawStockDistributionNameArray,drawStockDistributionPercentArray,drawStockDistributionStockName);
 
 }
@@ -10,18 +9,19 @@ function drawVisualization(){
 
 
 
-var drawStockHistoryDivId = null;
-var drawStockHistoryDateArray = null;
-var drawStockHistoryValueArray = null;
-var drawStockHistoryStockName = null;
+var drawStockHistoryDivId = new Array();
+var drawStockHistoryDateArray = new Array();
+var drawStockHistoryValueArray = new Array();
+var drawStockHistoryStockName = new Array();
 
 
 
-function drawStockHistory(divId, dateArray, valueArray, stockName) {
-	drawStockHistoryDivId = divId;
-	drawStockHistoryDateArray = dateArray;
-	drawStockHistoryValueArray = valueArray;
-	drawStockHistoryStockName = stockName;
+function drawStockHistory( divId, dateArray, valueArray, stockName, format,color) {
+	
+	drawStockHistoryDivId[divId] = divId;
+	drawStockHistoryDateArray[divId] = dateArray;
+	drawStockHistoryValueArray[divId] = valueArray;
+	drawStockHistoryStockName[divId] = stockName;
 	if($(divId).parent().css('display')!='none'){
 		
 
@@ -44,38 +44,127 @@ function drawStockHistory(divId, dateArray, valueArray, stockName) {
 			}
 			var annotatedtimeline = new google.visualization.AnnotatedTimeLine($(divId)[0]);
 			
+			if(format=='lastHour'){
+				
+				drawTimeLineLastHour(annotatedtimeline, data,color);
+				
+			}else if(format=='simple'){
+				
+				drawTimeLineSimple(annotatedtimeline,data,color);
+			}else if(format!=null && format.indexOf('simple,') == 0){
+				
+				drawTimeLineSimple(annotatedtimeline,data,color,format.split(",")[1]);
+			}else {
+				
+				drawTimeLine(annotatedtimeline,data,color);
+			}
+			
 			
 
 			google.visualization.events.addListener(annotatedtimeline, 'error', errHandler);
 			
-			annotatedtimeline.draw(data, {
-				// 'allValuesSuffix': '%', // A suffix that is added to all values
-				// 'colors': ['blue', 'red', '#0000bb'], // The colors to be used
-				'displayAnnotations' : true,
-				'displayExactValues' : true, // Do not truncate values (i.e.
-				// using K suffix)
-				'displayRangeSelector' : false, // Do not sow the range selector
-				'displayZoomButtons' : true, // DO not display the zoom buttons
-				'fill' : 30, // Fill the area below the lines with 20% opacity
-				'displayLegendDots' : true,
-				'legendPosition' : 'newRow', // Can be sameRow
-				// 'max': 35000, // Override the automatic default
-				// 'min': 30000, // Override the automatic default
-				// 'scaleColumns': [0], // Have two scales, by the first and second
-				// lines
-				'scaleType' : 'allmaximized', // See docs...
-				'thickness' : 3, // Make the lines thicker
-			// 'zoomStartTime': new Date(2009, 1 ,2), //NOTE: month 1 = Feb
-			// (javascript to blame)
-			// 'zoomEndTime': new Date(2009, 1 ,5) //NOTE: month 1 = Feb (javascript
-			// to blame)
-			});
+			
+			
+		
 
 		}
 	}
 	
 
 }
+function drawTimeLine(annotatedtimeline,data,color){
+	
+	
+	
+	annotatedtimeline.draw(data, {
+		// 'allValuesSuffix': '%', // A suffix that is added to all values
+		'colors': (color)?[color]:undefined, // The colors to be used
+		'displayAnnotations' : true,
+		'displayExactValues' : true, // Do not truncate values (i.e.
+		// using K suffix)
+		'displayRangeSelector' : false, // Do not sow the range selector
+		'displayZoomButtons' : true, // DO not display the zoom buttons
+		'fill' : 30, // Fill the area below the lines with 20% opacity
+		'displayLegendDots' : true,
+		'legendPosition' : 'sameRow', // Can be sameRow
+		// 'max': 35000, // Override the automatic default
+		// 'min': 30000, // Override the automatic default
+		// 'scaleColumns': [0], // Have two scales, by the first and second
+		// lines
+		'scaleType' : 'allmaximized', // See docs...
+		'thickness' : 3, // Make the lines thicker
+	// 'zoomStartTime': new Date(2009, 1 ,2), //NOTE: month 1 = Feb
+	// (javascript to blame)
+	// 'zoomEndTime': new Date(2009, 1 ,5) //NOTE: month 1 = Feb (javascript
+	// to blame)
+	});
+	
+	
+}
+
+function drawTimeLineLastHour(annotatedtimeline,data,color){
+	var ONE_HOUR = 60 * 60 * 1000;
+	
+	
+	annotatedtimeline.draw(data, {
+		// 'allValuesSuffix': '%', // A suffix that is added to all values
+		 'colors': (color)?[color]:undefined, // The colors to be used
+		'displayAnnotations' : true,
+		'displayExactValues' : true, // Do not truncate values (i.e.
+		// using K suffix)
+		'displayRangeSelector' : false, // Do not sow the range selector
+		'displayZoomButtons' : false, // DO not display the zoom buttons
+		'fill' : 30, // Fill the area below the lines with 20% opacity
+		'displayLegendDots' : true,
+		'legendPosition' : 'sameRow', // Can be sameRow
+		// 'max': 35000, // Override the automatic default
+		// 'min': 30000, // Override the automatic default
+		// 'scaleColumns': [0], // Have two scales, by the first and second
+		// lines
+		'scaleType' : 'allmaximized', // See docs...
+		'thickness' : 3, // Make the lines thicker
+		'zoomStartTime': new Date(new Date().getTime() - ONE_HOUR), //NOTE: month 1 = Feb
+	// (javascript to blame)
+	// 'zoomEndTime': new Date(2009, 1 ,5) //NOTE: month 1 = Feb (javascript
+	// to blame)
+	});
+	
+	
+}
+
+function drawTimeLineSimple(annotatedtimeline,data,color,minutes){
+	var ONE_MINUTE =  60 * 1000;
+	
+	var xMinutesAgo =new Date(new Date().getTime() - ONE_MINUTE*minutes);
+	annotatedtimeline.draw(data, {
+		// 'allValuesSuffix': '%', // A suffix that is added to all values
+		// 'colors': ['blue', 'red', '#0000bb'], // The colors to be used
+		'colors': (color)?[color]:undefined, // The colors to be used 
+		'displayAnnotations' : true,
+		'displayExactValues' : true, // Do not truncate values (i.e.
+		// using K suffix)
+		'displayRangeSelector' : false, // Do not sow the range selector
+		'displayZoomButtons' : false, // DO not display the zoom buttons
+		'fill' : 30, // Fill the area below the lines with 20% opacity
+		'displayLegendDots' : true,
+		'legendPosition' : 'sameRow', // Can be sameRow
+		// 'max': 35000, // Override the automatic default
+		 //'min': 0, // Override the automatic default
+		// 'scaleColumns': [0], // Have two scales, by the first and second
+		// lines
+		'scaleType' : 'allmaximized', // See docs...
+		'thickness' : 3, // Make the lines thicker
+		'zoomStartTime':(minutes)?xMinutesAgo:undefined,
+		//'zoomStartTime': new Date(new Date().getTime() - ONE_HOUR*6), //NOTE: month 1 = Feb
+	// (javascript to blame)
+	// 'zoomEndTime': new Date(2009, 1 ,5) //NOTE: month 1 = Feb (javascript
+	// to blame)
+	});
+	
+	
+}
+
+
 function errHandler(err){
 	
 	

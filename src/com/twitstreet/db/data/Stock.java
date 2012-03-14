@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.twitstreet.localization.LocalizationUtil;
+
 public class Stock implements DataObjectIF {
 	
 	//If stock is not updated more than 10 minutes, update is required
@@ -12,9 +14,12 @@ public class Stock implements DataObjectIF {
 	
 	long id;
 	String name;
+	String longName;
+	private String description;
 	int total;
 	double sold;
 	String pictureUrl;
+	String language;
 	Date lastUpdate;
 	int changePerHour;
 	boolean changePerHourCalculated;
@@ -76,6 +81,9 @@ public class Stock implements DataObjectIF {
 	public void getDataFromResultSet(ResultSet rs) throws SQLException {
 		this.setId(rs.getLong("id"));
 		this.setName(rs.getString("name"));
+		this.setLongName(rs.getString("longName"));
+		this.setDescription(rs.getString("description"));
+		this.setLanguage(rs.getString("language"));
 		this.setTotal(rs.getInt("total"));
 		this.setSold(rs.getDouble("sold"));
 		this.setPictureUrl(rs.getString("pictureUrl"));
@@ -118,5 +126,31 @@ public class Stock implements DataObjectIF {
 	}
 	public boolean isUpdateRequired() {
 		return Calendar.getInstance().getTimeInMillis() - lastUpdate.getTime() > UPDATE_REQUIRED ? true : false;
+	}
+	public String getLongName() {
+		return longName;
+	}
+	public void setLongName(String longName) {
+		this.longName = longName;
+	}
+	public String getLanguage() {
+		return language;
+	}
+	public void setLanguage(String language) {
+		
+		if(LocalizationUtil.getInstance().getLanguages().contains(language)){
+		
+			this.language = language;
+		}
+		else{
+			this.language = LocalizationUtil.DEFAULT_LANGUAGE;
+			
+		}
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

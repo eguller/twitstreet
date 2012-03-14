@@ -7,6 +7,7 @@ create table `users`(
     `firstLogin` datetime not null,
     `lastLogin` datetime not null,
     `cash` decimal(11,2) not null default 1000,
+    `language` varchar(10) not null default 'en',
     `lastIp` varchar(45) not null,
     `oauthToken` varchar(100) not null,
     `oauthTokenSecret` varchar(100) not null,
@@ -29,12 +30,16 @@ create table `admin`(
 create table `stock`(
     `id` bigint not null auto_increment,
     `name` varchar(45) not null,
+    `longName` varchar(255),
+    `description` varchar(255),
     `total` int not null,
     `pictureUrl` varchar(255),
     `lastUpdate` timestamp,
     `changePerHour` int,
+    `updating` bit(1) DEFAULT b'0',
     `verified` bit(1) DEFAULT b'0',
-     primary key (`id`)
+     primary key (`id`),
+     KEY `idx_name` (`name`)
 )  engine=innodb default charset=`utf8`;
 
 -- portfolio table
@@ -68,7 +73,8 @@ create  table `transactions` (
   `amount` decimal(11,2) null,
   `t_action` tinyint null,
   `t_date` timestamp,
-  primary key (`id`) 
+  primary key (`id`),
+  KEY `idx_user_stock` (`user_id`,`stock`)
 ) engine=innodb default charset=`utf8`;
 
 -- stock_history table
@@ -156,3 +162,26 @@ create table `twitter_trends` (
     `lastUpdate` timestamp not null default now(),
      constraint `fk_twitter_trends_stock` foreign key (`stock_id`) references `stock` (`id`)
 )  engine=innodb default charset=`utf8`;
+
+-- announcement table
+create table `announcement` (  
+    `stock_id` bigint not null, 
+     primary key (`stock_id`),
+    `timeSent` timestamp not null default now(),
+     constraint `fk_announcement_stock` foreign key (`stock_id`) references `stock` (`id`)
+)  engine=innodb default charset=`utf8`;
+
+create table `invite` (
+  `id` bigint(20) not null auto_increment,
+  `invitor` bigint(20) not null,
+  `invited` bigint(20) not null,
+  `invite_date` datetime default null,
+  primary key (`id`),
+  unique key `invited_unique` (`invited`),
+  key `fk_invited` (`invited`),
+  key `fk_invitor` (`invitor`),
+  constraint `fk_invitor` foreign key (`invitor`) references `users` (`id`) on delete no action on update no action,
+  constraint `fk_invited` foreign key (`invited`) references `users` (`id`) on delete no action on update no action
+) engine=innodb default charset=utf8;
+
+

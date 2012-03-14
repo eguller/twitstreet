@@ -52,7 +52,7 @@ function showStockDistribution(id){
 
 function showStockHistory(){
 	showTab("#stock-history-tab","#stock-trend-section");
-	drawVisualization();
+	drawVisualization('#detail-stock'+$("#hiddenStockDetailsStockId").val());
 }
 function showTweetsOfUser(){
 	showTab("#tweets-of-user-tab","#tweets-of-user-section");

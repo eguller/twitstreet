@@ -11,13 +11,11 @@ import javax.servlet.ServletContext;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import com.twitstreet.cache.TransactionCache;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
-import com.twitstreet.task.AsyncQuery;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.task.UserInfoUpdateTask;
 
@@ -29,8 +27,6 @@ public class TwitstreetImpl implements Twitstreet {
 	ConfigMgr configMgr;
 	ServletContext servletContext;
 	Injector injector;
-	@Inject AsyncQuery asyncQueryTask;
-	@Inject TransactionCache transactionCache;
 	@Inject GroupMgr groupMgr;
 	@Inject UserMgr userMgr;
 	@Inject StockMgr stockMgr;
@@ -84,20 +80,13 @@ public class TwitstreetImpl implements Twitstreet {
 		updateFollowerCountThread.setName("Stock Update Task");
 		updateFollowerCountThread.start();
 		
-		Thread asyncQueryTaskThread = new Thread(asyncQueryTask);
+		/*Thread asyncQueryTaskThread = new Thread(asyncQueryTask);
 		asyncQueryTaskThread.setName("Async query task");
-		asyncQueryTaskThread.start();
+		asyncQueryTaskThread.start();*/
 		
 		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
 		updateUserInfoThread.setName("User Info Update Task");
 		updateUserInfoThread.start();
-		
-		//Thread stockHistoryUpdateThread = new Thread (stockHistoryUpdateTask);
-		///stockHistoryUpdateThread.setName("Update Stock History");
-		//stockHistoryUpdateThread.start();
-		
-		transactionCache.load();
-		
 		initialized = true;
 		
 

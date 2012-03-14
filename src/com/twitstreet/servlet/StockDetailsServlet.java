@@ -31,9 +31,6 @@ public class StockDetailsServlet extends TwitStreetServlet {
 		loadUser(request);
 		User user = (User) request.getAttribute(User.USER);
 		
-if(user==null) return;
-		//loadUserFromCookie(request);
-		
 		if (stockIdStr == null) {
 			response.sendRedirect(response.encodeRedirectURL("/"));
 			return;

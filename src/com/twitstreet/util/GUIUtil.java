@@ -1,16 +1,22 @@
 package com.twitstreet.util;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import com.google.inject.Inject;
 import com.twitstreet.db.data.Stock;
+import com.twitstreet.db.data.StockHistoryData;
 import com.twitstreet.localization.LocalizationUtil;
+import com.twitstreet.market.StockMgr;
+import com.twitstreet.market.StockMgrImpl;
 
 public class GUIUtil {
 	ResourceBundle propertiesFile;
 	private static GUIUtil instance = new GUIUtil();
 	private LocalizationUtil lutil = LocalizationUtil.getInstance();
+	StockMgr stockMgr = StockMgrImpl.getInstance();;
 	
 	private GUIUtil() {
 		String propFileStr = this.getClass().getName();
@@ -77,7 +83,68 @@ public class GUIUtil {
 		}
 
 		buttonStr = buttonStr.replace("{1}", shareString);
+		buttonStr = buttonStr.replace("{2}", lang);
 		
 		return buttonStr;	
+	}
+	
+	public String getTwitterFollowButton(String userToFollow, String lang){
+		String buttonStr = propertiesFile.getString("twitter.follow.button");
+	
+	
+		buttonStr = buttonStr.replace("{0}", userToFollow);
+		buttonStr = buttonStr.replace("{1}", lang);
+		//buttonStr = buttonStr.replace("{2}", userToFollow);
+		return buttonStr;	
+	}
+	
+	public String getTwitterHashButton(String hashTag, String lang){
+		String buttonStr = propertiesFile.getString("twitter.hash.button");
+	
+	
+		buttonStr = buttonStr.replace("{0}", hashTag);
+		buttonStr = buttonStr.replace("{1}", lang);
+		//buttonStr = buttonStr.replace("{2}", userToFollow);
+		return buttonStr;	
+	}
+	
+	public String getTwitterMentionButton(String mention, String lang){
+		String buttonStr = propertiesFile.getString("twitter.mention.button");
+	
+	
+		buttonStr = buttonStr.replace("{0}", mention);
+		buttonStr = buttonStr.replace("{1}", lang);
+		//buttonStr = buttonStr.replace("{2}", userToFollow);
+		return buttonStr;	
+	}
+	
+	public String getTimeLine(Stock stock, StockHistoryData shd, String chartNamePrefix, String divIdPrefix,String format){
+		StringBuilder scriptStrBuilder = new StringBuilder();
+		scriptStrBuilder.append("<script type='text/javascript'>" +
+		"var dateArrayStock"+stock.getId()+" = new Array();"+
+		"var valueArrayStock"+stock.getId()+" = new Array();"+
+		"var stockNameStock"+stock.getId()+" = '" + stock.getName() +"';"+
+		"\n");
+		
+		
+	
+	
+		
+			LinkedHashMap<Date, Integer> dvm = shd.getDateValueMap();
+
+			scriptStrBuilder.append("dateArrayStock"+stock.getId()+".push(new Date(" + stock.getLastUpdate().getTime() + "));\n");
+
+			scriptStrBuilder.append("valueArrayStock"+stock.getId()+".push(" + stock.getTotal() + ");\n");
+
+			for (Date date : dvm.keySet()) {
+				scriptStrBuilder.append("dateArrayStock"+stock.getId()+".push(new Date(" + date.getTime() + "));\n");
+
+				scriptStrBuilder.append("valueArrayStock"+stock.getId()+".push(" + dvm.get(date) + ");\n");
+		}
+			scriptStrBuilder.append("drawStockHistory('" + chartNamePrefix+ "-"+stock.getId()+"' , '"+divIdPrefix+"-"+stock.getId()+"', dateArrayStock"+stock.getId()+", valueArrayStock"+stock.getId()+",	stockNameStock"+stock.getId()+",'"+format+"'");
+			scriptStrBuilder.append("</script>");
+			
+			String returnStr = scriptStrBuilder.toString();
+			return returnStr;	
 	}
 }

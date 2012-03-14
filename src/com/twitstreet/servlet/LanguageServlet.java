@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.localization.LocalizationUtil;
 import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
@@ -31,7 +32,7 @@ public class LanguageServlet extends TwitStreetServlet {
 
 		loadUser(request);
 		
-		return ;
+		response.getWriter().write(LocalizationUtil.getInstance().get("language.load.message", getLanguage(request)));
 
 	}
 

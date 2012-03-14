@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.servlet.UserProfileServlet"%>
 <%@page import="com.twitstreet.servlet.GetUserServlet"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.HashSet"%>
@@ -76,7 +77,7 @@
 											<td><img class="twuser" width="48" height="48" 
 												src="<%=searchResults.get(i).getPictureUrl()%>" />
 											</td>
-											<td><a href="#user-<%=searchResults.get(i).getId()%>" onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("user.details.tip", lang, searchResults.get(i).getUserName()) %>">
+											<td><a href="#!user=<%=searchResults.get(i).getId()%>" onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("user.details.tip", lang, searchResults.get(i).getUserName()) %>">
 													<%
 														out.write(searchResults.get(i).getUserName());
 													%> </a> 
@@ -118,3 +119,14 @@
 			<%
 				}
 			%>
+			
+			<%
+			User user = (User) request.getAttribute(UserProfileServlet.USER_PROFILE_USER);
+
+		if (user==null && getUserText.length() > 0) {
+	%>	
+			<div id="searchusernoresult"><p><%=lutil.get("shared.noresults", lang) %></p></div>
+	<%
+		}
+	%>
+	

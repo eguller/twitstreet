@@ -35,16 +35,39 @@ public class TwitStreetServlet extends HttpServlet {
 	}
 
 	
-	public void getLanguage(HttpServletRequest request) {
-	String langParam = request.getParameter(LocalizationUtil.LANGUAGE) ;
+	
+	public String getLanguage(HttpServletRequest request) {
+		String langParam = request.getParameter(LocalizationUtil.LANGUAGE) ;
 	
 		if (langParam!= null && langParam.length()>0){
 			
 			request.getSession().setAttribute(LocalizationUtil.LANGUAGE, langParam);
 		}
+		String lang = (String) request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+		if (lang == null || lang.length() < 1) {
+
+			String language = null;
 			
+			try{
+				language = request.getHeader("Accept-Language").substring(0,2);
+			}catch(Exception ex){
+				
+				
+			}
 			
-		
+			if(LocalizationUtil.getInstance().checkLanguageIsValid(language)){
+				request.getSession().setAttribute(LocalizationUtil.LANGUAGE,language);
+				
+			}
+			else{
+				request.getSession().setAttribute(LocalizationUtil.LANGUAGE,LocalizationUtil.DEFAULT_LANGUAGE);
+				
+			}
+			
+
+		}
+
+		return (String) request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 	}
 
 	

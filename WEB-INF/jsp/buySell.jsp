@@ -135,30 +135,50 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			<tr>
 				<td colspan="3" style="text-align: center; padding-top: 10px;">
 
-					<div id="dashboard-message-field" style="margin-top: 6px;"
-						class="field-white">
-						<p
-							style="width: 100%; text-align: center; margin-top: 10px; margin-bottom: 10px; padding-top: 5px; padding-bottom: 5px;">
-							<span id="user-stock"> <%
- 	if (userStock == null) {
- 		out.write(lutil.get("stock.youdonthave", lang,stock.getName()) +"<br>");
- 	} else {
- 		int amount = (int) (userStock.getPercent() * stock.getTotal());
- 		String commaSep = Util.commaSep(amount);
- 		out.write(lutil.get("stock.youhave", lang,new Object[]{commaSep, stock.getName()})+"<br>");
- 	}
+				<div id="dashboard-message-field" style="margin-top: 6px;"
+										class="field-white">
+				<p style="width: 100%; text-align: center; margin-top: 10px; margin-bottom: 10px; padding-top: 5px; padding-bottom: 5px;">
+				<span id="user-stock"> 
+							<%
+							
+							if(user!=null){
+								%>
+								
+									
+											
+											<%	
+											 	if (userStock == null) {
+											 		out.write(lutil.get("stock.youdonthave", lang,stock.getName()) +"<br>");
+											 	} else {
+											 		int amount = (int) (userStock.getPercent() * stock.getTotal());
+											 		String commaSep = Util.commaSep(amount);
+											 		out.write(lutil.get("stock.youhave", lang,new Object[]{commaSep, stock.getName()})+"<br>");
+											 	}
+											
+											 	if (user.getCash() < 1 && stock.getAvailable()>0) {
+											 		out.write(lutil.get("stock.notenoughcash", lang,stock.getName()));
+											 	}%> 
+										
+									
+							
+							<%	
+							}
+							else{
+ 								
+ 							
+ 											out.write(lutil.get("stockdetails.notsignedin", lang));
+ 							
+ 							
+ 							}%>	
+ 							</span>
+					</p>
+					
+			</div>
+		</td>
 
- 	if (user.getCash() < 1 && stock.getAvailable()>0) {
- 		out.write(lutil.get("stock.notenoughcash", lang,stock.getName()));
- 	}
- %> </span>
-						</p>
-					</div>
-				</td>
 
 
-
-			</tr>
+	</tr>
 			<tr id="buy-links-row">
 				<td colspan="3" id="buy-links">
 					<div id="buy-sell-div">
@@ -177,18 +197,32 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 									}
 
 									for (; i > 0; i--) {
-										buyValues.add(Math.pow(10, i - 1));
+										double tenTimesX = Math.pow(10, i - 1);
+										buyValues.add(tenTimesX);
+										if(i!=1){
+											buyValues.add(tenTimesX/2);
+											
+										}
 									}
 
 									if (userStock != null) {
 										double userTotalStock = (userStock.getPercent() * stock.getTotal());
 										i = userTotalStock < 1 ? 0 : String.valueOf((int) userTotalStock).length();
-										if (userTotalStock != Math.pow(10, i - 1)) {
+										
+										double tenTimesX = Math.pow(10, i - 1);
+										if (userTotalStock != tenTimesX) {
 											sellValues.add(Math.floor(userTotalStock));
 										}
 										for (; i > 0; i--) {
-											sellValues.add(Math.pow(10, i - 1));
+											tenTimesX = Math.pow(10, i - 1);
+											sellValues.add(tenTimesX);
+											if(i!=1){
+												sellValues.add(tenTimesX/2);
+												
+											}
 										}
+										
+										
 									}
 									i = 0;
 

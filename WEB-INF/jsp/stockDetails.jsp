@@ -31,6 +31,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	User user = (User) request.getAttribute(User.USER);
 
+	
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 
@@ -46,11 +47,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 		}
 	}
-	UserStock userStock = null;
-	if (user != null && stock != null) {
-		userStock = portfolioMgr.getStockInPortfolio(user.getId(), stock.getId());
-
-	}
+	
 
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
 	String quoteDisplay = request.getAttribute(HomePageServlet.QUOTE_DISPLAY) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE_DISPLAY);
@@ -70,35 +67,49 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<table class="datatbl">
 			<tr>
 				<td>
-					<div class="h3"  style="vertical-align: top">
+					<div class="h3 big"  style="vertical-align: top">
 						<a style="vertical-align: top;" href="http://twitter.com/#!/<%=stock.getName()%>"
 						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>"
-						target="_blank"><%=stock == null ? "" : stock.getName()%></a>
-							<% if(stock.isVerified()){ %>
+						target="_blank"><%=stock.getName()%></a> 	
+							<%if(stock.isVerified()){ %>
 						<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
 						<% } %>
+						<a class="gray-small" style="vertical-align: top; " href="http://twitter.com/#!/<%=stock.getName()%>"
+						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>" target="_blank">
+						<%=(stock.getLongName()!=null)?" ("+stock.getLongName()+")":""%></a> 
+					
+						<%=GUIUtil.getInstance().getTwitterShareButton("#!stock="+ stock.getId(), "twitter.share.stock", lang, stock.getName())%>
+						<%=GUIUtil.getInstance().getTwitterFollowButton(stock.getName(), lang)%>
+				
+					
 						&nbsp;&nbsp;&nbsp;
 						
-						<%=GUIUtil.getInstance().getTwitterShareButton("#stock-"+ stock.getId(), "twitter.share.stock", lang, stock.getName())%>
-						
+					
 					</div>					
 				</td>
+			
 				<td>
-					<div class="h3-right-top">
+								<%
+												if(user!=null){
+											 %>
+												<div class="h3 user-portfolio-item-watch-div-<%=stock.getId() %>" style="width:100%;float:right; text-align:right ">
 					
-						<%
-						ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
-						boolean beingWatched = watchList.contains(stock);
-						 %>
-						<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
-							<%=Util.getWatchListIcon(true,20,lutil.get("watchlist.add", lang))%>
-							
-						</a>	
-						<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
-							<%=Util.getWatchListIcon(false,20,lutil.get("watchlist.remove", lang))%>
-							
-						</a>	
-					</div>
+												<%
+													ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
+													boolean beingWatched = watchList.contains(stock);
+													 %>
+													<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
+														<%=Util.getWatchListIcon(true,15,lutil.get("watchlist.add", lang))%>
+														
+													</a>	
+													<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
+														<%=Util.getWatchListIcon(false,15,lutil.get("watchlist.remove", lang))%>
+														
+													</a>	
+												</div>
+											<%
+												}
+											 %>
 				</td>
 			</tr>
 			
@@ -108,40 +119,30 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			
 	
 	<div id="stock-details-menu" class="subheader">
-
-			
+		
 		<table class="datatbl">
+			
 			<tr>
-				<td>
+				<td rowspan="2" width="55">
 					<img class="twuser" width="48" height="48" 
 					src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 					id="dashboard-picture">
 					
 <!-- 					<img src="/images/activity_indicator_32.gif" /> -->
-															
+													
 					
-					</td>
+				</td>
+				<td colspan="2">
+					<span class="gray-small"><%=(stock.getDescription()!=null)?stock.getDescription():""%></span> 
+				</td>
+			</tr>
+			<tr>
 				<td>
-						
-				<br>
 					<% if(stock.isChangePerHourCalculated() && stock.getChangePerHour()!=0){ 
-					
-						
 					%>
-	
 						<%=Util.getPercentageFormatted((double) stock.getChangePerHour() / stock.getTotal(), false, true, true, true, false, true)  %>
-	
 					<% }
-					
-					
-					%>
-					
-					
-			
-											
-						
-				
-					
+					%>					
 				</td>
 				<td style="vertical-align: bottom; width:330px">
 					<div class="tabs">
@@ -160,7 +161,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	
 	<br>
 	
-	<div id="stock-details-screen">
+	<div id="stock-details-screen" class="main-div">
 		<div id="buy-sell-container">
 			<jsp:include page="buySell.jsp" />
 		</div>
@@ -174,11 +175,12 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		}
 	%>
 
-	<div id="hasnofollowers">
-
+	
 		<%
 			if (quote.length() > 0 && stock != null && stock.getTotal() == 0) {
 		%>
+		<div id="hasnofollowers">
+		
 		<div id="dashboard-message-field" style="margin-top: 6px;"
 			class="field-white">
 			<p style="margin-top: 10px; margin-bottom: 10px;">
@@ -187,10 +189,11 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 				%>
 			</p>
 		</div>
+			</div>
+		
 		<%
 			}
 		%>
-	</div>
 
 
 	

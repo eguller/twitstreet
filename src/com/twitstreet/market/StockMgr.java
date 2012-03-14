@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.StockHistoryData;
+import com.twitstreet.db.data.TrendyStock;
 
 /**
  * Manages a cache of "percent available" of stocks.
@@ -36,16 +37,6 @@ public interface StockMgr {
 	 */
 	public Stock getStockById(long id);
 	
-	/**
-	 * Update total follower count.
-	 * Do not call makePersistenUpdate directly,
-	 * if there is a sold/buy request
-	 * we do not want to sold stock count.
-	 * @param stockId - stockId.
-     * @param total - total
-	 * @return 
-	 */
-	public void updateTwitterData(long stockId, int total, String pictureUrl, String screenName, boolean verified);
 	
 	/**
 	 * Returns stock sold percentage by name
@@ -64,7 +55,7 @@ public interface StockMgr {
 	 */
 	public void updateStockHistory();
 	
-	public StockHistoryData getStockHistory(long id);
+	public StockHistoryData getStockHistory(long id, String since);
 
 	ArrayList<Stock> getTrendyStocks();
 
@@ -81,4 +72,19 @@ public interface StockMgr {
 	void updateStockData(long id);
 
 	void updateStockData(String stockName);
+
+	StockHistoryData getStockHistory(long id);
+	StockHistoryData getStockHistory(long id, int forMinutes);
+
+	List<TrendyStock> getTopGrossingStocks(int forhours);
+
+	public List<Stock> getUpdateRequiredStocksByServer();
+	public void resetSpeedOfOldStocksByServer();
+	public List<TrendyStock> getTopGrossingStocksByServer(int forhours);
+
+	ArrayList<Long> getUpdateRequiredStockIds();
+
+	void updateStockListData(ArrayList<Long> id);
+
+	List<Stock> getUpdateRequiredStocks(int limit);
 }

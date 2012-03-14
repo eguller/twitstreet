@@ -55,28 +55,31 @@ userList = (userList==null)? new ArrayList<User>(): userList;
 int maxRank = userMgr.getRecordPerPage();
 if (userCount > maxRank) {
 	// we should add 1 because of integer conversion
-	pageCount = (userCount / maxRank) + 1;
+	pageCount = (userCount / maxRank);
+	if(userCount%maxRank!=0){
+		pageCount++;
+	}
 }
 %>
 
 
 <div id="topranks" class="main-div">
-	<table class="datatbl">
-		<tr>
-			<td>
-				<h3><%=lutil.get("ranking.header", lang) %></h3>
-			</td>
-			<td align="right">
-				<jsp:include page="toprankPagination.jsp">
+	<div style="padding-top:0px; height:22px" class="h3">
+	
+		<div align="left" style="float: left;padding-top:4px">
+			<%=lutil.get("ranking.header", lang) %>
+		</div>
+		<div align="right" style="float: right">
+			<jsp:include page="toprankPagination.jsp">
+		
+				<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+				<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+				<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+		
+			</jsp:include>				
+		</div>
 			
-					<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
-					<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-					<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-			
-				</jsp:include>				
-			</td>
-		</tr>		
-	</table>	
+	</div>	
 
 	<div id="topranks-loading-div">
 		
@@ -115,7 +118,7 @@ if (userCount > maxRank) {
 					
 					<td class="rank-number"><%=user.getRank()%>.</td>
 					<td><img class="twuser" width="48" height="48"  src="<%=user.getPictureUrl()%>" /></td>
-					<td><a href="#user-<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("user.details.tip",lang, user.getUserName())%>"> <%=user.getUserName()%></a>
+					<td><a href="#!user=<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("user.details.tip",lang, user.getUserName())%>"> <%=user.getUserName()%></a>
 						<br> <%=Util.getNumberFormatted(total, true, true, false, false, false, false)%> <%
 									String className = null; 
 									String profitPerHour = Util.getRoundedProfitPerHourString(user.getProfit());
@@ -141,13 +144,14 @@ if (userCount > maxRank) {
 			%>
 			</table>
 	
-	
-		<jsp:include page="toprankPagination.jsp">
-	
-			<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
-			<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-			<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-	
-		</jsp:include>
+		<div style="padding-top:0px; height:22px" class="h3" align="right">
+			<jsp:include page="toprankPagination.jsp">
+		
+				<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+				<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+				<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+		
+			</jsp:include>
+		</div>
 	</div>
 </div>

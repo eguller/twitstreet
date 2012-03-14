@@ -7,6 +7,7 @@ import com.twitstreet.db.data.TransactionRecord;
 import com.twitstreet.db.data.User;
 
 public interface TransactionMgr {
+	public static final int CURRENT_TRANSACTION_LIMIT = 10;
 	public static final int BUY = 1;
 	public static final int SELL = 0;
 	public void recordTransaction(User user, Stock stock, int amount, int operation);
