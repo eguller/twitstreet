@@ -1,5 +1,6 @@
 package com.twitstreet.task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -14,6 +15,7 @@ import com.twitstreet.market.StockMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.TwitstreetAnnouncer;
 import com.twitstreet.twitter.TwitterProxyFactory;
+import com.twitstreet.twitter.TwitterProxyImpl;
 
 @Singleton
 public class StockUpdateTask implements Runnable {
@@ -64,7 +66,7 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Stock list update - end. "+users);
 
 				logger.info("Reset speed of stocks - begin.");
-				stockMgr.resetSpeedOfOldStocksByServer();
+				stockMgr.resetSpeedOfOldStocks();
 				logger.info("Reset speed of stocks - end.");
 
 				logger.info("Re-rank begin.");
@@ -75,26 +77,21 @@ public class StockUpdateTask implements Runnable {
 				userMgr.updateRankingHistory();
 				logger.info("Rank history update - end. "); 
 				
-				try{
-					//TrendyStock ts = stockMgr.getTopGrossingStocksByServer(2).get(0);
-					//twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage()));
-					//twitstreetAnnouncer.mention(ts,ts.getAnnouncementStockDetail(ts.getLanguage())+ " http://www.twitstreet.com/#stock-"+String.valueOf(ts.getId()));
-
-					TrendyStock ts = stockMgr.getTopGrossingStocks(24).get(0);
-
-					twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage())+ "www.twitstreet.com/#stock-"+ts.getId());
-				}
-				catch(Exception ex){
-					
-				}
+				logger.info("Rank history update - begin.");
+				mentionTopGrossingStocks();
+				logger.info("Rank history update - end. "); 
+				
+			
+				
+				
+				twitstreetAnnouncer.removeOldRecords(60 * 24);
+				
 			
 
 			} catch (Throwable ex) {
-				logger.error("Someone tried to kill our precious. He says: ", ex);
+				logger.error("Someone tried to kill our precious StockUpdateTask. He says: ", ex);
 			}
-			
-			twitstreetAnnouncer.removeOldRecordsByServer(60 * 24);
-			
+		
 			
 			
 			long endTime = System.currentTimeMillis();
@@ -111,15 +108,39 @@ public class StockUpdateTask implements Runnable {
 		}
 	}
 
-	public List<Stock> updateStocks() {
+	private void mentionTopGrossingStocks() {
+		try{
+			//TrendyStock ts = stockMgr.getTopGrossingStocksByServer(2).get(0);
+			//twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage()));
+			//twitstreetAnnouncer.mention(ts,ts.getAnnouncementStockDetail(ts.getLanguage())+ " http://www.twitstreet.com/#stock-"+String.valueOf(ts.getId()));
 
-		List<Stock> stockList = stockMgr.getUpdateRequiredStocks();
+			TrendyStock ts = stockMgr.getTopGrossingStocks(24).get(0);
 
-		for (Stock stock : stockList) {
-
-			stockMgr.updateStockData(stock.getId());
+			twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage())+ "www.twitstreet.com/#stock-"+ts.getId());
 		}
-		return stockList;
+		catch(Exception ex){
+			logger.error("Cannot mention top grossing stock", ex);
+		}
+	}
+
+	public List<Stock> updateStocks() {
+		List<Stock> updatedStocks = new ArrayList<Stock>();
+		while (true) {
+			List<Stock> stockList = stockMgr.getUpdateRequiredStocks(TwitterProxyImpl.USER_COUNT_FOR_UPDATE);
+
+			if (stockList.size() == 0)
+				break;
+			ArrayList<Long> idList = new ArrayList<Long>();
+			for (Stock stock : stockList) {
+				idList.add(stock.getId());
+
+			}
+
+			stockMgr.updateStockListData(idList);
+			
+			updatedStocks.addAll(stockList);
+		}
+		return updatedStocks;
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.twitstreet.twitter;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -21,6 +20,7 @@ import com.twitstreet.util.Util;
 
 public class TwitterProxyImpl implements TwitterProxy {
 
+	public static int USER_COUNT_FOR_UPDATE = 100;
 	private static int INVALID_REQUEST = 400;
 	private static int UNAUTHORIZED = 401;
 	private static int NOT_FOUND = 404;
@@ -131,6 +131,42 @@ public class TwitterProxyImpl implements TwitterProxy {
 		return user;
 	}
 
+
+	@Override
+	public ArrayList<User> getTwUsers(ArrayList<Long> idList){
+		
+		
+		
+		
+		ResponseList<User> users  = null;
+		ArrayList<User> userList = new ArrayList<User>();
+		try {
+			
+			long[] idArray = new long[idList.size()];
+			int i =0;
+			for(Long id: idList){
+
+				idArray[i] = id;
+				i++;
+			}
+			
+			users = twitter.lookupUsers(idArray);
+	
+		} catch (TwitterException e) {
+			handleError(e, idList);
+		}
+		catch(Exception ex){
+			logger.error(ex);
+		}
+		
+		if(users!=null){
+			
+			userList = new ArrayList<User>(users);
+		}
+		
+		return userList;
+	}
+	
 	@Override
 	public void setTwitter(Twitter twitter) {
 		this.twitter = twitter;
@@ -185,6 +221,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 	private void handleError(TwitterException e){
 		handleError(e, null);		
 	}
+	
 	private void handleError(TwitterException e, ArrayList<Object> params){
 		
 		String paramsStr = "";

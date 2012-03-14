@@ -83,7 +83,7 @@ public class TwitstreetAnnouncerImpl implements TwitstreetAnnouncer {
 	}
 
 	@Override
-	public void removeOldRecords(int removeOlderThanMinutes) {
+	public void removeOldRecords(int olderThanMinutesOld) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -91,7 +91,7 @@ public class TwitstreetAnnouncerImpl implements TwitstreetAnnouncer {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement(" delete from announcement where timestampdiff(minute,timeSent,now()) > ? ");
-			ps.setInt(1, removeOlderThanMinutes);
+			ps.setInt(1, olderThanMinutesOld);
 			ps.executeUpdate();
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());

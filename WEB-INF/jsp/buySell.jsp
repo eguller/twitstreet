@@ -197,18 +197,32 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 									}
 
 									for (; i > 0; i--) {
-										buyValues.add(Math.pow(10, i - 1));
+										double tenTimesX = Math.pow(10, i - 1);
+										buyValues.add(tenTimesX);
+										if(i!=1){
+											buyValues.add(tenTimesX/2);
+											
+										}
 									}
 
 									if (userStock != null) {
 										double userTotalStock = (userStock.getPercent() * stock.getTotal());
 										i = userTotalStock < 1 ? 0 : String.valueOf((int) userTotalStock).length();
-										if (userTotalStock != Math.pow(10, i - 1)) {
+										
+										double tenTimesX = Math.pow(10, i - 1);
+										if (userTotalStock != tenTimesX) {
 											sellValues.add(Math.floor(userTotalStock));
 										}
 										for (; i > 0; i--) {
-											sellValues.add(Math.pow(10, i - 1));
+											tenTimesX = Math.pow(10, i - 1);
+											sellValues.add(tenTimesX);
+											if(i!=1){
+												sellValues.add(tenTimesX/2);
+												
+											}
 										}
+										
+										
 									}
 									i = 0;
 

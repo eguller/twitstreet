@@ -25,6 +25,7 @@ import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
+import com.twitstreet.twitter.TwitterProxyImpl;
 
 public class StockMgrImpl implements StockMgr {
 
@@ -38,8 +39,9 @@ public class StockMgrImpl implements StockMgr {
 	private static String SELECT_FROM_STOCK = " select id, name, longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified, language, description  from stock ";
 	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name,longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, changePerHour, verified, language, description from stock ";
 	
-	
-	
+	private static String STOCK_IN_PORTFOLIO =" stock.id in (select distinct stock from portfolio) ";
+	private static String STOCK_IN_WATCHLIST =" stock.id in (select distinct stock_id from user_stock_watch ) ";
+	private static String STOCK_IN_TWITTER_TRENDS =" stock.id in (select stock_id from twitter_trends) ";
 	
 	private static int MAX_TRENDS = 6;
 	
@@ -205,10 +207,60 @@ public class StockMgrImpl implements StockMgr {
 		}
 
 	}
+	
+	private void setStockListUpdating(ArrayList<Long> idList, boolean updating){
+		
+		for(Long id : idList){
+			setStockUpdating(id, updating);
+		}
+		
+		
+	}
+	
+	private void setStockUpdating(long id, boolean updating){
+		
+		Connection connection = null;
+		PreparedStatement ps = null;
 
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement("update stock set updating = ?  where id = ?");
+
+			ps.setBoolean(1, updating);
+			ps.setLong(2, id);
+			ps.executeUpdate();
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+		
+		
+	}
+	@Override
+	public void updateStockListData(ArrayList<Long>idList) {
+		
+		try{
+			setStockListUpdating(idList, true);
+			
+			ArrayList<twitter4j.User> twUserList = getTwitterProxy().getTwUsers(idList);
+			
+			for(twitter4j.User twUser : twUserList){
+			
+				updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang(),twUser.getDescription());
+				setStockUpdating(twUser.getId(), false);
+			}
+		}catch(Exception ex){
+			setStockListUpdating(idList, false);
+		}
+		
+	}
 	@Override
 	public void updateStockData(String stockName) {
 	
+		
 		twitter4j.User twUser = getTwitterProxy().getTwUser(stockName);
 
 		updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang(),twUser.getDescription());
@@ -384,15 +436,34 @@ public class StockMgrImpl implements StockMgr {
 	@Override
 	public List<Stock> getUpdateRequiredStocks() {
 
+		return getUpdateRequiredStocks(-1);
+	}
+	@Override
+	public List<Stock> getUpdateRequiredStocks(int limit) {
+
+		if(limit<=0){
+			
+			limit = Integer.MAX_VALUE;
+			
+		}
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_DISTINCT_FROM_STOCK + " " + " where (TIMESTAMPDIFF(minute, lastUpdate, now())  > ?  or lastUpdate is null) " + " and (" + "		stock.id in (select distinct stock from portfolio) or " + "  		stock.id in (select distinct stock_id from user_stock_watch ) or " + "		stock.id in (select stock_id from twitter_trends )" + "		)");
-
+			ps = connection.prepareStatement(SELECT_DISTINCT_FROM_STOCK +  
+					" where (TIMESTAMPDIFF(minute, lastUpdate, now())  > ?  or lastUpdate is null) " 
+					+ " and (" + STOCK_IN_PORTFOLIO
+						+" or " +STOCK_IN_WATCHLIST 
+						+" or " + STOCK_IN_TWITTER_TRENDS 
+						+ " )" +
+					  " and updating != b'1' " +
+					" order by lastUpdate asc " +
+					" limit ?");
+			
 			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
+			ps.setInt(2, TwitterProxyImpl.USER_COUNT_FOR_UPDATE);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				Stock stockDO = new Stock();
@@ -407,6 +478,36 @@ public class StockMgrImpl implements StockMgr {
 		}
 		return stockList;
 	}
+	@Override
+	public ArrayList<Long> getUpdateRequiredStockIds() {
+
+		ArrayList<Long> idList = new ArrayList<Long>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_DISTINCT_FROM_STOCK +  
+					" where (TIMESTAMPDIFF(minute, lastUpdate, now())  > ?  or lastUpdate is null) " 
+					+ " and (" + STOCK_IN_PORTFOLIO
+						+" or " +STOCK_IN_WATCHLIST 
+						+" or " + STOCK_IN_TWITTER_TRENDS 
+						+ " )");
+
+			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				Long id = rs.getLong("id");
+				idList.add(id);
+			}
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return idList;
+	}
 	
 	@Override
 	public List<Stock> getUpdateRequiredStocksByServer() {
@@ -416,7 +517,13 @@ public class StockMgrImpl implements StockMgr {
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_DISTINCT_FROM_STOCK + " " + " where (TIMESTAMPDIFF(minute, lastUpdate, now())  > ?  or lastUpdate is null) " + " and (" + "		stock.id in (select distinct stock from portfolio) or " + "  		stock.id in (select distinct stock_id from user_stock_watch ) or " + "		stock.id in (select stock_id from twitter_trends )" + "		) and mod(id, ?) = ?");
+			ps = connection.prepareStatement(SELECT_DISTINCT_FROM_STOCK 
+					+" where (TIMESTAMPDIFF(minute, lastUpdate, now())  > ?  or lastUpdate is null) " 
+					+ " and (" + STOCK_IN_PORTFOLIO
+						+" or " +STOCK_IN_WATCHLIST 
+						+" or " + STOCK_IN_TWITTER_TRENDS 
+					+ " )"
+					+" and mod(id, ?) = ?");
 
 			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
 			ps.setInt(2, configMgr.getServerCount());

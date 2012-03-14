@@ -1,6 +1,6 @@
 package com.twitstreet.task;
 
-import java.beans.ConstructorProperties;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -12,6 +12,7 @@ import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
+import com.twitstreet.twitter.TwitterProxyImpl;
 
 public class UserInfoUpdateTask implements Runnable {
 	private static final long ONE_DAY = 24 * 60 * 60 * 1000;
@@ -28,20 +29,38 @@ public class UserInfoUpdateTask implements Runnable {
 
 		while (true) {
 			long start = System.currentTimeMillis();
-			List<User> userList = userMgr.getUserListByServer();
-			for (User user : userList) {
-				TwitterProxy twitterProxy = twitterProxyFactory.create(
-						user.getOauthToken(), user.getOauthTokenSecret());
-				twitter4j.User twitterUser = twitterProxy.getTwUser(user
-						.getId());
-				if(twitterUser != null){
-					System.out.println(user.getUserName() + ", " + twitterUser.getScreenName() + ", " + twitterUser.getProfileImageURL().toExternalForm());
-					user.setUserName(twitterUser.getScreenName());
-					user.setPictureUrl(twitterUser.getProfileImageURL()
-						.toExternalForm());
-					userMgr.updateTwitterData(user);
+
+			try {
+				List<User> userList = userMgr.getAll();
+				ArrayList<Long> idList = new ArrayList<Long>();
+				
+				for (User user : userList) {
+					idList.add(user.getId());				
 				}
+				User user = userMgr.random();
+				TwitterProxy twitterProxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
+				while (idList.size() > 0) {
+				
+					List<Long> subList = idList.subList(0,Math.min(TwitterProxyImpl.USER_COUNT_FOR_UPDATE,idList.size()));
+					ArrayList<twitter4j.User> twitterUserList = twitterProxy.getTwUsers(new ArrayList<Long>(subList));
+
+				
+
+					for (twitter4j.User twitterUser : twitterUserList) {
+						User updatedUser = new User();
+						System.out.println(twitterUser.getScreenName() + ", " + twitterUser.getProfileImageURL().toExternalForm());
+						updatedUser.setUserName(twitterUser.getScreenName());
+						updatedUser.setPictureUrl(twitterUser.getProfileImageURL().toExternalForm());
+						userMgr.updateTwitterData(updatedUser);
+					}
+					subList.clear();
+
+				}
+				
+			} catch (Throwable ex) {
+				logger.error("Someone tried to kill our precious UserUpdateTask. He says: ", ex);
 			}
+
 			long elapsed = System.currentTimeMillis() - start;
 			logger.info("UserInfoUpdateTask completed in " + elapsed / 1000 + " seconds");
 			if (ONE_DAY - elapsed > 0) {

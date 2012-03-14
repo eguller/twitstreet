@@ -609,6 +609,8 @@ public class UserMgrImpl implements UserMgr {
 		return userList;
 	}
 
+
+	
 	@Override
 	public ArrayList<User> getTopGrossingUsers(int limit) {
 
