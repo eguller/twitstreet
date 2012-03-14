@@ -55,7 +55,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						target="_blank"><%=user.getUserName()%></a>
 						&nbsp;&nbsp;&nbsp;
 						
-						<%=GUIUtil.getInstance().getTwitterShareButton("#user-"+ user.getId(), "twitter.share.user", lang, user.getUserName())%>
+						<%=GUIUtil.getInstance().getTwitterShareButton("#!user="+ user.getId(), "twitter.share.user", lang, user.getUserName())%>
 						<%=GUIUtil.getInstance().getTwitterFollowButton(user.getUserName(), lang)%>
 						
 					</div>					
@@ -142,7 +142,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 								</td>
 								<td>								
 									<div style="width:170px">
-										<a href='#stock-<%=stock.getStockId()%>'  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("stock.details.tip", lang, stock.getStockName())%>">
+										<a href='#!stock=<%=stock.getStockId()%>'  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("stock.details.tip", lang, stock.getStockName())%>">
 												<%=stock.getStockName()%>
 										
 											

@@ -51,13 +51,13 @@
 						spanClass = "red";
 						operation = "&#9654;";
 					}
-			%> <a href="#user-<%=transactionRecord.getUserId()%>"
+			%> <a href="#!user=<%=transactionRecord.getUserId()%>"
 			onclick="reloadIfHashIsMyHref(this)"
 			title="<%=lutil.get("user.details.tip", lang,
 						transactionRecord.getUserName())%>">
 				<%=transactionRecord.getUserName()%> </a> <span class="<%=spanClass%>">
 				<%=operation%></span> <%=Util.commaSep(transactionRecord.getAmount())%> <a
-			href="#stock-<%=transactionRecord.getStockId()%>"
+			href="#!stock=<%=transactionRecord.getStockId()%>"
 			onclick="reloadIfHashIsMyHref(this)"
 			title="<%=lutil.get("stock.details.tip", lang,
 						transactionRecord.getStockName())%>">

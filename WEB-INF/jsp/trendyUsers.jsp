@@ -88,7 +88,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 								<table class="datatbl2">
 									<tr>									
 										<td colspan="2">	
-											<a href="#user-<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("user.details.tip", lang, user.getUserName())%>">
+											<a href="#!user=<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("user.details.tip", lang, user.getUserName())%>">
 											<%=user.getUserName()%>
 											</a> 
 										

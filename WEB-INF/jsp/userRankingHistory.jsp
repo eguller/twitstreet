@@ -100,7 +100,6 @@
 		}		
 					
 					%>
-			//drawUserRankingHistory('#user-trend-chart-div', dateArray, rankArray, userName);
 			drawUserValueHistory('#user-value-chart-div', dateArray, valueArray, userName);
 		</script>
 

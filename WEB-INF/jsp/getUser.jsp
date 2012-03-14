@@ -54,7 +54,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<div>
 			<input type="text" class="textbox" id="getUserTextboxId" value="<%=getUserText%>"
 				name="getUserText" /> <input type="button" id="getUserButtonId"
-				onclick=" reloadIfHashIs('#searchuser-'+$('#getUserTextboxId').val()); window.location = '#searchuser-'+$('#getUserTextboxId').val();" value="<%=lutil.get("shared.search", lang) %>">
+				onclick=" reloadIfHashIs('#!searchuser='+$('#getUserTextboxId').val()); window.location = '#!searchuser='+$('#getUserTextboxId').val();" value="<%=lutil.get("shared.search", lang) %>">
 				<script>
 			
 					jQuery('#getUserTextboxId').click(function() {

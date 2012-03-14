@@ -53,7 +53,7 @@
 						operation = "&#9654;";
 					}
 			%> <span class="<%=spanClass%>"> <%=operation%></span> <%=Util.commaSep(transactionRecord.getAmount())%>
-			<a href="#stock-<%=transactionRecord.getStockId()%>"
+			<a href="#!stock=<%=transactionRecord.getStockId()%>"
 			title="<%=lutil.get("stock.details.tip", lang,
 						transactionRecord.getStockName())%>">
 				<%=transactionRecord.getStockName()%> </a></td>
