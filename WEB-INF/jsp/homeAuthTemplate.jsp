@@ -30,10 +30,8 @@
 
 
 				<template:get name="mainmenu"></template:get>
-				<template:get name="stocks"></template:get>
-				<template:get name="users"></template:get>
+				
 
-				<script type="text/javascript">showTabMain('.stocks-tab','#stocks-container')</script>
 			</div>
 			<div id="column_right">
 				<div id="topranks-container">

@@ -45,7 +45,7 @@
 		if (trendResults.size() > 0) {
 	%>
 
-	<h3><%=lutil.get("trendystocks.header", lang)%></h3>
+	<h3><%=lutil.get("suggestedstocks.header", lang)%></h3>
 		<table class="datatbl" style="margin-top: 10px;">
 			<%
 				for (int i = 0; i < trendResults.size();) {

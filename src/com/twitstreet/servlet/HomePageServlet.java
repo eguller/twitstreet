@@ -89,7 +89,7 @@ public class HomePageServlet extends TwitStreetServlet {
 		String command = request.getParameter("_escaped_fragment_");
 		
 		try{
-			if(command.startsWith("trendystocks")){
+			if(command.startsWith("suggestedstocks")){
 				//Do nothing... Default behavior is already Suggested Stocks 
 			}
 
@@ -98,10 +98,16 @@ public class HomePageServlet extends TwitStreetServlet {
 				Stock stock = stockMgr.getStockById(stockId);
 				request.setAttribute(STOCK, stock);
 			}
-			else if(command.startsWith("")){
-				
+			else if(command.startsWith("user=")){
+				long stockId =Long.valueOf(command.split("user=")[1]);
+				User user = userMgr.getUserById(stockId);
+				request.setAttribute(GetUserServlet.GET_USER, user);
+				request.setAttribute("selectedTab", "'.users-tab'");
 			}
-			else if(command.startsWith("")){
+			else if(command.startsWith("topgrossingusers")){
+				
+				request.setAttribute("selectedTab", "'.users-tab'");
+				
 				
 			}
 			else if(command.startsWith("")){

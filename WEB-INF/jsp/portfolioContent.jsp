@@ -41,8 +41,8 @@
 					StockInPortfolio stock = portfolio
 							.getStockInPortfolioList().get(i);
 		%>
-		<tr onmouseover="$('#!portfolio-item=<%=stock.getStockId()%>').show()"
-			onmouseout="$('#!portfolio-item=<%=stock.getStockId()%>').hide()">
+		<tr onmouseover="$('#portfolio-item-<%=stock.getStockId()%>').show()"
+			onmouseout="$('#portfolio-item-<%=stock.getStockId()%>').hide()">
 			<td width="58px"><img class="twuser" width="48" height="48"
 				src="<%=stock.getPictureUrl()%>" />
 			</td>

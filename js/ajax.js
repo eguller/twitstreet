@@ -62,9 +62,11 @@ $(function(){
 	    var hash = location.hash;
 	    
 	    // Set the page title based on the hash.
-	    var command =  hash.replace( /^#!/, '' );
+	    var command =  hash.replace( /^#/, '' );
 	    
 
+	    command = command.replace('!','');
+	    
 	    lastCommand = command;
 	    
 	    performOperation(command);

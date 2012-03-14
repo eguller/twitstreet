@@ -81,14 +81,14 @@ function getQuote(quote) {
 	if (quote.length > 0) {
 		ajaxLoad("/getquote", "quote=" + quote, "#stocks-container",
 				'#column_center');
-		showTabMain('.stocks-tab', '#stocks-container');
+		showTabMain('.stocks-tab');
 	}
 }
 
 function loadTrendyStocks() {
 
-	ajaxLoad("/trendystocks", null, "#stocks-screen", "#stocks-screen");
-	showTabMain('.stocks-tab', '#stocks-container');
+	ajaxLoad("/suggestedstocks", null, "#stocks-screen", "#stocks-screen");
+	showTabMain('.stocks-tab');
 
 }
 function loadTrendyUsers() {
@@ -100,7 +100,7 @@ function getUser(user) {
 	if (user.length > 0) {
 		ajaxLoad("/getuser", "getuser=" + user, "#users-container",
 				"#column_center");
-		showTabMain('.users-tab', '#users-container');
+		showTabMain('.users-tab');
 	}
 }
 
@@ -110,7 +110,7 @@ function loadStock(id, reload) {
 
 	ajaxLoad("stock", "stock=" + id, '#stocks-container', '#column_center');
 
-	showTabMain('.stocks-tab', '#stocks-container');
+	showTabMain('.stocks-tab');
 
 }
 
@@ -118,7 +118,7 @@ function loadUserProfile(userId, reload) {
 	if (userId != null) {
 		ajaxLoad("/user", "user=" + userId, "#users-container",
 				"#column_center", reload);
-		showTabMain('.users-tab', '#users-container');
+		showTabMain('.users-tab');
 	}
 }
 

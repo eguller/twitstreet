@@ -80,7 +80,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/balance").with(BalanceServlet.class);
 				serve("/stock").with(StockDetailsServlet.class);
 				serve("/user").with(UserProfileServlet.class);
-				serve("/trendystocks").with(TrendyStocksServlet.class);
+				serve("/suggestedstocks").with(TrendyStocksServlet.class);
 				serve("/trendyusers").with(TrendyUsersServlet.class);
 
 				serve("/lang").with(LanguageServlet.class);
