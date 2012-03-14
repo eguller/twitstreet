@@ -86,6 +86,14 @@ public class HomePageServlet extends TwitStreetServlet {
 				"meta-desc",
 				"Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
 
+		//Keep this until google removes broken links from its index
+		String queryString = request.getQueryString();
+		if(queryString!= null && queryString.startsWith("stock")){
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+		//Keep this until google removes broken links from its index
+		
 		String command = request.getParameter("_escaped_fragment_");
 		
 		try{

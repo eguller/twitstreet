@@ -17,6 +17,11 @@ public interface ConfigMgr {
 	public static  String ANNOUNCER_ACCESS_SECRET = "announcerAccessSecret";
 	
 	public static final int MASTER_SERVER_ID = 0;
+	public static final String STAGE = "stage";
+	
+	public static final String DEV = "dev";
+	public static final String PROD = "prod";
+		
 	
 	public void load();
 	public String get(String parm);
@@ -34,4 +39,6 @@ public interface ConfigMgr {
 	public void setServerCount(int serverCount);
 	public int getServerId();
 	public void setServerId(int serverId);
+	public boolean isDev();
+	public void setDev(boolean dev);
 }

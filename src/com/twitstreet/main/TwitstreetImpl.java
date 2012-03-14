@@ -53,6 +53,8 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		int serverCount = properties.getProperty(ConfigMgr.SERVER_COUNT) == null ? 1 : Integer.parseInt(properties.getProperty(ConfigMgr.SERVER_COUNT));
 		int serverId = properties.getProperty(ConfigMgr.SERVER_ID) == null ? 0 : Integer.parseInt(properties.getProperty(ConfigMgr.SERVER_ID));
+		boolean dev = properties.getProperty(ConfigMgr.STAGE) == null ? true : properties.getProperty(ConfigMgr.STAGE).equalsIgnoreCase(ConfigMgr.DEV);
+		
 		
 		int dbPort = Integer.parseInt(dbPortStr);
 		
@@ -65,6 +67,7 @@ public class TwitstreetImpl implements Twitstreet {
 		configMgr.load();
 		configMgr.setServerCount(serverCount);
 		configMgr.setServerId(serverId);
+		configMgr.setDev(dev);
 		
 		
 //		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);

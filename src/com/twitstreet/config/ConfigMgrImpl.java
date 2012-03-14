@@ -25,6 +25,7 @@ public class ConfigMgrImpl implements ConfigMgr{
 	
 	int serverCount;
 	int serverId;
+	boolean dev = true;
 
 	
 	@Inject public ConfigMgrImpl(DBMgr dbMgr) {
@@ -128,5 +129,15 @@ public class ConfigMgrImpl implements ConfigMgr{
 	@Override
 	public String getAnnouncerAccessSecret() {
 		return get(ConfigMgr.ANNOUNCER_ACCESS_SECRET);
+	}
+
+	@Override
+	public boolean isDev() {
+		return dev;
+	}
+
+	@Override
+	public void setDev(boolean dev) {
+		this.dev = dev;
 	}
 }

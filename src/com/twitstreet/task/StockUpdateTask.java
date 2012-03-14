@@ -104,13 +104,10 @@ public class StockUpdateTask implements Runnable {
 
 	private void mentionTopGrossingStocks() {
 		try{
-			//TrendyStock ts = stockMgr.getTopGrossingStocksByServer(2).get(0);
-			//twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage()));
-			//twitstreetAnnouncer.mention(ts,ts.getAnnouncementStockDetail(ts.getLanguage())+ " http://www.twitstreet.com/#stock-"+String.valueOf(ts.getId()));
-
-			TrendyStock ts = stockMgr.getTopGrossingStocks(24).get(0);
-
-			twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage())+ "www.twitstreet.com/#!stock="+ts.getId());
+            if(stockMgr.getTopGrossingStocks(24).size() > 0 && !configMgr.isDev()){  
+            	TrendyStock ts = stockMgr.getTopGrossingStocks(24).get(0);
+            	twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage())+ "www.twitstreet.com/#!stock="+ts.getId());
+            }
 		}
 		catch(Exception ex){
 			logger.error("Cannot mention top grossing stock", ex);
