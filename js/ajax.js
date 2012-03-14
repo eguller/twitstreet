@@ -62,7 +62,7 @@ $(function(){
 	    var hash = location.hash;
 	    
 	    // Set the page title based on the hash.
-	    var command =  hash.replace( /^#/, '' );
+	    var command =  hash.replace( /^#!/, '' );
 	    
 
 	    lastCommand = command;
@@ -82,14 +82,14 @@ function performLastOperation(){
 	performOperation(lastCommand);
 }
 function performOperation(command){
-	var itemType = command.split('-')[0];
+	var itemType = command.split('=')[0];
 		    
     if(itemType == 'stock'){
-    	 var id = command.split('-')[1];
+    	 var id = command.split('=')[1];
     	loadStock(id);
     	
     }else if(itemType == 'user'){
-    	 var id = command.split('-')[1];
+    	 var id = command.split('=')[1];
     	loadUserProfile(id);
     }
 	else if(itemType == 'suggestedstocks'){

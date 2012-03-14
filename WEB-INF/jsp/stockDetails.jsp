@@ -78,7 +78,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>" target="_blank">
 						<%=(stock.getLongName()!=null)?" ("+stock.getLongName()+")":""%></a> 
 					
-						<%=GUIUtil.getInstance().getTwitterShareButton("#stock-"+ stock.getId(), "twitter.share.stock", lang, stock.getName())%>
+						<%=GUIUtil.getInstance().getTwitterShareButton("#!stock="+ stock.getId(), "twitter.share.stock", lang, stock.getName())%>
 						<%=GUIUtil.getInstance().getTwitterFollowButton(stock.getName(), lang)%>
 				
 					

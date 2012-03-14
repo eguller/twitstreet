@@ -42,8 +42,8 @@
 
 							Stock stock = watchList.get(i);
 			%>
-			<tr onmouseover="$('#watch-item-<%=stock.getId()%>').show()"
-				onmouseout="$('#watch-item-<%=stock.getId()%>').hide()">
+			<tr onmouseover="$('#!watch-item=<%=stock.getId()%>').show()"
+				onmouseout="$('#!watch-item=<%=stock.getId()%>').hide()">
 				<td width="58px"><img class="twuser" width="48" height="48"
 					src="<%=stock.getPictureUrl()%>" /></td>
 				<td>
@@ -54,7 +54,7 @@
 
 								<div style="float: left">
 
-									<a href='#stock-<%=stock.getId()%>'
+									<a href='#!stock=<%=stock.getId()%>'
 										onclick="reloadIfHashIsMyHref(this)"
 										title="<%=lutil.get("stock.details.tip", lang,
 								stock.getName())%>"><%=stock.getName()%>

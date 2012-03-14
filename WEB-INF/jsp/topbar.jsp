@@ -117,7 +117,7 @@
 						src="<%=user.getPictureUrl()%>" />
 					</td>
 					<td><span id="username"><a
-							href="#user-<%=user.getId()%>"
+							href="#!user=<%=user.getId()%>"
 							onclick="reloadIfHashIsMyHref(this)"
 							title="<%=lutil.get("user.details.tip", lang,
 						user.getUserName())%>">

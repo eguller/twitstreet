@@ -76,24 +76,18 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Rank history update - begin.");
 				userMgr.updateRankingHistory();
 				logger.info("Rank history update - end. "); 
-				
-				logger.info("Rank history update - begin.");
-				mentionTopGrossingStocks();
-				logger.info("Rank history update - end. "); 
-				
-			
-				
-				
-				twitstreetAnnouncer.removeOldRecords(60 * 24);
-				
-			
 
+				logger.info("Mention trendy stock - begin.");
+				mentionTopGrossingStocks();
+				logger.info("Mention trendy stock - end. "); 
+				
+				logger.info("Remove old records - begin.");
+				twitstreetAnnouncer.removeOldRecords(60 * 24);
+				logger.info("Remove old records - end.");
 			} catch (Throwable ex) {
 				logger.error("Someone tried to kill our precious StockUpdateTask. He says: ", ex);
 			}
 		
-			
-			
 			long endTime = System.currentTimeMillis();
 			long diff = endTime - startTime;
 

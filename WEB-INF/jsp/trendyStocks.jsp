@@ -70,7 +70,7 @@
 								<table class="datatbl2">
 									
 									<tr>
-										<td colspan="2"><a href="#stock-<%=stock.getId()%>"
+										<td colspan="2"><a href="#!stock=<%=stock.getId()%>"
 											onclick="reloadIfHashIsMyHref(this)"
 											title="<%=lutil.get("stock.details.tip", lang, stock.getName())%>">
 												<%=stock.getName()%> </a> <%
