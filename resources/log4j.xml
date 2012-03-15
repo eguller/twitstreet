@@ -7,6 +7,7 @@
 		<param name="File" value="${catalina.home}/logs/twitstreet.txt" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{ABSOLUTE} %5p %t %c{1}:%L - %m%n" />
+			<param name="DatePattern" value=".yyyy-MM-dd-HH" />
 		</layout>
 
 	</appender>

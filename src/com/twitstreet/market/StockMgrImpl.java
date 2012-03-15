@@ -29,6 +29,8 @@ import com.twitstreet.twitter.TwitterProxyImpl;
 
 public class StockMgrImpl implements StockMgr {
 
+	private static int TOP_GROSSING_STOCK_TOTAL_THRESHOLD = 1000;
+
 	private static int TWITTER_TRENDS_CLEANUP_PERIOD = 24 * 60; // minutes
 
 	private static String TRENDY_STOCK_AVAILABLE_THRESHOLD = "5";
@@ -191,7 +193,9 @@ public class StockMgrImpl implements StockMgr {
 
 	
 	private TwitterProxy getTwitterProxy(){
-		User user = userMgr.random();
+		User user = userMgr.random();	
+		logger.info("Random User: "+user.getUserName());
+		
 		TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 		return twitterProxy;
 		
@@ -252,7 +256,8 @@ public class StockMgrImpl implements StockMgr {
 				updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang(),twUser.getDescription());
 				setStockUpdating(twUser.getId(), false);
 			}
-		}catch(Exception ex){
+		}
+		finally{
 			setStockListUpdating(idList, false);
 		}
 		
@@ -567,7 +572,7 @@ public class StockMgrImpl implements StockMgr {
 			ps.setInt(2, (forhours * 60) -35 );
 			ps.setInt(3, (forhours * 60) +35 );
 			//TODO create constant
-			ps.setInt(4, 500 );
+			ps.setInt(4, TOP_GROSSING_STOCK_TOTAL_THRESHOLD );
 			rs = ps.executeQuery();
 			
 			while (rs.next()) {
@@ -786,7 +791,7 @@ public class StockMgrImpl implements StockMgr {
 			for (Trend trend : trends) {
 
 				String name = trend.getName();
-				logger.info("Twitter trend: " + name);
+				logger.info("\n\nTwitter trend: " + name);
 				Stock stock = getStockById(getTwitterProxy().searchAndGetFirstResult(name));
 
 				if (stock != null) {
@@ -795,7 +800,6 @@ public class StockMgrImpl implements StockMgr {
 				}
 				else{
 					logger.info("Twitter trend is not related to any twitter user. Trend: " + name);
-					
 				}
 			}
 		}

@@ -153,4 +153,17 @@ public class Stock implements DataObjectIF {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	
+	public String toString(){
+
+		String str = "";
+
+		str = "Id: " + str + getId() + "\n";
+		str = "Name: " + str + getName() + "\n";
+		str = "Long Name: " + str + getLongName() + "\n";
+		str = "Follower Count: " + str + getTotal() + "\n";
+		str = "Speed: " + str + getChangePerHour() + "\n";
+		return str;
+	}
 }

@@ -29,8 +29,9 @@
 									style="vertical-align: top; line-height: 30px; height: 30px"
 									href="/">TwitStreet
 								</a>
-								<img height="35" width="35" alt="twitstreet.com" title="twitstreet.com"
-								src="/images/twitstreet_logo_50.png" onclick="http://www.twitstreet.com/">
+								<a href="/"> <img height="30" width="30" alt="twitstreet.com" title="twitstreet.com"
+									src="/images/twitstreet_logo_50.png">
+									</a>
 							</div>
 						</td>
 					</tr>

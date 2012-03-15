@@ -70,6 +70,9 @@ public class TwitstreetImpl implements Twitstreet {
 		configMgr.setDev(dev);
 		
 		
+	
+		
+		
 //		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
 		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);
@@ -89,10 +92,11 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
 		updateUserInfoThread.setName("User Info Update Task");
-		updateUserInfoThread.start();
-		initialized = true;
 		
-
+		if (!configMgr.isDev()) {
+			updateUserInfoThread.start();
+		}
+		initialized = true;
 	}
 	public boolean isInitialized(){
 		return initialized;

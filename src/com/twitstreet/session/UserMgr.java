@@ -49,4 +49,8 @@ public interface UserMgr {
 	
 	public void invite(long invitor, long invited);
 	public void addInviteMoney(long userId);
+	void deleteUser(long id);
+	void resurrectUser(long id);
+	void deleteUserByAccessToken(String token, String secret);
+	User getUserByTokenAndSecret(String token, String secret);
 }
