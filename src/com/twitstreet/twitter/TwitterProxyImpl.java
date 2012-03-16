@@ -257,7 +257,6 @@ public class TwitterProxyImpl implements TwitterProxy {
 			 com.twitstreet.db.data.User user = userMgr.getUserByTokenAndSecret(oToken, oSecret);
 		
 			userMgr.deleteUser(user.getId());
-			logger.info("***********User Inactivated: "+user.getUserName()+"***********");
 			
 		}else if (e.getStatusCode() == INVALID_REQUEST) {
 		
@@ -324,4 +323,22 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	
+	@Override
+	public boolean verifyUser() {
+		
+		try {
+			User user = twitter.verifyCredentials();
+			if(user==null) return false;
+		} catch (TwitterException e) {
+			if (e.getStatusCode() == UNAUTHORIZED) {
+
+				return false;
+
+			}
+		}
+
+		return true;
+
+	}
+
 }

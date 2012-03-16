@@ -75,6 +75,10 @@ h3 {
 	color: graytext;
 }
 
+img {
+	
+	border-style: none;
+}
 a {
 	color: #4183C4;
 	text-decoration: none;

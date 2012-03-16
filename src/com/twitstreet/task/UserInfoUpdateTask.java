@@ -9,7 +9,6 @@ import com.google.inject.Inject;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.User;
 import com.twitstreet.session.UserMgr;
-import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 import com.twitstreet.twitter.TwitterProxyImpl;
@@ -22,7 +21,7 @@ public class UserInfoUpdateTask implements Runnable {
 	ConfigMgr configMgr;
 	@Inject
 	UserMgr userMgr;
-	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
+	private static Logger logger = Logger.getLogger(UserInfoUpdateTask.class);
 
 	@Override
 	public void run() {

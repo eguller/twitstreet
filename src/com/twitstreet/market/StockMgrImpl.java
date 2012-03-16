@@ -194,7 +194,6 @@ public class StockMgrImpl implements StockMgr {
 	
 	private TwitterProxy getTwitterProxy(){
 		User user = userMgr.random();	
-		logger.info("Random User: "+user.getUserName());
 		
 		TwitterProxy twitterProxy = user == null ? null : twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 		return twitterProxy;

@@ -21,4 +21,5 @@ public interface TwitterProxy {
 	public ArrayList<Trend> getTrends();
 	public long searchAndGetFirstResult(String searchString);
 	ArrayList<User> getTwUsers(ArrayList<Long> idList);
+	boolean verifyUser();
 }
