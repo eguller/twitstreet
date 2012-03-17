@@ -2,6 +2,7 @@ package com.twitstreet.db.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -11,7 +12,8 @@ public class Stock implements DataObjectIF {
 	
 	//If stock is not updated more than 10 minutes, update is required
 	private static final int UPDATE_REQUIRED = 10 * 60 * 1000;
-	
+
+	public static int STOCK_OLDER_THAN_DAYS_AVAILABLE =  7;
 	long id;
 	String name;
 	String longName;
@@ -25,6 +27,9 @@ public class Stock implements DataObjectIF {
 	boolean changePerHourCalculated;
 	boolean verified;
 	boolean updateRequired = false;
+	public static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private Date createdAt;
+	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 	
 	public long getId() {
 		return id;
@@ -83,6 +88,7 @@ public class Stock implements DataObjectIF {
 		this.setName(rs.getString("name"));
 		this.setLongName(rs.getString("longName"));
 		this.setDescription(rs.getString("description"));
+		this.setCreatedAt(rs.getDate("createdAt"));
 		this.setLanguage(rs.getString("language"));
 		this.setTotal(rs.getInt("total"));
 		this.setSold(rs.getDouble("sold"));
@@ -166,4 +172,19 @@ public class Stock implements DataObjectIF {
 		str = "Speed: " + str + getChangePerHour() + "\n";
 		return str;
 	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+	public String getCreatedAtStr() {
+		return sdf.format(createdAt.getTime());
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+	public boolean isOldEnough() {
+		return getCreatedAt().getTime()< (new Date()).getTime()- 1000 * 60 * 60 * 24 * STOCK_OLDER_THAN_DAYS_AVAILABLE;
+	}
+	
 }

@@ -20,6 +20,7 @@ public class TrendyStock extends Stock {
 		this.setName(rs.getString("name"));
 		this.setLongName(rs.getString("longName"));
 		this.setTotal(rs.getInt("total"));
+		this.setCreatedAt(rs.getDate("createdAt"));
 		this.setPictureUrl(rs.getString("pictureUrl"));
 		this.setLastUpdate(rs.getTimestamp("lastUpdate"));
 		this.setOldUpdate(rs.getTimestamp("oldUpdate"));

@@ -16,6 +16,9 @@ public interface ConfigMgr {
 	public static  String ANNOUNCER_ACCESS_TOKEN = "announcerAccessToken";
 	public static  String ANNOUNCER_ACCESS_SECRET = "announcerAccessSecret";
 	
+
+	public static  String STOCK_OLDER_THAN_DAYS_AVAILABLE = "stockOlderThanDaysAvailable";
+	
 	public static final int MASTER_SERVER_ID = 0;
 	public static final String STAGE = "stage";
 	

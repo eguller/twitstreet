@@ -276,6 +276,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 				
 		Trends ts = null;
 		try {
+			
 			ts = twitter.getLocationTrends(1);
 		} catch (TwitterException e) {
 			handleError(e);

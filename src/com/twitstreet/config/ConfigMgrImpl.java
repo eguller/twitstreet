@@ -8,14 +8,11 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import twitter4j.auth.RequestToken;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Config;
-import com.twitstreet.market.StockMgrImpl;
 
 @Singleton
 public class ConfigMgrImpl implements ConfigMgr{
@@ -140,4 +137,6 @@ public class ConfigMgrImpl implements ConfigMgr{
 	public void setDev(boolean dev) {
 		this.dev = dev;
 	}
+
+	
 }

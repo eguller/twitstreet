@@ -123,7 +123,7 @@ public class StockUpdateTask implements Runnable {
 			updatedStocks.addAll(stockList);
 		}
 		
-		logger.info("Updated "+updatedStocks.size()+ " users. \n");
+		logger.info("Updated "+updatedStocks.size()+ " stocks. \n");
 		
 		for (Stock stock : updatedStocks) {
 

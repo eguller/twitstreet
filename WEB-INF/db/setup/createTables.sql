@@ -36,6 +36,7 @@ create table `stock`(
     `pictureUrl` varchar(255),
     `lastUpdate` timestamp,
     `changePerHour` int,
+    `createdAt` date not null default '2000-01-01',
     `updating` bit(1) DEFAULT b'0',
     `verified` bit(1) DEFAULT b'0',
      primary key (`id`),

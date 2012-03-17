@@ -120,3 +120,8 @@ function showTweetsOfUserInDiv(username, elementId) {
 function calculateSold(total, soldPercentage) {
 	return total * soldPercentage;
 }
+
+function getTimezoneOffset(){
+	
+	return $('#clientTzOffset').val();
+}
