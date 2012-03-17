@@ -6,7 +6,7 @@
 	userProfileTabsArray.push("#portfolio-tab");
 	userProfileTabsArray.push("#user-tweets-tab");
 
-	userProfileTabsArray.push("#user-ranking-history-tab");
+	userProfileTabsArray.push("#user-history-tab");
 	
 	userProfileTabContentsArray.push("#userstatus");
 	userProfileTabContentsArray.push("#usertweets");

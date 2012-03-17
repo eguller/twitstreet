@@ -12,11 +12,11 @@
 <%
 	Injector inj = (Injector) pageContext.getServletContext()
 			.getAttribute(Injector.class.getName());
-	User sessionUser = (User) request.getAttribute(User.USER);
+	String  userId = (String)request.getParameter(User.USER_ID);
 	TransactionMgr transactionMgr = inj
 			.getInstance(TransactionMgr.class);
 	List<TransactionRecord> transactionRecordList = transactionMgr
-			.queryTransactionRecord(sessionUser.getId());
+			.queryTransactionRecord(Long.parseLong(userId));
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);

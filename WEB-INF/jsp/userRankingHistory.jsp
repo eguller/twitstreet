@@ -1,45 +1,15 @@
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.HashSet"%>
-<%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="com.twitstreet.db.data.UserStock"%>
-<%@page import="java.sql.SQLException"%>
-<%@page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.google.inject.Injector"%>
-<%@ page import="com.google.inject.Guice"%>
 <%@ page import="com.twitstreet.db.data.User"%>
-<%@ page import="com.twitstreet.db.data.Stock"%>
-<%@ page import="com.twitstreet.util.Util"%>
-<%@page import="com.twitstreet.db.data.Portfolio"%>
-<%@page import="com.twitstreet.market.PortfolioMgr"%>
-<%@page import="com.twitstreet.config.ConfigMgr"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.UserProfileServlet"%>
 
-<%@ page import="com.twitstreet.servlet.HomePageServlet"%>
-<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Date"%>
-<%@page import="java.util.LinkedHashMap"%>
 <%@page import="com.twitstreet.db.data.RankingHistoryData"%>
 <%@page import="com.twitstreet.db.data.RankingData"%>
-<%@page import="com.twitstreet.db.data.UserStock"%>
-<%@page import="java.sql.SQLException"%>
-<%@page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.twitstreet.db.data.User"%>
-<%@ page import="com.google.inject.Guice"%>
-<%@ page import="com.twitstreet.util.Util"%>
-<%@ page import="com.twitstreet.db.data.Portfolio"%>
-<%@page import="com.twitstreet.config.ConfigMgr"%>
-<%@ page import="com.twitstreet.market.PortfolioMgr"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
-<%@ page import="com.twitstreet.db.data.UserStockDetail"%>
 <%@ page import="java.util.List"%>
-<%@ page import="com.twitstreet.util.Util"%>
-<%@ page import="java.text.DecimalFormat"%>
-<%@ page import="com.twitstreet.market.StockMgr"%>
-<%@ page import="com.twitstreet.db.data.Stock"%>
-<%@ page import="java.text.DecimalFormat"%>
 	
 <div id="user-trend-section">
 	<%
@@ -92,4 +62,12 @@
 	<%			
 	}
 	%>
+	<div>
+		<h3>Transactions</h3>
+		<div>
+			<jsp:include page="userTransactionsContent.jsp">
+				<jsp:param value="<%=user.getId()%>" name="user-id"/>
+			</jsp:include>
+		</div>
+	</div>
 </div>

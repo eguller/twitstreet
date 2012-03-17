@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.db.data.User;
 import com.twitstreet.market.TransactionMgr;
 
 @SuppressWarnings("serial")
@@ -37,8 +38,8 @@ public class TransactionServlet extends TwitStreetServlet {
 		try {
 
 			if (USER_TRANSACTIONS.equals(type)) {
-
-				getServletContext().getRequestDispatcher("/WEB-INF/jsp/yourTransactionsContent.jsp").forward(request, response);
+				User user = (User)request.getSession().getAttribute(User.USER_ID);
+				getServletContext().getRequestDispatcher("/WEB-INF/jsp/userTransactionsContent.jsp?user-id="+user.getId()).forward(request, response);
 
 			} else {
 
