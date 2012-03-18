@@ -45,11 +45,11 @@ public class StockUpdateTask implements Runnable {
 			try {
 
 				logger.info("\n\n************* Stock Update Task ****************\n\n");
-				
-				logger.info("Twitter trends update - begin.");
-				stockMgr.updateTwitterTrends();
-				logger.info("Twitter trends update - end.");
-
+				if(configMgr.isMaster()){
+					logger.info("Twitter trends update - begin.");
+					stockMgr.updateTwitterTrends();
+					logger.info("Twitter trends update - end.");
+				}
 				logger.info("Stock list update - begin.");
 				updateStocks();
 				logger.info("Stock list update - end. ");

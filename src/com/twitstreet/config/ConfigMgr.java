@@ -44,4 +44,5 @@ public interface ConfigMgr {
 	public void setServerId(int serverId);
 	public boolean isDev();
 	public void setDev(boolean dev);
+	public boolean isMaster();
 }

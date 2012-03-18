@@ -138,5 +138,10 @@ public class ConfigMgrImpl implements ConfigMgr{
 		this.dev = dev;
 	}
 
+	@Override
+	public boolean isMaster() {
+		return ConfigMgr.MASTER_SERVER_ID == getServerId();
+	}
+
 	
 }
