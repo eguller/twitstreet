@@ -35,12 +35,8 @@ public class LocalizationUtil {
 	}
 	public String getLanguageLongName(String shortName){
 		 
-		if("en".equalsIgnoreCase(shortName)){
-			return "English";
-		}else if("tr".equalsIgnoreCase(shortName)){
-			return "Türkçe";
-		}
-		return "";
+		return get("language", shortName);
+	
 		
 	}
 	public boolean checkLanguageIsValid(String lang){
