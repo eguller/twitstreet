@@ -23,35 +23,53 @@
 			<table class="datatbl2">
 				<tbody>
 					<tr>
-						<td style="width:60px;">
+						<td style="width:45px;">
 							<a href="/">
-								 <img height="50" width="50" alt="twitstreet.com" title="twitstreet.com"
+								 <img height="45" width="45" alt="twitstreet.com" title="twitstreet.com"
 											src="/images/twitstreet_logo_50.png">
 							</a>
 						</td>
 						<td style="vertical-align: top">
 							<div id="twitstreet-header" style="float: left; height:25px; ">
 								<a id="home"
-									style="vertical-align: top; line-height: 30px; height: 30px"
+									style="vertical-align: top; "
 									href="/">TwitStreet
-									</a>	
-									<br>	
-							<div id="twitstreet-share-main" style="float: left; clear:left">
-									<%=GUIUtil.getInstance().getTwitterShareButton("",
-										"twitter.share.main", lang)%>
+								</a>	
+							
+								<br>	
+								<div id="twitstreet-languages" style="font-size:6px; float:right;text-align: right">
+															
+											
+									<select onchange="loadLanguage($(this).val())" style="font-size:11px;">
+						
+									<% 					
+									ArrayList<String> languages = LocalizationUtil.getInstance().getLanguages();
+									for(int i = 0; i < languages.size();i++) {	
+										
+								      			String selectLang = languages.get(i);
+									%>
+										<option <%=(selectLang.equalsIgnoreCase(lang))?"selected=\"selected\"":""%> value="<%=selectLang%>"><%= lutil.getLanguageLongName(selectLang) %></option>
+										
+									<%	
+									}		
+									%>
+									</select>
+								
+								</div>
+								<div id="twitstreet-share-main" style="float: left; clear:left">
+										<%=GUIUtil.getInstance().getTwitterShareButton("",
+											"twitter.share.main", lang)%>
 								</div>
 								<div id="twitstreet-share-main" style="float: left;">
 									<%=GUIUtil.getInstance().getTwitterFollowButton(
 										"twitstreet_game", lang)%>
 								</div>
 							</div>
-								
 					
-							
-							<div style="float: left;vertical-align: bottom">
+			
+						
 								
 							
-							</div>
 						</td>
 					</tr>
 				</tbody>
@@ -114,27 +132,7 @@
 			}
 		%>
 		
-		<div style="float:left;height:33px;width:30px;"></div>
-			
-			<div id="twitstreet-languages" style="font-size:6px; float:left;text-align: left">
-													
-						
-				<select onchange="loadLanguage($(this).val())" style="font-size:11px;">
 	
-				<% 					
-				ArrayList<String> languages = LocalizationUtil.getInstance().getLanguages();
-				for(int i = 0; i < languages.size();i++) {	
-					
-			      			String selectLang = languages.get(i);
-				%>
-					<option <%=(selectLang.equalsIgnoreCase(lang))?"selected=\"selected\"":""%> value="<%=selectLang%>"><%= lutil.getLanguageLongName(selectLang) %></option>
-					
-				<%	
-				}		
-				%>
-				</select>
-			
-			</div>
 			
 	</div>
 
