@@ -28,6 +28,8 @@ public class TransactionMgrImpl implements TransactionMgr {
 	private static final String UPDATE_TRANSACTION_QUERY = "update transactions set amount = amount + ?, t_date = now() where user_id = ? and stock = ? and t_action = ? and timestampdiff(second, t_date, now()) < 30";
 	private static final String GET_CURRENT_TRANSACTIONS_QUERY = "select u.id as userId, u.userName as userName, s.id as stockId, s.name as stockName, t.t_action as transactionOperation, t.amount as transactionAmount, t.t_date as transactionDate  from transactions t, stock s, users u where t.user_id = u.id and t.stock = s.id order by t.t_date desc limit ?";
 	private static final String GET_USER_TRANSACTIONS_QUERY = "select u.id as userId, u.userName as userName, s.id as stockId, s.name as stockName, t.t_action as transactionOperation, t.amount as transactionAmount, t.t_date as transactionDate  from transactions t, stock s, users u where t.user_id = u.id and t.stock = s.id and t.user_id = ? order by t.t_date desc limit ?";
+	private static final String GET_STOCK_TRANSACTIONS_QUERY = "select u.id as userId, u.userName as userName, s.id as stockId, s.name as stockName, t.t_action as transactionOperation, t.amount as transactionAmount, t.t_date as transactionDate  from transactions t, stock s, users u where t.user_id = u.id and t.stock = s.id and s.id = ? order by t.t_date desc limit ?";
+	
 	@Override
 	public void recordTransaction(User user, Stock stock, int amount,
 			int operation) {
@@ -92,6 +94,31 @@ public class TransactionMgrImpl implements TransactionMgr {
 			connection = dbMgr.getConnection();
 			ps = connection.prepareStatement(GET_USER_TRANSACTIONS_QUERY);
 			ps.setLong(1, userId);
+			ps.setInt(2, TransactionMgr.CURRENT_TRANSACTION_LIMIT);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				TransactionRecord transactionRecord = new TransactionRecord();
+				transactionRecord.getDataFromResultSet(rs);
+				transactionRecordList.add(transactionRecord);
+			}
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return transactionRecordList;
+	}
+
+	@Override
+	public List<TransactionRecord> queryTransactionRecordByStock(long stockId) {
+		ArrayList<TransactionRecord> transactionRecordList = new ArrayList<TransactionRecord>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(GET_STOCK_TRANSACTIONS_QUERY);
+			ps.setLong(1, stockId);
 			ps.setInt(2, TransactionMgr.CURRENT_TRANSACTION_LIMIT);
 			rs = ps.executeQuery();
 			while(rs.next()){

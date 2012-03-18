@@ -9,7 +9,9 @@ import java.util.Date;
 import com.twitstreet.localization.LocalizationUtil;
 
 public class Stock implements DataObjectIF {
-	
+
+	public static final String STOCK = "stock";
+	public static final String STOCK_ID = "stock-id";
 	//If stock is not updated more than 10 minutes, update is required
 	private static final int UPDATE_REQUIRED = 10 * 60 * 1000;
 

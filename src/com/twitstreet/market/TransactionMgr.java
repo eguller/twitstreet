@@ -13,5 +13,6 @@ public interface TransactionMgr {
 	public void recordTransaction(User user, Stock stock, int amount, int operation);
 	public List<TransactionRecord> getCurrentTransactions();
 	public List<TransactionRecord> queryTransactionRecord(long userId);
+	public List<TransactionRecord> queryTransactionRecordByStock(long stockId);
 	
 }

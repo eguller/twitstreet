@@ -197,6 +197,7 @@ public class GetQuoteServlet extends TwitStreetServlet {
 		// Get user info from database
 		request.setAttribute(STOCK, stock);
 
+		request.setAttribute(HomePageServlet.SELECTED_TAB_STOCK_BAR, "stock-details-tab");
 		if (stock != null) {
 			logger.debug("Servlet: Stock queried successfully. Stock name:" + stock.getName());
 		} else {
