@@ -15,7 +15,14 @@
 	
 	Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
-
+	boolean showSuggestedStocks = false;
+	
+	try{
+		showSuggestedStocks = (boolean) (request.getAttribute(HomePageServlet.SUGGESTED_STOCKS).toString().length()>0);
+	}catch(Exception ex){
+		showSuggestedStocks = stock==null;
+	}
+	
 %>
 
 	
@@ -23,18 +30,35 @@
 
 	<jsp:include page="getQuote.jsp" />
 	
-	<div id="stocks-screen">
-	<%
-	if(stock!=null || quote!=null && quote.length()>0){
-	%>	
-		<jsp:include page="stockDetails.jsp" />
-	<%	
-	}else{
-	%>
-		<jsp:include page="trendyStocks.jsp" />
-	<%
-	}
-	%>	
-	</div>
+	
+	
+		<table class="datatbl">
+		<tr>
+			<td>
+				<jsp:include page="stockBar.jsp"></jsp:include>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div id="stocks-screen">
+					<div id="suggested-stocks-content">
+						<%if(showSuggestedStocks){%>
+							<jsp:include page="trendyStocks.jsp" />
+							
+						<%}%>
+						
+					</div>
+					<div id="stock-details-content">
+					<%if(stock!=null){%>
+						<jsp:include page="stockDetails.jsp" />
+						
+					<%	}%>
+						
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+
 
 </div>

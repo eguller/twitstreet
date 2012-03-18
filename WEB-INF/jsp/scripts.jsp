@@ -14,6 +14,9 @@
 <script type="text/javascript" src="/js/ajax.js"></script>
 <script type="text/javascript" src="/js/util.js"></script>
 <script type="text/javascript" src="/js/stockTabs.js"></script>
+<script type="text/javascript" src="/js/userTabs.js"></script>
+<script type="text/javascript" src="/js/stockDetailsTabs.js"></script>
+
 <script type="text/javascript" src="/js/mainTabs.js"></script>
 <script type="text/javascript" src="/js/userProfileTabs.js"></script>
 <script type="text/javascript" src="/js/portfolioTab.js"></script>

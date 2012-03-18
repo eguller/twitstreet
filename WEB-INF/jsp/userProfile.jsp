@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.servlet.HomePageServlet"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
 <%@page import="com.twitstreet.servlet.UserProfileServlet"%>
@@ -33,26 +34,54 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 	String getUserText = request.getAttribute(GetUserServlet.GET_USER_TEXT) == null ? "" : (String) request.getAttribute(GetUserServlet.GET_USER_TEXT);
 	String getUserTextDisplay = request.getAttribute(GetUserServlet.GET_USER_DISPLAY) == null ? "" : (String) request.getAttribute(GetUserServlet.GET_USER_DISPLAY);
+	
+	boolean showTopGrossingUsers = false;
+	
+	try{
+		showTopGrossingUsers = (boolean) (request.getAttribute(HomePageServlet.TOP_GROSSING_USERS).toString().length()>0);
+	}catch(Exception ex){
+		showTopGrossingUsers = user==null;
+	}
 
 %>
-<div id="userprofile" class="main-div" > 
+<div id="userprofile" class="main-div" >
+
+
 	<jsp:include page="getUser.jsp" />
-	<div id="users-screen">
-	<%
-		if(user!=null || getUserText!=null && getUserText.length()>0){
+	
+	
+		<table class="datatbl">
+			<tr>
+				<td>
+					<jsp:include page="userBar.jsp"></jsp:include>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="users-screen">
+	
+						<div id="top-grossing-users-content">
+							<%if(showTopGrossingUsers){%>
+								<jsp:include page="trendyUsers.jsp" />
+							<%}%>
+							
+						</div>
+						<div id="user-details-content">
+						<%if(user!=null){%>
+							<jsp:include page="userDetails.jsp" />
+							<jsp:include page="getUserOtherSearchResults.jsp" />
+							<script type="text/javascript">initUserProfileTabs()</script>
 			
-			%>
+							
+						<%	}%>
+							
+						</div>
+				
+					</div>
+				</td>
+			</tr>
+		</table>
+		
 			
-			<jsp:include page="userDetails.jsp" />
-			<jsp:include page="getUserOtherSearchResults.jsp" />
-			<script type="text/javascript">initUserProfileTabs()</script>
-			<%	
-		}else{
-		%>
-			<jsp:include page="trendyUsers.jsp" />
-		
-		<%
-		
-		}%>	
 	</div>
 </div>

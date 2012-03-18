@@ -1,60 +1,48 @@
 
-	stockTabsArray = new Array();
+	stockTabArray = new Array();
 
-	stockTabContentsArray = new Array();
-	stockTabsArray.push("#buy-sell-tab");
-	stockTabsArray.push("#stock-history-tab");
-	stockTabsArray.push("#stock-distribution-tab");
-	stockTabsArray.push("#tweets-of-user-tab");
+	stockTabContentArray = new Array();
+	stockTabArray.push(".suggested-stocks-tab");
+	stockTabArray.push(".stock-details-tab");
 	
-	stockTabContentsArray.push("#buy-sell-section");
-	stockTabContentsArray.push("#stock-trend-section");
-	stockTabContentsArray.push("#stock-share-section");
-	stockTabContentsArray.push("#tweets-of-user-section");
+	stockTabContentArray.push("#suggested-stocks-content");
+	stockTabContentArray.push("#stock-details-content");
 
-function showTab(tabId,tabContentId){
+function showStockTab(tabId,tabContentId){
 	var i;
-	for(i=0; i<stockTabsArray.length; i++){
+	for(i=0; i<stockTabArray.length; i++){
 		
-		if(tabId == stockTabsArray[i]){
+		if(tabId == stockTabArray[i]){
 			
-			$(stockTabsArray[i]).addClass("youarehere");
+			$(stockTabArray[i]).addClass("youarehere");
 		}
 		else{
 			
-			$(stockTabsArray[i]).removeClass("youarehere");
+			$(stockTabArray[i]).removeClass("youarehere");
 		}
 	}
 	
-	for(i=0; i<stockTabContentsArray.length; i++){
+	for(i=0; i<stockTabContentArray.length; i++){
 		
-		if(tabContentId == stockTabContentsArray[i]){
+		if(tabContentId == stockTabContentArray[i]){
 			
-			$(stockTabContentsArray[i]).show();
+			$(stockTabContentArray[i]).show();
 		}
 		else{
 			
-			$(stockTabContentsArray[i]).hide();
+			$(stockTabContentArray[i]).hide();
 		}
 		
 	}	
 	
 }
 
-function showBuySell(){	
-	showTab("#buy-sell-tab", "#buy-sell-section");
+function showStockDetailsContent(){
+	showStockTab(".stock-details-tab","#stock-details-content");
+	
 }
 
-function showStockDistribution(id){
-	showTab("#stock-distribution-tab","#stock-share-section");
-	reloadStockDistribution(id);
-}
-
-function showStockHistory(){
-	showTab("#stock-history-tab","#stock-trend-section");
-	drawVisualization('#detail-stock'+$("#hiddenStockDetailsStockId").val());
-}
-function showTweetsOfUser(){
-	showTab("#tweets-of-user-tab","#tweets-of-user-section");
-	//runScriptsInElement($("#tweets-of-user-section").html());
+function showSuggestedStocksContent(){
+	showStockTab(".suggested-stocks-tab","#suggested-stocks-content");
+	
 }

@@ -29,6 +29,8 @@ public class Stock implements DataObjectIF {
 	boolean updateRequired = false;
 	public static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private Date createdAt;
+    
+    private boolean suspended;
 	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 	
 	public long getId() {
@@ -185,6 +187,12 @@ public class Stock implements DataObjectIF {
 	}
 	public boolean isOldEnough() {
 		return getCreatedAt().getTime()< (new Date()).getTime()- 1000 * 60 * 60 * 24 * STOCK_OLDER_THAN_DAYS_AVAILABLE;
+	}
+	public boolean isSuspended() {
+		return suspended;
+	}
+	public void setSuspended(boolean suspended) {
+		this.suspended = suspended;
 	}
 	
 }

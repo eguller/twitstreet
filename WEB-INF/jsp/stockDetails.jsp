@@ -63,95 +63,116 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		if (stock != null) {
 	%>
 	
-		<input id="hiddenStockDetailsStockId" type="hidden" value="<%=stock.getId() %>"/>
-		<table class="datatbl">
-			<tr>
-				<td>
-					<div class="h3 big"  style="vertical-align: top">
-						<a style="vertical-align: top;" href="http://twitter.com/#!/<%=stock.getName()%>"
-						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>"
-						target="_blank"><%=stock.getName()%></a> 	
-							<%if(stock.isVerified()){ %>
-						<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
-						<% } %>
-						<a class="gray-small" style="vertical-align: top; " href="http://twitter.com/#!/<%=stock.getName()%>"
-						title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>" target="_blank">
-						<%=(stock.getLongName()!=null)?" ("+stock.getLongName()+")":""%></a> 
-					
-						<%=GUIUtil.getInstance().getTwitterShareButton("#!stock="+ stock.getId(), "twitter.share.stock", lang, stock.getName())%>
-						<%=GUIUtil.getInstance().getTwitterFollowButton(stock.getName(), lang)%>
-				
-					
-						&nbsp;&nbsp;&nbsp;
-						
-					
-					</div>					
-				</td>
-			
-				<td>
-								<%
-												if(user!=null){
-											 %>
-												<div class="h3 user-portfolio-item-watch-div-<%=stock.getId() %>" style="width:100%;float:right; text-align:right ">
-					
-												<%
-													ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
-													boolean beingWatched = watchList.contains(stock);
-													 %>
-													<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
-														<%=Util.getWatchListIcon(true,15,lutil.get("watchlist.add", lang))%>
-														
-													</a>	
-													<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
-														<%=Util.getWatchListIcon(false,15,lutil.get("watchlist.remove", lang))%>
-														
-													</a>	
-												</div>
-											<%
-												}
-											 %>
-				</td>
-			</tr>
-			
-		</table>
-		
-			
-			
+	<input id="hiddenStockDetailsStockId" type="hidden" value="<%=stock.getId() %>"/>
 	
 	<div id="stock-details-menu" class="subheader">
+		<%
+		if(stock.isSuspended()){
+	
+			%>	
+			<div class="field-white red" style="margin-bottom:10px">
+				<b><%=lutil.get("stock.suspended", lang) %></b>
+			</div>
+			<%	
+		}
 		
+		%>
+	
 		<table class="datatbl">
 			
 			<tr>
-				<td rowspan="2" width="55">
+				<td width="55" style="vertical-align: middle">
 					<img class="twuser" width="48" height="48" 
 					src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 					id="dashboard-picture">
-					
-<!-- 					<img src="/images/activity_indicator_32.gif" /> -->
-													
-					
+		
 				</td>
-				<td colspan="2">
-					<span class="gray-small"><%=(stock.getDescription()!=null)?stock.getDescription():""%></span> 
+				<td style="vertical-align: top">
+					<div style="text-align: left; vertical-align: top">
+
+						<div style="float:left; overflow: hidden">
+							
+							<a  style="float:left; vertical-align: top; " href="http://twitter.com/#!/<%=stock.getName()%>"
+							title="<%=lutil.get("twitter.link.tip", lang, stock.getName())%>" target="_blank">
+							<%=(stock.getLongName()!=null)?stock.getLongName():""%></a> 
+							 
+								
+							
+							<%if(stock.isVerified()){ %>
+								<div style="float:left">
+									<%=GUIUtil.getInstance().getVerifiedIcon(lang) %>
+								</div>
+							<% } %>
+								
+								
+							<%
+							if(user!=null){
+							 %>
+								<div style="float:left; margin-left:5px" class="user-portfolio-item-watch-div-<%=stock.getId() %>">
+									<%
+									ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
+									boolean beingWatched = watchList.contains(stock);
+									 %>
+									<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">
+										<%=Util.getWatchListIcon(true,15,lutil.get("watchlist.add", lang))%>
+										
+									</a>	
+									<a class="remove-from-watch-list-link-<%=stock.getId() %>" style="<%=(!beingWatched)?"display:none":"" %>" href="javascript:void(0)" onclick="removeFromWatchList(<%=stock.getId()%>)">
+										<%=Util.getWatchListIcon(false,15,lutil.get("watchlist.remove", lang))%>
+										
+									</a>	
+								</div>
+							 <%
+							}
+							 %>	
+							
+						
+						</div>
+						<div style="float:right">
+							<div style="float:right">
+								<%=GUIUtil.getInstance().getTwitterShareButton("#!stock="+ stock.getId(), "twitter.share.stock", lang, stock.getName())%>
+								<%=GUIUtil.getInstance().getTwitterFollowButton(stock.getName(), lang)%>
+							</div>
+						</div>
+					</div>					
+					<br>					
+					<div style="float:left" class="gray-small"><%=(stock.getDescription()!=null)?stock.getDescription():""%></div>
 				</td>
-			</tr>
+			</tr>	
+			
+		</table>
+		
+		<table class="datatbl">
 			<tr>
-				<td>
+				<td style="font-size: 15px">
+							
+					
 					<% if(stock.isChangePerHourCalculated() && stock.getChangePerHour()!=0){ 
 					%>
 						<%=Util.getPercentageFormatted((double) stock.getChangePerHour() / stock.getTotal(), false, true, true, true, false, true)  %>
 					<% }
-					%>					
+					%>	
+					
+							
 				</td>
-				<td style="vertical-align: bottom; width:330px">
+				<td style="float:right;vertical-align: bottom; width:370px">
 					<div class="tabs">
+							
 						<a id="buy-sell-tab" class="youarehere" onClick="showBuySell();">
-							<%=lutil.get("stockdetails.buysell", lang) %></a> <a id="stock-history-tab" onClick="showStockHistory();">
-							<%=lutil.get("stockdetails.history", lang) %></a> <a id="stock-distribution-tab"
-							onClick="showStockDistribution(<%=stock.getId()%>);">
-							<%=lutil.get("stockdetails.distribution", lang) %> </a> <a id="tweets-of-user-tab"
+							<%=lutil.get("stockdetails.buysell", lang) %></a> 
+							
+						<a id="tweets-of-user-tab"
 							onClick="showTweetsOfUser();"> <%=lutil.get("stockdetails.tweets", lang) %> </a>
+						<a id="tweets-about-stock-tab"
+							onClick="showTweetsAboutStock();">?</a>
+						<a id="stock-history-tab" onClick="showStockHistory();">
+							<%=lutil.get("stockdetails.history", lang) %></a> 
+							
+						<a id="stock-distribution-tab"
+							onClick="showStockDistribution(<%=stock.getId()%>);">
+							<%=lutil.get("stockdetails.distribution", lang) %> </a> 
+							
+							
 					</div>
 				</td>
 			</tr>
@@ -169,6 +190,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<jsp:include page="stockDistribution.jsp" />
 
 		<jsp:include page="tweetsOfUser.jsp" />
+		<jsp:include page="tweetsAboutStock.jsp" />
 
 	</div>
 	<%

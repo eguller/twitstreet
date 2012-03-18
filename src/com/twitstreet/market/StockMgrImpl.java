@@ -90,13 +90,11 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.getDataFromResultSet(rs);
 
 				if (stockDO.isUpdateRequired()) {
-					updateStockData(name);
-
-					// stockdo shall not require an update due to the update
-					// above
-					// so getStockById should go with the else block this time
-					stockDO = getStockById(stockDO.getId());
-
+					if(updateStockData(stockDO.getId())){
+						stockDO = getStockById(stockDO.getId());	
+					}else{
+						return null;
+					}
 				}
 				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 
@@ -155,8 +153,12 @@ public class StockMgrImpl implements StockMgr {
 				stockDO.getDataFromResultSet(rs);
 
 				if (stockDO.isUpdateRequired()) {
-					updateStockData(id);
-					stockDO = getStockById(id);
+					if(updateStockData(id)){
+						stockDO = getStockById(id);
+					}else{
+						stockDO.setSuspended(true);
+						return stockDO;
+					}
 				}
 				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 			} else {
@@ -207,12 +209,14 @@ public class StockMgrImpl implements StockMgr {
 	}
 	
 	@Override
-	public void updateStockData(long id) {
+	public boolean updateStockData(long id) {
 		
 		twitter4j.User twUser = getTwitterProxy().getTwUser(id);
 		if (twUser != null) {
 			updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang(),twUser.getDescription(), twUser.getCreatedAt());
+		return true;
 		}
+		return false;
 
 	}
 	
@@ -266,16 +270,7 @@ public class StockMgrImpl implements StockMgr {
 		}
 		
 	}
-	@Override
-	public void updateStockData(String stockName) {
-	
-		
-		twitter4j.User twUser = getTwitterProxy().getTwUser(stockName);
 
-		updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang(),twUser.getDescription(), twUser.getCreatedAt());
-
-	}
-	
 	@Override
 	public StockHistoryData getStockHistory(long id){
 		return getStockHistory(id, -1);

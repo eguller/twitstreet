@@ -61,7 +61,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		
 	%>
 	
-	<h3><%=lutil.get("topgrossingusers.header", lang) %></h3>
+<%-- 	<h3><%=lutil.get("topgrossingusers.header", lang) %></h3> --%>
 	<table class="datatbl" style="margin-top: 10px;">
 		
 		<%

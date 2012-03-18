@@ -163,7 +163,7 @@
 
 	
 				<tr>
-					<td colspan="3" style="text-align: center; padding-top: 10px;">
+					<td colspan="3" style="text-align: center;">
 	
 					<div id="dashboard-message-field" style="margin-top: 6px;"
 											class="field-white">

@@ -69,9 +69,7 @@ public interface StockMgr {
 
 	void resetSpeedOfOldStocks();
 
-	void updateStockData(long id);
-
-	void updateStockData(String stockName);
+	boolean updateStockData(long id);
 
 	StockHistoryData getStockHistory(long id);
 	StockHistoryData getStockHistory(long id, int forMinutes);

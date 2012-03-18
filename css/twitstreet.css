@@ -524,9 +524,9 @@ img.twuser {
 	width: 100%;
 }
 
-.subheader a {
-	color: #000000;
-}
+/* .subheader a { */
+/* 	color: #000000; */
+/* } */
 
 .subheader h1,.subheader h2 {
 	float: left;

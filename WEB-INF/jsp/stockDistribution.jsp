@@ -71,7 +71,7 @@
 	<%out.write("'" + stock.getName() + "';");
 
 				if (stock.getAvailable() > 0) {
-					out.write("drawStockDistributionNameArray.push('Available');\n");
+					out.write("drawStockDistributionNameArray.push('"+lutil.get("stockdistribution.available", lang)+"');\n");
 
 					out.write("drawStockDistributionPercentArray.push(" + stock.getAvailable() + ");\n");
 				}

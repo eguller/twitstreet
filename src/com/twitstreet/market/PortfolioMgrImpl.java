@@ -51,7 +51,6 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			
 		}
 		
-		
 		int amount2Buy = buyer.getCash() < amount ? (int)buyer.getCash() : amount;
 		if (stock.getAvailable() > 0) {
 			amount2Buy = amount2Buy < stock.getAvailable() ? amount2Buy : stock.getAvailable();

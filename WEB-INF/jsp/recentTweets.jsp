@@ -20,7 +20,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		new TWTR.Widget({
 			version : 2,
 			type : 'search',
-			search: 'twitstreet OR twitstreet_game OR #twitstreet OR from:twitstreet_game',
+			search: 'twitstreet OR twitstreet_game OR twitstreet_info OR #twitstreet OR from:twitstreet_game',
 			rpp : 20,
 			interval : 6000,
 			width : 250,
