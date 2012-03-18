@@ -36,7 +36,6 @@ public class LocalizationUtil {
 	public String getLanguageLongName(String shortName){
 		 
 		return get("language", shortName);
-	
 		
 	}
 	public boolean checkLanguageIsValid(String lang){

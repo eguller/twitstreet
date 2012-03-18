@@ -111,8 +111,8 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						<a id="user-status-tab" class="youarehere" onClick="showUserProfileTab('#user-status-tab','#userstatus');">
 							<%=lutil.get("userdetails.portfolio", lang) %></a> 
 					
-						<a id="user-ranking-history-tab"
-							onClick="showUserProfileTab('#user-ranking-history-tab','#user-trend-section');redrawUserRankingHistory();">
+						<a id="user-history-tab"
+							onClick="showUserProfileTab('#user-history-tab','#user-trend-section');redrawUserRankingHistory();">
 							<%=lutil.get("userdetails.history", lang)%> </a> 
 						<a id="user-tweets-tab"
 							onClick="showUserProfileTab('#user-tweets-tab','#usertweets');">

@@ -79,6 +79,6 @@ public class TransactionRecord  implements DataObjectIF{
 		this.stockName = rs.getString("stockName");
 		this.operation = rs.getInt("transactionOperation");
 		this.amount = rs.getInt("transactionAmount");
-		this.date = rs.getDate("transactionDate");
+		this.date = new Date(rs.getTimestamp("transactionDate").getTime());
 	}
 }
