@@ -38,8 +38,8 @@ public class TransactionServlet extends TwitStreetServlet {
 		try {
 
 			if (USER_TRANSACTIONS.equals(type)) {
-				User user = (User)request.getSession().getAttribute(User.USER_ID);
-				getServletContext().getRequestDispatcher("/WEB-INF/jsp/userTransactionsContent.jsp?user-id="+user.getId()).forward(request, response);
+				long userId = (Long)request.getSession().getAttribute(User.USER_ID);
+				getServletContext().getRequestDispatcher("/WEB-INF/jsp/userTransactionsContent.jsp?user-id="+userId).forward(request, response);
 
 			} else {
 

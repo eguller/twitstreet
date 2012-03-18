@@ -16,24 +16,23 @@ import com.twitstreet.session.UserMgr;
 
 public class Util {
 
-	private static final int SEC = 0;
+	private static final int SEC = 0; 
 	private static final int MIN = 1;
 	private static final int HOUR = 2;
 	private static final int DAY = 3;
 	private static final int WEEK = 4;
-	private static final int MONTH = 5; // assume 1 month is 4 week;
+	private static final int MONTH = 5; 
 	private static final int YEAR = 6;
 
-	private static long[] TIME = new long[YEAR + 1];
+	private static final long SEC_MS = 1000; 
+	private static final long MIN_MS = 60 * SEC_MS;
+	private static final long HOUR_MS= 60 * MIN_MS;
+	private static final long DAY_MS = 24 * HOUR_MS;
+	private static final long WEEK_MS = 7 * DAY_MS;
+	private static final long MONTH_MS = 4 * WEEK_MS; // assume 1 month is 4 week;
+	private static final long YEAR_MS = 12 * MONTH_MS;
 	
-	// TIME[SEC] = 1000;
-	// TIME[MIN] = 60 * TIME[SEC];
-	// TIME[HOUR] = 60 * TIME[MIN];
-	// TIME[DAY] = 24 * TIME[HOUR];
-	// TIME[WEEK] = 7 * TIME[DAY];
-	// TIME[MONTH] = 4 * TIME[WEEK];
-	// TIME[YEAR] = 12 * TIME[MONTH];
-
+	
 	public static String NO_RECORDS_FOUND_HTML = "<p>No records found.</p>";
 
 	public static java.sql.Date toSqlDate(java.util.Date date) {
@@ -445,7 +444,29 @@ public class Util {
 
 	public static String dateDiff2String(Date date) {
 		Date now = Calendar.getInstance().getTime();
-		return null;
+		System.out.println("Now: " + now.toString() + ", date" + date.toString());
+		long diff = now.getTime() - date.getTime();
+		if( diff / MIN_MS == 0){
+			return diff / SEC_MS > 1 ? diff / SEC_MS + " secs ago" : "1 sec ago";
+		}
+		else if(diff / HOUR_MS == 0){
+			return diff / MIN_MS > 1 ? diff / MIN_MS + " mins ago" : "1 min ago";
+		}
+		else if(diff / DAY_MS == 0){
+			return diff / HOUR_MS > 1 ? diff / HOUR_MS + " hours ago" : "1 hour ago";
+		}
+		else if(diff / WEEK_MS == 0){
+			return diff / DAY_MS > 1 ? diff / DAY_MS + " days ago" : "yesterday";
+		}
+		else if(diff / MONTH_MS == 0){
+			return diff / WEEK_MS > 1 ? diff / WEEK_MS + " weeks ago" : "last week";
+		}
+		else if(diff / YEAR_MS == 0){
+			return diff / MONTH_MS > 1 ? diff / WEEK_MS + " months ago" : "last month";
+		}
+		else{
+			return diff / YEAR_MS > 1 ? diff / YEAR_MS + " years ago" : "last year";
+		}
 	}
 
 }
