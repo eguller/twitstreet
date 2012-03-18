@@ -51,6 +51,8 @@ public class HomePageServlet extends TwitStreetServlet {
 
 	public static final String STOCK = "stock";
 
+	public static final String TOP_GROSSING_USERS = "topgrossingusers";
+	public static final String SUGGESTED_STOCKS = "suggestedstocks";
 	public static final String STOCK_ID = "stockId";
 	public static final String STOCK_DETAIL_LIST = "stockDetailList";
 	public static final String QUOTE = "quote";
@@ -98,9 +100,13 @@ public class HomePageServlet extends TwitStreetServlet {
 		
 		try{
 			if(command.startsWith("suggestedstocks")){
-				//Do nothing... Default behavior is already Suggested Stocks 
-			}
 
+				request.setAttribute(SUGGESTED_STOCKS, "true");
+			}
+			else if(command.startsWith("topgrossingusers")){
+
+				request.setAttribute(TOP_GROSSING_USERS, "true");
+			}
 			else if(command.startsWith("stock=")){
 				long stockId =Long.valueOf(command.split("stock=")[1]);
 				Stock stock = stockMgr.getStockById(stockId);
@@ -110,16 +116,13 @@ public class HomePageServlet extends TwitStreetServlet {
 				long stockId =Long.valueOf(command.split("user=")[1]);
 				User user = userMgr.getUserById(stockId);
 				request.setAttribute(GetUserServlet.GET_USER, user);
-				request.setAttribute("selectedTab", "'.users-tab'");
 			}
-			else if(command.startsWith("topgrossingusers")){
+		
+			else {
 				
-				request.setAttribute("selectedTab", "'.users-tab'");
-				
-				
-			}
-			else if(command.startsWith("")){
-				
+				//Default view for twitstreet.com is Suggested Stocks
+				request.setAttribute(SUGGESTED_STOCKS, "true");
+
 			}
 			
 			

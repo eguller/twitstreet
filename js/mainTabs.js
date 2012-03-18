@@ -11,7 +11,9 @@
 
 	function showTabMain(tabId){
 		
-		tabContentId = mainTabContentsArray[mainTabsArray.indexOf(tabId)];
+		tabContentId = mainTabContentsArray[jQuery.inArray(tabId, mainTabsArray)];
+		
+		
 		var i;
 		for(i=0; i<mainTabsArray.length; i++){
 			

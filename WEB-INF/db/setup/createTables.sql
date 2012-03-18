@@ -36,6 +36,7 @@ create table `stock`(
     `pictureUrl` varchar(255),
     `lastUpdate` timestamp,
     `changePerHour` int,
+    `createdAt` date not null default '2000-01-01',
     `updating` bit(1) DEFAULT b'0',
     `verified` bit(1) DEFAULT b'0',
      primary key (`id`),
@@ -182,6 +183,12 @@ create table `invite` (
   key `fk_invitor` (`invitor`),
   constraint `fk_invitor` foreign key (`invitor`) references `users` (`id`) on delete no action on update no action,
   constraint `fk_invited` foreign key (`invited`) references `users` (`id`) on delete no action on update no action
+) engine=innodb default charset=utf8;
+
+create table `inactive_user` (
+  `user_id` bigint not null,
+  primary key (`user_id`),
+  constraint `fk_inactive_user` foreign key (`user_id`) references `users` (`id`)
 ) engine=innodb default charset=utf8;
 
 

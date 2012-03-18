@@ -98,24 +98,34 @@ public class GUIUtil {
 		return buttonStr;	
 	}
 	
-	public String getTwitterHashButton(String hashTag, String lang){
+	public String getTwitterHashButton(String hashTag, String lang,String text){
 		String buttonStr = propertiesFile.getString("twitter.hash.button");
 	
 	
 		buttonStr = buttonStr.replace("{0}", hashTag);
 		buttonStr = buttonStr.replace("{1}", lang);
-		//buttonStr = buttonStr.replace("{2}", userToFollow);
+		buttonStr = buttonStr.replace("{2}", text);
 		return buttonStr;	
+	}	
+	public String getTwitterHashButton(String hashTag, String lang){
+	;
+		return getTwitterHashButton(hashTag, lang, "");	
 	}
-	
-	public String getTwitterMentionButton(String mention, String lang){
+	public String getTwitterMentionButton(String mention, String lang, String text){
 		String buttonStr = propertiesFile.getString("twitter.mention.button");
 	
 	
 		buttonStr = buttonStr.replace("{0}", mention);
 		buttonStr = buttonStr.replace("{1}", lang);
-		//buttonStr = buttonStr.replace("{2}", userToFollow);
+		if(text==null){
+			text = "";
+		}
+		buttonStr = buttonStr.replace("{2}", text);
 		return buttonStr;	
+	}
+	public String getTwitterMentionButton(String mention, String lang){
+		
+		return getTwitterMentionButton(mention, lang,null);	
 	}
 	
 	public String getTimeLine(Stock stock, StockHistoryData shd, String chartNamePrefix, String divIdPrefix,String format){

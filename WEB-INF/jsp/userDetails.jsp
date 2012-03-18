@@ -46,55 +46,65 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	%>
 	<input id="hiddenUserDetailsUserId" type="hidden" value="<%=user.getId() %>"/>
 	
-	<table class="datatbl">
-			<tr>
-				<td>
-					<div class="h3 big"  style="vertical-align: top">
-						<a style="vertical-align: top"  href="http://twitter.com/#!/<%=user.getUserName()%>"
-							title="<%=lutil.get("twitter.link.tip", lang, user.getUserName())%>"
-						target="_blank"><%=user.getUserName()%></a>
-						&nbsp;&nbsp;&nbsp;
-						
-						<%=GUIUtil.getInstance().getTwitterShareButton("#!user="+ user.getId(), "twitter.share.user", lang, user.getUserName())%>
-						<%=GUIUtil.getInstance().getTwitterFollowButton(user.getUserName(), lang)%>
-						
-					</div>					
-				</td>
-				
-			</tr>
-			
-		</table>
-		
-		
-	<div id="user-profile-menu" class="subheader main-div" style="height:54px">
+
+	<div id="user-profile-menu" class="subheader" >
 
 		<table class="datatbl">
 			<tr>
-				<td>
+				<td width="55" style="vertical-align: middle" >
 					<img class="twuser" width="48" height="48" 
 					src="<%=user == null ? "" : user.getPictureUrl()%>"
-					id="dashboard-picture"></td>
-				<td>
-					<table>
-						<tr>
+					id="dashboard-picture">
+				</td>
+				
 							
-							<td colspan="2" align="left" style="padding: 2px">
+				<td  style="vertical-align: top">
+					<div style="text-align: left; vertical-align: top">
+				
+						<div style="float:left; overflow: hidden">
+						
+							<a style="float:left;vertical-align: top"  href="http://twitter.com/#!/<%=user.getUserName()%>"
+								title="<%=lutil.get("twitter.link.tip", lang, user.getUserName())%>"
+								target="_blank"><%=user.getUserName()%></a>
+							
+						
+									
+							<br>
 							<%=user.getRank()%>.
-							</td>
-						</tr>
+							<br>
 					
-						<tr>
+					
+						
+							<%= Util.getRoundedMoneyString(user.getCash()+user.getPortfolio()) %>
+						 	 <%= (user.getProfit()!=0)? " | "+Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true):"" %>
+							<br>
+					
+					
+						</div>
+						<div style="float:right">
+								<div style="float:right">
+									<%=GUIUtil.getInstance().getTwitterShareButton("#!user="+ user.getId(), "twitter.share.user", lang, user.getUserName())%>
+									<%=GUIUtil.getInstance().getTwitterFollowButton(user.getUserName(), lang)%>
+								</div>
+							</div>
+					
+					</div>
+				</td>
+				
+			</tr>
+		</table>
+		<table class="datatbl">
+			<tr>
+				<td style="font-size: 15px">
 							
-							<td align="left" style="padding: 2px">
-								<%= Util.getRoundedMoneyString(user.getCash()+user.getPortfolio()) %>
-							</td>
-						
-							<td align="right" style="padding: 2px">
-							 	 <%= (user.getProfit()!=0)? " | "+Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true):"" %>
-							</td>
-						</tr>
-						
-					</table>
+					
+					<% if(user.isProfitCalculated() && user.getProfit()!=0){ 
+					%>
+						<%=Util.getPercentageFormatted((double) user.getProfit() / (user.getCash()+user.getPortfolio()), false, true, true, true, false, true)  %>
+					<% }
+					%>	
+					
+							
 				</td>
 				<td style="vertical-align: bottom;">
 					<div class="tabs">
@@ -112,16 +122,17 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 				</td>
 			</tr>
 		</table>
-		
 	</div>
 	
+	<br>
+					
 
 	<div id="userstatus" class="main-div">
 		
 		<div id="userPortfolio" class="main-div">
-			<h3>
-				<%=lutil.get("userdetails.portfolio", lang) %>
-			</h3>
+<!-- 			<h3> -->
+<%-- 				<%=lutil.get("userdetails.portfolio", lang) %> --%>
+<!-- 			</h3> -->
 			<table class="datatbl">
 				<%
 				if(portfolio.getStockInPortfolioList().size()>0){

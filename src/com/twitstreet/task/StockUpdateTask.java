@@ -43,27 +43,16 @@ public class StockUpdateTask implements Runnable {
 			long startTime = System.currentTimeMillis();
 
 			try {
-				
+
+				logger.info("\n\n************* Stock Update Task ****************\n\n");
 				
 				logger.info("Twitter trends update - begin.");
 				stockMgr.updateTwitterTrends();
 				logger.info("Twitter trends update - end.");
 
 				logger.info("Stock list update - begin.");
-				List<Stock> stockList = updateStocks();
-				String users = "";
-				if (stockList != null) {
-					users ="Updated "+stockList.size()+ " users. \n";
-					for (Stock stock : stockList) {
-
-						users = users + stock.getName() + "\n";
-
-					}
-				}else{
-					users = "No stock found to update";
-					
-				}
-				logger.info("Stock list update - end. "+users);
+				updateStocks();
+				logger.info("Stock list update - end. ");
 
 				logger.info("Reset speed of stocks - begin.");
 				stockMgr.resetSpeedOfOldStocks();
@@ -84,6 +73,8 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Remove old records - begin.");
 				twitstreetAnnouncer.removeOldRecords(60 * 24);
 				logger.info("Remove old records - end.");
+
+				logger.info("\n\n************************************************\n\n");
 			} catch (Throwable ex) {
 				logger.error("Someone tried to kill our precious StockUpdateTask. He says: ", ex);
 			}
@@ -114,7 +105,7 @@ public class StockUpdateTask implements Runnable {
 		}
 	}
 
-	public List<Stock> updateStocks() {
+	public void updateStocks() {
 		List<Stock> updatedStocks = new ArrayList<Stock>();
 		while (true) {
 			List<Stock> stockList = stockMgr.getUpdateRequiredStocks(TwitterProxyImpl.USER_COUNT_FOR_UPDATE);
@@ -131,7 +122,14 @@ public class StockUpdateTask implements Runnable {
 			
 			updatedStocks.addAll(stockList);
 		}
-		return updatedStocks;
+		
+		logger.info("Updated "+updatedStocks.size()+ " stocks. \n");
+		
+		for (Stock stock : updatedStocks) {
+
+			logger.debug(stock.toString()+"\n");
+		}
+		
 	}
 
 }

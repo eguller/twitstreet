@@ -33,7 +33,16 @@ public class LocalizationUtil {
 		return new ArrayList<String>(Arrays.asList(languages));
 		
 	}
-	
+	public String getLanguageLongName(String shortName){
+		 
+		if("en".equalsIgnoreCase(shortName)){
+			return "English";
+		}else if("tr".equalsIgnoreCase(shortName)){
+			return "Türkçe";
+		}
+		return "";
+		
+	}
 	public boolean checkLanguageIsValid(String lang){
 		
 		for(String lan : languages){

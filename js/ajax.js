@@ -52,7 +52,7 @@ function timeToReload(lastUpdate){
 	
 }
 
-
+var defaultCommand = "suggestedstocks";
 var lastCommand = null;
 $(function(){
 	  // Bind an event to window.onhashchange that, when the hash changes, gets the
@@ -60,9 +60,17 @@ $(function(){
 	  $(window).hashchange( function(){
 	    var hash = location.hash;
 	    // Set the page title based on the hash.
-	    var command =  hash.replace( /^#/, '' );
-	    command = command.replace('!','');
+	    var command =  hash.replace( /^#!/, '' );    
+//	    if(command==""){
+//	    	command = defaultCommand;
+//	    	location.hash = "#!"+defaultCommand;
+//	    	return;
+//	    }
+	    
+	    
 	    lastCommand = command;
+	    
+	    
 	    performOperation(command);
 	  })
 	  
@@ -85,9 +93,9 @@ function performOperation(command){
     	loadUserProfile(id);
     }
 	else if(itemType == 'suggestedstocks'){
-    	loadTrendyStocks();
+    	loadSuggestedStocks();
     }else if(itemType == 'topgrossingusers'){
-    	loadTrendyUsers();
+    	loadTopGrossingUsers();
     }else if(itemType == 'searchstock'){
     	var searchString = command.split('=')[1];
     	getQuote(searchString);

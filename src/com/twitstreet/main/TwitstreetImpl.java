@@ -16,6 +16,7 @@ import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
+import com.twitstreet.task.DetectInvalidTokensTask;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.task.UserInfoUpdateTask;
 
@@ -70,29 +71,28 @@ public class TwitstreetImpl implements Twitstreet {
 		configMgr.setDev(dev);
 		
 		
-//		ReRankTask reRankTask = injector.getInstance(ReRankTask.class);
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
 		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);
-		//StockHistoryUpdateTask stockHistoryUpdateTask = injector.getInstance(StockHistoryUpdateTask.class);
-		
-//		Thread reRankThread = new Thread(reRankTask);
-//		reRankThread.setName("Re-Rank");
-//		reRankThread.start();
+		DetectInvalidTokensTask detectInvalidTokensTask = injector.getInstance(DetectInvalidTokensTask.class);
+
+		Thread detectInvalidTokensThread= new Thread (detectInvalidTokensTask);
+		detectInvalidTokensThread.setName("Detect Invalid Tokens Task");
 		
 		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
 		updateFollowerCountThread.setName("Stock Update Task");
-		updateFollowerCountThread.start();
-		
-		/*Thread asyncQueryTaskThread = new Thread(asyncQueryTask);
-		asyncQueryTaskThread.setName("Async query task");
-		asyncQueryTaskThread.start();*/
-		
+
 		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
 		updateUserInfoThread.setName("User Info Update Task");
-		updateUserInfoThread.start();
-		initialized = true;
+		
 		
 
+		updateFollowerCountThread.start();
+		
+		if (!configMgr.isDev()) {
+			detectInvalidTokensThread.start();		
+			updateUserInfoThread.start();
+		}
+		initialized = true;
 	}
 	public boolean isInitialized(){
 		return initialized;

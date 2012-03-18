@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@page import="com.twitstreet.config.ConfigMgr"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
@@ -22,61 +23,54 @@
 			<table class="datatbl2">
 				<tbody>
 					<tr>
-
-						<td colspan=3 style="vertical-align: top">
-							<div id="twitstreet-header" style="float: left">
-								<a id="home"
-									style="vertical-align: top; line-height: 30px; height: 30px"
-									href="/">TwitStreet
-								</a>
-								<img height="35" width="35" alt="twitstreet.com" title="twitstreet.com"
-								src="/images/twitstreet_logo_50.png" onclick="http://www.twitstreet.com/">
-							</div>
+						<td style="width:45px;">
+							<a href="/">
+								 <img height="45" width="45" alt="twitstreet.com" title="twitstreet.com"
+											src="/images/twitstreet_logo_50.png">
+							</a>
 						</td>
-					</tr>
-
-					<tr>
-
-						<td style="float: left; margin-right: 5px">
-							<div id="twitstreet-share-main" style="float: left">
-								<%=GUIUtil.getInstance().getTwitterShareButton("",
-									"twitter.share.main", lang)%>
-							</div></td>
-						<td style="float: left; margin-right: 5px">
-							<div id="twitstreet-share-main" style="float: left">
-								<%=GUIUtil.getInstance().getTwitterFollowButton(
-									"twitstreet_game", lang)%>
-							</div></td>
-
-						<td style="float: right; margin-left: 5px">
-							<div id="twitstreet-languages" style="text-align: right">
-								<%
-									if (!"en".equalsIgnoreCase(lang)) {
-								%>
-								<a href="javascript:void(0)" onclick="loadLanguage('en')">English</a>
-
-								<%
-									} else {
-								%>
-								<span>English</span>
-								<%
-									}
-								%>
-
-								<%
-									if (!"tr".equalsIgnoreCase(lang)) {
-								%>
-								<a href="javascript:void(0)" onclick="loadLanguage('tr')">Türkçe</a>
-
-								<%
-									} else {
-								%>
-								<span>Türkçe</span>
-								<%
-									}
-								%>
-
-							</div></td>
+						<td style="vertical-align: top">
+							<div id="twitstreet-header" style="float: left; height:25px; ">
+								<a id="home"
+									style="vertical-align: top; "
+									href="/">TwitStreet
+								</a>	
+							
+								<br>	
+								<div id="twitstreet-languages" style="font-size:6px; float:right;text-align: right">
+															
+											
+									<select onchange="loadLanguage($(this).val())" style="font-size:11px;">
+						
+									<% 					
+									ArrayList<String> languages = LocalizationUtil.getInstance().getLanguages();
+									for(int i = 0; i < languages.size();i++) {	
+										
+								      			String selectLang = languages.get(i);
+									%>
+										<option <%=(selectLang.equalsIgnoreCase(lang))?"selected=\"selected\"":""%> value="<%=selectLang%>"><%= lutil.getLanguageLongName(selectLang) %></option>
+										
+									<%	
+									}		
+									%>
+									</select>
+								
+								</div>
+								<div id="twitstreet-share-main" style="float: left; clear:left">
+										<%=GUIUtil.getInstance().getTwitterShareButton("",
+											"twitter.share.main", lang)%>
+								</div>
+								<div id="twitstreet-share-main" style="float: left;">
+									<%=GUIUtil.getInstance().getTwitterFollowButton(
+										"twitstreet_game", lang)%>
+								</div>
+							</div>
+					
+			
+						
+								
+							
+						</td>
 					</tr>
 				</tbody>
 
@@ -100,17 +94,19 @@
 		</div>
 	</div>
 
-	<div id="top_right_div">
+	<div id="top_right_div" style="vertical-align: bottom">
+
 		<%
 			if (user == null) {
 		%>
-		<div id="loginbox">
+		<div id="loginbox" style="float:right">
 			<a href="/signin"><img src="/images/twitter-small.png"></img> </a>
 		</div>
 		<%
 			} else {
 		%>
-		<div id="logoutbox">
+		<div id="logoutbox" style="float:right">
+
 			<table>
 				<tr>
 					<td rowspan="2"><img class="twuser" width="48" height="48"
@@ -135,6 +131,9 @@
 		<%
 			}
 		%>
+		
+	
+			
 	</div>
 
 </div>

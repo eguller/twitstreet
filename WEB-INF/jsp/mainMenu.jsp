@@ -17,21 +17,6 @@
 			</a>
 		</div>
 
-		<div class="h3-right-top">
-			<div class="stocks-tab-right-content"
-				style="display: none; text-align: right; float: right; text-size: 20px; height: 20px">
-				<a id="trendy-stocks-id" href="#!suggestedstocks"
-					onclick="reloadIfHashIsMyHref(this)"> <%=lutil.get("suggestedstocks.header", lang)%>
-				</a>
-			</div>
-			<div class="users-tab-right-content"
-				style="display: none; text-align: right; float: right; text-size: 20px; height: 20px">
-				<a id="trendy-users-id" href="#!topgrossingusers"
-					onclick="reloadIfHashIsMyHref(this)"> <%=lutil.get("topgrossingusers.header", lang)%>
-				</a>
-			</div>
-		</div>
-		<div style="clear: both"></div>
 	</div>
 	<jsp:include page="stocks.jsp"></jsp:include>
 	<jsp:include page="users.jsp"></jsp:include>

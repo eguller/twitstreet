@@ -88,6 +88,43 @@ function objectExists(id) {
 	return $(id).length > 0;
 }
 
+function showTweetsWithKeyWords(keywordsString, elementId) {
+var width = $('#'+elementId).width();
+	if(keywordsString!=null && keywordsString.length>0){
+		new TWTR.Widget({
+			version : 2,
+			type : 'search',
+			search: keywordsString,
+			rpp : 20,
+			interval : 6000,
+			width : width,
+			height : 1500,
+			id : elementId,
+			theme : {
+				shell : {
+					background : '#f2f2f2',
+					color : '#000000'
+				},
+				tweets : {
+					background : '#ffffff',
+					color : '#000000',
+					links : '#4183c4'
+				}
+			},
+			features : {
+			    scrollbar: false,
+			    loop: true,
+			    live: true,
+			    hashtags: true,
+			    timestamp: true,
+			    avatars: true,
+			    toptweets: true,
+				behavior : 'all'
+			}
+		}).render().start();
+	}
+	
+}
 function showTweetsOfUserInDiv(username, elementId) {
 
 	new TWTR.Widget({
@@ -119,4 +156,9 @@ function showTweetsOfUserInDiv(username, elementId) {
 }
 function calculateSold(total, soldPercentage) {
 	return total * soldPercentage;
+}
+
+function getTimezoneOffset(){
+	
+	return $('#clientTzOffset').val();
 }

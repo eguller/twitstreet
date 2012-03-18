@@ -75,6 +75,10 @@ h3 {
 	color: graytext;
 }
 
+img {
+	
+	border-style: none;
+}
 a {
 	color: #4183C4;
 	text-decoration: none;
@@ -459,7 +463,7 @@ img.twuser {
 
 .buy-sell-table {
 	width: 100%;
-	margin-top: 15px;
+/* 	margin-top: 15px; */
 }
 
 .buy-sell-table td {
@@ -520,9 +524,9 @@ img.twuser {
 	width: 100%;
 }
 
-.subheader a {
-	color: #000000;
-}
+/* .subheader a { */
+/* 	color: #000000; */
+/* } */
 
 .subheader h1,.subheader h2 {
 	float: left;
@@ -583,6 +587,7 @@ img.twuser {
 	line-height: 18px;
 	margin-top: 4px;
 	margin-left: 5px;
+	
 }
 
 .main-tabs a {

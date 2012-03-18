@@ -58,10 +58,16 @@ public class BuyServlet extends TwitStreetServlet {
 			try {
 				Stock stockObj = stockMgr.getStockById(Long.parseLong(stock));
 				if (user != null && stockObj != null) {
-					portfolioMgr.buy(
-							user, stockObj,
-							Integer.parseInt(amount));
 					
+					
+					BuySellResponse bsr =	portfolioMgr.buy(
+								user, stockObj,
+								Integer.parseInt(amount));
+					
+					if(bsr==null){
+						return;
+					}
+				
 					String responseNeededString = request.getParameter(RESPONSE_NEEDED);
 				
 					if (!("n".equalsIgnoreCase(responseNeededString))) {

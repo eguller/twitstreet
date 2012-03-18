@@ -6,10 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -23,7 +21,6 @@ import com.twitstreet.db.base.DBMgrImpl;
 import com.twitstreet.db.data.Group;
 import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
-import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.util.Util;
 
 public class UserMgrImpl implements UserMgr {
@@ -74,7 +71,32 @@ public class UserMgrImpl implements UserMgr {
 		}
 		return userDO;
 	}
+@Override
+	public User getUserByTokenAndSecret(String token, String secret) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
+					+ " and users.oauthToken = ? and users.oauthTokenSecret = ? ");
+			ps.setString(1, token);
+			ps.setString(2, secret);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+			}
 
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userDO;
+	}
 	public ArrayList<User> getUsersByGroup(Group group) {
 		ArrayList<User> users = new ArrayList<User>();
 		if (group.getId() < 1 && group.getName() != null
@@ -170,7 +192,8 @@ public class UserMgrImpl implements UserMgr {
 					.prepareStatement("insert into users(id, userName, "
 							+ "lastLogin, firstLogin, "
 							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl) "
-							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+							"   ");
 			ps.setLong(1, userDO.getId());
 			ps.setString(2, userDO.getUserName());
 			ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));
@@ -217,6 +240,10 @@ public class UserMgrImpl implements UserMgr {
 			ps.setString(7, user.getPictureUrl());
 
 			ps.executeUpdate();
+		
+			//just in case...
+			resurrectUser(user.getId());
+			
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
@@ -225,6 +252,49 @@ public class UserMgrImpl implements UserMgr {
 		}
 	}
 
+	
+	@Override 
+	public void deleteUser(long id){
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("insert ignore into inactive_user values (?) ");
+			ps.setLong(1, id);
+		
+			ps.executeUpdate();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			
+			logger.info("***********User Inactivated: "+getUserById(id).getUserName()+"***********");
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
+
+	@Override 
+	public void resurrectUser(long id){
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("delete from inactive_user where user_id=? ");
+			ps.setLong(1, id);
+		
+			ps.executeUpdate();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			
+
+			logger.info("***********User Resurrected: "+getUserById(id).getUserName()+"***********");
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
 	@Override
 	public User random() {
 		Connection connection = null;
@@ -236,8 +306,9 @@ public class UserMgrImpl implements UserMgr {
 			stmt = connection.createStatement();
 			rs = stmt
 					.executeQuery(SELECT_FROM_USERS_JOIN_RANKING
-							+ " and users.id >= (select floor( max(id) * rand()) from users ) "
-							+ "order by users.id limit 1");
+							+ " and users.id >= (select floor( max(id) * rand()) from users ) " +
+							"   and users.id not in (select user_id from inactive_user) "
+							+ " order by users.id limit 1");
 			if (rs.next()) {
 				user = new User();
 				user.getDataFromResultSet(rs);
@@ -245,12 +316,15 @@ public class UserMgrImpl implements UserMgr {
 			} else {
 				logger.error("DB: Random user selection query is not working properly");
 			}
+			
+			
 		} catch (SQLException e) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + stmt.toString(), e);
 		} finally {
 			dbMgr.closeResources(connection, stmt, rs);
 
 		}
+	
 		return user;
 	}
 
@@ -383,7 +457,7 @@ public class UserMgrImpl implements UserMgr {
 											" )");
 											
 	
-		   int rowChanged=	ps.executeUpdate();
+		  ps.executeUpdate();
 				
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
@@ -543,6 +617,32 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
+
+	@Override
+	public List<User> getAllActive() {
+		List<User> userList = new ArrayList<User>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING + " and users.id not in (select user_id from inactive_user) ");
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				userDO = new User();

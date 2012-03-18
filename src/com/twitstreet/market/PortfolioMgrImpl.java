@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -23,7 +25,8 @@ import com.twitstreet.servlet.BuySellResponse;
 import com.twitstreet.session.UserMgr;
 
 public class PortfolioMgrImpl implements PortfolioMgr {
-	
+	public static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 	// commission rate 1%
 	private static final double COMMISSION_RATE = 0.01;
 	
@@ -38,6 +41,16 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 
 	@Override
 	public BuySellResponse buy(User buyer, Stock stock, int amount) {
+		
+		int day = 1000 * 60 * 60 * 24;
+		Date thresholdDate = new Date((new Date()).getTime() - day * Stock.STOCK_OLDER_THAN_DAYS_AVAILABLE);
+//		
+		if(!stock.isOldEnough()){
+			logger.info("Buy operation is cancelled. " + stock.getName()+" is not older than "+sdf.format(thresholdDate)+" ("+Stock.STOCK_OLDER_THAN_DAYS_AVAILABLE+" days)");
+			return null;
+			
+		}
+		
 		int amount2Buy = buyer.getCash() < amount ? (int)buyer.getCash() : amount;
 		if (stock.getAvailable() > 0) {
 			amount2Buy = amount2Buy < stock.getAvailable() ? amount2Buy : stock.getAvailable();

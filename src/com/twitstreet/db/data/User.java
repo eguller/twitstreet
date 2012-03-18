@@ -2,6 +2,7 @@ package com.twitstreet.db.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.google.inject.Inject;
@@ -10,14 +11,16 @@ import com.twitstreet.twitter.TwitterProxy;
 public class User implements DataObjectIF {
 	public static final String USER = "user";
 	public static final String USER_ID = "user-id";
-	
+	public static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     long id;
     String userName;
+    private Date createdAt;
     Date firstLogin;
     Date lastLogin;
     double cash;
     double portfolio;
-    
+
+	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
     //profit per hour
     double profit;
 
@@ -200,6 +203,17 @@ public class User implements DataObjectIF {
 
 	public void setProfitCalculated(boolean profitCalculated) {
 		this.profitCalculated = profitCalculated;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+	public String getCreatedAtStr() {
+		return sdf.format(createdAt.getTime());
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	

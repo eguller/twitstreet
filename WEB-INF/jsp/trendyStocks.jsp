@@ -28,8 +28,7 @@
 <%@ page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
 <%
-	Injector inj = (Injector) pageContext.getServletContext()
-			.getAttribute(Injector.class.getName());
+	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	User user = (User) request.getAttribute(User.USER);
 
@@ -45,7 +44,7 @@
 		if (trendResults.size() > 0) {
 	%>
 
-	<h3><%=lutil.get("suggestedstocks.header", lang)%></h3>
+<%-- 	<h3><%=lutil.get("suggestedstocks.header", lang)%></h3> --%>
 		<table class="datatbl" style="margin-top: 10px;">
 			<%
 				for (int i = 0; i < trendResults.size();) {

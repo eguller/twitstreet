@@ -16,6 +16,7 @@ import twitter4j.auth.AccessToken;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.session.UserMgr;
 import com.twitstreet.util.Util;
 
 public class TwitterProxyImpl implements TwitterProxy {
@@ -30,6 +31,8 @@ public class TwitterProxyImpl implements TwitterProxy {
 	private static Logger logger = Logger.getLogger(TwitterProxyImpl.class);
 	@Inject
 	ConfigMgr configMgr = null;
+	@Inject
+	UserMgr userMgr = null;
 	private Twitter twitter;
 	String consumerKey;
 	String consumerSecret;
@@ -39,13 +42,16 @@ public class TwitterProxyImpl implements TwitterProxy {
 	AccessToken accessToken;
 	@Inject
 	public TwitterProxyImpl(ConfigMgr configMgr,
-			@Assisted("ouathToken") String ouathToken,
+			@Assisted("oauthToken") String oauthToken,
 			@Assisted("oauthTokenSecret") String oauthTokenSecret) {
 		this.configMgr = configMgr;
 		Twitter twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer(configMgr.getConsumerKey(),
 				configMgr.getConsumerSecret());
-		accessToken = new AccessToken(ouathToken, oauthTokenSecret);
+		accessToken = new AccessToken(oauthToken, oauthTokenSecret);
+		
+		oToken = oauthToken;
+		oSecret = oauthTokenSecret;
 		
 		twitter.setOAuthAccessToken(accessToken);
 		this.setTwitter(twitter);
@@ -246,7 +252,11 @@ public class TwitterProxyImpl implements TwitterProxy {
 			logger.error("Twitter: Rate limit exceeded.");
 		}else if (e.getStatusCode() == UNAUTHORIZED) {
 		
-			logger.error("Twitter: Authentication credentials were missing or incorrect. Twitter proxy user: "+accessToken.getScreenName());
+			logger.error("Twitter: Authentication credentials were missing or incorrect. Token: "+oToken+", Secret: "+oSecret);
+			 
+			 com.twitstreet.db.data.User user = userMgr.getUserByTokenAndSecret(oToken, oSecret);
+		
+			userMgr.deleteUser(user.getId());
 			
 		}else if (e.getStatusCode() == INVALID_REQUEST) {
 		
@@ -266,6 +276,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 				
 		Trends ts = null;
 		try {
+			
 			ts = twitter.getLocationTrends(1);
 		} catch (TwitterException e) {
 			handleError(e);
@@ -313,4 +324,22 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	
+	@Override
+	public boolean verifyUser() {
+		
+		try {
+			User user = twitter.verifyCredentials();
+			if(user==null) return false;
+		} catch (TwitterException e) {
+			if (e.getStatusCode() == UNAUTHORIZED) {
+
+				return false;
+
+			}
+		}
+
+		return true;
+
+	}
+
 }
