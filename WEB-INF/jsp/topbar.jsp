@@ -30,32 +30,14 @@
 							</a>
 						</td>
 						<td style="vertical-align: top">
-							<div id="twitstreet-header" style="float: left; height:25px; ">
+							<div id="twitstreet-header" style="float: left;">
 								<a id="home"
-									style="vertical-align: top; "
+									style="font-size:22px; vertical-align: top; "
 									href="/">TwitStreet
 								</a>	
 							
 								<br>	
-								<div id="twitstreet-languages" style="font-size:6px; float:right;text-align: right">
-															
-											
-									<select onchange="loadLanguage($(this).val())" style="font-size:11px;">
-						
-									<% 					
-									ArrayList<String> languages = LocalizationUtil.getInstance().getLanguages();
-									for(int i = 0; i < languages.size();i++) {	
-										
-								      			String selectLang = languages.get(i);
-									%>
-										<option <%=(selectLang.equalsIgnoreCase(lang))?"selected=\"selected\"":""%> value="<%=selectLang%>"><%= lutil.getLanguageLongName(selectLang) %></option>
-										
-									<%	
-									}		
-									%>
-									</select>
 								
-								</div>
 								<div id="twitstreet-share-main" style="float: left; clear:left">
 										<%=GUIUtil.getInstance().getTwitterShareButton("",
 											"twitter.share.main", lang)%>
@@ -85,13 +67,50 @@
 
 
 	<div id="top_center_div">
-		<div align="center">
-		
-			<h1><b><%=lutil.get("season.info", lang) %></b></h1>
-		
-			<h1><b><%=lutil.get("season.time", lang) %></b></h1>
+	
+	
+	<table class="datatbl">
+		<tr>
+			<td width="33%">
+			</td>
+			<td width="33%">
+				<div align="center">
 			
-		</div>
+					<h1><b><%=lutil.get("season.info", lang) %></b></h1>
+				
+					<h1><b><%=lutil.get("season.time", lang) %></b></h1>
+					
+				</div>
+			</td>
+			<td width="33%" style="vertical-align: bottom">
+				<div id="twitstreet-languages" style="font-size:6px; margin-bottom:7px; float:right;clear:both;text-align: right">
+																	
+													
+					<select onchange="loadLanguage($(this).val())" style="font-size:11px;">
+		
+					<% 					
+					ArrayList<String> languages = LocalizationUtil.getInstance().getLanguages();
+					for(int i = 0; i < languages.size();i++) {	
+						
+				      			String selectLang = languages.get(i);
+					%>
+						<option <%=(selectLang.equalsIgnoreCase(lang))?"selected=\"selected\"":""%> value="<%=selectLang%>"><%= lutil.getLanguageLongName(selectLang) %></option>
+						
+					<%	
+					}		
+					%>
+					</select>
+				
+				</div>
+			</td>
+			
+			
+		</tr>
+	
+	</table>
+	
+		
+	
 	</div>
 
 	<div id="top_right_div" style="vertical-align: bottom">

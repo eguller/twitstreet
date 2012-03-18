@@ -22,11 +22,15 @@
 <div class="main-tabs" style="width: 100%;">
 	<div class="title-bar">
 		<a class="top-grossing-users-tab <%=(user!=null)?"": "youarehere"%> "
-			onclick="showTopGrossingUsersContent(); loadTopGrossingUsers();">
+			onclick="reloadIfHashIs('#!topgrossingusers');">
 			<%=lutil.get("topgrossingusers.header", lang)%> </a>
-		<a class="user-details-tab <%=(user==null)?"": "youarehere"%>"
-			onclick="showUserDetailsContent(); reloadUserProfile();">
-			 <%=(user==null)?"": "\""+user.getUserName()+"\""%> 
-			<%=lutil.get("userdetails", lang)%> </a>
+			
+			<%if(user!=null){ %>
+						<a class="user-details-tab <%=(user==null)?"": "youarehere"%>"
+							onclick="reloadIfHashIs('#!user=<%=user.getId()%>');">
+							 <%=user.getUserName()%> 
+									<%-- <%=lutil.get("userdetails", lang)%> --%>
+						</a> 
+				<%} %>
 	</div>
 </div>

@@ -1,4 +1,5 @@
 
+<%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.servlet.HomePageServlet"%>
 <%@page import="com.twitstreet.db.data.Stock"%>
 <%@page import="com.twitstreet.db.data.User"%>
@@ -15,13 +16,8 @@
 	
 	Stock stock = (Stock) request.getAttribute(HomePageServlet.STOCK);
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
-	boolean showSuggestedStocks = false;
-	
-	try{
-		showSuggestedStocks = (boolean) (request.getAttribute(HomePageServlet.SUGGESTED_STOCKS).toString().length()>0);
-	}catch(Exception ex){
-		showSuggestedStocks = stock==null;
-	}
+
+	String selectedTab = (String) request.getAttribute(HomePageServlet.SELECTED_TAB_STOCK_BAR);
 	
 %>
 
@@ -42,14 +38,29 @@
 			<td>
 				<div id="stocks-screen">
 					<div id="suggested-stocks-content">
-						<%if(showSuggestedStocks){%>
-							<jsp:include page="trendyStocks.jsp" />
-							
+						<%if(selectedTab.equalsIgnoreCase("suggested-stocks-tab")){						
+
+							ArrayList<Stock> results = stockMgr.getSuggestedStocks();
+							request.setAttribute("stockList", results);		
+							request.setAttribute("stockListName", "suggested");					
+						%>
+							<jsp:include page="suggestedStocks.jsp" />							
+						<%}%>
+						
+					</div>
+					<div id="top-grossing-stocks-content">
+						<%if(selectedTab.equalsIgnoreCase("top-grossing-stocks-tab")){		
+
+							ArrayList<Stock> results = stockMgr.getTopGrossingStocks();
+							request.setAttribute("stockList", results);		
+							request.setAttribute("stockListName", "top-grossing");	
+						%>
+							<jsp:include page="suggestedStocks.jsp" />							
 						<%}%>
 						
 					</div>
 					<div id="stock-details-content">
-					<%if(stock!=null){%>
+					<%if(selectedTab.equalsIgnoreCase("stock-details-tab")){%>
 						<jsp:include page="stockDetails.jsp" />
 						
 					<%	}%>

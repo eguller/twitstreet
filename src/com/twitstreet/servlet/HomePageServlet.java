@@ -1,25 +1,13 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
-import twitter4j.ResponseList;
-import twitter4j.Trends;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
@@ -29,8 +17,6 @@ import com.twitstreet.main.Twitstreet;
 import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.session.UserMgr;
-import com.twitstreet.twitter.SimpleTwitterUser;
-import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 
 @SuppressWarnings("serial")
@@ -51,6 +37,7 @@ public class HomePageServlet extends TwitStreetServlet {
 
 	public static final String STOCK = "stock";
 
+	public static final String SELECTED_TAB_STOCK_BAR = "selectedTabStockBar";
 	public static final String TOP_GROSSING_USERS = "topgrossingusers";
 	public static final String SUGGESTED_STOCKS = "suggestedstocks";
 	public static final String STOCK_ID = "stockId";
@@ -101,7 +88,11 @@ public class HomePageServlet extends TwitStreetServlet {
 		try{
 			if(command.startsWith("suggestedstocks")){
 
-				request.setAttribute(SUGGESTED_STOCKS, "true");
+				request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
+			}	
+			else if(command.startsWith("topgrossingstocks")){
+
+				request.setAttribute(SELECTED_TAB_STOCK_BAR, "top-grossing-stocks-tab");
 			}
 			else if(command.startsWith("topgrossingusers")){
 
@@ -149,7 +140,8 @@ public class HomePageServlet extends TwitStreetServlet {
 
 		loadUser(request);
 
-		
+		//	default tab for stocks view
+		request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
 		
 		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
 			getServletContext().getRequestDispatcher(

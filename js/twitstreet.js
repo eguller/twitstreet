@@ -87,16 +87,41 @@ function getQuote(quote) {
 	}
 }
 
+
+var stockOnScreen = "#hiddenStockDetailsStockId";
+function reloadStock() {
+	loadStock($(stockOnScreen).val());
+
+}
+function loadStock(id, reload) {
+
+	showTabMain('.stocks-tab');
+	showStockDetails();
+	if(id!=null){
+		ajaxLoad("stock", "stock=" + id, '#stocks-container', '#column_center');	
+	}
+	
+
+}
+
 function loadSuggestedStocks() {
 	showTabMain('.stocks-tab');
-	showSuggestedStocksContent();
+	showSuggestedStocks();
 	ajaxLoad("/suggestedstocks", null, "#suggested-stocks-content", "#column_center");
+	
+
+}
+
+function loadTopGrossingStocks() {
+	showTabMain('.stocks-tab');
+	showTopGrossingStocks();
+	ajaxLoad("/topgrossingstocks", null, "#top-grossing-stocks-content", "#column_center");
 	
 
 }
 function loadTopGrossingUsers() {
 
-	showTabMain('.users-tab', '#users-container');
+	showTabMain('.users-tab');
 	showTopGrossingUsersContent();
 	ajaxLoad("/trendyusers", null, "#users-screen", "#users-screen");
 }
@@ -108,21 +133,6 @@ function getUser(user) {
 				"#column_center");
 		showTabMain('.users-tab');
 	}
-}
-
-var stockOnScreen = "#hiddenStockDetailsStockId";
-function reloadStock() {
-	loadStock($(stockOnScreen).val());
-
-}
-function loadStock(id, reload) {
-
-	showTabMain('.stocks-tab');
-	if(id!=null){
-		ajaxLoad("stock", "stock=" + id, '#stocks-container', '#column_center');	
-	}
-	
-
 }
 
 var userOnScreen = "#hiddenUserDetailsUserId";

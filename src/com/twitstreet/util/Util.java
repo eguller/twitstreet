@@ -444,7 +444,7 @@ public class Util {
 
 	public static String dateDiff2String(Date date) {
 		Date now = Calendar.getInstance().getTime();
-		System.out.println("Now: " + now.toString() + ", date" + date.toString());
+//		System.out.println("Now: " + now.toString() + ", date" + date.toString());
 		long diff = now.getTime() - date.getTime();
 		if( diff / MIN_MS == 0){
 			return diff / SEC_MS > 1 ? diff / SEC_MS + " secs ago" : "1 sec ago";

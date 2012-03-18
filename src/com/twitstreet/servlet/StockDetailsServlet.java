@@ -3,14 +3,12 @@ package com.twitstreet.servlet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.data.Stock;
-import com.twitstreet.db.data.User;
 import com.twitstreet.market.StockMgr;
 
 @SuppressWarnings("serial")
@@ -56,6 +54,8 @@ public class StockDetailsServlet extends TwitStreetServlet {
 
 		}
 
+		
+		request.setAttribute(HomePageServlet.SELECTED_TAB_STOCK_BAR, "stock-details-tab");
 		getServletContext().getRequestDispatcher("/WEB-INF/jsp/dashboard.jsp")
 				.forward(request, response);
 

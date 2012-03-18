@@ -434,27 +434,35 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, cs, null);
 		}
 	}
-
+	
+	
 	@Override
 	public void updateRankingHistory() {
+		
+		updateRankingHistory(false);
+	}
+	@Override
+	public void updateRankingHistory(boolean neededOnly) {
 		Connection connection = null;
 		PreparedStatement ps = null;
-
+String neededString =(neededOnly)? " where " +
+		"ranking.user_id in" +
+		 "(" +
+		    "select distinct user_id from ranking r where " +
+		   " 15< TIMESTAMPDIFF(minute,( " +
+		           " select distinct rh.lastUpdate from ranking_history rh where rh.user_id=r.user_id order by rh.lastUpdate desc limit 1" +
+		         "   ), now()) " +
+		         " OR " +
+		         " 1 > (select count(*) from ranking_history rh where rh.user_id = r.user_id ) " +
+		" )":"";
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
 
 					.prepareStatement("insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank) " +
-											" select user_id, cash, portfolio,  lastUpdate, rank from ranking where " +
-											"ranking.user_id in" +
-											 "(" +
-											    "select distinct user_id from ranking r where " +
-											       " 15< TIMESTAMPDIFF(minute,( " +
-											           " select distinct rh.lastUpdate from ranking_history rh where rh.user_id=r.user_id order by rh.lastUpdate desc limit 1" +
-											         "   ), now()) " +
-											         " OR " +
-											         " 1 > (select count(*) from ranking_history rh where rh.user_id = r.user_id ) " +
-											" )");
+											" select user_id, cash, portfolio,  lastUpdate, rank from ranking "+
+											neededString
+											);
 											
 	
 		  ps.executeUpdate();
@@ -764,4 +772,5 @@ public class UserMgrImpl implements UserMgr {
 		}
 
 	}
+	
 }

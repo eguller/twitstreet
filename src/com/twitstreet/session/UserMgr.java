@@ -53,4 +53,5 @@ public interface UserMgr {
 	void resurrectUser(long id);
 	User getUserByTokenAndSecret(String token, String secret);
 	List<User> getAllActive();
+	void updateRankingHistory(boolean neededOnly);
 }

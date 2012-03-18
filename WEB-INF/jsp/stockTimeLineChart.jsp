@@ -33,10 +33,11 @@
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	User user = (User) request.getAttribute(User.USER);
 	
-	String divId = request.getParameter("divId");
+	String divId =(String) request.getAttribute("stockTimeLineDivId");
 	
 	String format = request.getParameter("format");
 	
+
 	String since = request.getParameter("since");
 	
 	String forMinutes = request.getParameter("forMinutes");
@@ -78,7 +79,7 @@
 
 				out.write("valueArrayStock"+stock.getId()+".push(" + dvm.get(date) + ");\n");
 		}%>
-		drawStockHistory('<%=divId+stock.getId()%>', dateArrayStock<%=stock.getId()%>, valueArrayStock<%=stock.getId()%>,
+		drawStockHistory('<%=divId%>', dateArrayStock<%=stock.getId()%>, valueArrayStock<%=stock.getId()%>,
 				stockNameStock<%=stock.getId()%>,'<%=format%>');
 	</script>
 

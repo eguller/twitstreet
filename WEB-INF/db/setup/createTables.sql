@@ -191,4 +191,10 @@ create table `inactive_user` (
   constraint `fk_inactive_user` foreign key (`user_id`) references `users` (`id`)
 ) engine=innodb default charset=utf8;
 
-
+create table `season_info` (
+  `id` int not null,
+  primary key (`id`),
+  `startTime` timestamp not null default now(),
+  `endTime` timestamp,
+  `active` bit(1) DEFAULT b'0'
+) engine=innodb default charset=utf8;

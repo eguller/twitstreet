@@ -57,7 +57,7 @@ public interface StockMgr {
 	
 	public StockHistoryData getStockHistory(long id, String since);
 
-	ArrayList<Stock> getTrendyStocks();
+	ArrayList<Stock> getSuggestedStocks();
 
 	ArrayList<Stock> getUserWatchList(long userid);
 
@@ -74,7 +74,7 @@ public interface StockMgr {
 	StockHistoryData getStockHistory(long id);
 	StockHistoryData getStockHistory(long id, int forMinutes);
 
-	List<TrendyStock> getTopGrossingStocks(int forhours);
+	List<TrendyStock> getTopGrossedStocks(int forhours);
 
 	public List<Stock> getUpdateRequiredStocksByServer();
 	public void resetSpeedOfOldStocksByServer();
@@ -85,4 +85,10 @@ public interface StockMgr {
 	void updateStockListData(ArrayList<Long> id);
 
 	List<Stock> getUpdateRequiredStocks(int limit);
+
+	ArrayList<Stock> getTopGrossingStocks();
+
+	ArrayList<Stock> getTopGrossingStocks(int page);
+
+	ArrayList<Stock> getSuggestedStocks(int page);
 }

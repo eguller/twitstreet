@@ -42,11 +42,13 @@
 	
 
 
-		<div id="detail-stock<%=stock.getId()%>" style="height: 200px; width: 500px;">
-			<% request.setAttribute("chartStock", stock); %>
-			<jsp:include page="stockTimeLineChart.jsp">										
-				<jsp:param name="divId" value="#detail-stock"/>						
-			</jsp:include>
+		<div id="detail-stock-<%=stock.getId()%>" style="height: 200px; width: 500px;">
+			<% request.setAttribute("chartStock", stock);
+
+			request.setAttribute("stockTimeLineDivId", "#detail-stock-"+stock.getId());
+			
+			%>
+			<jsp:include page="stockTimeLineChart.jsp"/>
 		</div>
 	
 

@@ -28,33 +28,40 @@
 <%@ page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
 <%
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
+	String lang = (String) request.getSession().getAttribute(
+			LocalizationUtil.LANGUAGE);
+
+	ArrayList<Stock> stockList = (ArrayList<Stock>) request.getAttribute("stockList");
+	String stockListName = (String) request.getAttribute("stockListName");
+
+
+	long time = (new Date()).getTime();
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	User user = (User) request.getAttribute(User.USER);
 
-	ArrayList<Stock> trendResults = stockMgr.getTrendyStocks();
+	
 
-	LocalizationUtil lutil = LocalizationUtil.getInstance();
-	String lang = (String) request.getSession().getAttribute(
-			LocalizationUtil.LANGUAGE);
+
 %>
-<div id="trendy-stocks">
+<div id="stock-list-<%=stockListName%>">
 
 	<%
-		if (trendResults.size() > 0) {
+		if (stockList!=null && stockList.size() > 0) {
 	%>
 
 <%-- 	<h3><%=lutil.get("suggestedstocks.header", lang)%></h3> --%>
 		<table class="datatbl" style="margin-top: 10px;">
 			<%
-				for (int i = 0; i < trendResults.size();) {
+				for (int i = 0; i < stockList.size();) {
 			%>
 			<tr height="150">
 				<%
 					for (int j = 0; j < 1; j++) {
-								if (i < trendResults.size()) {
+								if (i < stockList.size()) {
 
-									Stock stock = trendResults.get(i);
+									Stock stock = stockList.get(i);
 				%>
 
 				<td>
@@ -131,14 +138,14 @@
 							</td>
 							<td width="30">&nbsp;</td>
 							<td>
-								<div id="trendy-stock<%=stock.getId()%>"
+								<div id="<%=stockListName%>-stock-history-<%=stock.getId()%>"
 									style="width: 230px; height: 120px">
 
 									<%
 										request.setAttribute("chartStock", stock);
+										request.setAttribute("stockTimeLineDivId", "#"+stockListName+"-stock-history-"+stock.getId());
 									%>
 									<jsp:include page="stockTimeLineChart.jsp">
-										<jsp:param name="divId" value="#trendy-stock" />
 										<jsp:param name="format" value="simple,240" />							
 										<jsp:param name="forMinutes" value="360"/>	
 									</jsp:include>

@@ -63,7 +63,7 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Re-rank end.");
 
 				logger.info("Rank history update - begin.");
-				userMgr.updateRankingHistory();
+				userMgr.updateRankingHistory(true);
 				logger.info("Rank history update - end. "); 
 
 				logger.info("Mention trendy stock - begin.");
@@ -95,8 +95,8 @@ public class StockUpdateTask implements Runnable {
 
 	private void mentionTopGrossingStocks() {
 		try{
-            if(stockMgr.getTopGrossingStocks(24).size() > 0 && !configMgr.isDev()){  
-            	TrendyStock ts = stockMgr.getTopGrossingStocks(24).get(0);
+            if(stockMgr.getTopGrossedStocks(24).size() > 0 && !configMgr.isDev()){  
+            	TrendyStock ts = stockMgr.getTopGrossedStocks(24).get(0);
             	twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage())+ "www.twitstreet.com/#!stock="+ts.getId());
             }
 		}

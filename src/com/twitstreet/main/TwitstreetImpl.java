@@ -4,16 +4,27 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
+
+import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
+import com.twitstreet.db.base.DBMgrImpl;
+import com.twitstreet.db.data.User;
 import com.twitstreet.market.StockMgr;
+import com.twitstreet.market.StockMgrImpl;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.DetectInvalidTokensTask;
@@ -23,6 +34,7 @@ import com.twitstreet.task.UserInfoUpdateTask;
 
 @Singleton
 public class TwitstreetImpl implements Twitstreet {
+	private static String SELECT_FROM_SEASON_INFO = " select id, startTime, endTime, active from season_info ";
 	private boolean initialized = false;
 	DBMgr dbMgr;
 	ConfigMgr configMgr;
@@ -30,6 +42,7 @@ public class TwitstreetImpl implements Twitstreet {
 	Injector injector;
 	@Inject GroupMgr groupMgr;
 	@Inject UserMgr userMgr;
+	private static Logger logger = Logger.getLogger(TwitstreetImpl.class);
 	@Inject StockMgr stockMgr;
 	@Inject public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr){
 		this.dbMgr = dbMgr;
@@ -111,5 +124,83 @@ public class TwitstreetImpl implements Twitstreet {
 	@Override
 	public void setInjector(Injector injector) {
 		this.injector = injector;
+	}
+
+	@Override
+	public SeasonInfo getCurrentSeasonInfo(){
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		SeasonInfo siDO = null;
+
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO + " where active = true");
+
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				siDO = new SeasonInfo();
+				siDO.getDataFromResultSet(rs);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return siDO;
+
+	}
+	@Override
+	public SeasonInfo getSeasonInfo(int id){
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		SeasonInfo siDO = null;
+
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO + " where id = ?");
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				siDO = new SeasonInfo();
+				siDO.getDataFromResultSet(rs);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return siDO;
+	}
+	@Override
+	public ArrayList<SeasonInfo> getAllSeasons(){
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		SeasonInfo siDO = null;
+		ArrayList<SeasonInfo> siList = new ArrayList<SeasonInfo>();
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO + " order by id desc");
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				siDO = new SeasonInfo();
+				siDO.getDataFromResultSet(rs);
+				siList.add(siDO);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return siList;
 	}
 }

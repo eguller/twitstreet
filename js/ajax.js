@@ -94,6 +94,9 @@ function performOperation(command){
     }
 	else if(itemType == 'suggestedstocks'){
     	loadSuggestedStocks();
+    }
+	else if(itemType == 'topgrossingstocks'){
+    	loadTopGrossingStocks();
     }else if(itemType == 'topgrossingusers'){
     	loadTopGrossingUsers();
     }else if(itemType == 'searchstock'){
@@ -120,7 +123,12 @@ function reloadIfHashIsMyHref(element){
 }
 
 function reloadIfHashIs(hash){
-	if(isLocationEqualTo(hash)) performLastOperation();
+	if(isLocationEqualTo(hash)){
+		performLastOperation();
+	}else{
+
+		window.location.hash=hash;
+	}
 }
 
 function isLocationEqualTo(url){

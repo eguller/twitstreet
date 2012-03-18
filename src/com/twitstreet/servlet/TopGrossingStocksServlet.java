@@ -15,10 +15,7 @@ import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
 @Singleton
-public class TrendyStocksServlet extends TwitStreetServlet {
-
-	public static String TOPRANKS_USER_LIST = "topranksuserlist";
-
+public class TopGrossingStocksServlet extends TwitStreetServlet {
 	@Inject
 	UserMgr userMgr;
 	@Inject
@@ -36,9 +33,9 @@ public class TrendyStocksServlet extends TwitStreetServlet {
 		loadUser(request);
 		
 
-		ArrayList<Stock> stocks = stockMgr.getSuggestedStocks();
-		request.setAttribute("stockList", stocks);
-		request.setAttribute("stockListName", "suggested");
+		ArrayList<Stock> results = stockMgr.getTopGrossingStocks();
+		request.setAttribute("stockList", results);
+		request.setAttribute("stockListName", "top-grossing");
 		//loadUserFromCookie(request);
 		try {
 			getServletContext().getRequestDispatcher(

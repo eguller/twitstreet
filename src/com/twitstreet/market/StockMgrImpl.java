@@ -550,7 +550,7 @@ public class StockMgrImpl implements StockMgr {
 	}
 
 	@Override
-	public List<TrendyStock> getTopGrossingStocks(int forhours){
+	public List<TrendyStock> getTopGrossedStocks(int forhours){
 		
 		ArrayList<TrendyStock> stockList = new ArrayList<TrendyStock>();
 		Connection connection = null;
@@ -678,7 +678,12 @@ public class StockMgrImpl implements StockMgr {
 	}
 
 	@Override
-	public ArrayList<Stock> getTrendyStocks() {
+	public ArrayList<Stock> getSuggestedStocks() {
+		return getSuggestedStocks(1);
+	}
+
+	@Override
+	public ArrayList<Stock> getSuggestedStocks(int page) {
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -695,10 +700,49 @@ public class StockMgrImpl implements StockMgr {
 												" ("+STOCK_IN_PORTFOLIO+ " or "
 													+STOCK_IN_TWITTER_TRENDS+
 												  ")" +
-												" order by (changePerHour/total) desc limit ?;");
+												" order by (changePerHour/total) desc limit ?,?;");
 
 			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
 			ps.setInt(2, Stock.STOCK_OLDER_THAN_DAYS_AVAILABLE);
+			ps.setInt(3, (page-1)*MAX_TRENDS);
+			ps.setInt(4, MAX_TRENDS);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				Stock stockDO = new Stock();
+				stockDO.getDataFromResultSet(rs);
+				stockList.add(stockDO);
+			}
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return stockList;
+	}
+	@Override
+	public ArrayList<Stock> getTopGrossingStocks() {
+		return getTopGrossingStocks(1);
+	}
+	@Override
+	public ArrayList<Stock> getTopGrossingStocks(int page) {
+		ArrayList<Stock> stockList = new ArrayList<Stock>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_STOCK + " where changePerHour is not null " +
+												" and (TIMESTAMPDIFF(minute, lastUpdate, now())  < ?) "  +	
+												" and total >= " + TRENDY_STOCK_TOTAL_THRESHOLD +										
+												" and " +
+												" ("+STOCK_IN_PORTFOLIO+ " or "
+												+STOCK_IN_TWITTER_TRENDS+
+											  ")" +
+												" order by (changePerHour/total) desc limit ?,?;");
+
+			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
+			ps.setInt(2, (page-1)*MAX_TRENDS);
 			ps.setInt(3, MAX_TRENDS);
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -714,7 +758,6 @@ public class StockMgrImpl implements StockMgr {
 		}
 		return stockList;
 	}
-
 	@Override
 	public ArrayList<Stock> getUserWatchList(long userid) {
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
