@@ -442,30 +442,31 @@ public class Util {
 		return imgElement;
 	}
 
-	public static String dateDiff2String(Date date) {
+	public static String dateDiff2String(Date date, String lang) {
+		LocalizationUtil lutil = LocalizationUtil.getInstance();
 		Date now = Calendar.getInstance().getTime();
 //		System.out.println("Now: " + now.toString() + ", date" + date.toString());
 		long diff = now.getTime() - date.getTime();
 		if( diff / MIN_MS == 0){
-			return diff / SEC_MS > 1 ? diff / SEC_MS + " secs ago" : "1 sec ago";
+			return diff / SEC_MS > 1 ? lutil.get("transactions.secs_ago", lang, diff / SEC_MS): lutil.get("transactions.just_now", lang);
 		}
 		else if(diff / HOUR_MS == 0){
-			return diff / MIN_MS > 1 ? diff / MIN_MS + " mins ago" : "1 min ago";
+			return diff / MIN_MS > 1 ?  lutil.get("transactions.mins_ago", lang, diff / MIN_MS) : lutil.get("transactions.min_ago", lang, 1);
 		}
 		else if(diff / DAY_MS == 0){
-			return diff / HOUR_MS > 1 ? diff / HOUR_MS + " hours ago" : "1 hour ago";
+			return diff / HOUR_MS > 1 ? lutil.get("transactions.hours_ago", lang, diff / HOUR_MS) : lutil.get("transactions.hour_ago", lang, 1);
 		}
 		else if(diff / WEEK_MS == 0){
-			return diff / DAY_MS > 1 ? diff / DAY_MS + " days ago" : "yesterday";
+			return diff / DAY_MS > 1 ? lutil.get("transactions.days_ago", lang, diff / DAY_MS) : lutil.get("transactions.yesterday", lang);
 		}
 		else if(diff / MONTH_MS == 0){
-			return diff / WEEK_MS > 1 ? diff / WEEK_MS + " weeks ago" : "last week";
+			return diff / WEEK_MS > 1 ? lutil.get("transactions.weeks_ago", lang, diff / WEEK_MS) : lutil.get("transactions.week_ago", lang);
 		}
 		else if(diff / YEAR_MS == 0){
-			return diff / MONTH_MS > 1 ? diff / WEEK_MS + " months ago" : "last month";
+			return diff / MONTH_MS > 1 ?  lutil.get("transactions.months_ago", lang, diff / MONTH_MS) : lutil.get("transactions.month_ago", lang);
 		}
 		else{
-			return diff / YEAR_MS > 1 ? diff / YEAR_MS + " years ago" : "last year";
+			return diff / YEAR_MS > 1 ? lutil.get("transactions.years_ago", lang, diff / YEAR_MS) : lutil.get("transactions.years_ago", lang);
 		}
 	}
 

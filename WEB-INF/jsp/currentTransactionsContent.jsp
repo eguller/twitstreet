@@ -61,10 +61,28 @@
 			onclick="reloadIfHashIsMyHref(this)"
 			title="<%=lutil.get("stock.details.tip", lang,
 						transactionRecord.getStockName())%>">
-				<%=transactionRecord.getStockName()%> </a></td>
-				<td style="text-align: right;font-size: 9px; color: #777777;"><i><%=Util.dateDiff2String(transactionRecord.getDate()) %></i></td>
+				<%=transactionRecord.getStockName()%> </a>
+		</td>
 	</tr>
 	<%
-		}
+		if (i % 2 == 0) {
 	%>
+	<tr>
+		<%
+			} else {
+		%>
+
+
+		<tr class="odd">
+		<%
+			}
+		%><td style="text-align: right; font-size: 9px; color: #777777;"><i><%=Util.dateDiff2String(transactionRecord.getDate(),
+						lang)%></i>
+		</td>
+	</tr>
+
+		<%
+			}
+		%>
+	
 </table>
