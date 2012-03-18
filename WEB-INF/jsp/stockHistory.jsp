@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@page import="com.twitstreet.servlet.HomePageServlet"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Date"%>
@@ -25,6 +26,10 @@
 	<div id="stock-trend-section" style="display: none;">
 	
 	<%
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
+	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+
+	
 			Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 			StockMgr stockMgr = inj.getInstance(StockMgr.class);
 
@@ -50,8 +55,15 @@
 			%>
 			<jsp:include page="stockTimeLineChart.jsp"/>
 		</div>
-	
-
+	<br>
+<div>
+		<h3><%=lutil.get("transactions.header", lang) %></h3>
+		<div>
+			<jsp:include page="stockTransactionsContent.jsp">
+				<jsp:param value="<%=stock.getId()%>" name="stock-id"/>
+			</jsp:include>
+		</div>
+	</div>
 	<%
 			} else if (stock != null) {
 		%>

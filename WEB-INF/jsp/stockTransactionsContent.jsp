@@ -22,7 +22,7 @@
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
 %>
-<table class="datatbl" id="your-transactions-table">
+<table class="datatbl">
 	<%
 		int i = 0;
 		for (TransactionRecord transactionRecord : transactionRecordList) {
@@ -53,18 +53,38 @@
 						spanClass = "red";
 						operation = "&#9654;";
 					}
-			%> <span class="<%=spanClass%>"> <%=operation%></span> <%=Util.commaSep(transactionRecord.getAmount())%>
-			<a href="#!stock=<%=transactionRecord.getStockId()%>"
+			%> <a href="#!user=<%=transactionRecord.getUserId()%>"
+			onclick="reloadIfHashIsMyHref(this)"
+			title="<%=lutil.get("user.details.tip", lang,
+						transactionRecord.getUserName())%>">
+				<%=transactionRecord.getUserName()%> </a> <span class="<%=spanClass%>">
+				<%=operation%></span> <%=Util.commaSep(transactionRecord.getAmount())%> <a
+			href="#!stock=<%=transactionRecord.getStockId()%>"
+			onclick="reloadIfHashIsMyHref(this)"
 			title="<%=lutil.get("stock.details.tip", lang,
 						transactionRecord.getStockName())%>">
 				<%=transactionRecord.getStockName()%> </a>
 		</td>
-		<td style="text-align: right;font-size: 9px; color: #777777;">
-			<i><%=Util.dateDiff2String(transactionRecord.getDate()) %>
-			</i>
-		</td>
 	</tr>
 	<%
-		}
+		if (i % 2 == 0) {
 	%>
+	<tr>
+		<%
+			} else {
+		%>
+
+
+		<tr class="odd">
+		<%
+			}
+		%><td style="text-align: right; font-size: 9px; color: #777777;"><i><%=Util.dateDiff2String(transactionRecord.getDate(),
+						lang)%></i>
+		</td>
+	</tr>
+
+		<%
+			}
+		%>
+	
 </table>

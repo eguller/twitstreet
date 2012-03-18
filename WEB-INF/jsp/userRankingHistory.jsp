@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
@@ -13,6 +14,9 @@
 	
 <div id="user-trend-section">
 	<%
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
+	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	String parameterUser = request.getParameter(User.USER);
@@ -63,7 +67,7 @@
 	}
 	%>
 	<div>
-		<h3>Transactions</h3>
+		<h3><%=lutil.get("transactions.header", lang) %></h3>
 		<div>
 			<jsp:include page="userTransactionsContent.jsp">
 				<jsp:param value="<%=user.getId()%>" name="user-id"/>
