@@ -38,7 +38,7 @@ public class LocalizationUtil {
 		if("en".equalsIgnoreCase(shortName)){
 			return "English";
 		}else if("tr".equalsIgnoreCase(shortName)){
-			return "T\u00fcrkçe";
+			return "T\u00fcrk\u00e7e";
 		}
 		return "";
 		
