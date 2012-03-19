@@ -836,21 +836,24 @@ public class StockMgrImpl implements StockMgr {
 		ArrayList<Trend> trends = getTwitterProxy().getTrends();
 
 		if (trends != null) {
-
+			logger.info("Convert trend to stock started. Trend Size: " + trends.size());
+			int converted2Stock = 0;
 			for (Trend trend : trends) {
 
 				String name = trend.getName();
-				logger.info("\n\nTwitter trend: " + name);
+				logger.debug("\n\nTwitter trend: " + name);
 				Stock stock = getStockById(getTwitterProxy().searchAndGetFirstResult(name));
 
 				if (stock != null) {
 					idList.add(stock.getId());
-					logger.info("Stock: "+stock.getName());
+					logger.debug("Stock: "+stock.getName());
+					converted2Stock++;
 				}
 				else{
-					logger.info("Twitter trend is not related to any twitter user. Trend: " + name);
+					logger.debug("Twitter trend is not related to any twitter user. Trend: " + name);
 				}
 			}
+			logger.info("Convert trend to stock completed. " + converted2Stock + " trend converted to stock");
 		}
 		return idList;
 	}

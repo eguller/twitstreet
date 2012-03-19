@@ -445,7 +445,6 @@ public class Util {
 	public static String dateDiff2String(Date date, String lang) {
 		LocalizationUtil lutil = LocalizationUtil.getInstance();
 		Date now = Calendar.getInstance().getTime();
-//		System.out.println("Now: " + now.toString() + ", date" + date.toString());
 		long diff = now.getTime() - date.getTime();
 		if( diff / MIN_MS == 0){
 			return diff / SEC_MS > 1 ? lutil.get("transactions.secs_ago", lang, diff / SEC_MS): lutil.get("transactions.just_now", lang);
