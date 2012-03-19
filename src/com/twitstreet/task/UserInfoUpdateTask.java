@@ -47,7 +47,6 @@ public class UserInfoUpdateTask implements Runnable {
 
 					for (twitter4j.User twitterUser : twitterUserList) {
 						User updatedUser = new User();
-						System.out.println(twitterUser.getScreenName() + ", " + twitterUser.getProfileImageURL().toExternalForm());
 						updatedUser.setId(twitterUser.getId());
 						updatedUser.setUserName(twitterUser.getScreenName());
 						updatedUser.setPictureUrl(twitterUser.getProfileImageURL().toExternalForm());
