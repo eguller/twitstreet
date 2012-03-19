@@ -58,12 +58,7 @@
 			title="<%=lutil.get("user.details.tip", lang,
 						transactionRecord.getUserName())%>">
 				<%=transactionRecord.getUserName()%> </a> <span class="<%=spanClass%>">
-				<%=operation%></span> <%=Util.commaSep(transactionRecord.getAmount())%> <a
-			href="#!stock=<%=transactionRecord.getStockId()%>"
-			onclick="reloadIfHashIsMyHref(this)"
-			title="<%=lutil.get("stock.details.tip", lang,
-						transactionRecord.getStockName())%>">
-				<%=transactionRecord.getStockName()%> </a>
+				<%=operation%></span> <%=Util.commaSep(transactionRecord.getAmount())%> 
 		</td>
 	</tr>
 	<%

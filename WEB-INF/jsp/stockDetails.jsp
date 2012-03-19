@@ -223,6 +223,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	<%
 		if (quote.length() > 0){
 			%>
+			<br>
 			<jsp:include page="otherSearchResults.jsp" />
 			
 			

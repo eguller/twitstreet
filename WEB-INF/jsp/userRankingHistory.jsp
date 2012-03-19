@@ -60,7 +60,7 @@
 	}else if(user!=null){%>
 		<div>
 		<p>
-		No history data available for <%=user.getUserName()%> yet.
+		<%=lutil.get("user.noHistory", lang,user.getUserName()) %>
 		</p>
 		</div>
 	<%			

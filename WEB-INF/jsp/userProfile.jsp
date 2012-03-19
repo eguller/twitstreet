@@ -69,6 +69,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						<div id="user-details-content">
 						<%if(user!=null){%>
 							<jsp:include page="userDetails.jsp" />
+							<br>
 							<jsp:include page="getUserOtherSearchResults.jsp" />
 							<script type="text/javascript">initUserProfileTabs()</script>
 			

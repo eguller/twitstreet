@@ -72,7 +72,7 @@
 
 	<div class="field-white">
 	
-			<b>No history data available for <%=stock.getName()%> yet.
+			<b><%=lutil.get("stock.noHistory", lang,stock.getName()) %>
 			</b>
 	
 	</div>
