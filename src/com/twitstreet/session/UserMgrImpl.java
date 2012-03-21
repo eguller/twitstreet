@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.twitstreet.db.base.DBMgrImpl;
 import com.twitstreet.db.data.Group;
 import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
+import com.twitstreet.main.Twitstreet;
 import com.twitstreet.util.Util;
 
 public class UserMgrImpl implements UserMgr {
@@ -31,7 +33,10 @@ public class UserMgrImpl implements UserMgr {
 	ConfigMgr configMgr;
 	@Inject
 	GroupMgr groupMgr;
+	@Inject
+	Twitstreet twitstreet;
 
+	static SimpleDateFormat  df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	private static int MAX_RECORD_PER_PAGE = 20;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 
@@ -483,7 +488,8 @@ String neededString =(neededOnly)? " where " +
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		String sinceStr =" TIMESTAMP('"+SEASON_START+"') " ;
+	
+		String sinceStr =" TIMESTAMP('"+df.format(twitstreet.getCurrentSeasonInfo().getStartTime())+"') " ;
 		if(since!=null){			
 			sinceStr =" TIMESTAMP('" + since+"') " ;			
 		}

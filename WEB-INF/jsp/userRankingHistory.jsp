@@ -1,8 +1,10 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.UserProfileServlet"%>
+<%@ page import="com.twitstreet.main.*"%>
 
 <%@page import="java.util.Date"%>
 <%@page import="com.twitstreet.db.data.RankingHistoryData"%>
@@ -19,24 +21,35 @@
 
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
+	Twitstreet twitstreet = inj.getInstance(Twitstreet.class);
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
 	user = (user == null) ? (User) request.getAttribute(UserProfileServlet.USER_PROFILE_USER) : user;
 	user = (user == null && parameterUser != null) ? userMgr.getUserById(Long.valueOf(parameterUser)) : user;
 	request.setAttribute(UserProfileServlet.USER_PROFILE_USER, user);
 	RankingHistoryData rhd = null;
+	
+	ArrayList<SeasonInfo> siList = twitstreet.getAllSeasons();
+	
 	if(user!=null){
 		rhd = userMgr.getRankingHistoryForUser(user.getId(),null);
 	}
 	
 	if (rhd != null && rhd.getRankingHistory().size() > 0) {
 		%>
+	<select>
+	<% 
+	for(SeasonInfo si: siList){
+    %>	
+		
+    <%	
+	}
+	%>
+	</select>
 	
-<!-- 	<h3>Asset History</h3> -->
+	
 	<div id="user-value-chart-div" style="height: 200px; width: 500px;"></div>
 	<br>
-<!-- 	<h3>Ranking History</h3> -->
-<!-- 		<div id="user-trend-chart-div" style="height: 200px; width: 500px;"></div> -->
 		<script type="text/javascript">
 			var dateArray = new Array();
 			var valueArray = new Array();

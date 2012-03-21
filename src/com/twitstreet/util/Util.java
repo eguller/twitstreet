@@ -368,7 +368,7 @@ public class Util {
 	public static String getPercentageFormatted(double percentage,
 			boolean rounded, boolean percentSign, boolean perHour,
 			boolean arrow, boolean appendPlusIfPositive, boolean getInSpan) {
-
+		double percentageOrig = percentage;
 		percentage = percentage * 100;
 
 		percentage = Util.roundDouble(Math.abs(percentage), 2);
@@ -394,12 +394,12 @@ public class Util {
 		String arrowStr = "";
 		String plusMinus = "";
 		String spanClass = "";
-		if (percentage > 0) {
+		if (percentageOrig > 0) {
 			arrowStr = "&#9650;";
 			plusMinus = "+";
 			spanClass = "green-profit";
 
-		} else if (percentage < 0) {
+		} else if (percentageOrig < 0) {
 			arrowStr = "&#9660;";
 			plusMinus = "-";
 			spanClass = "red-profit";
