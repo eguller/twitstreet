@@ -1,37 +1,39 @@
 <project default="build">
 	<property name="build.dir" value="build" />
 	<property name="tomcat.home" value="" />
+	<property name="lib.dir" value="WEB-INF/lib/" />
 	<path id="lib.path.ref">
 		<fileset dir="WEB-INF/lib" includes="*.jar" />
 		<fileset dir="${tomcat.home}/lib" includes="*.jar" />
 	</path>
 	<target name="build">
-		<delete file="${user.home}/Desktop/ROOT.war"></delete>
+		<delete file="${user.home}/Desktop/ROOT.war">
+		</delete>
 		<delete dir="${build.dir}" />
 		<mkdir dir="${build.dir}/bin" />
 		<javac srcdir="src" destdir="${build.dir}/bin" classpathref="lib.path.ref" debug="true" debuglevel="lines,vars,source" />
 		<copy todir="${build.dir}/bin">
-		    <fileset dir="resources" includes="**/*"/>
+			<fileset dir="resources" includes="**/*" />
 		</copy>
-		
+
 		<!-- Copy localization files -->
 		<copy todir="${build.dir}/bin/com/twitstreet/localization/">
-		    <fileset dir="src/com/twitstreet/localization/" includes="**/*.properties"/>
+			<fileset dir="src/com/twitstreet/localization/" includes="**/*.properties" />
 		</copy>
-	   
-	   <!-- Copy gui utility files -->
+
+		<!-- Copy gui utility files -->
 		<copy todir="${build.dir}/bin/com/twitstreet/util/">
-		    <fileset dir="src/com/twitstreet/util/" includes="**/*.properties"/>
+			<fileset dir="src/com/twitstreet/util/" includes="**/*.properties" />
 		</copy>
-		       
-		       
-		<replace file="${build.dir}/bin/log4j.xml" token="${catalina.home}/logs/twitstreet.txt" value="/var/log/tomcat6/twitstreet.txt"/>
+
+
+		<replace file="${build.dir}/bin/log4j.xml" token="${catalina.home}/logs/twitstreet.txt" value="/var/log/tomcat6/twitstreet.txt" />
 		<war destfile="${user.home}/Desktop/ROOT.war" webxml="WEB-INF/web.xml">
 			<fileset dir=".">
-				<include name="css/*"/>
-				<include name="images/*"/>
-				<include name="js/*"/>
-				<exclude name="images/Thumbs.db"/>
+				<include name="css/*" />
+				<include name="images/*" />
+				<include name="js/*" />
+				<exclude name="images/Thumbs.db" />
 			</fileset>
 			<lib dir="WEB-INF/lib" />
 			<classes dir="build/bin" />
@@ -42,7 +44,36 @@
 				<include name="tlds/**" />
 			</webinf>
 		</war>
-		<delete dir="build"/>
+		<delete dir="build" />
+	</target>
+	<target name="merge-static" depends="clean-static">
+		<echo message="Merging all jss files into: all.js" />
+		<concat destfile="${build.dir}/all.js" force="no">
+			<fileset dir="js" includes="*.js" excludes="jquery.countdown-*.js,*.min.js" />
+		</concat>
+		<echo message="Merging all css files into: all.css" />
+		<concat destfile="${build.dir}/all.css" force="no">
+			<fileset dir="css" includes="*.css" />
+		</concat>
+	</target>
+	<target name="minify-static" depends="merge-static">
+		<echo message="Compressing js file to: all-min.js" />
+		<java jar="${lib.dir}/yuicompressor-2.4.7.jar" fork="true">
+			<arg value="${build.dir}/all.js" />
+			<arg value="-o" />
+			<arg value="js/all-min.js" />
+		</java>
+		<delete file="${build.dir}/all.js"></delete>
+		<echo message="Compressing css file to: all-min.css" />
+		<java jar="${lib.dir}/yuicompressor-2.4.7.jar" fork="true">
+			<arg value="${build.dir}/all.css" />
+			<arg value="-o" />
+			<arg value="css/all-min.css" />
+		</java>
+		<delete file="${build.dir}/all.css"></delete>
+	</target>
+	<target name="clean-static">
+		<delete file="css/all-min.css"></delete>
+		<delete file="js/all-min.js"></delete>
 	</target>
 </project>
-	
