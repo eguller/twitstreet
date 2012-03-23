@@ -37,7 +37,7 @@ public class UserMgrImpl implements UserMgr {
 	@Inject
 	Twitstreet twitstreet;
 
-	static SimpleDateFormat  df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	static SimpleDateFormat  df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static int MAX_RECORD_PER_PAGE = 20;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 

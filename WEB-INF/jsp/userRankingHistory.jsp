@@ -73,13 +73,13 @@
 			
 			//Global variable
 			rankTitle = '<%=lutil.get("balance.rank", lang)%>';
-		<%
-		for(RankingData rd : rhd.getRankingHistory()){
-					out.write("dateArray.push(new Date(" + rd.getLastUpdate().getTime()+ "));\n");
-					out.write("rankArray.push(" + rd.getRank() + ");\n");
-					out.write("valueArray.push(" + rd.getTotal() + ");\n");
-		}		
-					%>
+			<%
+			for(RankingData rd : rhd.getRankingHistory()){
+						out.write("dateArray.push(new Date(" + rd.getLastUpdate().getTime()+ "));\n");
+						out.write("rankArray.push(" + rd.getRank() + ");\n");
+						out.write("valueArray.push(" + rd.getTotal() + ");\n");
+			}		
+			%>
 			drawUserValueHistory('#user-value-chart-div', dateArray, valueArray,rankArray, userName);
 		</script>
 	<%
