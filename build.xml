@@ -27,6 +27,9 @@
 		<copy todir="${build.dir}/bin/com/twitstreet/util/">
 		    <fileset dir="src/com/twitstreet/util/" includes="**/*.properties"/>
 		</copy>
+		<copy todir="${build.dir}/js/">
+		    <fileset dir="js" includes="jquery.countdown-*.js"/>
+		</copy>
 	</target>
 	
 	<target name="compile">
