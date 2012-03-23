@@ -33,9 +33,15 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 	google.load('visualization', '1.0', {'packages':['corechart']});
 	google.load('visualization', '1', {packages: ['annotatedtimeline']});
 </script>
+
+<!--  Start of Twitter Widget -->
+<script type="text/javascript" src="http://widgets.twimg.com/j/2/widget.js"></script>
+<!--  End of Twitter Widget -->
+
 <!-- End GoogleAPI -->
 <% if(configMgr.isDev()){ %>
 <!-- Start Tw-Static -->
+<!-- If you are updating here please update file list under merge-static task in buil.xml file -->
 <script type="text/javascript" src="/js/jquery-corner.js"></script>
 <script type="text/javascript" src="/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="/js/hashchange.js"></script>
@@ -49,6 +55,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script type="text/javascript" src="/js/userProfileTabs.js"></script>
 <script type="text/javascript" src="/js/portfolioTab.js"></script>
 <script type="text/javascript" src="/js/transactionTab.js"></script>
+<script type="text/javascript" src="/js/charts.js"></script>
 <script type="text/javascript" src="/js/jquery.countdown.min.js"></script>
 <!-- End Tw-Static -->
 <% } else{ %>
@@ -56,7 +63,6 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <% } %>
 <%if(!lang.equalsIgnoreCase(LocalizationUtil.DEFAULT_LANGUAGE)){
 %>	
-
 <script type="text/javascript" src="/js/jquery.countdown-<%=lang%>.js"></script>
 <%	
 }%>
