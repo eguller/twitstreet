@@ -14,7 +14,7 @@
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="java.util.List"%>
 	
-<div id="user-trend-section">
+<div id="userRankingHistoryId">
 	<%
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
@@ -30,48 +30,61 @@
 	RankingHistoryData rhd = null;
 	
 	ArrayList<SeasonInfo> siList = twitstreet.getAllSeasons();
+	SeasonInfo selectedSeason = (SeasonInfo) request.getAttribute("selectedSeason");
+	SeasonInfo currentSeason = twitstreet.getCurrentSeason();
+	selectedSeason = (selectedSeason!=null)? selectedSeason:twitstreet.getCurrentSeason();
+	int id = -1;
+	if(selectedSeason!=null){
+		id = selectedSeason.getId();
+	}
 	
-	if(user!=null){
-		rhd = userMgr.getRankingHistoryForUser(user.getId(),null);
+	
+	
+	if(user!=null && selectedSeason!=null){
+		rhd = userMgr.getRankingHistoryForUser(user.getId(),selectedSeason.getStartTime(),selectedSeason.getEndTime());
 	}
 	
 	if (rhd != null && rhd.getRankingHistory().size() > 0) {
+		if(selectedSeason.getId() == currentSeason.getId()){
+			RankingData rd = new RankingData();
+	
+			double totalNow = user.getCash()+ user.getPortfolio();
+			Date date = new Date();
+			
+			rd.setCash(user.getCash());
+			rd.setPortfolio(user.getPortfolio());
+			rd.setLastUpdate(date);
+			rd.setRank(user.getRank());
+			rd.setTotal(totalNow);
+
+			rhd.getRankingHistory().add(rd);
+		}
 		%>
-	<select>
-	<% 
-	for(SeasonInfo si: siList){
-    %>	
 		
-    <%	
-	}
-	%>
-	</select>
 	
-	
-	<div id="user-value-chart-div" style="height: 200px; width: 500px;"></div>
-	<br>
+		
+		<div id="user-value-chart-div" style="height: 200px; width: 500px;"></div>
+		<br>
 		<script type="text/javascript">
 			var dateArray = new Array();
 			var valueArray = new Array();
 			var rankArray = new Array();
 			var userName = '<%=user.getUserName()%>';
+			
+			//Global variable
+			rankTitle = '<%=lutil.get("balance.rank", lang)%>';
 		<%
-		double totalNow = user.getCash()+ user.getPortfolio();
-		Date date = new Date();
-		out.write("dateArray.push(new Date(" + date.getTime()+ "));\n");
-		out.write("rankArray.push(" + user.getRank() + ");\n");
-		out.write("valueArray.push("  + totalNow  + ");\n");
 		for(RankingData rd : rhd.getRankingHistory()){
 					out.write("dateArray.push(new Date(" + rd.getLastUpdate().getTime()+ "));\n");
 					out.write("rankArray.push(" + rd.getRank() + ");\n");
 					out.write("valueArray.push(" + rd.getTotal() + ");\n");
 		}		
 					%>
-			drawUserValueHistory('#user-value-chart-div', dateArray, valueArray, userName);
+			drawUserValueHistory('#user-value-chart-div', dateArray, valueArray,rankArray, userName);
 		</script>
 	<%
 	}else if(user!=null){%>
-		<div>
+		<div align="center">
 		<p>
 		<%=lutil.get("user.noHistory", lang,user.getUserName()) %>
 		</p>

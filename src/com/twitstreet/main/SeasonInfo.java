@@ -52,7 +52,7 @@ public class SeasonInfo implements DataObjectIF {
 	public void getDataFromResultSet(ResultSet rs) throws SQLException {
 		setStartTime(rs.getTimestamp("startTime"));
 		setEndTime(rs.getTimestamp("endTime"));
-		setId(rs.getInt("endTime"));
+		setId(rs.getInt("id"));
 		setActive(rs.getBoolean("active"));
 		
 		

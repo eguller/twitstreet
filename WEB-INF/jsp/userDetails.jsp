@@ -1,3 +1,5 @@
+<%@page import="com.twitstreet.main.Twitstreet"%>
+<%@page import="com.twitstreet.main.SeasonInfo"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
 <%@page import="com.twitstreet.servlet.UserProfileServlet"%>
 <%@page import="com.twitstreet.db.data.StockInPortfolio"%>
@@ -23,7 +25,8 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	Portfolio portfolio = null;
-	
+
+	Twitstreet twitstreet = inj.getInstance(Twitstreet.class);
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
 	
@@ -236,9 +239,35 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		</div>
 	</div>
 	
-	<jsp:include page="userRankingHistory.jsp" />
-	<%
-		}
-	%>
+
+	<div id="user-trend-section">	
+		<%
 	
+		ArrayList<SeasonInfo> siList = twitstreet.getAllSeasons();
+		SeasonInfo selectedSeason = twitstreet.getCurrentSeason();
+	
+		
+		%>
+		<div align="center">
+			<%=lutil.get("season", lang) %>
+			<select onchange="loadUserHistory(<%=user.getId() %>,$(this).val())" style="font-size:11px;">
+			<% 
+			for(SeasonInfo si: siList){
+		    %>	
+				<option <%=(si.getId()==selectedSeason.getId())?"selected=\"selected\"":""%> value="<%=si.getId()%>"><%= si.getId() %></option>
+								
+			    <%		
+			}
+			%>
+			</select>	
+		</div>
+			
+			
+		<jsp:include page="userRankingHistory.jsp" />
+			
+		
+		<%
+			}
+		%>
+	</div>
 </div>

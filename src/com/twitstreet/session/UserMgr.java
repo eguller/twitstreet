@@ -1,5 +1,6 @@
 package com.twitstreet.session;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,6 @@ public interface UserMgr {
 	public ArrayList<User> getTopRank(int pageNumber);
 	
 	public int count();
-	public RankingHistoryData getRankingHistoryForUser(long id, String since);
 	public void updateRankingHistory();
 
 	public void rerank();
@@ -54,4 +54,6 @@ public interface UserMgr {
 	User getUserByTokenAndSecret(String token, String secret);
 	List<User> getAllActive();
 	void updateRankingHistory(boolean neededOnly);
+	RankingHistoryData getRankingHistoryForUser(long id, String from, String to);
+	RankingHistoryData getRankingHistoryForUser(long id, Timestamp start, Timestamp end);
 }

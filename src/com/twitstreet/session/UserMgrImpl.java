@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -480,18 +481,26 @@ String neededString =(neededOnly)? " where " +
 		}
 
 	}
-
 	@Override
-	public RankingHistoryData getRankingHistoryForUser(long id, String since) {
+	public RankingHistoryData getRankingHistoryForUser(long id, Timestamp start, Timestamp end) {
+
+		return getRankingHistoryForUser(id, df.format(start),df.format(end));
+	}
+	@Override
+	public RankingHistoryData getRankingHistoryForUser(long id, String from,String to) {
 
 		RankingHistoryData rhd = new RankingHistoryData();
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 	
-		String sinceStr =" TIMESTAMP('"+df.format(twitstreet.getCurrentSeasonInfo().getStartTime())+"') " ;
-		if(since!=null){			
-			sinceStr =" TIMESTAMP('" + since+"') " ;			
+		String fromStr =" TIMESTAMP('"+df.format(twitstreet.getCurrentSeason().getStartTime())+"') " ;
+		String toStr =" TIMESTAMP('"+df.format(twitstreet.getCurrentSeason().getEndTime())+"') " ;
+		if(from!=null){			
+			fromStr =" TIMESTAMP('" + from+"') " ;			
+		}	
+		if(to!=null){			
+			toStr =" TIMESTAMP('" + to+"') " ;			
 		}
 		try {
 			connection = dbMgr.getConnection();
@@ -500,8 +509,9 @@ String neededString =(neededOnly)? " where " +
 					+ " rh.portfolio as portfolio, " + " rh.rank as rank, "
 					+ " rh.lastUpdate as lastUpdate "
 					+ " from ranking_history rh " + "  where user_id = ? "
-					+ " and rh.lastUpdate > " + sinceStr
-					+ " order by lastUpdate desc ");
+					+ " and rh.lastUpdate >= " + fromStr 
+					+ " and rh.lastUpdate <= " + toStr
+					+ " order by lastUpdate asc ");
 			ps.setLong(1, id);
 			rs = ps.executeQuery();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
