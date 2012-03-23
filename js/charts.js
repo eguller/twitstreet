@@ -183,35 +183,49 @@ var drawUserValueHistoryDivId = null;
 var drawUserValueHistoryValueArray = null;
 var drawUserValueHistoryDateArray = null;
 var drawUserValueHistoryUserName = null;
+var drawUserValueHistoryRankArray = null;
 var drawUserRankingHistoryDivId = null;
 var drawUserRankingHistoryDateArray = null;
 var drawUserRankingHistoryRankArray = null;
 var drawUserRankingHistoryUserName = null;
 
 function redrawUserRankingHistory() {
-	drawUserValueHistory(drawUserValueHistoryDivId, drawUserValueHistoryDateArray, drawUserValueHistoryValueArray, drawUserValueHistoryUserName);
+	drawUserValueHistory(drawUserValueHistoryDivId, drawUserValueHistoryDateArray, drawUserValueHistoryValueArray,drawUserValueHistoryRankArray, drawUserValueHistoryUserName);
 }
-function drawUserValueHistory(divId, dateArray, valueArray, userName){
+function drawUserValueHistory(divId, dateArray, valueArray, rankArray, userName){
 	drawUserValueHistoryDivId = divId;
 	drawUserValueHistoryValueArray = valueArray;
 	drawUserValueHistoryDateArray = dateArray;
+	drawUserValueHistoryRankArray = rankArray;
 	drawUserValueHistoryUserName = userName;
 	if($(divId).parent().css('display')!='none'){
 		if (dateArray != null && dateArray.length > 0) {
 			var data = new google.visualization.DataTable();
 			data.addColumn('datetime', 'Date');
 			data.addColumn('number', '');
+			 data.addColumn('string', 'rankTitle');
+			 data.addColumn('string', 'rank');
+			// data.addColumn('number', '');
+			  
 			data.addRows(dateArray.length);
 			var i = 0;
 			for (i; i < dateArray.length; i++) {
 				data.setValue(i, 0, dateArray[i]);
 				data.setValue(i, 1, valueArray[i]);
+				
+				
+				
+				if(i==0 || rankArray[i] != rankArray[i-1] ){
+					data.setValue(i, 2,rankTitle);
+					data.setValue(i, 3,''+ rankArray[i]);
+				}
+				//data.setValue(i, 3, rankArray[i]);
 			}
 			var annotatedtimeline = new google.visualization.AnnotatedTimeLine($(divId)[0]);
 			google.visualization.events.addListener(annotatedtimeline, 'error', errHandler);
 			annotatedtimeline.draw(data, {
-				// 'allValuesSuffix': '%', // A suffix that is added to all values
-				 'colors': ['#F2469C'],//, 'red', '#0000bb'], // The colors to be used
+				 'allValuesPrefix': '$', // A suffix that is added to all values
+				 'colors': ['#F2469C', '#9933FF'], // The colors to be used
 				'displayAnnotations' : true,
 				'displayExactValues' : true, // Do not truncate values (i.e.
 				// using K suffix)

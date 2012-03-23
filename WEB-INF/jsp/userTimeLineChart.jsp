@@ -80,7 +80,7 @@
 		Date date = cal.getTime();
 		
 	
-			shd = userMgr.getRankingHistoryForUser(chartUser.getId(),dateFormat.format(date));
+			shd = userMgr.getRankingHistoryForUser(chartUser.getId(),dateFormat.format(date),null);
 
 			out.write("dateArrayStock"+chartUser.getId()+".push(new Date());\n");
 

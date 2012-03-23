@@ -1,7 +1,7 @@
 <project default="build">
 	<property name="build.dir" value="build" />
 	<property name="tomcat.home" value="" />
-	<property name="lib.dir" value="WEB-INF/lib/" />
+	<property name="lib.dir" value="WEB-INF/lib"></property>
 	<path id="lib.path.ref">
 		<fileset dir="WEB-INF/lib" includes="*.jar" />
 		<fileset dir="${tomcat.home}/lib" includes="*.jar" />
@@ -16,16 +16,16 @@
 	<target name="copy-rsrc">
 		<mkdir dir="${build.dir}/bin" />
 		<copy todir="${build.dir}/bin">
-			<fileset dir="resources" includes="**/*" />
+		    <fileset dir="resources" includes="**/*"/>
 		</copy>
 		<!-- Copy localization files -->
 		<copy todir="${build.dir}/bin/com/twitstreet/localization/">
-			<fileset dir="src/com/twitstreet/localization/" includes="**/*.properties" />
+		    <fileset dir="src/com/twitstreet/localization/" includes="**/*.properties"/>
 		</copy>
-
-		<!-- Copy gui utility files -->
+	   
+	   <!-- Copy gui utility files -->
 		<copy todir="${build.dir}/bin/com/twitstreet/util/">
-			<fileset dir="src/com/twitstreet/util/" includes="**/*.properties" />
+		    <fileset dir="src/com/twitstreet/util/" includes="**/*.properties"/>
 		</copy>
 	</target>
 	
@@ -86,5 +86,5 @@
 		</war>
 		<delete dir="build" />
 	</target>
-
 </project>
+	

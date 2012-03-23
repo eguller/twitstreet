@@ -56,6 +56,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <% } %>
 <%if(!lang.equalsIgnoreCase(LocalizationUtil.DEFAULT_LANGUAGE)){
 %>	
+
 <script type="text/javascript" src="/js/jquery.countdown-<%=lang%>.js"></script>
 <%	
 }%>

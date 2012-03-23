@@ -146,7 +146,12 @@ function loadUserProfile(userId, reload) {
 				"#column_center", reload);
 	}
 }
-
+function loadUserHistory(userId, seasonId) {
+	if (userId != null && seasonId!=null) {
+		ajaxLoad("/userhistory", "user=" + userId+"&season="+seasonId, "#userRankingHistoryId",
+				"#column_center");
+	}
+}
 function reloadCurrentTransactions() {
 	if ($(".currenttransactions-tab").hasClass("youarehere")) {
 		loadCurrentTransactions(true);

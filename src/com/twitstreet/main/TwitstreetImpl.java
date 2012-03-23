@@ -21,10 +21,7 @@ import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
-import com.twitstreet.db.base.DBMgrImpl;
-import com.twitstreet.db.data.User;
 import com.twitstreet.market.StockMgr;
-import com.twitstreet.market.StockMgrImpl;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.DetectInvalidTokensTask;
@@ -48,6 +45,11 @@ public class TwitstreetImpl implements Twitstreet {
 		this.dbMgr = dbMgr;
 		this.configMgr = configMgr;
 	}
+	
+	
+	ArrayList<SeasonInfo> allSeasons = new ArrayList<SeasonInfo>(); 
+	SeasonInfo currentSeason = new SeasonInfo();
+	
 	
 	@Override
 	public void initialize() {
@@ -82,6 +84,14 @@ public class TwitstreetImpl implements Twitstreet {
 		configMgr.setServerCount(serverCount);
 		configMgr.setServerId(serverId);
 		configMgr.setDev(dev);
+		
+		
+		try{
+			loadAllSeasons();
+			loadCurrentSeason();		
+		}catch(Exception ex){
+			logger.error("Error in getting season info", ex);			
+		}
 		
 		
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
@@ -127,7 +137,12 @@ public class TwitstreetImpl implements Twitstreet {
 	}
 
 	@Override
-	public SeasonInfo getCurrentSeasonInfo(){
+	public SeasonInfo getCurrentSeason(){
+		return currentSeason;
+
+	}
+	@Override
+	public SeasonInfo loadCurrentSeason(){
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -149,7 +164,7 @@ public class TwitstreetImpl implements Twitstreet {
 		} finally {
 			dbMgr.closeResources(connection, ps, rs);
 		}
-		return siDO;
+		return currentSeason=siDO;
 
 	}
 	@Override
@@ -179,6 +194,11 @@ public class TwitstreetImpl implements Twitstreet {
 	}
 	@Override
 	public ArrayList<SeasonInfo> getAllSeasons(){
+		return allSeasons;
+	}
+	@Override
+	public ArrayList<SeasonInfo> loadAllSeasons(){
+		
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -201,6 +221,12 @@ public class TwitstreetImpl implements Twitstreet {
 		} finally {
 			dbMgr.closeResources(connection, ps, rs);
 		}
-		return siList;
+		return allSeasons = siList;
+	}
+	@Override
+	public void loadSeasonInfo() {
+		
+		
+		
 	}
 }
