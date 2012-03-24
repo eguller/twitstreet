@@ -2,8 +2,21 @@ insert into admin(username,password,lastLogin,lastIp) values('{username}', '{pas
 insert into config(parm, val) values('consumerKey', '{consumerKey}');
 insert into config(parm, val) values('consumerSecret', '{consumerSecret}');
 insert into config(parm, val) values('minFollower', 0);
+
+7, announcerConsumerKey, CSiOKSpSlIxKgCg2YD8og
+8, announcerConsumerSecret, UsbejOcKjcHc0GdAdEARDwlWkZs9NKhmTk1fwjGSfZQ
+9, announcerAccessToken, 273572038-s6qY3ZaLMaNBdf95gGIlOqEjwMc9ZIcvGsgVHaaD
+10, announcerAccessSecret, I7WBanQwKWJW7FwqqJ5VwQlVCmFdLJP1ka2Ukm4aZk
+
 insert into config(parm, val) values('gaAccount', 'UA-7030369-5');
 insert into config(parm, val) values('comissionTreshold', '15000');
+
+insert into config(parm, val) values('announcerConsumerKey', '{announcerConsumerKey}');
+insert into config(parm, val) values('announcerConsumerSecret', '{announcerConsumerSecret}');
+insert into config(parm, val) values('announcerAccessToken', '{announcerAccessToken}');
+insert into config(parm, val) values('announcerAccessSecret', '{announcerAccessSecret}');
+
+insert into config(parm, val) values('server-count', '{server-count}');
 
 insert into groups(name,id) values('Overall',1);
 

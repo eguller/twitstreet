@@ -40,109 +40,96 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	@Inject private ConfigMgr configMgr;
 
 	@Override
-	public BuySellResponse buy(User buyer, Stock stock, int amount) {
-		
+	public boolean buy(User buyer, Stock stock, int amount) {
+		if(stock.getTotal()<=0){
+			logger.info("Buy operation cancelled. " + stock.getName()+" has no followers");
+			return false;	
+		}
 		int day = 1000 * 60 * 60 * 24;
-		Date thresholdDate = new Date((new Date()).getTime() - day * Stock.STOCK_OLDER_THAN_DAYS_AVAILABLE);
-//		
+		Date thresholdDate = new Date((new Date()).getTime() - day * Stock.STOCK_OLDER_THAN_DAYS_AVAILABLE);		
 		if(!stock.isOldEnough()){
-			logger.info("Buy operation is cancelled. " + stock.getName()+" is not older than "+sdf.format(thresholdDate)+" ("+Stock.STOCK_OLDER_THAN_DAYS_AVAILABLE+" days)");
-			return null;
+			logger.info("Buy operation cancelled. " + stock.getName()+" is not older than "+sdf.format(thresholdDate)+" ("+Stock.STOCK_OLDER_THAN_DAYS_AVAILABLE+" days)");
+			return false;
 			
 		}
-		
+		if (stock.getAvailable()<= 0) {
+			logger.info("Buy operation cancelled. " + stock.getName()+" is sold out");
+			return false;
+		}
+		if(buyer.getCash() <= 0){
+			logger.info("Buy operation cancelled. " + buyer.getUserName() +" has no cash");
+			return false;
+		}
 		int amount2Buy = buyer.getCash() < amount ? (int)buyer.getCash() : amount;
-		if (stock.getAvailable() > 0) {
-			amount2Buy = amount2Buy < stock.getAvailable() ? amount2Buy : stock.getAvailable();
-			double sold = (double) amount2Buy / (double) stock.getTotal();
-			stock.setSold(stock.getSold() + sold);
-			UserStock userStock = getStockInPortfolio(buyer.getId(),
-					stock.getId());
-
-			if (userStock == null) {
-				addStock2Portfolio(buyer.getId(), stock.getId(), sold);
-
-			} else {
-				updateStockInPortfolio(buyer.getId(), stock.getId(), sold, userStock.getCapital()+amount2Buy);
-			}
-			userMgr.updateCash(buyer.getId(), amount2Buy);
-			transactionMgr.recordTransaction(buyer, stock, amount2Buy,
-					TransactionMgr.BUY);
-			buyer.setCash(buyer.getCash() - amount2Buy);
-			buyer.setPortfolio(buyer.getPortfolio() + amount2Buy);
-			
-		}
+		amount2Buy = amount2Buy < stock.getAvailable() ? amount2Buy : stock.getAvailable();
 		
-		UserStock updateUserStock = getStockInPortfolio(buyer.getId(),
+		double sold = (double) amount2Buy / (double) stock.getTotal();
+		stock.setSold(stock.getSold() + sold);
+		UserStock userStock = getStockInPortfolio(buyer.getId(),
 				stock.getId());
-		int userStockValue = (int) (updateUserStock.getPercent() * stock
-				.getTotal());
-		
-		BuySellResponse bsr = new BuySellResponse(buyer, stock, userStockValue);
-		
-		return bsr;
 
+		if (userStock == null) {
+			addStock2Portfolio(buyer.getId(), stock.getId(), sold);
+
+		} else {
+			updateStockInPortfolio(buyer.getId(), stock.getId(), sold, userStock.getCapital()+amount2Buy);
+		}
+		userMgr.updateCash(buyer.getId(), amount2Buy);
+		transactionMgr.recordTransaction(buyer, stock, amount2Buy,
+				TransactionMgr.BUY);
+		buyer.setCash(buyer.getCash() - amount2Buy);
+		buyer.setPortfolio(buyer.getPortfolio() + amount2Buy);
+
+		return true;	
 	}
 	
 	@Override
-	public BuySellResponse sell(User seller, Stock stock, int amount) {
-		
+	public boolean sell(User seller, Stock stock, int amount) {
+
 		UserStock userStock = getStockInPortfolio(seller.getId(), stock.getId());
-		
-		if (userStock != null) {
-			
-			double stockPercentInPortfolio = userStock.getPercent();
-			double stockCapitalInPortfolio = userStock.getCapital();
-			int stockValueInPortfolio = (int) (userStock.getPercent() * stock
-					.getTotal());
 
-			// if someone is trying to sell more than he has, let him sell what
-			// he has.
-			int amount2Sell = amount > stockValueInPortfolio ? stockValueInPortfolio
-					: amount;
-
-			double sold = (double) amount2Sell / (double) stock.getTotal();
-			stock.setSold(stock.getSold() - sold);
-            
-			
-			if (amount2Sell >= stockValueInPortfolio && Math.abs(amount2Sell - stockValueInPortfolio) < 1) {
-				// if user sold all he has, delete stock from his portfolio.
-				// we do not want to show $0 value stock in portfolio.
-				//if remainin portfolio value is less than 1 again delete 
-				//portfolio
-				deleteStockInPortfolio(seller.getId(), stock.getId());
-			} else {
-				// if user did not sell all he has, just update stock in
-				// portfolio.
-				 double newCapital =   ( (stockCapitalInPortfolio / stockPercentInPortfolio)*(stockPercentInPortfolio-sold));
-				updateStockInPortfolio(seller.getId(), stock.getId(), -sold, newCapital);
-			}
-			
-			// calculate commission
-			
-			double commission = (seller.getCash() + seller.getPortfolio()) < configMgr.getComissionTreshold() ? 0 : (amount2Sell * COMMISSION_RATE);
-
-			// subtract commission
-			double cash = amount2Sell - commission;
-			
-			userMgr.updateCash(seller.getId(), -cash);
-			transactionMgr.recordTransaction(seller, stock, amount2Sell,
-					TransactionMgr.SELL);
-			seller.setCash(seller.getCash() + cash);
-			seller.setPortfolio(seller.getPortfolio() - amount2Sell);
-			UserStock updateUserStock = getStockInPortfolio(seller.getId(),
-					stock.getId());
-			int userStockValue = updateUserStock == null ? 0
-					: (int) (updateUserStock.getPercent() * stock.getTotal());
-
-			
-			BuySellResponse bsr = new BuySellResponse(seller, stock, userStockValue);
-			
-			return bsr;
-		} else {
-			BuySellResponse bsr = new BuySellResponse(seller, stock, 0);
-			return bsr;
+		if (userStock == null) {
+			return false;
 		}
+		double stockPercentInPortfolio = userStock.getPercent();
+		double stockCapitalInPortfolio = userStock.getCapital();
+		int stockValueInPortfolio = (int) (userStock.getPercent() * stock.getTotal());
+
+		// if someone is trying to sell more than he has, let him sell what
+		// he has.
+		int amount2Sell = amount > stockValueInPortfolio ? stockValueInPortfolio : amount;
+
+		double sold = (double) amount2Sell / (double) stock.getTotal();
+		stock.setSold(stock.getSold() - sold);
+
+		if (amount2Sell >= stockValueInPortfolio && Math.abs(amount2Sell - stockValueInPortfolio) < 1) {
+			// if user sold all he has, delete stock from his portfolio.
+			// we do not want to show $0 value stock in portfolio.
+			// if remainin portfolio value is less than 1 again delete
+			// portfolio
+			deleteStockInPortfolio(seller.getId(), stock.getId());
+		} else {
+			// if user did not sell all he has, just update stock in
+			// portfolio.
+			double newCapital = ((stockCapitalInPortfolio / stockPercentInPortfolio) * (stockPercentInPortfolio - sold));
+			updateStockInPortfolio(seller.getId(), stock.getId(), -sold, newCapital);
+		}
+
+		// calculate commission
+
+		double commission = (seller.getCash() + seller.getPortfolio()) < configMgr.getComissionTreshold() ? 0 : (amount2Sell * COMMISSION_RATE);
+
+		// subtract commission
+		double cash = amount2Sell - commission;
+
+		userMgr.updateCash(seller.getId(), -cash);
+		transactionMgr.recordTransaction(seller, stock, amount2Sell, TransactionMgr.SELL);
+		seller.setCash(seller.getCash() + cash);
+		seller.setPortfolio(seller.getPortfolio() - amount2Sell);
+		UserStock updateUserStock = getStockInPortfolio(seller.getId(), stock.getId());
+		int userStockValue = updateUserStock == null ? 0 : (int) (updateUserStock.getPercent() * stock.getTotal());
+
+		return true;
 
 	}
 

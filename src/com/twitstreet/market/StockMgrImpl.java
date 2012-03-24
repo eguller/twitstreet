@@ -428,6 +428,11 @@ public class StockMgrImpl implements StockMgr {
 			ps.setDate(9, new Date(stock.getCreatedAt().getTime()));
 
 			ps.executeUpdate();
+			
+			ps = connection.prepareStatement("insert ignore into stock_history(stock, total, date, hour, lastUpdate) " + " select id, total, DATE(NOW()), HOUR(NOW()), lastUpdate from stock where id = ?");
+			ps.setLong(1, stock.getId());
+			ps.executeUpdate();
+			
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			logger.warn("DB: Stock already exist - Stock Id:" + stock.getId() + " User Name: " + stock.getName() + " - " + e.getMessage());

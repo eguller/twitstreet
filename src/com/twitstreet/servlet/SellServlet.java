@@ -52,9 +52,13 @@ public class SellServlet extends TwitStreetServlet{
 //				User seller = userMgr.getUserById(user.getId());
 				Stock stockObj = stockMgr.getStockById(Long.parseLong(stock));
 				if(stockObj != null){
-					BuySellResponse buySellResponse = portfolioMgr.sell(user, stockObj, Integer.parseInt(amount));
+					boolean succ = portfolioMgr.sell(user, stockObj, Integer.parseInt(amount));
 					
-					
+
+					if(!succ){
+						return;
+					}
+				
 					
 					
 					String responseNeededString = request.getParameter(RESPONSE_NEEDED);

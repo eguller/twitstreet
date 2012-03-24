@@ -130,7 +130,7 @@
 						<td colspan="1" rowspan="1" align="right">
 							<%
 								if (stock.isChangePerHourCalculated()
-												&& stock.getChangePerHour() != 0) {
+												&& stock.getChangePerHour() != 0 && stock.getTotal()!=0) {
 							%> <%=Util.getPercentageFormatted(
 								(double) stock.getTotalChangePerHour()
 										/ stock.getTotal(), false, true, true,

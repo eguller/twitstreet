@@ -1,5 +1,8 @@
 package com.twitstreet.config;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 
 public interface ConfigMgr {
 	public static final String CONSUMER_KEY = "consumerKey";
@@ -16,10 +19,9 @@ public interface ConfigMgr {
 	public static  String ANNOUNCER_ACCESS_TOKEN = "announcerAccessToken";
 	public static  String ANNOUNCER_ACCESS_SECRET = "announcerAccessSecret";
 	
-
-	public static  String STOCK_OLDER_THAN_DAYS_AVAILABLE = "stockOlderThanDaysAvailable";
-	
-	public static final int MASTER_SERVER_ID = 0;
+	//currently just one server is master and its id is 0.
+	//replace {0} with {0,7,3,2,...} as new master servers are added
+	public static HashSet<Integer> masterIdSet = new HashSet<Integer>(Arrays.asList(new Integer[]{0}));
 	public static final String STAGE = "stage";
 	
 	public static final String DEV = "dev";

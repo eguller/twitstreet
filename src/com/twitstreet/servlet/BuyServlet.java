@@ -60,11 +60,11 @@ public class BuyServlet extends TwitStreetServlet {
 				if (user != null && stockObj != null) {
 					
 					
-					BuySellResponse bsr =	portfolioMgr.buy(
+					boolean succ = portfolioMgr.buy(
 								user, stockObj,
 								Integer.parseInt(amount));
 					
-					if(bsr==null){
+					if(!succ){
 						return;
 					}
 				

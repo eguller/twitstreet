@@ -129,10 +129,15 @@
 
 									</tr>
 									<tr>
-										<td colspan="2" align="right"><%=Util.getPercentageFormatted(
-									(double) stock.getChangePerHour()
-											/ stock.getTotal(), false, true,
-									true, true, false, true)%></td>
+										<td colspan="2" align="right">
+										<%										
+											if(stock.getTotal()!=0){
+												out.write(Util.getPercentageFormatted(
+														(double) stock.getChangePerHour()
+														/ stock.getTotal(), false, true,
+												true, true, false, true));
+											}
+										%></td>
 									</tr>
 								</table> 
 							</td>

@@ -28,7 +28,6 @@ import com.twitstreet.task.DetectInvalidTokensTask;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.task.UserInfoUpdateTask;
 
-
 @Singleton
 public class TwitstreetImpl implements Twitstreet {
 	private static String SELECT_FROM_SEASON_INFO = " select id, startTime, endTime, active from season_info ";
@@ -37,22 +36,70 @@ public class TwitstreetImpl implements Twitstreet {
 	ConfigMgr configMgr;
 	ServletContext servletContext;
 	Injector injector;
-	@Inject GroupMgr groupMgr;
-	@Inject UserMgr userMgr;
+	@Inject
+	GroupMgr groupMgr;
+	@Inject
+	UserMgr userMgr;
 	private static Logger logger = Logger.getLogger(TwitstreetImpl.class);
-	@Inject StockMgr stockMgr;
-	@Inject public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr){
+	@Inject
+	StockMgr stockMgr;
+
+	@Inject
+	public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr) {
 		this.dbMgr = dbMgr;
 		this.configMgr = configMgr;
 	}
-	
-	
-	ArrayList<SeasonInfo> allSeasons = new ArrayList<SeasonInfo>(); 
+
+	ArrayList<SeasonInfo> allSeasons = new ArrayList<SeasonInfo>();
 	SeasonInfo currentSeason = new SeasonInfo();
-	
-	
+
 	@Override
 	public void initialize() {
+		loadConfiguration();
+		
+		loadSeasonInfo();
+	
+		if (!configMgr.isMaster()) {
+			startTasks();
+
+		}
+		initialized = true;
+	}
+
+	private void startTasks() {
+		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
+		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);
+		DetectInvalidTokensTask detectInvalidTokensTask = injector.getInstance(DetectInvalidTokensTask.class);
+
+		Thread detectInvalidTokensThread = new Thread(detectInvalidTokensTask);
+		detectInvalidTokensThread.setName("Detect Invalid Tokens Task");
+
+		Thread updateFollowerCountThread = new Thread(updateFollowerCountTask);
+		updateFollowerCountThread.setName("Stock Update Task");
+
+		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
+		updateUserInfoThread.setName("User Info Update Task");
+
+		updateFollowerCountThread.start();
+
+		if (!configMgr.isDev()) {
+			detectInvalidTokensThread.start();
+			updateUserInfoThread.start();
+		}
+		
+	}
+
+	private void loadSeasonInfo() {
+		try {
+			loadAllSeasons();
+			loadCurrentSeason();
+		} catch (Exception ex) {
+			logger.error("Error in getting season info", ex);
+		}
+		
+	}
+
+	private void loadConfiguration(){
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileReader(new File(Twitstreet.TWITSTREET_PROPERTIES)));
@@ -66,14 +113,11 @@ public class TwitstreetImpl implements Twitstreet {
 		String dbPassword = properties.getProperty(Twitstreet.DB_PASSWORD);
 		String dbName = properties.getProperty(Twitstreet.DATABASE);
 		String dbPortStr = properties.getProperty(Twitstreet.DB_PORT);
-		
-		int serverCount = properties.getProperty(ConfigMgr.SERVER_COUNT) == null ? 1 : Integer.parseInt(properties.getProperty(ConfigMgr.SERVER_COUNT));
+
 		int serverId = properties.getProperty(ConfigMgr.SERVER_ID) == null ? 0 : Integer.parseInt(properties.getProperty(ConfigMgr.SERVER_ID));
 		boolean dev = properties.getProperty(ConfigMgr.STAGE) == null ? true : properties.getProperty(ConfigMgr.STAGE).equalsIgnoreCase(ConfigMgr.DEV);
-		
-		
 		int dbPort = Integer.parseInt(dbPortStr);
-		
+
 		dbMgr.setDbHost(dbHost);
 		dbMgr.setUserName(dbAdmin);
 		dbMgr.setPassword(dbPassword);
@@ -81,43 +125,12 @@ public class TwitstreetImpl implements Twitstreet {
 		dbMgr.setDbPort(dbPort);
 		dbMgr.init();
 		configMgr.load();
-		configMgr.setServerCount(serverCount);
 		configMgr.setServerId(serverId);
 		configMgr.setDev(dev);
 		
-		
-		try{
-			loadAllSeasons();
-			loadCurrentSeason();		
-		}catch(Exception ex){
-			logger.error("Error in getting season info", ex);			
-		}
-		
-		
-		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
-		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);
-		DetectInvalidTokensTask detectInvalidTokensTask = injector.getInstance(DetectInvalidTokensTask.class);
-
-		Thread detectInvalidTokensThread= new Thread (detectInvalidTokensTask);
-		detectInvalidTokensThread.setName("Detect Invalid Tokens Task");
-		
-		Thread updateFollowerCountThread = new Thread (updateFollowerCountTask);
-		updateFollowerCountThread.setName("Stock Update Task");
-
-		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
-		updateUserInfoThread.setName("User Info Update Task");
-		
-		
-
-		updateFollowerCountThread.start();
-		
-		if (!configMgr.isDev()) {
-			detectInvalidTokensThread.start();		
-			updateUserInfoThread.start();
-		}
-		initialized = true;
 	}
-	public boolean isInitialized(){
+	
+	public boolean isInitialized() {
 		return initialized;
 	}
 
@@ -137,12 +150,13 @@ public class TwitstreetImpl implements Twitstreet {
 	}
 
 	@Override
-	public SeasonInfo getCurrentSeason(){
+	public SeasonInfo getCurrentSeason() {
 		return currentSeason;
 
 	}
+
 	@Override
-	public SeasonInfo loadCurrentSeason(){
+	public SeasonInfo loadCurrentSeason() {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -164,11 +178,12 @@ public class TwitstreetImpl implements Twitstreet {
 		} finally {
 			dbMgr.closeResources(connection, ps, rs);
 		}
-		return currentSeason=siDO;
+		return currentSeason = siDO;
 
 	}
+
 	@Override
-	public SeasonInfo getSeasonInfo(int id){
+	public SeasonInfo getSeasonInfo(int id) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -192,13 +207,15 @@ public class TwitstreetImpl implements Twitstreet {
 		}
 		return siDO;
 	}
+
 	@Override
-	public ArrayList<SeasonInfo> getAllSeasons(){
+	public ArrayList<SeasonInfo> getAllSeasons() {
 		return allSeasons;
 	}
+
 	@Override
-	public ArrayList<SeasonInfo> loadAllSeasons(){
-		
+	public ArrayList<SeasonInfo> loadAllSeasons() {
+
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -208,7 +225,7 @@ public class TwitstreetImpl implements Twitstreet {
 			connection = dbMgr.getConnection();
 			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO + " order by id desc");
 			rs = ps.executeQuery();
-			
+
 			while (rs.next()) {
 				siDO = new SeasonInfo();
 				siDO.getDataFromResultSet(rs);
@@ -223,10 +240,5 @@ public class TwitstreetImpl implements Twitstreet {
 		}
 		return allSeasons = siList;
 	}
-	@Override
-	public void loadSeasonInfo() {
-		
-		
-		
-	}
+ 
 }

@@ -15,8 +15,7 @@ public interface Twitstreet {
 	public static final String DATABASE = "database";
 	public static final String TWITSTREET_PROPERTIES = System.getProperty("user.home") + "/.twitstreet/twitstreet.properties";
 	
-	
-	public void loadSeasonInfo();
+	 
 	public void initialize();
 	public boolean isInitialized();
 	public ServletContext getServletContext();

@@ -147,7 +147,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 				<td style="font-size: 15px">
 							
 					
-					<% if(stock.isChangePerHourCalculated() && stock.getChangePerHour()!=0){ 
+					<% if(stock.isChangePerHourCalculated() && stock.getChangePerHour()!=0 && stock.getTotal() !=0 ){ 
 					%>
 						<%=Util.getPercentageFormatted((double) stock.getChangePerHour() / stock.getTotal(), false, true, true, true, false, true)  %>
 					<% }

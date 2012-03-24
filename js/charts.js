@@ -209,15 +209,19 @@ function drawUserValueHistory(divId, dateArray, valueArray, rankArray, userName)
 			  
 			data.addRows(dateArray.length);
 			var i = 0;
+			var lastDisplayedRank = null;
 			for (i; i < dateArray.length; i++) {
 				data.setValue(i, 0, dateArray[i]);
 				data.setValue(i, 1, valueArray[i]);
 				
 				
 				
-				if(i==0 || rankArray[i] != rankArray[i-1] ){
+				if(i==0 || i==dateArray.length-1 || 
+				   !daysAreSame(dateArray[i],dateArray[i-1]) && rankArray[i] != lastDisplayedRank )
+				{
 					data.setValue(i, 2,rankTitle);
 					data.setValue(i, 3,''+ rankArray[i]);
+					lastDisplayedRank = rankArray[i];
 				}
 				//data.setValue(i, 3, rankArray[i]);
 			}

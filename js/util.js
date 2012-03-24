@@ -11,6 +11,19 @@ function runScriptsInElement(responseData) {
 
 }
 
+function daysAreSame(date1,date2){
+
+	var month1 = date1.getMonth();
+	var day1 = date1.getDate();
+	var year1 = date1.getFullYear();
+	
+	var month2 = date2.getMonth();
+	var day2 = date2.getDate();
+	var year2 = date2.getFullYear();
+	
+	return month1==month2 && day1 == day2 && year1 == year2;
+}
+
 function blockElementWithMsg(elementId, msg) {
 	if(msg==null){
 		msg = 'Loading';

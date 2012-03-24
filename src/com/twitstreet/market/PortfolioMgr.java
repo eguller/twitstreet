@@ -26,7 +26,7 @@ public interface PortfolioMgr {
 	 * @param amount - Amount bought
 	 * @return
 	 */
-	public BuySellResponse buy(User buyer,Stock stock, int amount);
+	public boolean buy(User buyer,Stock stock, int amount);
 	
 	/**
 	 * @param userId is the twitter id of Seller
@@ -35,7 +35,7 @@ public interface PortfolioMgr {
 	 * @return
 	 * @throws SQLException
 	 */
-	public BuySellResponse sell(User user, Stock stock, int amount);
+	public boolean sell(User user, Stock stock, int amount);
 	
 	/**
 	 * Returns user portfolio

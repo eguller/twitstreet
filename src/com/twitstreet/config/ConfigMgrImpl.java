@@ -46,6 +46,11 @@ public class ConfigMgrImpl implements ConfigMgr{
 				configMap.put(config.getParm(), config);
 			}
 			
+			
+			if(isDev()){
+				setServerCount(1);
+			}
+			
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + stmt.toString());
 			logger.debug("Config manager initialized successfully.");
 
@@ -61,7 +66,13 @@ public class ConfigMgrImpl implements ConfigMgr{
 		Config config = configMap.get(parm);
 		return config == null ? Config.NONE : config.getVal();
 	}
-	
+
+	private void setConfig(String parm, Config config){
+		configMap.put(parm,config);
+	}
+	private Config getConfig(String parm){
+		return configMap.get(parm);
+	}
 	public String getConsumerKey(){
 		return get(ConfigMgr.CONSUMER_KEY);
 	}
@@ -90,17 +101,20 @@ public class ConfigMgrImpl implements ConfigMgr{
 
 	@Override
 	public int getServerCount() {
-		return serverCount;
+		return Integer.valueOf(get(ConfigMgr.SERVER_COUNT));
+	}
+
+	@Override
+	public void setServerCount(int serverCount) {
+		
+		Config config = getConfig(SERVER_COUNT);
+		config.setVal(String.valueOf(serverCount));
+		setConfig(SERVER_COUNT, config);
 	}
 
 	@Override
 	public int getServerId() {
 		return serverId;
-	}
-
-	@Override
-	public void setServerCount(int serverCount) {
-		this.serverCount = serverCount;
 	}
 
 	@Override
@@ -140,7 +154,7 @@ public class ConfigMgrImpl implements ConfigMgr{
 
 	@Override
 	public boolean isMaster() {
-		return ConfigMgr.MASTER_SERVER_ID == getServerId();
+		return ConfigMgr.masterIdSet.contains(getServerId());
 	}
 
 	
