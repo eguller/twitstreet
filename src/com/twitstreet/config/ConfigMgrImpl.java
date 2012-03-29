@@ -108,7 +108,14 @@ public class ConfigMgrImpl implements ConfigMgr{
 	public void setServerCount(int serverCount) {
 		
 		Config config = getConfig(SERVER_COUNT);
-		config.setVal(String.valueOf(serverCount));
+		if(config != null){
+			config.setVal(String.valueOf(serverCount));
+		}
+		else{
+			config = new Config();
+			config.setParm(SERVER_COUNT);
+			config.setVal(ConfigMgr.DEFAULT_SERVER_COUNT);
+		}
 		setConfig(SERVER_COUNT, config);
 	}
 
