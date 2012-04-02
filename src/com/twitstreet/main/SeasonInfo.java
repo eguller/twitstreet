@@ -11,9 +11,12 @@ public class SeasonInfo implements DataObjectIF {
 	private Timestamp startTime = new Timestamp(0);
 
 	private Timestamp endTime = new Timestamp(0);
-	
+	  
+
+
 	private int id = 0;
-	
+
+    private boolean updateInProgress = false;
 	private boolean active = false;
 
 	public Timestamp getStartTime() {
@@ -54,8 +57,16 @@ public class SeasonInfo implements DataObjectIF {
 		setEndTime(rs.getTimestamp("endTime"));
 		setId(rs.getInt("id"));
 		setActive(rs.getBoolean("active"));
+		setUpdateInProgress(rs.getBoolean("updateInProgress"));
 		
-		
+	}
+
+	public boolean isUpdateInProgress() {
+		return updateInProgress;
+	}
+
+	public void setUpdateInProgress(boolean updateInProgress) {
+		this.updateInProgress = updateInProgress;
 	}
 	
 	

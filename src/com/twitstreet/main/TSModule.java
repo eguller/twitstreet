@@ -20,6 +20,8 @@ import com.twitstreet.market.TransactionMgr;
 import com.twitstreet.market.TransactionMgrImpl;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.GroupMgrImpl;
+import com.twitstreet.session.SeasonMgr;
+import com.twitstreet.session.SeasonMgrImpl;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.task.ReRankTask;
@@ -40,6 +42,7 @@ public class TSModule extends AbstractModule {
 		bind(Twitstreet.class).to(TwitstreetImpl.class).in(Scopes.SINGLETON);
 		bind(UserMgr.class).to(UserMgrImpl.class);
 		bind(StockMgr.class).to(StockMgrImpl.class);
+		bind(SeasonMgr.class).to(SeasonMgrImpl.class).in(Scopes.SINGLETON);
 		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class);
 		bind(DBSetup.class).to(DBSetupImpl.class);
 		bind(DBScriptParser.class).to(DBScriptParserImpl.class);

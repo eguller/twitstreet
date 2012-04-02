@@ -1,7 +1,5 @@
 package com.twitstreet.main;
 
-import java.util.ArrayList;
-
 import javax.servlet.ServletContext;
 
 import com.google.inject.Injector;
@@ -21,9 +19,4 @@ public interface Twitstreet {
 	public ServletContext getServletContext();
 	public void setServletContext(ServletContext servletContext);
 	public void setInjector(Injector injector);
-	ArrayList<SeasonInfo> getAllSeasons();
-	SeasonInfo getSeasonInfo(int id);
-	SeasonInfo getCurrentSeason();
-	ArrayList<SeasonInfo> loadAllSeasons();
-	SeasonInfo loadCurrentSeason();
 }

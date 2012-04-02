@@ -142,10 +142,12 @@ create table `ranking_history` (
     `portfolio` decimal(11,2),
     `rank` int,
     `lastUpdate` timestamp,
-     primary key (`user_id`,`lastUpdate`),
-     constraint `fk_ranking_history_user` foreign key (`user_id`) references `users` (`id`)
+     `season_id` int, 
+    `id` bigint(20) not null auto_increment,
+     primary key (`id`),
+     constraint `fk_ranking_history_user` foreign key (`user_id`) references `users` (`id`),
+     constraint `fk_ranking_history_season` foreign key (`season_id`) references `season_info` (`id`)
 )  engine=innodb default charset=`utf8`;
-
 
 -- ranking history table
 create table `user_stock_watch` (
@@ -196,5 +198,7 @@ create table `season_info` (
   primary key (`id`),
   `startTime` timestamp not null default now(),
   `endTime` timestamp,
-  `active` bit(1) DEFAULT b'0'
+  `active` bit(1) DEFAULT b'0',
+  `updateInProgress` bit(1) DEFAULT b'0'
 ) engine=innodb default charset=utf8;
+

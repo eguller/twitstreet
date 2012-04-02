@@ -56,4 +56,5 @@ public interface UserMgr {
 	void updateRankingHistory(boolean neededOnly);
 	RankingHistoryData getRankingHistoryForUser(long id, String from, String to);
 	RankingHistoryData getRankingHistoryForUser(long id, Timestamp start, Timestamp end);
+	RankingHistoryData getRankingHistoryForUser(long id, int seasonId);
 }

@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.session.SeasonMgr"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@ page import="com.google.inject.Injector"%>
@@ -21,7 +22,8 @@
 
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
-	Twitstreet twitstreet = inj.getInstance(Twitstreet.class);
+
+	SeasonMgr seasonMgr = inj.getInstance(SeasonMgr.class);
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
 	user = (user == null) ? (User) request.getAttribute(UserProfileServlet.USER_PROFILE_USER) : user;
@@ -29,10 +31,10 @@
 	request.setAttribute(UserProfileServlet.USER_PROFILE_USER, user);
 	RankingHistoryData rhd = null;
 	
-	ArrayList<SeasonInfo> siList = twitstreet.getAllSeasons();
+	ArrayList<SeasonInfo> siList = seasonMgr.getAllSeasons();
 	SeasonInfo selectedSeason = (SeasonInfo) request.getAttribute("selectedSeason");
-	SeasonInfo currentSeason = twitstreet.getCurrentSeason();
-	selectedSeason = (selectedSeason!=null)? selectedSeason:twitstreet.getCurrentSeason();
+	SeasonInfo currentSeason = seasonMgr.getCurrentSeason();
+	selectedSeason = (selectedSeason!=null)? selectedSeason:seasonMgr.getCurrentSeason();
 	int id = -1;
 	if(selectedSeason!=null){
 		id = selectedSeason.getId();
@@ -41,7 +43,7 @@
 	
 	
 	if(user!=null && selectedSeason!=null){
-		rhd = userMgr.getRankingHistoryForUser(user.getId(),selectedSeason.getStartTime(),selectedSeason.getEndTime());
+		rhd = userMgr.getRankingHistoryForUser(user.getId(),selectedSeason.getId());
 	}
 	
 	if (rhd != null && rhd.getRankingHistory().size() > 0) {
