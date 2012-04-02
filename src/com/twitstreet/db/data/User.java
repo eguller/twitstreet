@@ -31,6 +31,10 @@ public class User implements DataObjectIF {
     int oldRank;
     int direction;
     String pictureUrl;
+    String description;
+    String location;
+    String longName;
+    
     @Inject TwitterProxy twitterProxy = null;
 	private boolean profitCalculated;
     
@@ -171,6 +175,9 @@ public class User implements DataObjectIF {
 		this.setFirstLogin(rs.getDate("firstLogin"));
 		this.setCash(rs.getDouble("cash"));
 		this.setPortfolio(rs.getDouble("portfolio"));
+		this.setDescription(rs.getString("description"));
+		this.setLongName(rs.getString("longName"));
+		this.setLocation(rs.getString("location"));
 		
 		Double profit =	rs.getDouble("changePerHour");
 		
@@ -214,6 +221,30 @@ public class User implements DataObjectIF {
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getLongName() {
+		return longName;
+	}
+
+	public void setLongName(String longName) {
+		this.longName = longName;
 	}
 
 	

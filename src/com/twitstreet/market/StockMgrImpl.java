@@ -41,8 +41,8 @@ public class StockMgrImpl implements StockMgr {
 
 	private static String SELECT_FROM_STOCK = " select id, name, longName, " +
 												" total, stock_sold(id) as sold, pictureUrl, " +
-												" lastUpdate, createdAt, changePerHour, verified, language, description  from stock ";
-	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name,longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, createdAt, changePerHour, verified, language, description from stock ";
+												" lastUpdate, createdAt, changePerHour, verified, language, description, location  from stock ";
+	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name,longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, createdAt, changePerHour, verified, language, description, location from stock ";
 	
 	private static String STOCK_IN_PORTFOLIO =" stock.id in (select distinct stock from portfolio) ";
 	private static String STOCK_IN_WATCHLIST =" stock.id in (select distinct stock_id from user_stock_watch ) ";
@@ -103,18 +103,8 @@ public class StockMgrImpl implements StockMgr {
 				twitter4j.User twUser = getTwitterProxy().getTwUser(name);
 
 				if (twUser != null) {
-					stockDO = new Stock();
-					stockDO.setId(twUser.getId());
-					stockDO.setLongName(twUser.getName());
-					stockDO.setName(twUser.getScreenName());
-					stockDO.setTotal(twUser.getFollowersCount());
-					stockDO.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
-					stockDO.setSold(0.0D);
-					stockDO.setVerified(twUser.isVerified());
-					stockDO.setLanguage(twUser.getLang());
-					stockDO.setCreatedAt(twUser.getCreatedAt());
+					stockDO = new Stock(twUser);
 					saveStock(stockDO);
-
 					// stockdo shall not require an update due to the update
 					// above
 					// so getStockById should go with the else block this time
@@ -166,16 +156,7 @@ public class StockMgrImpl implements StockMgr {
 				twitter4j.User twUser = getTwitterProxy().getTwUser(id);
 
 				if (twUser != null) {
-					stockDO = new Stock();
-					stockDO.setId(twUser.getId());
-					stockDO.setName(twUser.getScreenName());
-					stockDO.setLongName(twUser.getName());
-					stockDO.setTotal(twUser.getFollowersCount());
-					stockDO.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
-					stockDO.setSold(0.0D);
-					stockDO.setVerified(twUser.isVerified());
-					stockDO.setLanguage(twUser.getLang());
-					stockDO.setCreatedAt(twUser.getCreatedAt());
+					stockDO = new Stock(twUser);
 					saveStock(stockDO);
 
 					// stockdo shall not require an update due to the update
@@ -213,7 +194,7 @@ public class StockMgrImpl implements StockMgr {
 		
 		twitter4j.User twUser = getTwitterProxy().getTwUser(id);
 		if (twUser != null) {
-			updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang(),twUser.getDescription(), twUser.getCreatedAt());
+			updateTwitterData(twUser);
 		return true;
 		}
 		return false;
@@ -261,7 +242,7 @@ public class StockMgrImpl implements StockMgr {
 			
 			for(twitter4j.User twUser : twUserList){
 			
-				updateTwitterData(twUser.getId(), twUser.getFollowersCount(), twUser.getProfileImageURL().toExternalForm(), twUser.getScreenName(),twUser.getName(), twUser.isVerified(),twUser.getLang(),twUser.getDescription(), twUser.getCreatedAt());
+				updateTwitterData(twUser);
 				setStockUpdating(twUser.getId(), false);
 			}
 		}
@@ -368,23 +349,23 @@ public class StockMgrImpl implements StockMgr {
 
 	}
 
-	private void updateTwitterData(long id, int total, String pictureUrl, String screenName,String longName, boolean verified,String language, String description, java.util.Date createdAt) {
+	private void updateTwitterData(twitter4j.User twUser) {
 		Connection connection = null;
 		PreparedStatement ps = null;
-
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ?,longName = ?, verified = ?,language = ?,description = ?, createdAt=?  where id = ?");
+			ps = connection.prepareStatement("update stock set total = ?, pictureUrl = ?, lastUpdate = now(), name = ?,longName = ?, verified = ?,language = ?,description = ?, createdAt=?, location = ?  where id = ?");
 
-			ps.setInt(1, total);
-			ps.setString(2, pictureUrl);
-			ps.setString(3, screenName);
-			ps.setString(4, longName);
-			ps.setBoolean(5, verified);
-			ps.setString(6, language);
-			ps.setString(7, description);
-			ps.setDate(8, new Date(createdAt.getTime()));
-			ps.setLong(9, id);
+			ps.setInt(1, twUser.getFollowersCount());
+			ps.setString(2, twUser.getProfileImageURL().toExternalForm());
+			ps.setString(3, twUser.getScreenName());
+			ps.setString(4, twUser.getName());
+			ps.setBoolean(5, twUser.isVerified());
+			ps.setString(6, twUser.getLang());
+			ps.setString(7, twUser.getDescription());
+			ps.setDate(8, new Date(twUser.getCreatedAt().getTime()));
+			ps.setString(9, twUser.getLocation());
+			ps.setLong(10, twUser.getId());
 			ps.executeUpdate();
 
 			// This query should be called right after the stock update,
@@ -392,13 +373,13 @@ public class StockMgrImpl implements StockMgr {
 			// stock table
 			ps = connection.prepareStatement("update stock set changePerHour = get_stock_trend_for_x_minutes(?,?) where id = ?");
 
-			ps.setLong(1, id);
+			ps.setLong(1, twUser.getId());
 			ps.setInt(2, STOCK_TREND_IN_MINUTES);
-			ps.setLong(3, id);
+			ps.setLong(3, twUser.getId());
 			ps.executeUpdate();
 
 			ps = connection.prepareStatement("insert ignore into stock_history(stock, total, date, hour, lastUpdate) " + " select id, total, DATE(NOW()), HOUR(NOW()), lastUpdate from stock where id = ?");
-			ps.setLong(1, id);
+			ps.setLong(1, twUser.getId());
 			ps.executeUpdate();
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());

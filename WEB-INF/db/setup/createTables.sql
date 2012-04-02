@@ -4,6 +4,7 @@
 create table `users`(
     `id` bigint not null,
     `userName` varchar(45) not null,
+    `longName` varchar(255) default null,
     `firstLogin` datetime not null,
     `lastLogin` datetime not null,
     `cash` decimal(11,2) not null default 1000,
@@ -12,6 +13,8 @@ create table `users`(
     `oauthToken` varchar(100) not null,
     `oauthTokenSecret` varchar(100) not null,
     `pictureUrl` varchar(255),
+    `location` varchar(255) DEFAULT NULL,
+    `longName` varchar(45) DEFAULT NULL,
      primary key (`id`),
      unique key `username_unique` (`username`)
 )  engine=innodb default charset=`utf8`;
@@ -30,8 +33,8 @@ create table `admin`(
 create table `stock`(
     `id` bigint not null auto_increment,
     `name` varchar(45) not null,
-    `longName` varchar(255),
-    `description` varchar(255),
+    `longName` varchar(255) default null,
+    `description` varchar(255) default null,
     `total` int not null,
     `pictureUrl` varchar(255),
     `lastUpdate` timestamp,
@@ -39,6 +42,7 @@ create table `stock`(
     `createdAt` date not null default '2000-01-01',
     `updating` bit(1) DEFAULT b'0',
     `verified` bit(1) DEFAULT b'0',
+    `location` varchar(45) default NULL,
      primary key (`id`),
      KEY `idx_name` (`name`)
 )  engine=innodb default charset=`utf8`;
