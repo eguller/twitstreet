@@ -14,7 +14,7 @@ create table `users`(
     `oauthTokenSecret` varchar(100) not null,
     `pictureUrl` varchar(255),
     `location` varchar(255) DEFAULT NULL,
-    `longName` varchar(45) DEFAULT NULL,
+    `description` varchar(255) DEFAULT NULL,
      primary key (`id`),
      unique key `username_unique` (`username`)
 )  engine=innodb default charset=`utf8`;
