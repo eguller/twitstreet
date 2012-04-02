@@ -54,7 +54,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 		<table class="datatbl">
 			<tr>
-				<td width="55" style="vertical-align: middle" >
+				<td width="55" style="vertical-align: top" >
 					<img class="twuser" width="48" height="48" 
 					src="<%=user == null ? "" : user.getPictureUrl()%>"
 					id="dashboard-picture">
@@ -90,7 +90,14 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 									<%=GUIUtil.getInstance().getTwitterFollowButton(user.getUserName(), lang)%>
 								</div>
 							</div>
-					
+					</div>
+					<br>					
+					<div style="float:left" class="gray-small"><%=(user.getDescription()!=null)?user.getDescription():""%></div>
+					<br>
+					<div style="float:right">
+						<% if(user.getLocation() != null){ %>
+							<a href="http://maps.google.com/maps?q=<%=user.getLocation() %>" target="_blank"><%=user.getLocation()%></a>
+						<% } %>
 					</div>
 				</td>
 				

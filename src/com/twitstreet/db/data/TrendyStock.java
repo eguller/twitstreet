@@ -26,6 +26,7 @@ public class TrendyStock extends Stock {
 		this.setOldUpdate(rs.getTimestamp("oldUpdate"));
 		this.setOldValue(rs.getInt("oldValue"));
 		this.setLanguage(rs.getString("language"));
+		this.setLocation(rs.getString("location"));
 		
 		Integer changePerHour =	rs.getInt("changePerHour");
 		

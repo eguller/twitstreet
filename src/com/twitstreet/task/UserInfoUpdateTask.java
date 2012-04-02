@@ -46,6 +46,9 @@ public class UserInfoUpdateTask implements Runnable {
 						updatedUser.setId(twitterUser.getId());
 						updatedUser.setUserName(twitterUser.getScreenName());
 						updatedUser.setPictureUrl(twitterUser.getProfileImageURL().toExternalForm());
+						updatedUser.setLocation(twitterUser.getLocation());
+						updatedUser.setDescription(twitterUser.getDescription());
+						updatedUser.setLongName(twitterUser.getName());
 						userMgr.updateTwitterData(updatedUser);
 					}
 					subList.clear();

@@ -63,7 +63,7 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		season.loadSeasonInfo();
 	
-		if (!configMgr.isMaster()) {
+		if (configMgr.isDev() || !configMgr.isMaster()) {
 			startTasks();
 
 		}
