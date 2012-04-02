@@ -1,4 +1,3 @@
-<%@page import="com.twitstreet.main.Twitstreet"%>
 <%@page import="com.twitstreet.season.SeasonInfo"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
 <%@page import="com.twitstreet.servlet.UserProfileServlet"%>
@@ -13,8 +12,9 @@
 <%@ page import="com.twitstreet.util.Util"%>
 <%@ page import="com.twitstreet.market.PortfolioMgr"%>
 <%@ page import="com.twitstreet.db.data.Portfolio"%>
-<%@page import="java.util.ArrayList"%>
+<%@ page import="java.util.ArrayList"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
+<%@ page import="com.twitstreet.season.SeasonMgr" %>
 
 <%
 LocalizationUtil lutil = LocalizationUtil.getInstance();
@@ -26,7 +26,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	Portfolio portfolio = null;
 
-	Twitstreet twitstreet = inj.getInstance(Twitstreet.class);
+	SeasonMgr seasonMgr = inj.getInstance(SeasonMgr.class);
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
 	
@@ -250,8 +250,8 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	<div id="user-trend-section">	
 		<%
 	
-		ArrayList<SeasonInfo> siList = twitstreet.getAllSeasons();
-		SeasonInfo selectedSeason = twitstreet.getCurrentSeason();
+		ArrayList<SeasonInfo> siList = seasonMgr.getAllSeasons();
+		SeasonInfo selectedSeason = seasonMgr.getCurrentSeason();
 	
 		
 		%>

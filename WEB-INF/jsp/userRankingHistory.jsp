@@ -4,8 +4,7 @@
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.UserProfileServlet"%>
-<%@ page import="com.twitstreet.main.*"%>
-
+<%@ page import="com.twitstreet.season.SeasonInfo"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.twitstreet.db.data.RankingHistoryData"%>
 <%@page import="com.twitstreet.db.data.RankingData"%>
@@ -13,6 +12,7 @@
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="java.util.List"%>
+<%@ page import="com.twitstreet.season.SeasonMgr" %>
 	
 <div id="userRankingHistoryId">
 	<%
@@ -21,7 +21,7 @@
 
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
-	Twitstreet twitstreet = inj.getInstance(Twitstreet.class);
+	SeasonMgr seasonMgr = inj.getInstance(SeasonMgr.class);
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
 	user = (user == null) ? (User) request.getAttribute(UserProfileServlet.USER_PROFILE_USER) : user;
@@ -29,10 +29,10 @@
 	request.setAttribute(UserProfileServlet.USER_PROFILE_USER, user);
 	RankingHistoryData rhd = null;
 	
-	ArrayList<SeasonInfo> siList = twitstreet.getAllSeasons();
+	ArrayList<SeasonInfo> siList = seasonMgr.getAllSeasons();
 	SeasonInfo selectedSeason = (SeasonInfo) request.getAttribute("selectedSeason");
-	SeasonInfo currentSeason = twitstreet.getCurrentSeason();
-	selectedSeason = (selectedSeason!=null)? selectedSeason:twitstreet.getCurrentSeason();
+	SeasonInfo currentSeason = seasonMgr.getCurrentSeason();
+	selectedSeason = (selectedSeason!=null)? selectedSeason:seasonMgr.getCurrentSeason();
 	int id = -1;
 	if(selectedSeason!=null){
 		id = selectedSeason.getId();
