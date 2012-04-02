@@ -1,5 +1,5 @@
 <%@page import="com.twitstreet.main.Twitstreet"%>
-<%@page import="com.twitstreet.main.SeasonInfo"%>
+<%@page import="com.twitstreet.season.SeasonInfo"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
 <%@page import="com.twitstreet.servlet.UserProfileServlet"%>
 <%@page import="com.twitstreet.db.data.StockInPortfolio"%>

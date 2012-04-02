@@ -24,6 +24,7 @@ import com.twitstreet.db.data.Group;
 import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
 import com.twitstreet.main.Twitstreet;
+import com.twitstreet.season.SeasonMgr;
 import com.twitstreet.util.Util;
 
 public class UserMgrImpl implements UserMgr {
@@ -35,14 +36,12 @@ public class UserMgrImpl implements UserMgr {
 	@Inject
 	GroupMgr groupMgr;
 	@Inject
-	Twitstreet twitstreet;
+	SeasonMgr seasonMgr;
 
 	static SimpleDateFormat  df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static int MAX_RECORD_PER_PAGE = 20;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 
-	private static String SEASON_START = "2012-03-18 18:02:00";
-	
 	private static String SELECT_FROM_USERS_RANKING = "select " + "id, "
 			+ "userName, " + "lastLogin, " + "firstLogin, "
 			+ "users.cash as cash, " + "lastIp, " + "oauthToken, "
@@ -494,8 +493,8 @@ String neededString =(neededOnly)? " where " +
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 	
-		String fromStr =" TIMESTAMP('"+df.format(twitstreet.getCurrentSeason().getStartTime())+"') " ;
-		String toStr =" TIMESTAMP('"+df.format(twitstreet.getCurrentSeason().getEndTime())+"') " ;
+		String fromStr =" TIMESTAMP('"+df.format(seasonMgr.getCurrentSeason().getStartTime())+"') " ;
+		String toStr =" TIMESTAMP('"+df.format(seasonMgr.getCurrentSeason().getEndTime())+"') " ;
 		if(from!=null){			
 			fromStr =" TIMESTAMP('" + from+"') " ;			
 		}	

@@ -18,6 +18,8 @@ import com.twitstreet.market.StockMgr;
 import com.twitstreet.market.StockMgrImpl;
 import com.twitstreet.market.TransactionMgr;
 import com.twitstreet.market.TransactionMgrImpl;
+import com.twitstreet.season.SeasonMgr;
+import com.twitstreet.season.SeasonImpl;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.GroupMgrImpl;
 import com.twitstreet.session.UserMgr;
@@ -48,6 +50,7 @@ public class TSModule extends AbstractModule {
 		bind(ReRankTask.class).in(Scopes.SINGLETON);
 		bind(StockUpdateTask.class).in(Scopes.SINGLETON);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class).in(Scopes.SINGLETON);
+		bind(SeasonMgr.class).to(SeasonImpl.class).in(Scopes.SINGLETON);
 		install(new FactoryModuleBuilder()
 	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
 	     .build(TwitterProxyFactory.class));

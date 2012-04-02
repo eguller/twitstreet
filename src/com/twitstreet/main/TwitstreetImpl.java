@@ -22,6 +22,8 @@ import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.market.StockMgr;
+import com.twitstreet.season.SeasonMgr;
+import com.twitstreet.season.SeasonInfo;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.DetectInvalidTokensTask;
@@ -30,8 +32,10 @@ import com.twitstreet.task.UserInfoUpdateTask;
 
 @Singleton
 public class TwitstreetImpl implements Twitstreet {
-	private static String SELECT_FROM_SEASON_INFO = " select id, startTime, endTime, active from season_info ";
+
 	private boolean initialized = false;
+	private static Logger logger = Logger.getLogger(TwitstreetImpl.class);
+	
 	DBMgr dbMgr;
 	ConfigMgr configMgr;
 	ServletContext servletContext;
@@ -40,9 +44,9 @@ public class TwitstreetImpl implements Twitstreet {
 	GroupMgr groupMgr;
 	@Inject
 	UserMgr userMgr;
-	private static Logger logger = Logger.getLogger(TwitstreetImpl.class);
 	@Inject
 	StockMgr stockMgr;
+	@Inject SeasonMgr season;
 
 	@Inject
 	public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr) {
@@ -57,7 +61,7 @@ public class TwitstreetImpl implements Twitstreet {
 	public void initialize() {
 		loadConfiguration();
 		
-		loadSeasonInfo();
+		season.loadSeasonInfo();
 	
 		if (!configMgr.isMaster()) {
 			startTasks();
@@ -89,15 +93,7 @@ public class TwitstreetImpl implements Twitstreet {
 		
 	}
 
-	private void loadSeasonInfo() {
-		try {
-			loadAllSeasons();
-			loadCurrentSeason();
-		} catch (Exception ex) {
-			logger.error("Error in getting season info", ex);
-		}
-		
-	}
+
 
 	private void loadConfiguration(){
 		Properties properties = new Properties();
@@ -148,97 +144,4 @@ public class TwitstreetImpl implements Twitstreet {
 	public void setInjector(Injector injector) {
 		this.injector = injector;
 	}
-
-	@Override
-	public SeasonInfo getCurrentSeason() {
-		return currentSeason;
-
-	}
-
-	@Override
-	public SeasonInfo loadCurrentSeason() {
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		SeasonInfo siDO = null;
-
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO + " where active = true");
-
-			rs = ps.executeQuery();
-			if (rs.next()) {
-				siDO = new SeasonInfo();
-				siDO.getDataFromResultSet(rs);
-			}
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-		return currentSeason = siDO;
-
-	}
-
-	@Override
-	public SeasonInfo getSeasonInfo(int id) {
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		SeasonInfo siDO = null;
-
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO + " where id = ?");
-			ps.setInt(1, id);
-			rs = ps.executeQuery();
-			if (rs.next()) {
-				siDO = new SeasonInfo();
-				siDO.getDataFromResultSet(rs);
-			}
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-		return siDO;
-	}
-
-	@Override
-	public ArrayList<SeasonInfo> getAllSeasons() {
-		return allSeasons;
-	}
-
-	@Override
-	public ArrayList<SeasonInfo> loadAllSeasons() {
-
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		SeasonInfo siDO = null;
-		ArrayList<SeasonInfo> siList = new ArrayList<SeasonInfo>();
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO + " order by id desc");
-			rs = ps.executeQuery();
-
-			while (rs.next()) {
-				siDO = new SeasonInfo();
-				siDO.getDataFromResultSet(rs);
-				siList.add(siDO);
-			}
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-		return allSeasons = siList;
-	}
- 
 }

@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.season.SeasonMgr"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@page import="com.twitstreet.config.ConfigMgr"%>
@@ -9,6 +10,7 @@
 	Injector inj = (Injector) pageContext.getServletContext()
 			.getAttribute(Injector.class.getName());
 	ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
+	SeasonMgr seasonMgr = inj.getInstance(SeasonMgr.class);
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
@@ -76,9 +78,9 @@
 			<td width="33%">
 				<div align="center">
 			
-					<h1><b><%=lutil.get("season.info", lang) %></b></h1>
+					<h1><b><%=lutil.get("season", lang) %> <%=seasonMgr.getCurrentSeason().getId()%></b></h1>
 				
-					<h1><b><%=lutil.get("season.time", lang) %></b></h1>
+					<h1><b><%=seasonMgr.getCurrentSeason().localizedSeasonTime(lang)%></b></h1>
 					
 				</div>
 			</td>
