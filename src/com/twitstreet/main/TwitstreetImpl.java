@@ -105,8 +105,6 @@ public class TwitstreetImpl implements Twitstreet {
 		
 	}
 
-
-
 	private void loadConfiguration(){
 		Properties properties = new Properties();
 		try {
