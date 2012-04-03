@@ -27,8 +27,8 @@ public class Util {
 	
 	public static String NO_RECORDS_FOUND_HTML = "<p>No records found.</p>";
 
-	public static java.sql.Timestamp toSqlDate(java.util.Date date) {
-		return new java.sql.Timestamp(date.getTime());
+	public static java.sql.Date toSqlDate(java.util.Date date) {
+		return new java.sql.Date(date.getTime());
 	}
 
 	private static String convertToHex(byte[] data) {

@@ -202,8 +202,8 @@ public class UserMgrImpl implements UserMgr {
 							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?) " + "   ");
 			ps.setLong(1, userDO.getId());
 			ps.setString(2, userDO.getUserName());
-			ps.setTimestamp(3, Util.toSqlDate(userDO.getLastLogin()));
-			ps.setTimestamp(4, Util.toSqlDate(userDO.getFirstLogin()));
+			ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));
+			ps.setDate(4, Util.toSqlDate(userDO.getFirstLogin()));
 			ps.setDouble(5, userDO.getCash());
 			ps.setString(6, userDO.getLastIp());
 			ps.setString(7, userDO.getOauthToken());
@@ -238,7 +238,7 @@ public class UserMgrImpl implements UserMgr {
 							+ "lastLogin = ?, "
 							+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ?, pictureUrl = ? where id = ?");
 			ps.setString(1, user.getUserName());
-			ps.setTimestamp(2, Util.toSqlDate(user.getLastLogin()));
+			ps.setDate(2, Util.toSqlDate(user.getLastLogin()));
 			ps.setString(3, user.getLastIp());
 			ps.setString(4, user.getOauthToken());
 			ps.setString(5, user.getOauthTokenSecret());
@@ -822,7 +822,7 @@ public class UserMgrImpl implements UserMgr {
 					.prepareStatement("insert into invite (invitor, invited, invite_date) values(?, ?, ?)");
 			ps.setLong(1, invitor);
 			ps.setLong(2, invited);
-			ps.setTimestamp(3, Util.toSqlDate(Calendar.getInstance().getTime()));
+			ps.setDate(3, Util.toSqlDate(Calendar.getInstance().getTime()));
 			ps.execute();
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
