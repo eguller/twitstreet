@@ -15,6 +15,7 @@ create table `users`(
     `pictureUrl` varchar(255),
     `location` varchar(255) DEFAULT NULL,
     `description` varchar(255) DEFAULT NULL,
+    `inviteActive` tinyint(1) DEFAULT '1',
      primary key (`id`),
      unique key `username_unique` (`username`)
 )  engine=innodb default charset=`utf8`;
