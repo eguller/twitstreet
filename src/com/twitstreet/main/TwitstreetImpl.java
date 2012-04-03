@@ -4,11 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -19,14 +14,13 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
-import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.season.SeasonMgr;
-import com.twitstreet.season.SeasonInfo;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.DetectInvalidTokensTask;
+import com.twitstreet.task.SeasonTask;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.task.UserInfoUpdateTask;
 
@@ -44,9 +38,12 @@ public class TwitstreetImpl implements Twitstreet {
 	GroupMgr groupMgr;
 	@Inject
 	UserMgr userMgr;
+
+	@Inject
+	SeasonMgr seasonMgr;
+
 	@Inject
 	StockMgr stockMgr;
-	@Inject SeasonMgr season;
 
 	@Inject
 	public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr) {
@@ -54,21 +51,36 @@ public class TwitstreetImpl implements Twitstreet {
 		this.configMgr = configMgr;
 	}
 
-	ArrayList<SeasonInfo> allSeasons = new ArrayList<SeasonInfo>();
-	SeasonInfo currentSeason = new SeasonInfo();
 
 	@Override
 	public void initialize() {
 		loadConfiguration();
 		
-		season.loadSeasonInfo();
+		seasonMgr.loadSeasonInfo();
+
 	
+
 		if (configMgr.isDev() || !configMgr.isMaster()) {
+
 			startTasks();
 
 		}
+		if(configMgr.isMaster() || configMgr.isDev() ){
+			startSeasonTask();
+		}
 		initialized = true;
 	}
+
+	private void startSeasonTask() {
+		SeasonTask seasonTask = injector.getInstance(SeasonTask.class);
+
+		Thread seasonTaskThread = new Thread(seasonTask);
+		seasonTaskThread.setName("Season Task");
+
+		seasonTaskThread.start();
+
+	}
+
 
 	private void startTasks() {
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
@@ -144,4 +156,5 @@ public class TwitstreetImpl implements Twitstreet {
 	public void setInjector(Injector injector) {
 		this.injector = injector;
 	}
+
 }

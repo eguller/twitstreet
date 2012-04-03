@@ -1,6 +1,5 @@
 package com.twitstreet.main;
 
-
 import javax.servlet.ServletContext;
 
 import com.google.inject.Injector;

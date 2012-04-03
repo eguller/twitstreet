@@ -1,3 +1,5 @@
+
+<%@page import="com.twitstreet.main.Twitstreet"%>
 <%@page import="com.twitstreet.season.SeasonInfo"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
 <%@page import="com.twitstreet.servlet.UserProfileServlet"%>

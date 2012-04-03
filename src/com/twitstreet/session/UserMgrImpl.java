@@ -36,10 +36,10 @@ public class UserMgrImpl implements UserMgr {
 	GroupMgr groupMgr;
 	@Inject
 	SeasonMgr seasonMgr;
-
 	static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static int MAX_RECORD_PER_PAGE = 20;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
+
 	private static String SELECT_FROM_USERS_RANKING = "select " + "id, "
 			+ "userName, " + "longName, " + "lastLogin, " + "firstLogin, "
 			+ "users.cash as cash, " + "lastIp, " + "oauthToken, "
@@ -469,13 +469,11 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-
-					.prepareStatement("insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank) "
-							+ " select user_id, cash, portfolio,  lastUpdate, rank from ranking "
+					.prepareStatement("insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank, season_id) "
+							+ "select user_id, cash, portfolio,  lastUpdate, rank, (select id from season_info where active is true) from ranking "
 							+ neededString);
 
 			ps.executeUpdate();
-
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
@@ -515,6 +513,7 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection.prepareStatement(" select "
+					+ " rh.season_id as season_id, "
 					+ " rh.user_id as user_id, " + " rh.cash as cash, "
 					+ " rh.portfolio as portfolio, " + " rh.rank as rank, "
 					+ " rh.lastUpdate as lastUpdate "
@@ -523,6 +522,39 @@ public class UserMgrImpl implements UserMgr {
 					+ " and rh.lastUpdate <= " + toStr
 					+ " order by lastUpdate asc ");
 			ps.setLong(1, id);
+			rs = ps.executeQuery();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+
+			rhd.getDataFromResultSet(rs);
+
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return rhd;
+	}
+
+	@Override
+	public RankingHistoryData getRankingHistoryForUser(long id, int seasonId) {
+
+		RankingHistoryData rhd = new RankingHistoryData();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(" select "
+					+ " rh.season_id as season_id, "
+					+ " rh.user_id as user_id, " + " rh.cash as cash, "
+					+ " rh.portfolio as portfolio, " + " rh.rank as rank, "
+					+ " rh.lastUpdate as lastUpdate "
+					+ " from ranking_history rh "
+					+ "  where user_id = ? and season_id = ?"
+					+ " order by lastUpdate asc ");
+			ps.setLong(1, id);
+			ps.setInt(2, seasonId);
 			rs = ps.executeQuery();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 

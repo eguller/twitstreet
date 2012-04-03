@@ -18,6 +18,7 @@ import com.twitstreet.season.SeasonMgr;
 public class UserHistoryServlet extends TwitStreetServlet {
 
 	@Inject PortfolioMgr portfolioMgr;
+	@Inject Twitstreet twitstreet;
 	@Inject SeasonMgr seasonMgr;
 	
 	public static String SELECTED_SEASON = "selectedSeason";

@@ -21,6 +21,7 @@
 
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
+
 	SeasonMgr seasonMgr = inj.getInstance(SeasonMgr.class);
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
@@ -41,7 +42,7 @@
 	
 	
 	if(user!=null && selectedSeason!=null){
-		rhd = userMgr.getRankingHistoryForUser(user.getId(),selectedSeason.getStartTime(),selectedSeason.getEndTime());
+		rhd = userMgr.getRankingHistoryForUser(user.getId(),selectedSeason.getId());
 	}
 	
 	if (rhd != null && rhd.getRankingHistory().size() > 0) {

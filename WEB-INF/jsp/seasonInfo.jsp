@@ -3,18 +3,17 @@
 <%@ page import="com.google.inject.Guice"%>
 <%@ page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.db.data.User"%>
-<%@ page import="com.twitstreet.localization.LocalizationUtil"%>
-<%@ page import="com.twitstreet.util.Util"%>
-<%@ page import="com.twitstreet.servlet.TwitStreetServlet"%>
+<%@ page import="com.twitstreet.localization.LocalizationUtil" %>
+<%@ page import="com.twitstreet.util.Util" %>
+<%@ page import="com.twitstreet.servlet.TwitStreetServlet" %>
 
 <%
-	Injector inj = (Injector) pageContext.getServletContext()
-			.getAttribute(Injector.class.getName());
+	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	User user = (User) request.getAttribute(User.USER);
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
-	String lang = (String) request.getSession().getAttribute(
-			LocalizationUtil.LANGUAGE);
+	String lang = (String) request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 %>
+<%--
 	<div id="balance" class="main-div">
 		<input id="cash-hidden" type="hidden" value="<%=user.getCash()%>" />
 		<h3><%=lutil.get("balance.header", lang)%></h3>
@@ -23,7 +22,21 @@
 				<td><b><%=lutil.get("balance.rank", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
 				<td colspan="2" id="balance_rank" style="text-align: left">
-		
+			<%
+				if (user != null && user.getDirection() > 0) {
+			%>
+				<div id="balance_direction" style="text-align: left"><%=user == null ? "" : user.getRank()%>.<img src="/images/up_small.png" /></div>
+			<%
+				} else if (user != null && user.getDirection() < 0) {
+			%>
+				<div id="balance_direction" style="text-align: left"><%=user == null ? "" : user.getRank()%>.<img src="/images/down_small.png" /></div>
+			<%
+				} else {
+			%>
+				<div id="balance_direction" style="text-align: left"><%=user == null ? "" : user.getRank()%>.</div>
+			<%
+				}
+			%>
 				</td>
 	
 			</tr>
@@ -59,24 +72,18 @@
 				<td/>
 			</tr>
 	</table>
-	<%
-		if (user != null && user.isInviteActive()) {
-	%>
-	<div class="field-white">
-		<p style="text-align: center">
-			<%=lutil.get(
-						"topbar.invite",
-						lang,
-						new Object[] {
-								user.getId(),
-								(int) (Math.sqrt(user.getCash()
-										+ user.getPortfolio()) * UserMgr.INVITE_MONEY_RATE) })%>
-			<br>
-			<%=GUIUtil.getInstance().getTwitterShareButton(
-						"?ref=" + user.getId(), "twitter.share.main", lang)%></p>
+	
+		<%
+						if (user != null) {
+					%>
+					<div class="field-white">
+						<p style="text-align: center">
+							<%=lutil.get("topbar.invite", lang, new Object[] { user.getId(), (int) (Math.sqrt(user.getCash() + user.getPortfolio()) * UserMgr.INVITE_MONEY_RATE) })%>
+						<br>
+						<%=GUIUtil.getInstance().getTwitterShareButton("?ref="+user.getId(), "twitter.share.main", lang)%></p>
+					</div> <%
+					 	}
+					 %>
+				
 	</div>
-	<%
-		}
-	%>
-
-</div>
+--%>

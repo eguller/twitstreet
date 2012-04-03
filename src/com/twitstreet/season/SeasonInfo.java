@@ -20,6 +20,7 @@ public class SeasonInfo implements DataObjectIF {
 	
 	private boolean active = false;
 
+    private boolean updateInProgress = false;
 	public Timestamp getStartTime() {
 		return startTime;
 	}
@@ -77,11 +78,24 @@ public class SeasonInfo implements DataObjectIF {
 		return seasonTimeText;
 	}
 
+
 	@Override
 	public void getDataFromResultSet(ResultSet rs) throws SQLException {
 		setStartTime(rs.getTimestamp("startTime"));
 		setEndTime(rs.getTimestamp("endTime"));
 		setId(rs.getInt("id"));
 		setActive(rs.getBoolean("active"));
+		setUpdateInProgress(rs.getBoolean("updateInProgress"));
+		
 	}
+
+	public boolean isUpdateInProgress() {
+		return updateInProgress;
+	}
+
+	public void setUpdateInProgress(boolean updateInProgress) {
+		this.updateInProgress = updateInProgress;
+	}
+	
+	
 }

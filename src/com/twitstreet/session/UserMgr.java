@@ -57,4 +57,5 @@ public interface UserMgr {
 	RankingHistoryData getRankingHistoryForUser(long id, String from, String to);
 	RankingHistoryData getRankingHistoryForUser(long id, Timestamp start, Timestamp end);
 	public void resetInvitation();
+	RankingHistoryData getRankingHistoryForUser(long id, int seasonId);
 }
