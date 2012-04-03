@@ -23,7 +23,7 @@
 				<td><b><%=lutil.get("balance.rank", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
 				<td colspan="2" id="balance_rank" style="text-align: left">
-		
+					<%=user == null ? "" : user.getRank()%>
 				</td>
 	
 			</tr>
