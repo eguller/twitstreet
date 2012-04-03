@@ -8,7 +8,7 @@ import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
 
 public interface UserMgr {
-	public static final double INVITE_MONEY_RATE = 4;
+	public static final double INVITE_MONEY_RATE = 8;
 
     /**
      * Return user by given twitter id
@@ -56,5 +56,6 @@ public interface UserMgr {
 	void updateRankingHistory(boolean neededOnly);
 	RankingHistoryData getRankingHistoryForUser(long id, String from, String to);
 	RankingHistoryData getRankingHistoryForUser(long id, Timestamp start, Timestamp end);
+	public void resetInvitation();
 	RankingHistoryData getRankingHistoryForUser(long id, int seasonId);
 }

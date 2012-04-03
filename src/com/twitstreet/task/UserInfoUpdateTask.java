@@ -30,6 +30,7 @@ public class UserInfoUpdateTask implements Runnable {
 			long start = System.currentTimeMillis();
 
 			try {
+				userMgr.resetInvitation();
 				List<User> userList = userMgr.getAll();
 				ArrayList<Long> idList = new ArrayList<Long>();
 				
