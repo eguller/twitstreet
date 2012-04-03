@@ -840,7 +840,7 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("update users set inviteActive = true where id not in (select invitor from invite where invite_date > DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY))");
+					.prepareStatement("update users set inviteActive = true");
 			ps.execute();
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
