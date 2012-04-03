@@ -11,10 +11,13 @@ public interface SeasonMgr {
 	public ArrayList<SeasonInfo> getAllSeasons();
 	public SeasonInfo getSeasonInfo(int id);
 	public SeasonInfo getCurrentSeason();
-	public ArrayList<SeasonInfo> loadAllSeasons();
-	public SeasonInfo loadCurrentSeason();
 	public void loadSeasonInfo();
 
 
 	SeasonInfo setSeasonInfo(SeasonInfo si);
+	
+	public SeasonResult getSeasonResult(int seasonId);
+
+
+	SeasonResult getSeasonResult(int seasonId, int start, int stop);
 }

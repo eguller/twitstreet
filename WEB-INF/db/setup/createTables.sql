@@ -153,6 +153,15 @@ create table `ranking_history` (
      constraint `fk_ranking_history_season` foreign key (`season_id`) references `season_info` (`id`)
 )  engine=innodb default charset=`utf8`;
 
+create table `season_result` (
+    `ranking_history_id` bigint not null,
+    `season_id` int not null,
+     primary key (`ranking_history_id`),
+     constraint `fk_season_result_ranking_history_id` foreign key (`ranking_history_id`) references `ranking_history` (`id`),
+     constraint `fk_season_result_season_id` foreign key (`season_id`) references `season_info` (`id`)
+)  engine=innodb default charset=`utf8`;
+ 
+
 -- ranking history table
 create table `user_stock_watch` (
     `user_id` bigint not null,    

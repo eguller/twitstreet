@@ -21,7 +21,7 @@
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
 %>
-<table class="datatbl" id="your-transactions-table">
+<table class="datatbl" >
 	<%
 		int i = 0;
 		for (TransactionRecord transactionRecord : transactionRecordList) {

@@ -2,6 +2,7 @@
 <template:insert template='homeAuthTemplate.jsp'>
   <template:put name='header' content='header.jsp' />
   <template:put name='topbar' content='topbar.jsp' />
+  <template:put name='oldseasons' content='oldSeasons.jsp' />
   <template:put name='stocks' content='stocks.jsp' />
   <template:put name='users' content='users.jsp'/>
   <template:put name='mainmenu' content='mainMenu.jsp'/>  
