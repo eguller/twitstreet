@@ -34,6 +34,7 @@ public class User implements DataObjectIF {
     String description;
     String location;
     String longName;
+    private boolean inviteActive = true;
     
     @Inject TwitterProxy twitterProxy = null;
 	private boolean profitCalculated;
@@ -178,6 +179,7 @@ public class User implements DataObjectIF {
 		this.setDescription(rs.getString("description"));
 		this.setLongName(rs.getString("longName"));
 		this.setLocation(rs.getString("location"));
+		this.setInviteActive(rs.getBoolean("inviteActive"));
 		
 		Double profit =	rs.getDouble("changePerHour");
 		
@@ -245,6 +247,14 @@ public class User implements DataObjectIF {
 
 	public void setLongName(String longName) {
 		this.longName = longName;
+	}
+
+	public boolean isInviteActive() {
+		return inviteActive;
+	}
+
+	public void setInviteActive(boolean inviteActive) {
+		this.inviteActive = inviteActive;
 	}
 
 	

@@ -16,14 +16,6 @@ import com.twitstreet.session.UserMgr;
 
 public class Util {
 
-	private static final int SEC = 0; 
-	private static final int MIN = 1;
-	private static final int HOUR = 2;
-	private static final int DAY = 3;
-	private static final int WEEK = 4;
-	private static final int MONTH = 5; 
-	private static final int YEAR = 6;
-
 	private static final long SEC_MS = 1000; 
 	private static final long MIN_MS = 60 * SEC_MS;
 	private static final long HOUR_MS= 60 * MIN_MS;
@@ -35,8 +27,8 @@ public class Util {
 	
 	public static String NO_RECORDS_FOUND_HTML = "<p>No records found.</p>";
 
-	public static java.sql.Date toSqlDate(java.util.Date date) {
-		return new java.sql.Date(date.getTime());
+	public static java.sql.Timestamp toSqlDate(java.util.Date date) {
+		return new java.sql.Timestamp(date.getTime());
 	}
 
 	private static String convertToHex(byte[] data) {
