@@ -19,6 +19,8 @@ public interface ConfigMgr {
 	public static  String ANNOUNCER_ACCESS_TOKEN = "announcerAccessToken";
 	public static  String ANNOUNCER_ACCESS_SECRET = "announcerAccessSecret";
 	
+	public static String DEFAULT_SERVER_COUNT = "1";
+	
 	//currently just one server is master and its id is 0.
 	//replace {0} with {0,7,3,2,...} as new master servers are added
 	public static HashSet<Integer> masterIdSet = new HashSet<Integer>(Arrays.asList(new Integer[]{0}));

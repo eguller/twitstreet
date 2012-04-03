@@ -1,12 +1,10 @@
-<%@page import="com.twitstreet.session.SeasonMgr"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.UserProfileServlet"%>
-<%@ page import="com.twitstreet.main.*"%>
-
+<%@ page import="com.twitstreet.season.SeasonInfo"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.twitstreet.db.data.RankingHistoryData"%>
 <%@page import="com.twitstreet.db.data.RankingData"%>
@@ -14,6 +12,7 @@
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="java.util.List"%>
+<%@ page import="com.twitstreet.season.SeasonMgr" %>
 	
 <div id="userRankingHistoryId">
 	<%

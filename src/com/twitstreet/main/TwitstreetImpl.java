@@ -16,8 +16,8 @@ import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.market.StockMgr;
+import com.twitstreet.season.SeasonMgr;
 import com.twitstreet.session.GroupMgr;
-import com.twitstreet.session.SeasonMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.DetectInvalidTokensTask;
 import com.twitstreet.task.SeasonTask;
@@ -26,7 +26,10 @@ import com.twitstreet.task.UserInfoUpdateTask;
 
 @Singleton
 public class TwitstreetImpl implements Twitstreet {
+
 	private boolean initialized = false;
+	private static Logger logger = Logger.getLogger(TwitstreetImpl.class);
+	
 	DBMgr dbMgr;
 	ConfigMgr configMgr;
 	ServletContext servletContext;
@@ -35,9 +38,10 @@ public class TwitstreetImpl implements Twitstreet {
 	GroupMgr groupMgr;
 	@Inject
 	UserMgr userMgr;
+
 	@Inject
 	SeasonMgr seasonMgr;
-	private static Logger logger = Logger.getLogger(TwitstreetImpl.class);
+
 	@Inject
 	StockMgr stockMgr;
 
@@ -53,8 +57,11 @@ public class TwitstreetImpl implements Twitstreet {
 		loadConfiguration();
 		
 		seasonMgr.loadSeasonInfo();
+
 	
-		if (!configMgr.isMaster() || configMgr.isDev()) {
+
+		if (configMgr.isDev() || !configMgr.isMaster()) {
+
 			startTasks();
 
 		}
@@ -150,6 +157,4 @@ public class TwitstreetImpl implements Twitstreet {
 		this.injector = injector;
 	}
 
-
- 
 }

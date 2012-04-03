@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.User;
-import com.twitstreet.session.SeasonMgr;
+import com.twitstreet.season.SeasonMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
@@ -41,7 +41,7 @@ public class SeasonTask implements Runnable {
 			long endTime = seasonMgr.getCurrentSeason().getEndTime().getTime();
 			long diff = endTime - now;
 			try {
-				if(diff>0 && diff <SeasonMgr.bufferToStart){
+				if(diff > 0 && diff < SeasonMgr.bufferToStart){
 					seasonMgr.newSeason();
 					continue;
 				}
@@ -51,7 +51,7 @@ public class SeasonTask implements Runnable {
 
 			long sleep = 10 * 1000;
 			
-			if(diff>0 && diff<2 * SeasonMgr.bufferToStart){
+			if(diff > 0 && diff < 2 * SeasonMgr.bufferToStart){
 				sleep = diff-SeasonMgr.bufferToStart;
 			}else if(diff>0 && diff>2 * SeasonMgr.bufferToStart){
 				sleep = diff/2;
@@ -59,7 +59,7 @@ public class SeasonTask implements Runnable {
 			long elapsed = System.currentTimeMillis() - start;
 
 			logger.info("Time remaining to end season: "+diff/60000+"mins");
-			logger.info("Sleep time: "+sleep/60000+"secs");
+			logger.info("Sleep time: "+sleep/60000+"mins");
 			
 			logger.info("SeasonTask completed in " + elapsed / 1000 + " seconds");
 			if (sleep> 0) {

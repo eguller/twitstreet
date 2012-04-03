@@ -81,7 +81,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<table class="datatbl">
 			
 			<tr>
-				<td width="55" style="vertical-align: middle">
+				<td width="55" style="vertical-align: top">
 					<img class="twuser" width="48" height="48" 
 					src="<%=stock == null ? "" : stock.getPictureUrl()%>"
 					id="dashboard-picture">
@@ -137,6 +137,12 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					</div>					
 					<br>					
 					<div style="float:left" class="gray-small"><%=(stock.getDescription()!=null)?stock.getDescription():""%></div>
+					<br>
+					<div style="float:right">
+						<% if(user.getLocation() != null){ %>
+							<a href="http://maps.google.com/maps?q=<%=stock.getLocation() %>" target="_blank"><%=stock.getLocation()%></a>
+						<% } %>
+					</div>
 				</td>
 			</tr>	
 			

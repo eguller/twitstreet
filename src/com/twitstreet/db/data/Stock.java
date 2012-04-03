@@ -29,11 +29,29 @@ public class Stock implements DataObjectIF {
 	boolean changePerHourCalculated;
 	boolean verified;
 	boolean updateRequired = false;
+	private String location;
 	public static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private Date createdAt;
     
+    
     private boolean suspended;
 	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+	
+	public Stock(){}
+	
+	public Stock(twitter4j.User twUser){
+		this.setId(twUser.getId());
+		this.setLongName(twUser.getName());
+		this.setName(twUser.getScreenName());
+		this.setTotal(twUser.getFollowersCount());
+		this.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
+		this.setSold(0.0D);
+		this.setVerified(twUser.isVerified());
+		this.setLanguage(twUser.getLang());
+		this.setCreatedAt(twUser.getCreatedAt());
+		this.setLocation(twUser.getLocation());
+		this.setDescription(twUser.getDescription());
+	}
 	
 	public long getId() {
 		return id;
@@ -98,6 +116,7 @@ public class Stock implements DataObjectIF {
 		this.setSold(rs.getDouble("sold"));
 		this.setPictureUrl(rs.getString("pictureUrl"));
 		this.setLastUpdate(rs.getTimestamp("lastUpdate"));
+		this.setLocation(rs.getString("location"));
 		
 		Integer changePerHour =	rs.getInt("changePerHour");
 		
@@ -195,6 +214,14 @@ public class Stock implements DataObjectIF {
 	}
 	public void setSuspended(boolean suspended) {
 		this.suspended = suspended;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
 }

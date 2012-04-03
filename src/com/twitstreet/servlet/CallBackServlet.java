@@ -61,9 +61,9 @@ public class CallBackServlet extends TwitStreetServlet {
 			String oauthTokenSecret = accessToken.getTokenSecret();
 			User user = null;
 			user = userMgr.getUserById(userId);
-			twitter4j.User twUser = twitter.showUser(userId);
 			//new user
 			if (user == null) {
+				twitter4j.User twUser = twitter.showUser(userId);
 				user = new User();
 				user.setId(userId);
 				user.setUserName(screenName);
@@ -74,6 +74,11 @@ public class CallBackServlet extends TwitStreetServlet {
 				user.setOauthTokenSecret(oauthTokenSecret);
 				user.setCash(configMgr.getInitialMoney());
 				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
+				
+				user.setDescription(twUser.getDescription());
+				user.setLongName(twUser.getName());
+				user.setLocation(twUser.getLocation());
+				
 				userMgr.saveUser(user);
 				String referenceId = (String) request.getSession().getAttribute(HomePageServlet.REFERENCE_ID);
 				long referenceLong = -1;
@@ -97,7 +102,6 @@ public class CallBackServlet extends TwitStreetServlet {
 				user.setLastIp(request.getRemoteHost());
 				user.setOauthToken(oauthToken);
 				user.setOauthTokenSecret(oauthTokenSecret);
-				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
 				userMgr.updateUser(user);
 			}
 			request.getSession().setAttribute(User.USER_ID, user.getId());

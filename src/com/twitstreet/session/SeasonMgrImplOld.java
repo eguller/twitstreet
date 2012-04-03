@@ -15,10 +15,10 @@ import com.google.inject.Inject;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
-import com.twitstreet.main.SeasonInfo;
+import com.twitstreet.season.SeasonInfo;
 import com.twitstreet.main.Twitstreet;
 
-public class SeasonMgrImpl implements SeasonMgr {
+public class SeasonMgrImplOld implements SeasonMgrOld {
 
 	@Inject
 	DBMgr dbMgr;
@@ -37,7 +37,7 @@ public class SeasonMgrImpl implements SeasonMgr {
 	ArrayList<SeasonInfo> allSeasons = new ArrayList<SeasonInfo>();
 	SeasonInfo currentSeason = new SeasonInfo();
 	static SimpleDateFormat  df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static Logger logger = Logger.getLogger(SeasonMgrImpl.class);
+	private static Logger logger = Logger.getLogger(SeasonMgrImplOld.class);
 
 	public void loadSeasonInfo() {
 		try {

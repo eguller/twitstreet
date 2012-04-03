@@ -23,7 +23,7 @@ import com.twitstreet.db.base.DBMgrImpl;
 import com.twitstreet.db.data.Group;
 import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
-import com.twitstreet.main.Twitstreet;
+import com.twitstreet.season.SeasonMgr;
 import com.twitstreet.util.Util;
 
 public class UserMgrImpl implements UserMgr {
@@ -35,21 +35,20 @@ public class UserMgrImpl implements UserMgr {
 	@Inject
 	GroupMgr groupMgr;
 	@Inject
-	Twitstreet twitstreet;
-
-	@Inject
 	SeasonMgr seasonMgr;
+
+
 	
 	static SimpleDateFormat  df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static int MAX_RECORD_PER_PAGE = 20;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
-	
+
 	private static String SELECT_FROM_USERS_RANKING = "select " + "id, "
-			+ "userName, " + "lastLogin, " + "firstLogin, "
+			+ "userName, " + "longName, " + "lastLogin, " + "firstLogin, "
 			+ "users.cash as cash, " + "lastIp, " + "oauthToken, "
 			+ "oauthTokenSecret, " + "user_profit(users.id) as changePerHour,"
 			+ "rank, " + "oldRank, " + "direction, " + "pictureUrl, "
-			+ "portfolio_value(id) as portfolio " + "from users,ranking ";
+			+ "portfolio_value(id) as portfolio, " +"description, " + "location " + "from users,ranking ";
 
 	private static String SELECT_FROM_USERS_JOIN_RANKING = SELECT_FROM_USERS_RANKING
 			+ " where ranking.user_id = users.id ";
@@ -726,10 +725,13 @@ String neededString =(neededOnly)? " where " +
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("update users set userName = ?, pictureUrl = ? where id = ?");
+					.prepareStatement("update users set userName = ?, pictureUrl = ?, location = ?, description = ?, longName = ? where id = ?");
 			ps.setString(1, user.getUserName());
 			ps.setString(2, user.getPictureUrl());
-			ps.setLong(3, user.getId());
+			ps.setString(3, user.getLocation());
+			ps.setString(4, user.getDescription());
+			ps.setString(5, user.getLongName());
+			ps.setLong(6, user.getId());
 
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());

@@ -175,7 +175,6 @@ public class GetQuoteServlet extends TwitStreetServlet {
 		// Get user info from twitter.
 
 		if (Util.isValidTwitterUserName(twUserName)) {
-
 			stock = stockMgr.getStock(twUserName);
 		}
 		searchResultList = twitterProxy.searchUsers(twUserName);

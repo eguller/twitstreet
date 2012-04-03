@@ -1,6 +1,6 @@
-<%@page import="com.twitstreet.session.SeasonMgr"%>
+
 <%@page import="com.twitstreet.main.Twitstreet"%>
-<%@page import="com.twitstreet.main.SeasonInfo"%>
+<%@page import="com.twitstreet.season.SeasonInfo"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
 <%@page import="com.twitstreet.servlet.UserProfileServlet"%>
 <%@page import="com.twitstreet.db.data.StockInPortfolio"%>
@@ -14,8 +14,9 @@
 <%@ page import="com.twitstreet.util.Util"%>
 <%@ page import="com.twitstreet.market.PortfolioMgr"%>
 <%@ page import="com.twitstreet.db.data.Portfolio"%>
-<%@page import="java.util.ArrayList"%>
+<%@ page import="java.util.ArrayList"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
+<%@ page import="com.twitstreet.season.SeasonMgr" %>
 
 <%
 LocalizationUtil lutil = LocalizationUtil.getInstance();
@@ -55,7 +56,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 		<table class="datatbl">
 			<tr>
-				<td width="55" style="vertical-align: middle" >
+				<td width="55" style="vertical-align: top" >
 					<img class="twuser" width="48" height="48" 
 					src="<%=user == null ? "" : user.getPictureUrl()%>"
 					id="dashboard-picture">
@@ -91,7 +92,14 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 									<%=GUIUtil.getInstance().getTwitterFollowButton(user.getUserName(), lang)%>
 								</div>
 							</div>
-					
+					</div>
+					<br>					
+					<div style="float:left" class="gray-small"><%=(user.getDescription()!=null)?user.getDescription():""%></div>
+					<br>
+					<div style="float:right">
+						<% if(user.getLocation() != null){ %>
+							<a href="http://maps.google.com/maps?q=<%=user.getLocation() %>" target="_blank"><%=user.getLocation()%></a>
+						<% } %>
 					</div>
 				</td>
 				
