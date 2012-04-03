@@ -1,43 +1,96 @@
-package com.twitstreet.session;
+package com.twitstreet.season;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
-import com.twitstreet.season.SeasonInfo;
-import com.twitstreet.main.Twitstreet;
 
-public class SeasonMgrImplOld implements SeasonMgrOld {
-
-	@Inject
-	DBMgr dbMgr;
-	@Inject
-	ConfigMgr configMgr;
-	@Inject
-	GroupMgr groupMgr;
-	@Inject
-	Twitstreet twitstreet;
-
-	
-
+@Singleton
+public class SeasonMgrImpl implements SeasonMgr{
+	private static Logger logger = Logger.getLogger(SeasonMgrImpl.class);
 	private static String INSERT_UPDATE_SEASON_INFO = "insert into season_info (id, startTime, endTime, active, updateInProgress)  values (?,?,?,?,?) on duplicate key update startTime=?, endTime=?, active=?, updateInProgress=? ";
 	private static String SELECT_FROM_SEASON_INFO = " select id, startTime, endTime, active, updateInProgress from season_info ";
 	
-	ArrayList<SeasonInfo> allSeasons = new ArrayList<SeasonInfo>();
-	SeasonInfo currentSeason = new SeasonInfo();
-	static SimpleDateFormat  df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static Logger logger = Logger.getLogger(SeasonMgrImplOld.class);
+
+	@Inject DBMgr dbMgr;
+
+	private ArrayList<SeasonInfo> allSeasons = new ArrayList<SeasonInfo>();
+
+	@Inject
+	ConfigMgr configMgr;
+	private SeasonInfo currentSeason;
+	
+	@Override
+	public SeasonInfo getSeasonInfo(int id) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		SeasonInfo siDO = null;
+
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO
+					+ " where id = ?");
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				siDO = new SeasonInfo();
+				siDO.getDataFromResultSet(rs);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return siDO;
+	}
+
+	@Override
+	public ArrayList<SeasonInfo> getAllSeasons() {
+		return allSeasons ;
+	}
+
+	@Override
+	public ArrayList<SeasonInfo> loadAllSeasons() {
+
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		SeasonInfo siDO = null;
+		ArrayList<SeasonInfo> siList = new ArrayList<SeasonInfo>();
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO
+					+ " order by id desc");
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				siDO = new SeasonInfo();
+				siDO.getDataFromResultSet(rs);
+				siList.add(siDO);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return allSeasons = siList;
+	}
 
 	public void loadSeasonInfo() {
 		try {
@@ -46,14 +99,14 @@ public class SeasonMgrImplOld implements SeasonMgrOld {
 		} catch (Exception ex) {
 			logger.error("Error in getting season info", ex);
 		}
-		
+
 	}
+
 	@Override
 	public SeasonInfo getCurrentSeason() {
 		return currentSeason;
 
 	}
-
 	@Override
 	public SeasonInfo loadCurrentSeason() {
 		Connection connection = null;
@@ -63,7 +116,8 @@ public class SeasonMgrImplOld implements SeasonMgrOld {
 
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO + " where active = true");
+			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO
+					+ " where active = true");
 
 			rs = ps.executeQuery();
 			if (rs.next()) {
@@ -79,32 +133,6 @@ public class SeasonMgrImplOld implements SeasonMgrOld {
 		}
 		return currentSeason = siDO;
 
-	}
-
-	@Override
-	public SeasonInfo getSeasonInfo(int id) {
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		SeasonInfo siDO = null;
-
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO + " where id = ?");
-			ps.setInt(1, id);
-			rs = ps.executeQuery();
-			if (rs.next()) {
-				siDO = new SeasonInfo();
-				siDO.getDataFromResultSet(rs);
-			}
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-		return siDO;
 	}
 	@Override
 	public SeasonInfo setSeasonInfo(SeasonInfo si) {
@@ -135,39 +163,6 @@ public class SeasonMgrImplOld implements SeasonMgrOld {
 		}
 		return siDO;
 	}
-
-	@Override
-	public ArrayList<SeasonInfo> getAllSeasons() {
-		return allSeasons;
-	}
-
-	@Override
-	public ArrayList<SeasonInfo> loadAllSeasons() {
-
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		SeasonInfo siDO = null;
-		ArrayList<SeasonInfo> siList = new ArrayList<SeasonInfo>();
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_SEASON_INFO + " order by id desc");
-			rs = ps.executeQuery();
-
-			while (rs.next()) {
-				siDO = new SeasonInfo();
-				siDO.getDataFromResultSet(rs);
-				siList.add(siDO);
-			}
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-		return allSeasons = siList;
-	}
 	@Override
 	public void newSeason() {
 		Connection connection = null;
@@ -187,9 +182,8 @@ public class SeasonMgrImplOld implements SeasonMgrOld {
 		
 		try {
 			connection = dbMgr.getConnection();
-			cs = connection.prepareCall("{call new_season(?,?)}");
-			cs.setInt(1, current.getId());
-			cs.setDouble(2, INITIAL_CASH);
+			cs = connection.prepareCall("{call new_season(?)}");
+			cs.setDouble(1, configMgr.getInitialMoney());
 			cs.execute();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + cs.toString());
 		} catch (SQLException ex) {
@@ -198,8 +192,11 @@ public class SeasonMgrImplOld implements SeasonMgrOld {
 			dbMgr.closeResources(connection, cs, null);
 		}
 		
+		current.setActive(false);
+		current.setUpdateInProgress(false);
+		setSeasonInfo(current);
+		
 		loadSeasonInfo();
 		
 	}
-	
 }
