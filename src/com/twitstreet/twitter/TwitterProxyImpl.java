@@ -193,11 +193,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 		query = query.replace("%23", "");
 		query = query.replace("%22", "");
 		query = query.replace("%20", " ");
-//		try {
-//			query = Util.convertStringToValidURL(query);
-//		} catch (UnsupportedEncodingException e1) {
-//			logger.error("Error converting \"" + query +"\" to valid URL. ", e1);
-//		}
+
 	    query = Util.collapseSpaces(query).replace(' ', '+');
 		try {
 			userResponseList = twitter.searchUsers(query, 1);
