@@ -49,6 +49,9 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 	<jsp:include page="getUser.jsp" />
 	
+	<% if(user == null) { %>
+		<div id="searchnoresult"><p style="text-align: center;"><%=lutil.get("shared.noresults", lang) %></p></div>
+	<% } %>
 	
 		<table class="datatbl">
 			<tr>
