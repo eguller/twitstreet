@@ -146,7 +146,7 @@ create table `ranking_history` (
     `cash` decimal(11,2),
     `portfolio` decimal(11,2),
     `rank` int,
-    `lastUpdate` timestamp,
+    `lastUpdate` timestamp, index (`lastUpdate`),
      `season_id` int, 
     `id` bigint(20) not null auto_increment,
      primary key (`id`),

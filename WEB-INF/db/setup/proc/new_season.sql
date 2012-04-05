@@ -17,6 +17,9 @@ select id, endTime into @active_season,@active_season_end from season_info where
 	insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank, season_id) 
 		select user_id, cash, portfolio,  lastUpdate, rank,@active_season from ranking;
 		
+	call create_season_result(@active_season);	
+	
+	
  	update users set cash = initial_cash;
  	delete from portfolio;
  	
@@ -24,7 +27,7 @@ select id, endTime into @active_season,@active_season_end from season_info where
  	update season_info set active=false where id = @active_season;
     
     set @timeNow := now();
-  insert into season_info(id,startTime,endTime,active) values(@next_season, @timeNow, @active_season_end + INTERVAL 7 DAY, true);
+  	insert into season_info(id,startTime,endTime,active) values(@next_season, @timeNow, @active_season_end + INTERVAL 7 DAY, true);
     
     
 	call rerank();
