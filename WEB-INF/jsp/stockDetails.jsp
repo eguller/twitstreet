@@ -237,7 +237,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			if(stock == null) {
 			%>	
 			
-				<div id="searchnoresult"><p><%=lutil.get("shared.noresults", lang) %></p></div>
+				<div id="searchnoresult"><p style="text-align: center;"><%=lutil.get("shared.noresults", lang) %></p></div>
 		<%	}
 		%>
 

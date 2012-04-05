@@ -396,7 +396,7 @@ public class StockMgrImpl implements StockMgr {
 		PreparedStatement ps = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("insert into stock(id, name, longName, description, total, pictureUrl, lastUpdate, verified,language,createdAt) values(?, ?,?,?, ?, ?, now(), ?, ?,?)");
+			ps = connection.prepareStatement("insert into stock(id, name, longName, description, total, pictureUrl, lastUpdate, verified,language,createdAt, location) values(?, ?,?,?, ?, ?, now(), ?, ?,?, ?)");
 			ps.setLong(1, stock.getId());
 			ps.setString(2, stock.getName());
 			ps.setString(3, stock.getLongName());
@@ -407,6 +407,7 @@ public class StockMgrImpl implements StockMgr {
 			ps.setBoolean(7, stock.isVerified());
 			ps.setString(8, stock.getLanguage());
 			ps.setDate(9, new Date(stock.getCreatedAt().getTime()));
+			ps.setString(10, stock.getLocation());
 
 			ps.executeUpdate();
 			

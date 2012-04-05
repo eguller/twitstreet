@@ -12,6 +12,7 @@ public class SimpleTwitterUser implements Serializable{
 	String pictureUrl;
 	int followerCount = 0;
 	boolean verified;
+	
 	public SimpleTwitterUser(User user){
 		this.id = user.getId();
 		this.screenName = user.getScreenName();
