@@ -1,4 +1,5 @@
 
+<%@page import="com.twitstreet.servlet.SeasonServlet"%>
 <%@page import="com.twitstreet.main.Twitstreet"%>
 <%@page import="com.twitstreet.season.SeasonInfo"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
@@ -271,9 +272,25 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			</select>	
 		</div>
 			
-			
-		<jsp:include page="userRankingHistory.jsp" />
-			
+		<div id="userRankingHistoryId">	
+		<% 
+					request.setAttribute("selectedSeason", selectedSeason);
+					request.setAttribute(SeasonServlet.SEASON_HISTORY_USER, user); 
+					request.setAttribute("chartName",  "userHistory"+user.getId()); %>
+							
+			<jsp:include page="userRankingHistory.jsp" >
+		
+				<jsp:param value="500" name="width"/>
+			</jsp:include>
+		</div>
+		<div>
+			<h3><%=lutil.get("transactions.header", lang) %></h3>
+			<div>
+				<jsp:include page="userTransactionsContent.jsp">
+					<jsp:param value="<%=user.getId()%>" name="user-id"/>
+				</jsp:include>
+			</div>
+		</div>
 		
 		<%
 			}

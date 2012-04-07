@@ -1,3 +1,4 @@
+<%@page import="com.twitstreet.servlet.SeasonServlet"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@ page import="com.google.inject.Injector"%>
@@ -14,7 +15,7 @@
 <%@ page import="java.util.List"%>
 <%@ page import="com.twitstreet.season.SeasonMgr" %>
 	
-<div id="userRankingHistoryId">
+
 	<%
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
@@ -23,8 +24,15 @@
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 
 	SeasonMgr seasonMgr = inj.getInstance(SeasonMgr.class);
+	String width = request.getParameter("width");
+
+	String chartName = (String)request.getAttribute("chartName"); 
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
+	
+	
+
+	user = (user == null) ? (User) request.getAttribute(SeasonServlet.SEASON_HISTORY_USER) : user;
 	user = (user == null) ? (User) request.getAttribute(UserProfileServlet.USER_PROFILE_USER) : user;
 	user = (user == null && parameterUser != null) ? userMgr.getUserById(Long.valueOf(parameterUser)) : user;
 	request.setAttribute(UserProfileServlet.USER_PROFILE_USER, user);
@@ -64,7 +72,7 @@
 		
 	
 		
-		<div id="user-value-chart-div" style="height: 200px; width: 500px;"></div>
+		<div id="<%=chartName%>" style="height: 200px; width: <%=width%>px;"></div>
 		<br>
 		<script type="text/javascript">
 			var dateArray = new Array();
@@ -81,7 +89,7 @@
 						out.write("valueArray.push(" + rd.getTotal() + ");\n");
 			}		
 			%>
-			drawUserValueHistory('#user-value-chart-div', dateArray, valueArray,rankArray, userName);
+			drawUserValueHistory('#<%=chartName%>', dateArray, valueArray,rankArray, userName);
 		</script>
 	<%
 	}else if(user!=null){%>
@@ -93,12 +101,5 @@
 	<%			
 	}
 	%>
-	<div>
-		<h3><%=lutil.get("transactions.header", lang) %></h3>
-		<div>
-			<jsp:include page="userTransactionsContent.jsp">
-				<jsp:param value="<%=user.getId()%>" name="user-id"/>
-			</jsp:include>
-		</div>
-	</div>
-</div>
+
+

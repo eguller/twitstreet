@@ -11,10 +11,11 @@ public class RankingData implements DataObjectIF{
 	private double total;
 	private int rank;
 	private int seasonId;
-	
+	private long userId;
 	@Override
 	public void getDataFromResultSet(ResultSet rs) throws SQLException {
 
+		setUserId(rs.getLong("user_id"));
 		this.setSeasonId(rs.getInt("season_id"));
 		this.setRank(rs.getInt("rank"));
 		this.setCash(rs.getDouble("cash"));
@@ -88,6 +89,18 @@ public class RankingData implements DataObjectIF{
 
 	public void setSeasonId(int seasonId) {
 		this.seasonId = seasonId;
+	}
+
+
+
+	public long getUserId() {
+		return userId;
+	}
+
+
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 

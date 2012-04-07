@@ -125,6 +125,12 @@ function loadTopGrossingUsers() {
 	showTopGrossingUsersContent();
 	ajaxLoad("/trendyusers", null, "#users-screen", "#users-screen");
 }
+function loadOldSeason() {
+
+	showTabMain('.oldseasons-tab');
+	showTopGrossingUsersContent();
+	ajaxLoad("/trendyusers", null, "#users-screen", "#users-screen");
+}
 
 
 function getUser(user) {
@@ -149,6 +155,12 @@ function loadUserProfile(userId, reload) {
 function loadUserHistory(userId, seasonId) {
 	if (userId != null && seasonId!=null) {
 		ajaxLoad("/userhistory", "user=" + userId+"&season="+seasonId, "#userRankingHistoryId",
+				"#column_center");
+	}
+}
+function loadSeasonResults(seasonId) {
+	if (seasonId!=null) {
+		ajaxLoad("/season", "season=" + seasonId , "#oldseasons-container",
 				"#column_center");
 	}
 }
