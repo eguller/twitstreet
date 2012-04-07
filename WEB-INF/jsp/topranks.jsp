@@ -18,7 +18,9 @@ UserMgr userMgr = inj.getInstance(UserMgr.class);
 int userCount = userMgr.count();
 
 String pageParam = request.getParameter("page");
+String typeParam = request.getParameter("type");
 
+typeParam = (typeParam==null)?"currentSeason":typeParam;
 if (pageParam == null || pageParam == ""){
 	
 	pageParam = (String) request.getSession().getAttribute(TopRankServlet.PAGE);
@@ -35,19 +37,35 @@ if (pageParam != null && pageParam != "") {
 		currPage = 1;		
 	}
 	if (currPage < 1) {
-		currPage = 1;
+		if(typeParam.equalsIgnoreCase("allTime")){
+			currPage= userMgr.getPageOfRank(sessionUser.getRankCumulative());
+		}else{
+			currPage= userMgr.getPageOfRank(sessionUser.getRank());
+		}
 	}
 	
 }
 else if(sessionUser!=null){
-	currPage= userMgr.getPageOfRank(sessionUser.getRank());
+	if(typeParam.equalsIgnoreCase("allTime")){
+		currPage= userMgr.getPageOfRank(sessionUser.getRankCumulative());
+	}else{
+		currPage= userMgr.getPageOfRank(sessionUser.getRank());
+	}
+	
 	
 }
 
 request.getSession().setAttribute(TopRankServlet.PAGE,String.valueOf(currPage));
 
 int pageCount = 1;
-ArrayList<User> userList = userMgr.getTopRank(currPage);
+ArrayList<User> userList = null;
+
+if(typeParam.equalsIgnoreCase("allTime")){
+	userList =  userMgr.getTopRankAllTime(currPage);
+	
+}else{
+	userList =  userMgr.getTopRank(currPage);
+}
 
 userList = (userList==null)? new ArrayList<User>(): userList;
 
@@ -69,18 +87,31 @@ if (userCount > maxRank) {
 		<div align="left" style="float: left;padding-top:4px">
 			<%=lutil.get("ranking.header", lang) %>
 		</div>
-		<div align="right" style="float: right">
-			<jsp:include page="toprankPagination.jsp">
-		
-				<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
-				<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-				<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-		
-			</jsp:include>				
-		</div>
+		<div align="right" style="float: right;padding: 3px;margin-bottom:5px;">
+					<jsp:include page="toprankSelectSeason.jsp">
+				
+						<jsp:param name="type" value="<%=String.valueOf(typeParam) %>"></jsp:param>
+				
+					</jsp:include>				
+				</div>
+			
 			
 	</div>	
+	<div>
 
+				
+		<div align="center" style="padding: 3px;margin-bottom:5px;">
+					<jsp:include page="toprankPagination.jsp">
+				
+						<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+						<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+						<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+				
+					</jsp:include>				
+				</div>
+	
+		
+	</div>	
 	<div id="topranks-loading-div">
 		
 	
@@ -90,6 +121,7 @@ if (userCount > maxRank) {
 			
 			for(int i = 0; i < userList.size(); i++) {
 					
+				int rankDisplay = maxRank*(currPage-1) + i + 1;
 					User user = userList.get(i);
 	
 					double profitDiff = 0;
@@ -99,6 +131,10 @@ if (userCount > maxRank) {
 	
 					}
 					double total = user.getCash() + user.getPortfolio();
+					
+					if(typeParam.equalsIgnoreCase("allTime")){
+						total = user.getValueCumulative();						
+					}
 					String clssNm = "odd";
 					
 					if (i % 2 == 1) {
@@ -116,7 +152,7 @@ if (userCount > maxRank) {
 				
 				<tr style="<%=style%>" class="<%=clssNm%>">
 					
-					<td class="rank-number"><%=user.getRank()%>.</td>
+					<td class="rank-number"><%=rankDisplay%>.</td>
 					<td><img class="twuser" width="48" height="48"  src="<%=user.getPictureUrl()%>" /></td>
 					<td><a href="#!user=<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("user.details.tip",lang, user.getUserName())%>"> <%=user.getUserName()%></a>
 						<br> <%=Util.getNumberFormatted(total, true, true, false, false, false, false)%> <%
@@ -144,14 +180,29 @@ if (userCount > maxRank) {
 			%>
 			</table>
 	
-		<div style="padding-top:0px; height:22px" class="h3" align="right">
-			<jsp:include page="toprankPagination.jsp">
+	
+				
+		<div align="center" style="padding: 3px;margin-bottom:5px;">
+					<jsp:include page="toprankPagination.jsp">
+				
+						<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
+						<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
+						<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+				
+					</jsp:include>				
+				</div>
+	
 		
-				<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
-				<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-				<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-		
-			</jsp:include>
+	
+		<div style="height:22px" class="h3" align="right">
+			<div align="right" style="float: right">
+				<jsp:include page="toprankSelectSeason.jsp">
+			
+					<jsp:param name="type" value="<%=String.valueOf(typeParam) %>"></jsp:param>
+			
+				</jsp:include>				
+			</div>
+
 		</div>
 	</div>
 </div>

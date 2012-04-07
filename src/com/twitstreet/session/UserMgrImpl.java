@@ -28,6 +28,7 @@ import com.twitstreet.util.Util;
 
 public class UserMgrImpl implements UserMgr {
 
+
 	@Inject
 	DBMgr dbMgr;
 	@Inject
@@ -40,17 +41,22 @@ public class UserMgrImpl implements UserMgr {
 	private static int MAX_RECORD_PER_PAGE = 20;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 
+
 	private static String SELECT_FROM_USERS_RANKING = "select " + "id, "
 			+ "userName, " + "longName, " + "lastLogin, " + "firstLogin, "
 			+ "users.cash as cash, " + "lastIp, " + "oauthToken, "
-			+ "oauthTokenSecret, " + "user_profit(users.id) as changePerHour,"
+			+ "oauthTokenSecret, " + "user_profit(users.id) as changePerHour,"+ "valueCumulative, rankCumulative,"
 			+ "rank, " + "oldRank, " + "direction, " + "pictureUrl, "
-			+ "portfolio_value(id) as portfolio, " + "description, "
-			+ "location, " + "inviteActive " + "from users,ranking ";
+			+ "portfolio_value(id) as portfolio, "+ " users.cash+portfolio as total, "
+			+ "description, "+ "location, " + "inviteActive "
+			+ "from users,ranking ";
 
 	private static String SELECT_FROM_USERS_JOIN_RANKING = SELECT_FROM_USERS_RANKING
 			+ " where ranking.user_id = users.id ";
 
+	
+
+	
 	public User getUserById(long id) {
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -428,6 +434,36 @@ public class UserMgrImpl implements UserMgr {
 		}
 		return userList;
 	}
+	@Override
+	public ArrayList<User> getTopRankAllTime(int pageNumber) {
+
+		// i.e limit : 17, 17
+		int maxRank = getRecordPerPage();
+		String limit = ((pageNumber - 1) * maxRank) + ", " + maxRank;
+
+		ArrayList<User> userList = new ArrayList<User>(100);
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
+					+ " order by rankCumulative asc limit " + limit);
+			rs = ps.executeQuery();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
 
 	@Override
 	public void rerank() {
@@ -568,6 +604,59 @@ public class UserMgrImpl implements UserMgr {
 		return rhd;
 	}
 
+//	@Override
+//	public int getUserTotalMoneyForPreviousSeasons(long userid) {
+//		Connection connection = null;
+//		PreparedStatement ps = null;
+//		ResultSet rs = null;
+//
+//		int count = 0;
+//		try {
+//			connection = dbMgr.getConnection();
+//			ps = connection.prepareStatement(SQL_GET_TOTAL_MONEY_FOR_PREV_SEASONS);
+//			rs = ps.executeQuery();
+//			if (rs.next()) {
+//				long userid = rs.getLong("user_id");
+//				
+//				count = rs.getInt(1);
+//			}
+//		} catch (SQLException exception) {
+//			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
+//					exception);
+//		} finally {
+//			dbMgr.closeResources(connection, ps, rs);
+//		}
+//		return count;
+//		
+//	}
+//	
+//	private void loadUserTotalMoneyForPreviousSeasons(){
+//		Connection connection = null;
+//		PreparedStatement ps = null;
+//		ResultSet rs = null;
+//
+//		int count = 0;
+//		try {
+//			connection = dbMgr.getConnection();
+//			ps = connection.prepareStatement(SQL_GET_TOTAL_MONEY_FOR_PREV_SEASONS);
+//			rs = ps.executeQuery();
+//			if (rs.next()) {
+//				long userid = rs.getLong("user_id");
+//				
+//				count = rs.getInt(1);
+//			}
+//		} catch (SQLException exception) {
+//			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
+//					exception);
+//		} finally {
+//			dbMgr.closeResources(connection, ps, rs);
+//		}
+//		return count;
+//		
+//		
+//	}
+//	
+//	
 	@Override
 	public int count() {
 		Connection connection = null;

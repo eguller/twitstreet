@@ -182,9 +182,11 @@ public class SeasonMgrImpl implements SeasonMgr {
 		loadSeasonInfo();
 
 		Date nowDate = new Date();
+		
 		long now = nowDate.getTime();
 		long endTime = getCurrentSeason().getEndTime().getTime();
-		if (endTime - now < 0 || getCurrentSeason().isUpdateInProgress() || endTime - now > bufferToStart) {
+		
+		if (getCurrentSeason().isUpdateInProgress()) {
 			return;
 		}
 		SeasonInfo current = getCurrentSeason();

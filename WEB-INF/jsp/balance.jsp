@@ -19,14 +19,63 @@
 		<input id="cash-hidden" type="hidden" value="<%=user.getCash()%>" />
 		<h3><%=lutil.get("balance.header", lang)%></h3>
 		<table class="right_aligned datatbl">
+		
+		
 			<tr>
+				<td colspan="3" align="center" style="text-align: center"><b><%=lutil.get("season.alltime", lang)%></b></td>
+			
+	
+			</tr>
+			
+				<tr>
 				<td><b><%=lutil.get("balance.rank", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
 				<td colspan="2" id="balance_rank" style="text-align: left">
+					<%=user == null ? "" : user.getRankCumulative()%>
+				</td>
+	
+			</tr>
+			<tr>
+				<td><b><%=lutil.get("balance.total", lang)%></b></td>
+				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
+				<td colspan="2" id="total_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getValueCumulative())%></td>
+				<td/>
+				<tr>
+				<td></td>
+				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">&nbsp;</td>
+				
+				<%
+				String speedStr = "";
+									if (user != null && user.getProfit() != 0) {
+
+										speedStr = Util.getNumberFormatted(user.getProfit(), true, false, true, true, false, true);
+									}
+								%>
+				<td colspan="2" title="<%=lutil.get("balance.speed.tip", lang)%>" style="text-align: left"><%=speedStr%></td>
+				<td/>
+			</tr>
+			
+			
+				
+			<tr>
+				<td>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" align="center" style="text-align: center"><b><%=lutil.get("season.thisseason", lang)%></b></td>
+			
+	
+			</tr>
+		
+			<tr>
+				<td width="48%"><b><%=lutil.get("balance.rank", lang)%></b></td>
+				<td width="4%" style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
+				<td width="48%" colspan="2" id="balance_rank" style="text-align: left">
 					<%=user == null ? "" : user.getRank()%>
 				</td>
 	
 			</tr>
+		
 			<tr>
 				<td><b><%=lutil.get("balance.cash", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
@@ -49,15 +98,17 @@
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">&nbsp;</td>
 				
 				<%
-									String speedStr = "";
+									speedStr = "";
 									if (user != null && user.getProfit() != 0) {
 
 										speedStr = Util.getNumberFormatted(user.getProfit(), true, false, true, true, false, true);
 									}
 								%>
-				<td colspan="2" title="<%=lutil.get("balance.speed.tip", lang)%>" id="total_trend" style="text-align: left"><%=speedStr%></td>
+				<td colspan="2" title="<%=lutil.get("balance.speed.tip", lang)%>" style="text-align: left"><%=speedStr%></td>
 				<td/>
 			</tr>
+		
+		
 	</table>
 	<%
 		if (user != null && user.isInviteActive()) {

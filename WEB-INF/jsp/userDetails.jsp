@@ -57,33 +57,59 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 		<table class="datatbl">
 			<tr>
-				<td width="55" style="vertical-align: top" >
+				<td width="55" align="center" style="vertical-align: top" >
+		
+					<a style="float:left;vertical-align: top"  href="http://twitter.com/#!/<%=user.getUserName()%>"
+						title="<%=lutil.get("twitter.link.tip", lang, user.getUserName())%>"
+						target="_blank"><%=user.getUserName()%></a>
+					
+						
 					<img class="twuser" width="48" height="48" 
 					src="<%=user == null ? "" : user.getPictureUrl()%>"
 					id="dashboard-picture">
 				</td>
 				
 							
-				<td  style="vertical-align: top">
+				<td align="center"   style="vertical-align: top">
 					<div style="text-align: left; vertical-align: top">
 				
-						<div style="float:left; overflow: hidden">
+						<div style="float:left; overflow: hidden; width:280px">
 						
-							<a style="float:left;vertical-align: top"  href="http://twitter.com/#!/<%=user.getUserName()%>"
-								title="<%=lutil.get("twitter.link.tip", lang, user.getUserName())%>"
-								target="_blank"><%=user.getUserName()%></a>
-							
+							<table class="datatbl" style="text-align: center;">
+								
+								<tr>
+									<td width="50%">
+										<b><%=lutil.get("season.thisseason", lang) %></b>
+									</td>
+									<td width="50%">
+										<b><%=lutil.get("season.alltime", lang) %></b>
+									</td>
+								</tr>
+									
+								<tr>
+									<td width="50%">
+										<%=user.getRank()%>.
+									</td>
+									<td width="50%">
+										<%=user.getRankCumulative()%>.
+									</td>
+								</tr>
+									
+								<tr>
+									<td width="50%">
+										<%=Util.getRoundedMoneyString(user.getTotal())%>
+										 <%= (user.getProfit()!=0)? "("+Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true)+")":"" %>
+									</td>
+									<td width="50%">
+										<%=Util.getRoundedMoneyString(user.getValueCumulative())%>
+										 
+									</td>
+								</tr>
 						
 									
-							<br>
-							<%=user.getRank()%>.
-							<br>
-					
-					
+							
+							</table>		
 						
-							<%= Util.getRoundedMoneyString(user.getCash()+user.getPortfolio()) %>
-						 	 <%= (user.getProfit()!=0)? " | "+Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true):"" %>
-							<br>
 					
 					
 						</div>
