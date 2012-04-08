@@ -758,7 +758,10 @@ public class UserMgrImpl implements UserMgr {
 		int rpp = getRecordPerPage();
 
 		int a = (rank + rpp) / rpp;
-
+		
+		if (rank % rpp == 0) {
+			a--;
+		}
 		return a;
 	}
 
