@@ -1,6 +1,7 @@
 package com.twitstreet.market;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.twitstreet.db.data.Stock;
@@ -55,7 +56,7 @@ public interface StockMgr {
 	 */
 	public void updateStockHistory();
 	
-	public StockHistoryData getStockHistory(long id, String since);
+	public StockHistoryData getStockHistory(long id, Date since);
 
 	ArrayList<Stock> getSuggestedStocks();
 

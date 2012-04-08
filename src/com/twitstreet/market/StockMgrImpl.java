@@ -258,7 +258,7 @@ public class StockMgrImpl implements StockMgr {
 	}
 	
 	@Override
-	public StockHistoryData getStockHistory(long id, String since) {
+	public StockHistoryData getStockHistory(long id, java.util.Date since) {
 		
 		String sinceStr =" " ;
 		if(since!=null){	

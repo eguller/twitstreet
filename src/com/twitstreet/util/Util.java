@@ -6,6 +6,8 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -15,7 +17,9 @@ import com.twitstreet.localization.LocalizationUtil;
 import com.twitstreet.session.UserMgr;
 
 public class Util {
-
+	public static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	static SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+	
 	private static final long SEC_MS = 1000; 
 	private static final long MIN_MS = 60 * SEC_MS;
 	private static final long HOUR_MS= 60 * MIN_MS;
@@ -460,5 +464,20 @@ public class Util {
 			return diff / YEAR_MS > 1 ? lutil.get("transactions.years_ago", lang, diff / YEAR_MS) : lutil.get("transactions.years_ago", lang);
 		}
 	}
-
+	public static Date stringToDate(String dateStr){
+		
+		try {
+			return sdf.parse(dateStr);
+		} catch (ParseException e) {
+			
+		 return null;
+		}
+		
+	}
+	public static String dateToString(Date date){
+		
+			return sdf.format(date);
+		 
+		
+	}
 }

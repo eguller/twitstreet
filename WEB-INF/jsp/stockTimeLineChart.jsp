@@ -59,7 +59,8 @@
 	
 			StockHistoryData shd = null;
 			if(since!=null){
-						shd = stockMgr.getStockHistory(stock.getId(),since);
+				Date sinceDate = Util.stringToDate(since);
+						shd = stockMgr.getStockHistory(stock.getId(),sinceDate);
 			}
 			else if(forMinutes!=null){
 				shd = stockMgr.getStockHistory(stock.getId(),Integer.valueOf(forMinutes));
