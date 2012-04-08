@@ -1,4 +1,6 @@
 
+<%@page import="com.twitstreet.season.SeasonInfo"%>
+<%@page import="com.twitstreet.season.SeasonMgr"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
@@ -51,6 +53,7 @@
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
+	SeasonMgr seasonMgr = inj.getInstance(SeasonMgr.class);
 	User user = (User) request.getAttribute(User.USER);
 	
 	String divId = request.getParameter("divId");
@@ -78,7 +81,10 @@
 		cal.add(Calendar.HOUR_OF_DAY, -6);
 		
 		Date date = cal.getTime();
-		
+		SeasonInfo currentSeason = seasonMgr.getCurrentSeason();
+		if(date.getTime() < currentSeason.getStartTime().getTime() ){
+			date.setTime(currentSeason.getStartTime().getTime());
+		}
 	
 			shd = userMgr.getRankingHistoryForUser(chartUser.getId(),dateFormat.format(date),null);
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public interface SeasonMgr {
 
-	public int bufferToStart = 10 * 1000;
+	public int INITIAL_SEASON_ID = 4;
 	public void newSeason();
 	
 	

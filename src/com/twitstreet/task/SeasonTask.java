@@ -30,8 +30,10 @@ public class SeasonTask implements Runnable {
 
 	@Override
 	public void run() {
-
+		int i= 0;
+ 
 		while (true) {
+			i++;
 			long start = System.currentTimeMillis();
 			
 			seasonMgr.loadSeasonInfo();
@@ -41,7 +43,7 @@ public class SeasonTask implements Runnable {
 			long endTime = seasonMgr.getCurrentSeason().getEndTime().getTime();
 			long diff = endTime - now;
 			try {
-				if(diff > 0 && diff < SeasonMgr.bufferToStart){
+				if(now> endTime){
 					logger.info("********************    PERFORMING START NEW SEASON OPERATION    ********************");
 					seasonMgr.newSeason();
 					logger.info("********************      END OF START NEW SEASON OPERATION      ********************");
@@ -53,17 +55,14 @@ public class SeasonTask implements Runnable {
 
 			long sleep = 10 * 1000;
 			
-			if(diff > 0 && diff < 2 * SeasonMgr.bufferToStart){
-				sleep = diff-SeasonMgr.bufferToStart;
-			}else if(diff>0 && diff>2 * SeasonMgr.bufferToStart){
-				sleep = diff/2;
-			}
+			
 			long elapsed = System.currentTimeMillis() - start;
 
-			logger.info("Time remaining to end season: "+diff/60000+"mins "+(diff-(diff/60000)*60000)/1000+"secs");
-			logger.info("Sleep time: "+sleep/60000+"mins "+(sleep-(sleep/60000)*60000)/1000+"secs");
-			
-			logger.info("SeasonTask completed in " + elapsed / 1000 + " seconds");
+			if (i % 6 == 0) {
+				logger.info("Time remaining to end season: " + diff / 60000 + "mins " + (diff - (diff / 60000) * 60000) / 1000 + "secs");
+
+				logger.info("SeasonTask completed in " + elapsed / 1000 + " seconds");
+			}
 			if (sleep> 0) {
 				try {
 					Thread.sleep(sleep);

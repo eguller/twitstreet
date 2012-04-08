@@ -102,7 +102,10 @@ public class SeasonMgrImpl implements SeasonMgr {
 		try {
 			loadAllSeasons();
 			loadCurrentSeason();
-			loadSeasonResults();
+	
+			getSeasonResult(getCurrentSeason().getId());
+		
+		
 		} catch (Exception ex) {
 			logger.error("Error in getting season info", ex);
 		}
@@ -180,19 +183,19 @@ public class SeasonMgrImpl implements SeasonMgr {
 		CallableStatement cs = null;
 
 		loadSeasonInfo();
-
+		if (getCurrentSeason().isUpdateInProgress()) {
+			return;
+		}
+		
+		SeasonInfo current = getCurrentSeason();
+		current.setUpdateInProgress(true);
+		setSeasonInfo(current);
+		
 		Date nowDate = new Date();
 		
 		long now = nowDate.getTime();
 		long endTime = getCurrentSeason().getEndTime().getTime();
 		
-		if (getCurrentSeason().isUpdateInProgress()) {
-			return;
-		}
-		SeasonInfo current = getCurrentSeason();
-		current.setUpdateInProgress(true);
-		setSeasonInfo(current);
-
 		try {
 			connection = dbMgr.getConnection();
 			cs = connection.prepareCall("{call new_season(?)}");
@@ -222,21 +225,27 @@ public class SeasonMgrImpl implements SeasonMgr {
 	@Override
 	public SeasonResult getSeasonResult(int seasonId, int offset, int count) {
 		
-		
-		
-		SeasonResult seasonResult = getSeasonResults().get(seasonId);
-
+		SeasonResult seasonResult = new SeasonResult();
 		try {
 			if (getSeasonResults().containsKey(seasonId)) {
-
+				seasonResult = getSeasonResults().get(seasonId);
 				seasonResult.setRankingHistory(new ArrayList<RankingData>(seasonResult.getRankingHistory().subList(offset, offset + count)));
 
+			}else{
+				loadSeasonResults();
+				if (getSeasonResults().containsKey(seasonId)) {
+				    seasonResult = getSeasonResults().get(seasonId);
+					seasonResult.setRankingHistory(new ArrayList<RankingData>(seasonResult.getRankingHistory().subList(offset, offset + count)));
+
+				}
 			}
+				
 		} catch (Exception ex) {
 
 		}
 
 		return seasonResult;
+		
 
 	}
 
