@@ -29,8 +29,9 @@ public interface UserMgr {
 	public void increaseCash(long userId, double cash);
 	
 	public void updateCash(long userId, double amount);
-	
+
 	public ArrayList<User> getTopRank(int pageNumber);
+	public ArrayList<User> getTopRankAllTime(int pageNumber);
 	
 	public int count();
 	public void updateRankingHistory();

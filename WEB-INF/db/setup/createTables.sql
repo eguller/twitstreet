@@ -131,7 +131,9 @@ create table `ranking` (
     `user_id` bigint not null,
 	`cash` decimal(11,2),
 	`portfolio` decimal(11,2),
+	`valueCumulative` decimal(11,2),
     `rank` int,
+    `rankCumulative` int,
     `oldRank` int,
     `direction` int,
     `profit` decimal(11,2),
@@ -214,5 +216,12 @@ create table `season_info` (
   `endTime` timestamp,
   `active` bit(1) DEFAULT b'0',
   `updateInProgress` bit(1) DEFAULT b'0'
+) engine=innodb default charset=utf8;
+
+create table `user_cumulative_value` (
+  `user_id` bigint not null,
+  `value` decimal(11,2) not null , 
+  primary key (`user_id`),
+  constraint `fk_user_cumulative_value_user` foreign key (`user_id`) references `users` (`id`)
 ) engine=innodb default charset=utf8;
 

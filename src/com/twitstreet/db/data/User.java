@@ -19,7 +19,9 @@ public class User implements DataObjectIF {
     Date lastLogin;
     double cash;
     double portfolio;
-
+    double total;
+    double valueCumulative;
+    private int rankCumulative;
 	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
     //profit per hour
     double profit;
@@ -176,10 +178,13 @@ public class User implements DataObjectIF {
 		this.setFirstLogin(rs.getDate("firstLogin"));
 		this.setCash(rs.getDouble("cash"));
 		this.setPortfolio(rs.getDouble("portfolio"));
+		this.setTotal(rs.getDouble("total"));
 		this.setDescription(rs.getString("description"));
 		this.setLongName(rs.getString("longName"));
 		this.setLocation(rs.getString("location"));
 		this.setInviteActive(rs.getBoolean("inviteActive"));
+		this.setValueCumulative(rs.getDouble("valueCumulative"));
+		this.setRankCumulative(rs.getInt("rankCumulative"));
 		
 		Double profit =	rs.getDouble("changePerHour");
 		
@@ -255,6 +260,30 @@ public class User implements DataObjectIF {
 
 	public void setInviteActive(boolean inviteActive) {
 		this.inviteActive = inviteActive;
+	}
+
+	public double getValueCumulative() {
+		return valueCumulative;
+	}
+
+	public void setValueCumulative(double cumulativeValue) {
+		this.valueCumulative = cumulativeValue;
+	}
+
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
+
+	public int getRankCumulative() {
+		return rankCumulative;
+	}
+
+	public void setRankCumulative(int rankCumulative) {
+		this.rankCumulative = rankCumulative;
 	}
 
 	

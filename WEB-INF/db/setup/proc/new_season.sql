@@ -19,7 +19,10 @@ select id, endTime into @active_season,@active_season_end from season_info where
 		
 	call create_season_result(@active_season);	
 	
-	
+	delete from user_cumulative_value;
+	insert into user_cumulative_value(value,user_id) select sum(cash+portfolio) as total, rh.user_id from season_result sr inner join ranking_history rh on rh.id = sr.ranking_history_id 
+		where sr.season_id >= 4 group by rh.user_id order by total desc;
+
  	update users set cash = initial_cash;
  	delete from portfolio;
  	

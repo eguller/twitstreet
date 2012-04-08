@@ -292,19 +292,22 @@ function toprankNextPage() {
 }
 
 function reloadToprank() {
-	toprank(null, true);
+	toprank(null,null, true);
 
 }
 
-function toprank(page, reload) {
+function toprank(page, type, reload) {
 	var pageParam = page;
 
 	if (pageParam == null) {
 		pageParam = $('.topRankSelect:first').val();
 
 	}
+	if (type == null) {
+		type = $('.topRankSelectSeason:first').val();
 
-	ajaxLoad("toprank", "page=" + pageParam, "#topranks-container",
+	}
+	ajaxLoad("toprank", "page=" + pageParam+ "&type=" + type, "#topranks-container",
 			'#topranks-loading-div', reload);
 }
 
