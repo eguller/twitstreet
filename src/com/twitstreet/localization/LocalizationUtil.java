@@ -23,6 +23,7 @@ public class LocalizationUtil {
 	
 	
 	private HashMap<String, ResourceBundle> setOfDictionaries = new HashMap<String, ResourceBundle>();
+	private HashMap<String, ResourceBundle> setOfErrorDictionaries = new HashMap<String, ResourceBundle>();
 
 	String[] languages = {"tr","en"};
 	
@@ -58,10 +59,14 @@ public class LocalizationUtil {
 		for(String language : languages){
 			
 			String propFileStr = this.getClass().getPackage().getName()+"."+language;
+			String errorFileStr = this.getClass().getPackage().getName()+".error_"+language;
 
+			
 			ResourceBundle propertiesFile = PropertyResourceBundle.getBundle(propFileStr);
+			ResourceBundle errorPropFile = PropertyResourceBundle.getBundle(errorFileStr);
 			
 			setOfDictionaries.put(language, propertiesFile);
+			setOfErrorDictionaries.put(language, errorPropFile);
 			
 		}
 	
@@ -109,20 +114,9 @@ public class LocalizationUtil {
 		return valueList;
 		
 	}	
-	public String get(String key, String lang){
-		
-		return get(key, lang, null);
-		
-	}	
-	public String get(String key, String lang, Object param){
-		
-		return get(key, lang, new Object[]{param});
-	}	
-	public String get(String key, String lang, Object[] params){
-		
-		
-		
-		
+	
+	private String get(String key, String lang, Object[] params,  HashMap<String, ResourceBundle>  map){
+
 		if(lang==null|| lang.length()==0){
 			
 			lang = DEFAULT_LANGUAGE;
@@ -131,7 +125,7 @@ public class LocalizationUtil {
 		
 		String value ="";
 		try {
-			value = setOfDictionaries.get(lang).getString(key);
+			value = map.get(lang).getString(key);
 		} catch (Exception ex) {
 
 		}
@@ -150,6 +144,22 @@ public class LocalizationUtil {
 		
 		return value;
 		
+		
+	}
+	
+	public String get(String key, String lang){
+		
+		return get(key, lang, null);
+		
+	}	
+	public String get(String key, String lang, Object param){
+		
+		return get(key, lang, new Object[]{param});
+	}	
+	public String get(String key, String lang, Object[] params){
+		
+		return get(key, lang, params, setOfDictionaries);
+		
 	}	
 	public static LocalizationUtil getInstance(){
 		
@@ -157,5 +167,18 @@ public class LocalizationUtil {
 		
 		
 	}
-	
+	public String getError(String key, String lang){
+		
+		return getError(key, lang, null);
+		
+	}	
+	public String getError(String key, String lang, Object param){
+		
+		return getError(key, lang, new Object[]{param});
+	}	
+public String getError(String key, String lang, Object[] params){
+		
+		return get(key, lang, params, setOfErrorDictionaries);
+		
+	}	
 }

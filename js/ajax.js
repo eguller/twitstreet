@@ -40,6 +40,17 @@ function ajaxLoad(url, queryString, containerDiv, loadingDiv, isReload, callback
 			
 			
 			widgetLoad();
+		},
+		error : function(xhrError) {
+			unblockElement(loadingDiv);
+			if(xhrError.status==450 && !isReload){
+			
+				alert(xhrError.responseText);
+			}else{
+				
+				
+				
+			}
 		}
 	});
 	

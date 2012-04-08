@@ -12,8 +12,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import twitter4j.Trend;
-
 import com.google.inject.Inject;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.twitstreet.config.ConfigMgr;
@@ -41,17 +39,17 @@ public class StockMgrImpl implements StockMgr {
 	private static String TRENDY_STOCK_TOTAL_THRESHOLD = "500";
 	private static String TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD = "0.99";
 
-	private static String SELECT_FROM_STOCK = " select id, name, longName, " +
+	public static String SELECT_FROM_STOCK = " select id, name, longName, " +
 												" total, stock_sold(id) as sold, pictureUrl, " +
 												" lastUpdate, createdAt, changePerHour, verified, language, description, location  from stock ";
-	private static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name,longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, createdAt, changePerHour, verified, language, description, location from stock ";
+	public static String SELECT_DISTINCT_FROM_STOCK = " select distinct id, name,longName, total, stock_sold(id) as sold, pictureUrl, lastUpdate, createdAt, changePerHour, verified, language, description, location from stock ";
 	
 	private static String STOCK_IN_PORTFOLIO =" stock.id in (select distinct stock from portfolio) ";
 	private static String STOCK_IN_WATCHLIST =" stock.id in (select distinct stock_id from user_stock_watch ) ";
 	private static String STOCK_IN_TWITTER_TRENDS =" stock.id in (select stock_id from twitter_trends) ";
-	
 	private static int MAX_TRENDS = 6;
 	
+
 	@Inject
 	ConfigMgr configMgr;
 
@@ -706,75 +704,6 @@ public class StockMgrImpl implements StockMgr {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 		return stockList;
-	}
-	@Override
-	public ArrayList<Stock> getUserWatchList(long userid) {
-		ArrayList<Stock> stockList = new ArrayList<Stock>();
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_STOCK + " where id in (select stock_id from user_stock_watch where user_id=?)");
-
-			ps.setLong(1, userid);
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				Stock stockDO = new Stock();
-				stockDO.getDataFromResultSet(rs);
-				stockList.add(stockDO);
-			}
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-		return stockList;
-	}
-
-	@Override
-	public void addStockIntoUserWatchList(long stockid, long userid) {
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("insert ignore into user_stock_watch(user_id,stock_id) VALUES  (?,?) ");
-
-			ps.setLong(1, userid);
-
-			ps.setLong(2, stockid);
-			ps.executeUpdate();
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-	}
-
-	@Override
-	public void removeStockFromUserWatchList(long stockid, long userid) {
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("delete from user_stock_watch where user_id=? and stock_id=? ");
-
-			ps.setLong(1, userid);
-
-			ps.setLong(2, stockid);
-			ps.executeUpdate();
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
 	}
 
 	

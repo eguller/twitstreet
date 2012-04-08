@@ -21,7 +21,7 @@ import com.twitstreet.db.data.StockInPortfolio;
 import com.twitstreet.db.data.User;
 import com.twitstreet.db.data.UserStock;
 import com.twitstreet.db.data.UserStockDetail;
-import com.twitstreet.servlet.BuySellResponse;
+import com.twitstreet.main.TwitstreetException;
 import com.twitstreet.session.UserMgr;
 
 public class PortfolioMgrImpl implements PortfolioMgr {
@@ -29,6 +29,14 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 	// commission rate 1%
 	private static final double COMMISSION_RATE = 0.01;
+	
+	private static int MAX_STOCK_IN_WATCHLIST = 20;
+	private static String SQL_GET_USER_WATCHLIST_SIZE = " select count(*) as watchlistSize from user_stock_watch where user_id = ? ";
+	
+
+	
+	private static int MAX_STOCK_IN_PORTFOLIO = 20;
+	private static String SQL_GET_USER_PORTFOLIO_SIZE = " select count(*) as portfolioSize from portfolio where user_id = ? ";
 	
 	private static Logger logger = Logger.getLogger(PortfolioMgrImpl.class);
 	@Inject
@@ -40,7 +48,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 	@Inject private ConfigMgr configMgr;
 
 	@Override
-	public boolean buy(User buyer, Stock stock, int amount) {
+	public boolean buy(User buyer, Stock stock, int amount) throws TwitstreetException {
 		if(stock.getTotal()<=0){
 			logger.info("Buy operation cancelled. " + stock.getName()+" has no followers");
 			return false;	
@@ -52,6 +60,8 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 			return false;
 			
 		}
+		
+		
 		if (stock.getAvailable()<= 0) {
 			logger.info("Buy operation cancelled. " + stock.getName()+" is sold out");
 			return false;
@@ -126,9 +136,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		transactionMgr.recordTransaction(seller, stock, amount2Sell, TransactionMgr.SELL);
 		seller.setCash(seller.getCash() + cash);
 		seller.setPortfolio(seller.getPortfolio() - amount2Sell);
-		UserStock updateUserStock = getStockInPortfolio(seller.getId(), stock.getId());
-		int userStockValue = updateUserStock == null ? 0 : (int) (updateUserStock.getPercent() * stock.getTotal());
-
+		
 		return true;
 
 	}
@@ -155,11 +163,29 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		}
 	}
 
-	private void addStock2Portfolio(long buyer, long stock, double sold) {
+	private void addStock2Portfolio(long buyer, long stock, double sold) throws TwitstreetException {
 		Connection connection = null;
 		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int portfolioSize = 0;
 		try {
 			connection = dbMgr.getConnection();
+			
+			
+			ps = connection.prepareStatement(SQL_GET_USER_PORTFOLIO_SIZE);
+			ps.setLong(1, buyer);
+			
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				portfolioSize = rs.getInt("portfolioSize");
+			}
+			
+			if(portfolioSize>=MAX_STOCK_IN_PORTFOLIO){
+				throw new TwitstreetException(this.getClass().getSimpleName(), "addStock2Portfolio", 1, new Object[]{MAX_STOCK_IN_PORTFOLIO});
+			}
+			
 			ps = connection
 					.prepareStatement("insert into portfolio(user_id, stock, percentage, capital) values(?, ?, ?,?*(select total from stock where id = ?))");
 			ps.setLong(1, buyer);
@@ -176,6 +202,8 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		}
 	}
 
+
+	
 	@Override
 	public UserStock getStockInPortfolio(long userId, long stockId) {
 		UserStock userStock = null;
@@ -340,5 +368,91 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 		
 		return userStockList;
 	}
-	
+	@Override
+	public ArrayList<Stock> getUserWatchList(long userid) {
+		ArrayList<Stock> stockList = new ArrayList<Stock>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(StockMgrImpl.SELECT_FROM_STOCK + " where id in (select stock_id from user_stock_watch where user_id=?)");
+
+			ps.setLong(1, userid);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				Stock stockDO = new Stock();
+				stockDO.getDataFromResultSet(rs);
+				stockList.add(stockDO);
+			}
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return stockList;
+	}
+
+	@Override
+	public void addStockIntoUserWatchList(long stockid, long userid) throws TwitstreetException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int watchlistSize = 0;
+		try {
+			connection = dbMgr.getConnection();
+			
+			ps = connection.prepareStatement(SQL_GET_USER_WATCHLIST_SIZE);
+			ps.setLong(1, userid);
+			
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				watchlistSize = rs.getInt("watchlistSize");
+			}
+			
+			if(watchlistSize>=MAX_STOCK_IN_WATCHLIST){
+				throw new TwitstreetException(this.getClass().getSimpleName(), "addStockIntoUserWatchList", 1, new Object[]{MAX_STOCK_IN_WATCHLIST});
+			}
+			
+			
+			
+			ps = connection.prepareStatement("insert ignore into user_stock_watch(user_id,stock_id) VALUES  (?,?) ");
+
+			ps.setLong(1, userid);
+
+			ps.setLong(2, stockid);
+			ps.executeUpdate();
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+	}
+
+	@Override
+	public void removeStockFromUserWatchList(long stockid, long userid) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement("delete from user_stock_watch where user_id=? and stock_id=? ");
+
+			ps.setLong(1, userid);
+
+			ps.setLong(2, stockid);
+			ps.executeUpdate();
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+	}
+
 }

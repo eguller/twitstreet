@@ -3,7 +3,6 @@ package com.twitstreet.servlet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,6 +11,8 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.data.User;
+import com.twitstreet.main.TwitstreetException;
+import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.StockMgr;
 
 @SuppressWarnings("serial")
@@ -20,6 +21,7 @@ public class WatchListServlet extends TwitStreetServlet {
 
 	private static Logger logger = Logger.getLogger(WatchListServlet.class);
 	@Inject StockMgr stockMgr; 
+	@Inject PortfolioMgr portfolioMgr; 
 	public static String STOCK = "stock"; 
 	public static String ADD="add";
 	public static String REMOVE="remove";
@@ -52,9 +54,14 @@ public class WatchListServlet extends TwitStreetServlet {
 			if (stockId != -1) {
 
 				if (ADD.equalsIgnoreCase(operation)) {
-					stockMgr.addStockIntoUserWatchList(stockId, user.getId());
+					try {
+						portfolioMgr.addStockIntoUserWatchList(stockId, user.getId());
+					} catch (TwitstreetException e) {
+						writeErrorIntoResponse(request, response, e);
+						return;
+					}
 				} else if (REMOVE.equalsIgnoreCase(operation)) {
-					stockMgr.removeStockFromUserWatchList(stockId, user.getId());
+					portfolioMgr.removeStockFromUserWatchList(stockId, user.getId());
 				}
 			}
 

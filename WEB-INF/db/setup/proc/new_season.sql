@@ -37,3 +37,4 @@ select id, endTime into @active_season,@active_season_end from season_info where
 	insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank, season_id) 
 		select user_id, cash, portfolio,  lastUpdate, rank,@next_season from ranking;
 end $$
+delimiter ;

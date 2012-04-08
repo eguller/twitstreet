@@ -1,4 +1,5 @@
 
+<%@page import="com.twitstreet.servlet.GetUserServlet"%>
 <%@page import="com.twitstreet.servlet.SeasonServlet"%>
 <%@page import="com.twitstreet.main.Twitstreet"%>
 <%@page import="com.twitstreet.season.SeasonInfo"%>
@@ -32,6 +33,10 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	SeasonMgr seasonMgr = inj.getInstance(SeasonMgr.class);
 	String parameterUser = request.getParameter(User.USER);
 	User user = null;
+	
+	String getUserText = request.getAttribute(GetUserServlet.GET_USER_TEXT) == null ? "" : (String) request.getAttribute(GetUserServlet.GET_USER_TEXT);
+	String getUserTextDisplay = request.getAttribute(GetUserServlet.GET_USER_DISPLAY) == null ? "" : (String) request.getAttribute(GetUserServlet.GET_USER_DISPLAY);
+	
 	
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	User sessionUser = (User) request.getAttribute(User.USER);
@@ -206,7 +211,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 												<div class="user-portfolio-item-watch-div-<%=stock.getStockId() %>" style="display:none; float:right; ">
 					
 												<%
-												ArrayList<Stock> watchList = stockMgr.getUserWatchList(sessionUser.getId());
+												ArrayList<Stock> watchList = portfolioMgr.getUserWatchList(sessionUser.getId());
 												boolean beingWatched = watchList.contains(stock);
 												 %>
 												<a class="add-to-watch-list-link-<%=stock.getStockId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getStockId()%>)">
@@ -321,5 +326,15 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		<%
 			}
 		%>
+		
+		
+		
 	</div>
+	
+	
+	
+	<% if(user == null && getUserText.length()>0) { %>
+		<div id="searchnoresult"><p style="text-align: center;"><%=lutil.get("shared.noresults", lang) %></p></div>
+	<% } %>
+	
 </div>

@@ -110,7 +110,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 							 %>
 								<div style="float:left; margin-left:5px" class="user-portfolio-item-watch-div-<%=stock.getId() %>">
 									<%
-									ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
+									ArrayList<Stock> watchList = portfolioMgr.getUserWatchList(user.getId());
 									boolean beingWatched = watchList.contains(stock);
 									 %>
 									<a class="add-to-watch-list-link-<%=stock.getId() %>" style="<%out.write((beingWatched)?"display:none":""); %>" href="javascript:void(0)" onclick="addToWatchList(<%=stock.getId()%>)">

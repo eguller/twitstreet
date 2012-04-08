@@ -1,12 +1,16 @@
 package com.twitstreet.servlet;
 
+import java.io.IOException;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
 import com.twitstreet.db.data.User;
 import com.twitstreet.localization.LocalizationUtil;
+import com.twitstreet.main.TwitstreetException;
 import com.twitstreet.session.UserMgr;
 
 public class TwitStreetServlet extends HttpServlet {
@@ -110,4 +114,14 @@ public class TwitStreetServlet extends HttpServlet {
 		}
 		
 	}
+	
+	public void writeErrorIntoResponse(HttpServletRequest request, HttpServletResponse response, TwitstreetException e) throws IOException{
+	
+		response.getWriter().print(e.getLocalizedMessage(getLanguage(request)));
+		response.setStatus(450);
+		
+		
+	}
+	
+	
 }

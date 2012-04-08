@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
+import com.twitstreet.main.TwitstreetException;
 import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.session.UserMgr;
@@ -60,9 +61,17 @@ public class BuyServlet extends TwitStreetServlet {
 				if (user != null && stockObj != null) {
 					
 					
-					boolean succ = portfolioMgr.buy(
-								user, stockObj,
-								Integer.parseInt(amount));
+					boolean succ = false;
+					try {
+						succ = portfolioMgr.buy(
+									user, stockObj,
+									Integer.parseInt(amount));
+					} catch (TwitstreetException e) {
+					
+						writeErrorIntoResponse(request, response, e);
+						return;
+						
+					}
 					
 					if(!succ){
 						return;

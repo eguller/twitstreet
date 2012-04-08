@@ -1,6 +1,7 @@
 package com.twitstreet.market;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.twitstreet.db.data.Portfolio;
@@ -8,7 +9,7 @@ import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
 import com.twitstreet.db.data.UserStock;
 import com.twitstreet.db.data.UserStockDetail;
-import com.twitstreet.servlet.BuySellResponse;
+import com.twitstreet.main.TwitstreetException;
 
 /**
  * Maintains a cache of stock portfolio and money of Users.
@@ -25,8 +26,9 @@ public interface PortfolioMgr {
 	 * @param stock - twitter id of stock.
 	 * @param amount - Amount bought
 	 * @return
+	 * @throws TwitstreetException 
 	 */
-	public boolean buy(User buyer,Stock stock, int amount);
+	public boolean buy(User buyer,Stock stock, int amount) throws TwitstreetException;
 	
 	/**
 	 * @param userId is the twitter id of Seller
@@ -64,6 +66,12 @@ public interface PortfolioMgr {
 	public void deleteStockInPortfolio(long seller, long stock);
 	
 	public List<UserStockDetail> getStockDistribution(long stock);
+
+	ArrayList<Stock> getUserWatchList(long userid);
+
+	void addStockIntoUserWatchList(long userid, long stockid) throws TwitstreetException;
+
+	void removeStockFromUserWatchList(long stockid, long userid);
 
 	
 }

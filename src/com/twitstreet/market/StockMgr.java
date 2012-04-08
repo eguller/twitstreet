@@ -59,12 +59,6 @@ public interface StockMgr {
 
 	ArrayList<Stock> getSuggestedStocks();
 
-	ArrayList<Stock> getUserWatchList(long userid);
-
-	void addStockIntoUserWatchList(long userid, long stockid);
-
-	void removeStockFromUserWatchList(long stockid, long userid);
-
 	void updateTwitterTrends();
 
 	void resetSpeedOfOldStocks();

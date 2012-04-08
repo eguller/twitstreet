@@ -24,8 +24,8 @@
 
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
-
-	ArrayList<Stock> watchList = stockMgr.getUserWatchList(user.getId());
+	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
+	ArrayList<Stock> watchList = portfolioMgr.getUserWatchList(user.getId());
 %>
 <%
 	if (watchList != null) {

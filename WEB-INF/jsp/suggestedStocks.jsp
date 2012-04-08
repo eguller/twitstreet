@@ -32,12 +32,12 @@
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
 
+	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	ArrayList<Stock> stockList = (ArrayList<Stock>) request.getAttribute("stockList");
 	String stockListName = (String) request.getAttribute("stockListName");
 
-
+	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
 	long time = (new Date()).getTime();
-	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	User user = (User) request.getAttribute(User.USER);
 
@@ -90,7 +90,7 @@
 												style="display: none; float: right;">
 
 												<%
-													ArrayList<Stock> watchList = stockMgr
+													ArrayList<Stock> watchList = portfolioMgr
 																				.getUserWatchList(user.getId());
 																		boolean beingWatched = watchList
 																				.contains(stock);
