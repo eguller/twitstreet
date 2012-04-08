@@ -1,4 +1,5 @@
 /*
+
  * Added additional null checks when closing the ResultSet and Statements.
  *
  * Thanks to pihug12 and Grzegorz Oledzki at stackoverflow.com
