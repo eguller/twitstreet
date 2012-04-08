@@ -1,6 +1,10 @@
 package com.twitstreet.twitter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -20,6 +24,8 @@ import com.twitstreet.session.UserMgr;
 import com.twitstreet.util.Util;
 
 public class TwitterProxyImpl implements TwitterProxy {
+	
+	Map<String, Integer> woiedMap = new HashMap<String, Integer>();
 
 	public static int USER_COUNT_FOR_UPDATE = 100;
 	private static int INVALID_REQUEST = 400;
@@ -55,6 +61,46 @@ public class TwitterProxyImpl implements TwitterProxy {
 		
 		twitter.setOAuthAccessToken(accessToken);
 		this.setTwitter(twitter);
+		
+		//top
+		woiedMap.put("Worldwide",1);
+		//1
+		woiedMap.put("Argentina",23424747);
+		woiedMap.put("Australia",23424748);
+		woiedMap.put("Brazil", 23424768);
+		woiedMap.put("Canada", 23424775);
+		woiedMap.put("Chile", 23424782);
+		woiedMap.put("Colombia", 23424787);
+		woiedMap.put("Dominican Republic", 23424800);
+		woiedMap.put("Ecuador", 23424801);
+		woiedMap.put("France", 23424819);
+		woiedMap.put("Germany", 23424829);
+		woiedMap.put("Guatemala", 23424834);
+		woiedMap.put("India", 23424848);
+		//2
+		woiedMap.put("Indonesia", 23424846);
+		woiedMap.put("Ireland", 23424803);
+		woiedMap.put("Italy", 23424853);
+		woiedMap.put("Japan", 23424856);
+		woiedMap.put("Malaysia", 23424901);
+		woiedMap.put("Mexico", 23424900);
+		woiedMap.put("Netherlands", 23424909);
+		woiedMap.put("New Zeland", 23424916);
+		woiedMap.put("Nigeria", 23424908);
+		woiedMap.put("Pakistan", 23424922);
+		woiedMap.put("Peru", 23424919);
+		woiedMap.put("Philippines", 23424934);
+		//3
+		woiedMap.put("Russia", 23424936);
+		woiedMap.put("Singapore", 23424948);
+		woiedMap.put("South Africa", 23424942);
+		woiedMap.put("Spain", 23424950);
+		woiedMap.put("Sweden", 23424954);
+		woiedMap.put("Turkey", 23424969);
+		woiedMap.put("United Arab Emirates", 23424738);
+		woiedMap.put("United Kingdom", 23424975);
+		woiedMap.put("United States", 23424977);
+		woiedMap.put("Venezuela", 23424982);
 	}
 
 	
@@ -268,29 +314,26 @@ public class TwitterProxyImpl implements TwitterProxy {
 	}
 
 	@Override
-	public ArrayList<Trend> getTrends() {
-				
-		Trends ts = null;
-		try {
-			
-			ts = twitter.getLocationTrends(1);
-		} catch (TwitterException e) {
-			handleError(e);
-		}
-		ArrayList<Trend> trendList = new ArrayList<Trend>();
-		if(ts!=null){
-			Trend[] trends = ts.getTrends();
-			
-			if(trends!=null){
-				for(Trend trend: trends){
-					
-					trendList.add(trend);
+	public Set<String> getTrends() {
+		Set<String> trendSet = new HashSet<String>();
+		for(String location : woiedMap.keySet()){
+			int woied = woiedMap.get(location);
+			try {
+				Trends ts = twitter.getLocationTrends(woied);
+				if(ts != null){
+					Trend[] trends = ts.getTrends();
+					if(trends != null){
+						logger.debug("Location: " + location + ", trend size: " + trends.length);
+						for(Trend trend: trends){
+							trendSet.add(trend.getName());
+						}
+					}
 				}
-				
+			} catch (TwitterException e) {
+				e.printStackTrace();
 			}
 		}
-		return trendList;
-		
+		return trendSet;		
 	}
 
 	

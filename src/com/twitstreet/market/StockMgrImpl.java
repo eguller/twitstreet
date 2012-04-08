@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -780,17 +782,16 @@ public class StockMgrImpl implements StockMgr {
 		
 		ArrayList<Long> idList = new ArrayList<Long>();
 
-		ArrayList<Trend> trends = getTwitterProxy().getTrends();
+		Set<String> trends = getTwitterProxy().getTrends();
 
 		if (trends != null) {
 			logger.info("Convert trend to stock started. Trend Size: " + trends.size());
 			int converted2Stock = 0;
-			for (Trend trend : trends) {
-
-				String name = trend.getName();
+			Iterator<String> trendsIterator = trends.iterator();
+			for (;trendsIterator.hasNext();) {
+				String name = trendsIterator.next();
 				logger.debug("\n\nTwitter trend: " + name);
 				Stock stock = getStockById(getTwitterProxy().searchAndGetFirstResult(name));
-
 				if (stock != null) {
 					idList.add(stock.getId());
 					logger.debug("Stock: "+stock.getName());

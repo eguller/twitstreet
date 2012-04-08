@@ -2,6 +2,7 @@ package com.twitstreet.twitter;
 
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import twitter4j.Trend;
 import twitter4j.Twitter;
@@ -18,7 +19,7 @@ public interface TwitterProxy {
 	public ArrayList<SimpleTwitterUser> searchUsers(String query);
 	
 
-	public ArrayList<Trend> getTrends();
+	public Set<String> getTrends();
 	public long searchAndGetFirstResult(String searchString);
 	ArrayList<User> getTwUsers(ArrayList<Long> idList);
 	boolean verifyUser();
