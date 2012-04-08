@@ -139,7 +139,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					<div style="float:left" class="gray-small"><%=(stock.getDescription()!=null)?stock.getDescription():""%></div>
 					<br>
 					<div style="float:right">
-						<% if(user.getLocation() != null){ %>
+						<% if(stock.getLocation() != null){ %>
 							<a href="http://maps.google.com/maps?q=<%=stock.getLocation() %>" target="_blank"><%=stock.getLocation()%></a>
 						<% } %>
 					</div>
