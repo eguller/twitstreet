@@ -63,7 +63,7 @@ public class StockUpdateTask implements Runnable {
 
 			try {
 
-				logger.info("\n\n************* Stock Update Task ****************\n\n");
+				logger.info("\n\n************* Stock Update Task - Begin ****************\n\n");
 				
 				logger.info("Twitter trends update - begin.");
 				stockMgr.updateTwitterTrends();
@@ -73,39 +73,28 @@ public class StockUpdateTask implements Runnable {
 				updateStocks();
 				logger.info("Stock list update - end. ");
 
+				logger.info("Reset speed of stocks - begin.");
+				stockMgr.resetSpeedOfOldStocks();
+				logger.info("Reset speed of stocks - end.");
 
-				if(counter%2 == 0){
-					
+				logger.info("Re-rank begin.");
+				userMgr.rerank();
+				logger.info("Re-rank end.");
 
-					logger.info("Reset speed of stocks - begin.");
-					stockMgr.resetSpeedOfOldStocks();
-					logger.info("Reset speed of stocks - end.");
-					
-					logger.info("Re-rank begin.");
-					userMgr.rerank();
-					logger.info("Re-rank end.");
-	
-				
+				logger.info("Rank history update - begin.");
+				userMgr.updateRankingHistory(false);
+				logger.info("Rank history update - end. ");
 
-					logger.info("Rank history update - begin.");
-					userMgr.updateRankingHistory(false);
-					logger.info("Rank history update - end. "); 
-					
+				logger.info("Mention trendy stock - begin.");
+				mentionTopGrossingStocks();
+				logger.info("Mention trendy stock - end. ");
 
-					logger.info("Mention trendy stock - begin.");
-					mentionTopGrossingStocks();
-					logger.info("Mention trendy stock - end. ");
-					
-					
-					logger.info("Remove old records - begin.");
-					twitstreetAnnouncer.removeOldRecords(60 * 24);
-					logger.info("Remove old records - end.");
+				logger.info("Remove old records - begin.");
+				twitstreetAnnouncer.removeOldRecords(60 * 24);
+				logger.info("Remove old records - end.");
 
-				}
-
-			
 				counter ++;
-				logger.info("\n\n************************************************\n\n");
+				logger.info("\n\n******************** Stock Update Task - End ****************************\n\n");
 			} catch (Throwable ex) {
 				logger.error("Someone tried to kill our precious StockUpdateTask. He says: ", ex);
 			}

@@ -200,6 +200,13 @@ public class UserMgrImpl implements UserMgr {
 			ps.setInt(6, 0);
 
 			ps.executeUpdate();
+			
+			CallableStatement cs = null;
+		
+				cs = connection.prepareCall("{call rerank()}");
+				cs.execute();
+		
+					
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			logger.warn("DB: User already exists in ranking - UserId:"
