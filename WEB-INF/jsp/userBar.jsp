@@ -17,20 +17,22 @@
 
 	String parameterUser = request.getParameter(User.USER);
 	user = (user == null && parameterUser != null) ? userMgr.getUserById(Long.valueOf(parameterUser)) : user;
-	
+
+	String selectedTab = (String) request.getAttribute(HomePageServlet.SELECTED_TAB_USER_BAR);
 %>
 <div class="main-tabs" style="width: 100%;">
 	<div class="title-bar">
-		<a class="top-grossing-users-tab <%=(user!=null)?"": "youarehere"%> "
+	
+			<a class="top-grossing-users-tab <%=(!selectedTab.equalsIgnoreCase("top-grossing-users-tab"))?"": "youarehere"%>"
 			onclick="reloadIfHashIs('#!topgrossingusers');">
 			<%=lutil.get("topgrossingusers.header", lang)%> </a>
 			
-			<%if(user!=null){ %>
-						<a class="user-details-tab <%=(user==null)?"": "youarehere"%>"
-							onclick="reloadIfHashIs('#!user=<%=user.getId()%>');">
-							 <%=user.getUserName()%> 
-									<%-- <%=lutil.get("userdetails", lang)%> --%>
-						</a> 
-				<%} %>
+<%if(user!=null){ %>
+			<a class="user-details-tab <%=(!selectedTab.equalsIgnoreCase("user-details-tab"))?"": "youarehere"%>"
+			onclick="reloadIfHashIs('#!user=<%=user.getId()%>');">
+			 <%=user.getUserName()%> 
+					<%-- <%=lutil.get("userdetails", lang)%> --%>
+		</a> 
+<%} %>
 	</div>
 </div>

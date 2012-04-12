@@ -19,6 +19,7 @@
 package com.twitstreet.twitter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,7 +27,9 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import twitter4j.Paging;
 import twitter4j.ResponseList;
+import twitter4j.Status;
 import twitter4j.Trend;
 import twitter4j.Trends;
 import twitter4j.Twitter;
@@ -273,6 +276,27 @@ public class TwitterProxyImpl implements TwitterProxy {
 		}
 		return searchResultList;
 	}
+	@Override
+	public Date getFirstTweetDate(long stockId){
+		ResponseList<Status> respList;
+		try {
+			Paging paging = new Paging(1l);
+			respList = twitter.getUserTimeline(stockId,paging);
+			
+			
+			return respList.get(0).getCreatedAt();
+			
+		} catch (TwitterException e) {
+			handleError(e);
+		
+		}
+		
+		
+		return null;
+		 
+		
+		
+	}
 	private void handleError(TwitterException e, Object param){
 		
 		ArrayList<Object> params = null;
@@ -334,7 +358,16 @@ public class TwitterProxyImpl implements TwitterProxy {
 	@Override
 	public Set<String> getTrends() {
 		Set<String> trendSet = new HashSet<String>();
+		
+		int i = 0;
 		for(String location : woiedMap.keySet()){
+			
+			if(i>3 && configMgr.isDev()){
+				
+				break;
+			}
+			
+			
 			int woied = woiedMap.get(location);
 			try {
 				Trends ts = twitter.getLocationTrends(woied);
@@ -350,6 +383,9 @@ public class TwitterProxyImpl implements TwitterProxy {
 			} catch (TwitterException e) {
 				e.printStackTrace();
 			}
+			
+			
+			i++;
 		}
 		return trendSet;		
 	}

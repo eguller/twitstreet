@@ -42,6 +42,9 @@ public class UserProfileServlet extends TwitStreetServlet {
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
 		loadUser(request);
+		
+
+		request.setAttribute(HomePageServlet.SELECTED_TAB_USER_BAR, "user-details-tab");
 		//loadUserFromCookie(request);
 		getServletContext().getRequestDispatcher("/WEB-INF/jsp/userProfile.jsp").forward(request, response);
 

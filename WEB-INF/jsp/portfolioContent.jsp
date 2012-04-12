@@ -76,7 +76,7 @@
 							<div id="portfolio-item-<%=stock.getStockId()%>"
 								style="display: none; float: right; text-align: right">
 								<a href="javascript:void(0)" class="red-profit"
-									onclick="sell(<%=stock.getStockId()%>,<%=Integer.MAX_VALUE%>)">
+									onclick="sellAll(<%=stock.getStockId()%>)">
 									<%=lutil.get("portfolio.sellall", lang)%> </a>
 							</div></td>
 					</tr>

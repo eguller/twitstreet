@@ -56,6 +56,7 @@ public class HomePageServlet extends TwitStreetServlet {
 	public static final String STOCK = "stock";
 
 	public static final String SELECTED_TAB_STOCK_BAR = "selectedTabStockBar";
+	public static final String SELECTED_TAB_USER_BAR = "selectedTabUserBar";
 	public static final String TOP_GROSSING_USERS = "topgrossingusers";
 	public static final String SUGGESTED_STOCKS = "suggestedstocks";
 	public static final String STOCK_ID = "stockId";
@@ -114,7 +115,8 @@ public class HomePageServlet extends TwitStreetServlet {
 			}
 			else if(command.startsWith("topgrossingusers")){
 
-				request.setAttribute(TOP_GROSSING_USERS, "true");
+				request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
+		
 			}
 			else if(command.startsWith("stock=")){
 				long stockId =Long.valueOf(command.split("stock=")[1]);
@@ -129,9 +131,7 @@ public class HomePageServlet extends TwitStreetServlet {
 		
 			else {
 				
-				//Default view for twitstreet.com is Suggested Stocks
-				request.setAttribute(SUGGESTED_STOCKS, "true");
-
+				
 			}
 			
 			
@@ -160,6 +160,8 @@ public class HomePageServlet extends TwitStreetServlet {
 
 		//	default tab for stocks view
 		request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
+		//	default tab for users view
+		request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
 		
 		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
 			getServletContext().getRequestDispatcher(

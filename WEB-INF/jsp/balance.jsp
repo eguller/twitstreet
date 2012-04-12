@@ -89,18 +89,7 @@
 				<td><b><%=lutil.get("balance.total", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
 				<td colspan="2" id="total_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getValueCumulative())%></td>
-			<tr>
-				<td></td>
-				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">&nbsp;</td>
-				
-				<%
-				speedStr = "";
-									if (user != null && user.getProfit() != 0) {
-
-										speedStr = Util.getNumberFormatted(user.getProfit(), true, false, true, true, false, true);
-									}
-								%>
-				<td colspan="2" title="<%=lutil.get("balance.speed.tip", lang)%>" style="text-align: left"><%=speedStr%></td>
+		
 			</tr>
 
 			
