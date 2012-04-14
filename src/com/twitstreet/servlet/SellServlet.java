@@ -44,7 +44,7 @@ public class SellServlet extends TwitStreetServlet{
 	@Inject TwitterProxyFactory twitterProxyFactory = null;
 	@Inject PortfolioMgr portfolioMgr = null;
 	
-	
+	public String SELL_ALL = "all";
 	public String RESPONSE_NEEDED = "response";
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -70,7 +70,15 @@ public class SellServlet extends TwitStreetServlet{
 //				User seller = userMgr.getUserById(user.getId());
 				Stock stockObj = stockMgr.getStockById(Long.parseLong(stock));
 				if(stockObj != null){
-					boolean succ = portfolioMgr.sell(user, stockObj, Integer.parseInt(amount));
+					int amountInt = 0;
+					if(amount.equalsIgnoreCase(SELL_ALL)){
+						amountInt = Integer.MAX_VALUE;
+					}
+					else{
+						amountInt = Integer.parseInt(amount);
+					}
+					
+					boolean succ = portfolioMgr.sell(user, stockObj,amountInt);
 					
 
 					if(!succ){

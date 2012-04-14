@@ -127,6 +127,8 @@ public class GetUserServlet extends TwitStreetServlet {
 		request.setAttribute(GET_USER, user);
 		request.setAttribute(GET_USER_OTHER_SEARCH_RESULTS, searchResultUsers);
 
+		request.setAttribute(HomePageServlet.SELECTED_TAB_USER_BAR, "user-details-tab");
+		
 		if (user != null) {
 			request.setAttribute(GetUserServlet.GET_USER_DISPLAY, user.getUserName());
 		}

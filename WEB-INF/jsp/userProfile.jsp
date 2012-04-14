@@ -35,14 +35,8 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	String getUserText = request.getAttribute(GetUserServlet.GET_USER_TEXT) == null ? "" : (String) request.getAttribute(GetUserServlet.GET_USER_TEXT);
 	String getUserTextDisplay = request.getAttribute(GetUserServlet.GET_USER_DISPLAY) == null ? "" : (String) request.getAttribute(GetUserServlet.GET_USER_DISPLAY);
 	
-	boolean showTopGrossingUsers = false;
 	
-	try{
-		showTopGrossingUsers = (boolean) (request.getAttribute(HomePageServlet.TOP_GROSSING_USERS).toString().length()>0);
-	}catch(Exception ex){
-		showTopGrossingUsers = user==null;
-	}
-
+	String selectedTab = (String) request.getAttribute(HomePageServlet.SELECTED_TAB_USER_BAR);
 %>
 <div id="userprofile" class="main-div" >
 
@@ -61,13 +55,13 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					<div id="users-screen">
 	
 						<div id="top-grossing-users-content">
-							<%if(showTopGrossingUsers){%>
+							<%if(selectedTab.equalsIgnoreCase("top-grossing-users-tab")){	%>
 								<jsp:include page="trendyUsers.jsp" />
 							<%}%>
 							
 						</div>
 						<div id="user-details-content">
-						<%if(user!=null){%>
+						<%if(selectedTab.equalsIgnoreCase("user-details-tab")){	%>
 							<jsp:include page="userDetails.jsp" />
 							<br>
 							<jsp:include page="getUserOtherSearchResults.jsp" />

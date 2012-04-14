@@ -20,6 +20,7 @@ package com.twitstreet.twitter;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Set;
 
 import twitter4j.Trend;
@@ -41,4 +42,5 @@ public interface TwitterProxy {
 	public long searchAndGetFirstResult(String searchString);
 	ArrayList<User> getTwUsers(ArrayList<Long> idList);
 	boolean verifyUser();
+	Date getFirstTweetDate(long stockId);
 }

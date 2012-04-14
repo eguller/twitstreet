@@ -39,6 +39,7 @@ public class Stock implements DataObjectIF {
 	String longName;
 	private String description;
 	int total;
+	
 	double sold;
 	String pictureUrl;
 	String language;
@@ -50,7 +51,7 @@ public class Stock implements DataObjectIF {
 	private String location;
 	public static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private Date createdAt;
-    
+    private Date firstTweetDate;
     
     private boolean suspended;
 	SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
@@ -240,6 +241,14 @@ public class Stock implements DataObjectIF {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public Date getFirstTweetDate() {
+		return firstTweetDate;
+	}
+
+	public void setFirstTweetDate(Date firstTweetDate) {
+		this.firstTweetDate = firstTweetDate;
 	}
 	
 }

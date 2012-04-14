@@ -123,13 +123,13 @@ function loadTopGrossingUsers() {
 
 	showTabMain('.users-tab');
 	showTopGrossingUsersContent();
-	ajaxLoad("/trendyusers", null, "#users-screen", "#users-screen");
+	ajaxLoad("/trendyusers", null, "#users-screen","#column_center");
 }
 function loadOldSeason() {
 
 	showTabMain('.oldseasons-tab');
 	showTopGrossingUsersContent();
-	ajaxLoad("/trendyusers", null, "#users-screen", "#users-screen");
+	ajaxLoad("/trendyusers", null, "#users-screen", "#column_center");
 }
 
 
@@ -214,15 +214,19 @@ function buy(stock, amount) {
 			containerDiv, containerDiv, false, buySellCallback, stock);
 	showTabPortfolio('.portfolio-tab', '#portfolio-content');
 }
+
+function sellAll(stockId){
+	
+	
+	sell(stockId,"all");
+}
+
 function sell(stock, amount) {
 
 	var responseNeeded = "";
 
 	var containerDiv = '#buy-sell-container';
-	if (stock != $(stockOnScreen).val()) {
-		responseNeeded = "&response=n";
-		containerDiv = '';
-	}
+
 
 	ajaxLoad("a/sell", "stock=" + stock + "&amount=" + amount + responseNeeded,
 			containerDiv, containerDiv, false, buySellCallback, stock);
@@ -233,6 +237,8 @@ function buySellCallback(stock) {
 
 	if (stock == $(stockOnScreen).val()) {
 		showBuySell();
+	}else{
+		reloadStock();
 	}
 	loadPortfolio(false, true);
 	loadBalance(false, true);

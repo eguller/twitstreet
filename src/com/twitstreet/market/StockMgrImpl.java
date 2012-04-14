@@ -434,6 +434,9 @@ public class StockMgrImpl implements StockMgr {
 			ps.setLong(1, stock.getId());
 			ps.executeUpdate();
 			
+			
+		   //  java.util.Date date = getTwitterProxy().getFirstTweetDate(stock.getId());
+			
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			logger.warn("DB: Stock already exist - Stock Id:" + stock.getId() + " User Name: " + stock.getName() + " - " + e.getMessage());
@@ -725,7 +728,10 @@ public class StockMgrImpl implements StockMgr {
 		return stockList;
 	}
 
-	
+	private java.util.Date getFirstTweetDate(long stockId){
+		return getTwitterProxy().getFirstTweetDate(stockId);
+		
+	}
 	private ArrayList<Long> getTwitterTrendsAndSaveAsStock(){
 		
 		ArrayList<Long> idList = new ArrayList<Long>();

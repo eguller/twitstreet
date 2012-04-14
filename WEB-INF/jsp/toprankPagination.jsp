@@ -14,7 +14,7 @@
 			.getAttribute(Injector.class.getName());
 
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
-
+	User sessionUser = (User)request.getAttribute(User.USER);
 	int pageCount = Integer.valueOf(request.getParameter("pageCount"));
 
 	int userCount = Integer.valueOf(request.getParameter("userCount"));
@@ -36,7 +36,7 @@
 	
 	
 	<select  class="topRankSelect" style="font-size: 10px" onchange="toprank($(this).val())">
-		<option value="0" style="text-align:center;"><%=lutil.get("ranking.showme",lang) %></option>
+		<%if(sessionUser!=null){%><option value="0" style="text-align:center;"><%=lutil.get("ranking.showme",lang) %></option><%}%>
 		<% 		
 		for(int i = 0; i < pageCount;i++) {	
 			
