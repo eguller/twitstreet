@@ -30,7 +30,7 @@
 			</a>
 		</div>
 		<div style="float: right; margin-top: 3px;">
-			<div class="fb-like" data-href="http://www.twitstreet.com" data-layout="button_count" data-width="100" data-show-faces="false" data-font="trebuchet ms"></div>
+			<div class="fb-like" data-href="http://www.twitstreet.com" data-layout="button_count" data-width="90" data-show-faces="false" data-font="trebuchet ms"></div>
 		</div>
 	</div>
 	<jsp:include page="stocks.jsp"></jsp:include>
