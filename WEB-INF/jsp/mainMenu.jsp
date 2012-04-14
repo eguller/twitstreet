@@ -8,6 +8,16 @@
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
 %>
+<div id="fb-root"></div>
+
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=429661103727162";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
 <div id="main-menu">
 	<div class="title-bar">
 		<div class="main-tabs">
@@ -19,7 +29,9 @@
 			<a class="oldseasons-tab" onclick="showTabMain('.oldseasons-tab');"> <%=lutil.get("season.oldseasons", lang)%>
 			</a>
 		</div>
-
+		<div style="float: right; margin-top: 3px;">
+			<div class="fb-like" data-href="http://www.twitstreet.com" data-layout="button_count" data-width="100" data-show-faces="false" data-font="trebuchet ms"></div>
+		</div>
 	</div>
 	<jsp:include page="stocks.jsp"></jsp:include>
 	<jsp:include page="users.jsp"></jsp:include>

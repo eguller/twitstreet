@@ -10,7 +10,6 @@
 <template:get name="header"></template:get>
 </head>
 <body>
-
 	<div id="container">
 		<template:get name="topbar"></template:get>
 		<div id="main">
