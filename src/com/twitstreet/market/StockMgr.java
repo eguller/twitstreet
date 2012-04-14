@@ -102,4 +102,7 @@ public interface StockMgr {
 	ArrayList<Stock> getTopGrossingStocks(int page);
 
 	ArrayList<Stock> getSuggestedStocks(int page);
+	public boolean addStockIntoAnnouncement(long stockid);
+	public void removeOldRecords(int removeOlderThanMinutes);
+	public void removeOldRecordsByServer(int removeOlderThanMinutes);
 }

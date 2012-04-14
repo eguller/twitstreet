@@ -493,9 +493,30 @@ public class Util {
 		
 	}
 	public static String dateToString(Date date){
-		
 			return sdf.format(date);
-		 
-		
+	}
+	
+	public static String at(String name){
+		if(name == null || name.length() == 0){
+			return "@";
+		}
+		else if(name.charAt(0) == '@'){
+			return name;
+		}
+		else{
+			return "@" + name;
+		}
+	}
+	
+	public static String mentionMessage(String mention, String message){
+		return at(mention) + " " + message;
+	}
+	
+	public static String mentionMessage(String[] mentions, String message){
+		String mentionMessage = "";
+		for(String mention : mentions){
+			mentionMessage += at(mention) + " ";
+		}
+		return mentionMessage + message;
 	}
 }

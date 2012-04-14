@@ -170,20 +170,12 @@ public class DBMgrImpl implements DBMgr {
 	
 	public static String getIdListAsCommaSeparatedString(ArrayList<Long> idList){
 		String idListStr = "";
-		
 		for(int i= 0;i <idList.size(); i++){
-			
 			if(i!=0){
-				
 				idListStr = idListStr +",";
 			}
-			
 			idListStr = idListStr + "("+String.valueOf(idList.get(i)+(")"));
-			
-			
-			
 		}
 		return idListStr;
-		
 	}
 }

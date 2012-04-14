@@ -55,6 +55,9 @@ public class User implements DataObjectIF {
     String location;
     String longName;
     private boolean inviteActive = true;
+    String language;
+    
+    boolean newSeasonInfoSent = true;
     
     @Inject TwitterProxy twitterProxy = null;
 	private boolean profitCalculated;
@@ -225,7 +228,7 @@ public class User implements DataObjectIF {
 		this.setOauthToken(rs.getString("oauthToken"));
 		this.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
 		this.setPictureUrl(rs.getString("pictureUrl"));
-		
+		this.setLanguage(rs.getString("language"));
 		
 	}
 
@@ -302,6 +305,14 @@ public class User implements DataObjectIF {
 
 	public void setRankCumulative(int rankCumulative) {
 		this.rankCumulative = rankCumulative;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	

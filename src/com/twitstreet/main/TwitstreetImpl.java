@@ -39,9 +39,11 @@ import com.twitstreet.season.SeasonMgr;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.DetectInvalidTokensTask;
+import com.twitstreet.task.NewSeasonInfoSentTask;
 import com.twitstreet.task.SeasonTask;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.task.UserInfoUpdateTask;
+import com.twitstreet.twitter.AnnouncerMgr;
 
 @Singleton
 public class TwitstreetImpl implements Twitstreet {
@@ -63,6 +65,8 @@ public class TwitstreetImpl implements Twitstreet {
 
 	@Inject
 	StockMgr stockMgr;
+	
+	@Inject AnnouncerMgr announcerMgr;
 
 	@Inject
 	public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr) {
@@ -76,7 +80,7 @@ public class TwitstreetImpl implements Twitstreet {
 		loadConfiguration();
 		
 		seasonMgr.loadSeasonInfo();
-
+		announcerMgr.loadAnnouncers();
 	
 
 		if (configMgr.isDev() || !configMgr.isMaster()) {
@@ -105,7 +109,9 @@ public class TwitstreetImpl implements Twitstreet {
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
 		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);
 		DetectInvalidTokensTask detectInvalidTokensTask = injector.getInstance(DetectInvalidTokensTask.class);
-
+		NewSeasonInfoSentTask newSeasonInfoSentTask = injector.getInstance(NewSeasonInfoSentTask.class);
+		
+		
 		Thread detectInvalidTokensThread = new Thread(detectInvalidTokensTask);
 		detectInvalidTokensThread.setName("Detect Invalid Tokens Task");
 
@@ -114,12 +120,18 @@ public class TwitstreetImpl implements Twitstreet {
 
 		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
 		updateUserInfoThread.setName("User Info Update Task");
+		
+		Thread newSeasonInfoSentThread = new Thread(newSeasonInfoSentTask);
+		newSeasonInfoSentThread.setName("New Season Info Sent Task");
 
 		updateFollowerCountThread.start();
+		
+		//newSeasonInfoSentThread.start();
 
 		if (!configMgr.isDev()) {
 			detectInvalidTokensThread.start();
 			updateUserInfoThread.start();
+			newSeasonInfoSentThread.start();
 		}
 		
 	}

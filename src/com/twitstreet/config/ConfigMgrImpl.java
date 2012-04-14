@@ -147,26 +147,6 @@ public class ConfigMgrImpl implements ConfigMgr{
 	}
 
 	@Override
-	public String getAnnouncerConsumerKey() {
-		return get(ConfigMgr.ANNOUNCER_CONSUMER_KEY);
-	}
-
-	@Override
-	public String getAnnouncerConsumerSecret() {
-		return get(ConfigMgr.ANNOUNCER_CONSUMER_SECRET);
-	}
-
-	@Override
-	public String getAnnouncerAccessToken() {
-		return get(ConfigMgr.ANNOUNCER_ACCESS_TOKEN);
-	}
-
-	@Override
-	public String getAnnouncerAccessSecret() {
-		return get(ConfigMgr.ANNOUNCER_ACCESS_SECRET);
-	}
-
-	@Override
 	public boolean isDev() {
 		return dev;
 	}

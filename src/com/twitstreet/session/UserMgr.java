@@ -77,4 +77,6 @@ public interface UserMgr {
 	RankingHistoryData getRankingHistoryForUser(long id, Timestamp start, Timestamp end);
 	public void resetInvitation();
 	RankingHistoryData getRankingHistoryForUser(long id, int seasonId);
+	public List<User> getNewSeasonInfoNotSentUsers(int size);
+	public void setNewSeasonInfoSent(List<User> userIdList);
 }

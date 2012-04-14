@@ -16,6 +16,8 @@ create table `users`(
     `location` varchar(255) DEFAULT NULL,
     `description` varchar(255) DEFAULT NULL,
     `inviteActive` tinyint(1) DEFAULT '1',
+    `newSeasonInfoSent` tinyint(1) NOT NULL DEFAULT '1',
+     `language` varchar(45) NOT NULL DEFAULT 'en',
      primary key (`id`),
      unique key `username_unique` (`username`)
 )  engine=innodb default charset=`utf8`;
@@ -224,4 +226,15 @@ create table `user_cumulative_value` (
   primary key (`user_id`),
   constraint `fk_user_cumulative_value_user` foreign key (`user_id`) references `users` (`id`)
 ) engine=innodb default charset=utf8;
+
+CREATE TABLE `announcer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  `consumerKey` varchar(255) DEFAULT NULL,
+  `consumerSecret` varchar(255) DEFAULT NULL,
+  `accessToken` varchar(255) DEFAULT NULL,
+  `accessTokenSecret` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf;
 

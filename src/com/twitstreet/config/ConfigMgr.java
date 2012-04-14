@@ -30,12 +30,6 @@ public interface ConfigMgr {
 	public static final String SERVER_COUNT = "server-count";
 	public static final String SERVER_ID = "server-id";
 	public static final String INITIAL_MONEY = "initialMoney";
-
-	public static  String ANNOUNCER_CONSUMER_KEY = "announcerConsumerKey";
-	public static  String ANNOUNCER_CONSUMER_SECRET = "announcerConsumerSecret";
-	public static  String ANNOUNCER_ACCESS_TOKEN = "announcerAccessToken";
-	public static  String ANNOUNCER_ACCESS_SECRET = "announcerAccessSecret";
-	
 	public static String DEFAULT_SERVER_COUNT = "1";
 	
 	//currently just one server is master and its id is 0.
@@ -51,10 +45,6 @@ public interface ConfigMgr {
 	public String get(String parm);
 	public String getConsumerKey();
 	public String getConsumerSecret();
-	public String getAnnouncerConsumerKey();
-	public String getAnnouncerConsumerSecret();
-	public String getAnnouncerAccessToken();
-	public String getAnnouncerAccessSecret();
 	public int getMinFollower();
 	public String getGaAccount();
 	public double getInitialMoney();
