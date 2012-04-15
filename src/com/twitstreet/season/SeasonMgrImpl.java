@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -36,10 +37,16 @@ import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.RankingData;
+import com.twitstreet.db.data.User;
+import com.twitstreet.localization.LocalizationUtil;
+import com.twitstreet.session.UserMgr;
+import com.twitstreet.twitter.AnnouncerMgr;
 
 @Singleton
 public class SeasonMgrImpl implements SeasonMgr {
 	private static Logger logger = Logger.getLogger(SeasonMgrImpl.class);
+	private static final int SEASON_RESULT_SIZE = 3;
+	
 	private static String INSERT_UPDATE_SEASON_INFO = "insert into season_info (id, startTime, endTime, active, updateInProgress)  values (?,?,?,?,?) on duplicate key update startTime=?, endTime=?, active=?, updateInProgress=? ";
 	private static String SELECT_FROM_SEASON_INFO = " select id, startTime, endTime, active, updateInProgress from season_info ";
 
@@ -49,11 +56,18 @@ public class SeasonMgrImpl implements SeasonMgr {
 
 	@Inject
 	DBMgr dbMgr;
+	
+	@Inject
+	UserMgr userMgr;
 
 	private ArrayList<SeasonInfo> allSeasons = new ArrayList<SeasonInfo>();
 
 	@Inject
 	ConfigMgr configMgr;
+	
+	@Inject
+	AnnouncerMgr announcer;
+	
 	private SeasonInfo currentSeason;
 
 	@Override
@@ -214,11 +228,10 @@ public class SeasonMgrImpl implements SeasonMgr {
 		current.setUpdateInProgress(true);
 		setSeasonInfo(current);
 		
-		Date nowDate = new Date();
-		
-		long now = nowDate.getTime();
-		long endTime = getCurrentSeason().getEndTime().getTime();
-		
+		userMgr.rerank();
+		List<User> userList = userMgr.getTopNUsers(SEASON_RESULT_SIZE);
+		String seasonResultMessage = seasonResultMessage(userList);
+		announcer.announceFromTwitStreetGame(seasonResultMessage);
 		try {
 			connection = dbMgr.getConnection();
 			cs = connection.prepareCall("{call new_season(?)}");
@@ -310,6 +323,18 @@ public class SeasonMgrImpl implements SeasonMgr {
 			loadSeasonResults();
 		}
 		return seasonResults;
+	}
+	
+	private String seasonResultMessage(List<User> userList){
+		LocalizationUtil lutil = LocalizationUtil.getInstance();
+		
+		Object[] messageParams = new Object[2 * SEASON_RESULT_SIZE + 1];
+		messageParams[0] = currentSeason.getId();
+		for(int i = 0; i < SEASON_RESULT_SIZE; i ++){
+			messageParams[i * 2 + 1]  = "@" + userList.get(i).getUserName();
+			messageParams[i * 2 + 2] = (int)userList.get(i).getTotal();
+		}
+		return lutil.get("season.result", LocalizationUtil.DEFAULT_LANGUAGE, messageParams);
 	}
 
 }

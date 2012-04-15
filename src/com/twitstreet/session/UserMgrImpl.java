@@ -68,7 +68,8 @@ public class UserMgrImpl implements UserMgr {
 			+ "direction, " + "pictureUrl, "
 			+ "portfolio_value(id) as portfolio, "
 			+ " users.cash+portfolio as total, " + "description, "
-			+ "location, " + "inviteActive, " + "language " +"from users,ranking ";
+			+ "location, " + "inviteActive, " + "language "
+			+ "from users,ranking ";
 
 	private static String SELECT_FROM_USERS_JOIN_RANKING = SELECT_FROM_USERS_RANKING
 			+ " where ranking.user_id = users.id ";
@@ -198,13 +199,12 @@ public class UserMgrImpl implements UserMgr {
 			ps.setInt(6, 0);
 
 			ps.executeUpdate();
-			
+
 			CallableStatement cs = null;
-		
-				cs = connection.prepareCall("{call rerank()}");
-				cs.execute();
-		
-					
+
+			cs = connection.prepareCall("{call rerank()}");
+			cs.execute();
+
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			logger.warn("DB: User already exists in ranking - UserId:"
@@ -857,7 +857,6 @@ public class UserMgrImpl implements UserMgr {
 			ps.setString(5, user.getLongName());
 			ps.setString(6, user.getLanguage());
 			ps.setLong(7, user.getId());
-			
 
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -1027,4 +1026,31 @@ public class UserMgrImpl implements UserMgr {
 		return idListStr;
 	}
 
+	@Override
+	public List<User> getTopNUsers(int n) {
+		List<User> userList = new ArrayList<User>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
+					+ " order by rank asc limit ?");
+			ps.setInt(1, n);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
 }

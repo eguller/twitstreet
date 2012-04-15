@@ -13,7 +13,6 @@ select id, endTime into @active_season,@active_season_end from season_info where
  
     set @next_season := @active_season+1;
 
-	call rerank();
 	insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank, season_id) 
 		select user_id, cash, portfolio,  lastUpdate, rank,@active_season from ranking;
 		

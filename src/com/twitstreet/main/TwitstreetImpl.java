@@ -67,6 +67,7 @@ public class TwitstreetImpl implements Twitstreet {
 	StockMgr stockMgr;
 	
 	@Inject AnnouncerMgr announcerMgr;
+	
 
 	@Inject
 	public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr) {
@@ -82,7 +83,6 @@ public class TwitstreetImpl implements Twitstreet {
 		seasonMgr.loadSeasonInfo();
 		announcerMgr.loadAnnouncers();
 	
-
 		if (configMgr.isDev() || !configMgr.isMaster()) {
 
 			startTasks();

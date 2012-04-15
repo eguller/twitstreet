@@ -79,4 +79,5 @@ public interface UserMgr {
 	RankingHistoryData getRankingHistoryForUser(long id, int seasonId);
 	public List<User> getNewSeasonInfoNotSentUsers(int size);
 	public void setNewSeasonInfoSent(List<User> userIdList);
+	public List<User> getTopNUsers(int n);
 }

@@ -14,7 +14,7 @@ import com.twitstreet.util.Util;
 public class NewSeasonInfoSentTask implements Runnable {
 	private static Logger logger = Logger.getLogger(NewSeasonInfoSentTask.class);
 	private static final int SEASONINFO_SIZE = 3;
-	private static final long ONEHOUR = 1 * 60 * 60 * 1000;
+	private static final long FIFTEEN_MINUTE = 15 * 60 * 1000;
 	private static final int SIZE = 1;
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	@Inject UserMgr userMgr;
@@ -32,7 +32,7 @@ public class NewSeasonInfoSentTask implements Runnable {
 				announcerMgr.announceFromAnnouncer(Util.mentionMessage(user.getUserName(), message));
 			}
 			try {
-				Thread.sleep(ONEHOUR);
+				Thread.sleep(FIFTEEN_MINUTE);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
