@@ -41,6 +41,7 @@ import com.twitstreet.db.data.User;
 import com.twitstreet.localization.LocalizationUtil;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.AnnouncerMgr;
+import com.twitstreet.util.Util;
 
 @Singleton
 public class SeasonMgrImpl implements SeasonMgr {
@@ -332,7 +333,7 @@ public class SeasonMgrImpl implements SeasonMgr {
 		messageParams[0] = currentSeason.getId();
 		for(int i = 0; i < SEASON_RESULT_SIZE; i ++){
 			messageParams[i * 2 + 1]  = "@" + userList.get(i).getUserName();
-			messageParams[i * 2 + 2] = (int)userList.get(i).getTotal();
+			messageParams[i * 2 + 2] = Util.commaSep((int)userList.get(i).getTotal());
 		}
 		return lutil.get("season.result", LocalizationUtil.DEFAULT_LANGUAGE, messageParams);
 	}
