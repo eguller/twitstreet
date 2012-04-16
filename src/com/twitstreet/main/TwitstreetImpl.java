@@ -91,7 +91,18 @@ public class TwitstreetImpl implements Twitstreet {
 		if(configMgr.isMaster() || configMgr.isDev() ){
 			startSeasonTask();
 		}
+		if(!configMgr.isDev()){
+			startNewSeasonInfoSentTask();
+		}
 		initialized = true;
+	}
+
+
+	private void startNewSeasonInfoSentTask() {
+		NewSeasonInfoSentTask newSeasonInfoSentTask = injector.getInstance(NewSeasonInfoSentTask.class);
+		Thread newSeasonInfoSentThread = new Thread(newSeasonInfoSentTask);
+		newSeasonInfoSentThread.setName("New Season Info Sent Task");
+		newSeasonInfoSentThread.start();
 	}
 
 	private void startSeasonTask() {
@@ -109,7 +120,7 @@ public class TwitstreetImpl implements Twitstreet {
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
 		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);
 		DetectInvalidTokensTask detectInvalidTokensTask = injector.getInstance(DetectInvalidTokensTask.class);
-		NewSeasonInfoSentTask newSeasonInfoSentTask = injector.getInstance(NewSeasonInfoSentTask.class);
+		
 		
 		
 		Thread detectInvalidTokensThread = new Thread(detectInvalidTokensTask);
@@ -121,17 +132,12 @@ public class TwitstreetImpl implements Twitstreet {
 		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
 		updateUserInfoThread.setName("User Info Update Task");
 		
-		Thread newSeasonInfoSentThread = new Thread(newSeasonInfoSentTask);
-		newSeasonInfoSentThread.setName("New Season Info Sent Task");
-
 		updateFollowerCountThread.start();
 		
-		//newSeasonInfoSentThread.start();
-
 		if (!configMgr.isDev()) {
 			detectInvalidTokensThread.start();
 			updateUserInfoThread.start();
-			newSeasonInfoSentThread.start();
+			
 		}
 		
 	}
