@@ -85,11 +85,9 @@ public class Welcome2ListenerMgrImpl implements Welcome2ListenerMgr {
 						if(userList != null){
 							for(User user : userList){
 								if(user.getFollowersCount() > MIN_FOLLOWER_COUNT_FOR_TREND){
-									System.out.println("Welcome to: " + user.getScreenName());
 									Stock stock = new Stock(user);
 									stockMgr.saveStock(stock);
 									stockMgr.saveTrend(stock.getId());
-									
 								}
 							}
 						}
