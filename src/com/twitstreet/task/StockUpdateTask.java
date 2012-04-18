@@ -145,7 +145,7 @@ public class StockUpdateTask implements Runnable {
 		List<Stock> updatedStocks = new ArrayList<Stock>();
 		while (true) {
 			List<Stock> stockList = stockMgr
-					.getUpdateRequiredStocks(TwitterProxyImpl.USER_COUNT_FOR_UPDATE);
+					.getUpdateRequiredStocks(TwitterProxyImpl.IDS_SIZE);
 			if (stockList.size() == 0)
 				break;
 			ArrayList<Long> idList = new ArrayList<Long>();

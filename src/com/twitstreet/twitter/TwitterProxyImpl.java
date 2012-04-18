@@ -52,7 +52,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 	
 	Map<String, Integer> woiedMap = new HashMap<String, Integer>();
 
-	public static int USER_COUNT_FOR_UPDATE = 100;
+	public static int IDS_SIZE = 100;
 	private static int INVALID_REQUEST = 400;
 	private static int UNAUTHORIZED = 401;
 	private static int NOT_FOUND = 404;
@@ -211,10 +211,6 @@ public class TwitterProxyImpl implements TwitterProxy {
 
 	@Override
 	public ArrayList<User> getTwUsers(ArrayList<Long> idList){
-		
-		
-		
-		
 		ResponseList<User> users  = null;
 		ArrayList<User> userList = new ArrayList<User>();
 		try {

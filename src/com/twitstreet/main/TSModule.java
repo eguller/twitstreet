@@ -52,6 +52,8 @@ import com.twitstreet.twitter.AnnouncerMgrImpl;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 import com.twitstreet.twitter.TwitterProxyImpl;
+import com.twitstreet.twitter.Welcome2ListenerMgr;
+import com.twitstreet.twitter.Welcome2ListenerMgrImpl;
 
 public class TSModule extends AbstractModule {
 	@Inject Twitstreet twitStreet;
@@ -73,6 +75,7 @@ public class TSModule extends AbstractModule {
 		bind(SeasonMgr.class).to(SeasonMgrImpl.class).in(Scopes.SINGLETON);
 		bind(AnnouncerMgr.class).to(AnnouncerMgrImpl.class).in(Scopes.SINGLETON);
 		bind(AdsListenerMgr.class).to(AdsListenerMgrImpl.class).in(Scopes.SINGLETON);
+		bind(Welcome2ListenerMgr.class).to(Welcome2ListenerMgrImpl.class).in(Scopes.SINGLETON);
 		install(new FactoryModuleBuilder()
 	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
 	     .build(TwitterProxyFactory.class));

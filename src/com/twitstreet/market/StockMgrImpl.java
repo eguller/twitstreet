@@ -478,7 +478,7 @@ public class StockMgrImpl implements StockMgr {
 					" limit ?");
 			
 			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
-			ps.setInt(2, TwitterProxyImpl.USER_COUNT_FOR_UPDATE);
+			ps.setInt(2, TwitterProxyImpl.IDS_SIZE);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				Stock stockDO = new Stock();
@@ -859,6 +859,23 @@ public class StockMgrImpl implements StockMgr {
 
 		} finally {
 			dbMgr.closeResources(connection, ps, rs);
+		}
+	}
+	
+	@Override
+	public void saveTrend(long stockId){
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement("insert into twitter_trends (stock_id)  values (?) on duplicate key update lastUpdate = now() ");
+			ps.setLong(1, stockId);
+			ps.executeUpdate();
+			
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
 		}
 	}
 

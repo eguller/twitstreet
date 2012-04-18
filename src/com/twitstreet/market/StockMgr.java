@@ -105,4 +105,6 @@ public interface StockMgr {
 	public boolean addStockIntoAnnouncement(long stockid);
 	public void removeOldRecords(int removeOlderThanMinutes);
 	public void removeOldRecordsByServer(int removeOlderThanMinutes);
+
+	public void saveTrend(long id);
 }
