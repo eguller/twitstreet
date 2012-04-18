@@ -86,11 +86,8 @@ public class TwitstreetImpl implements Twitstreet {
 		seasonMgr.loadSeasonInfo();
 		announcerMgr.loadAnnouncers();
 		
-		adsListenerMgr.start();
 		if (configMgr.isDev() || !configMgr.isMaster()) {
-
 			startTasks();
-
 		}
 		if(configMgr.isMaster() || configMgr.isDev() ){
 			startSeasonTask();
@@ -141,7 +138,7 @@ public class TwitstreetImpl implements Twitstreet {
 		if (!configMgr.isDev()) {
 			detectInvalidTokensThread.start();
 			updateUserInfoThread.start();
-			
+			adsListenerMgr.start();
 		}
 		
 		
