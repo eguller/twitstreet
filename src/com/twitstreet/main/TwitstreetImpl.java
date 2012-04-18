@@ -43,6 +43,7 @@ import com.twitstreet.task.NewSeasonInfoSentTask;
 import com.twitstreet.task.SeasonTask;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.task.UserInfoUpdateTask;
+import com.twitstreet.twitter.AdsListenerMgr;
 import com.twitstreet.twitter.AnnouncerMgr;
 
 @Singleton
@@ -68,6 +69,8 @@ public class TwitstreetImpl implements Twitstreet {
 	
 	@Inject AnnouncerMgr announcerMgr;
 	
+	@Inject AdsListenerMgr adsListenerMgr;
+	
 
 	@Inject
 	public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr) {
@@ -82,7 +85,8 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		seasonMgr.loadSeasonInfo();
 		announcerMgr.loadAnnouncers();
-	
+		
+		adsListenerMgr.start();
 		if (configMgr.isDev() || !configMgr.isMaster()) {
 
 			startTasks();
@@ -139,6 +143,7 @@ public class TwitstreetImpl implements Twitstreet {
 			updateUserInfoThread.start();
 			
 		}
+		
 		
 	}
 

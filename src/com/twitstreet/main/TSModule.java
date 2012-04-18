@@ -20,6 +20,7 @@ package com.twitstreet.main;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Scope;
 import com.google.inject.Scopes;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.twitstreet.config.ConfigMgr;
@@ -44,6 +45,8 @@ import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.task.ReRankTask;
 import com.twitstreet.task.StockUpdateTask;
+import com.twitstreet.twitter.AdsListenerMgr;
+import com.twitstreet.twitter.AdsListenerMgrImpl;
 import com.twitstreet.twitter.AnnouncerMgr;
 import com.twitstreet.twitter.AnnouncerMgrImpl;
 import com.twitstreet.twitter.TwitterProxy;
@@ -69,6 +72,7 @@ public class TSModule extends AbstractModule {
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class).in(Scopes.SINGLETON);
 		bind(SeasonMgr.class).to(SeasonMgrImpl.class).in(Scopes.SINGLETON);
 		bind(AnnouncerMgr.class).to(AnnouncerMgrImpl.class).in(Scopes.SINGLETON);
+		bind(AdsListenerMgr.class).to(AdsListenerMgrImpl.class).in(Scopes.SINGLETON);
 		install(new FactoryModuleBuilder()
 	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
 	     .build(TwitterProxyFactory.class));

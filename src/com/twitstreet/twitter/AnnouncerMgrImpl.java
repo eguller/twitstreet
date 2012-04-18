@@ -27,6 +27,7 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 	private static final String LOAD_ANNOUNCER = "select * from announcer";
 
 	ArrayList<Twitter> announcerList = new ArrayList<Twitter>();
+	ArrayList<Announcer> announcerDataList = new ArrayList<Announcer>();
 	Twitter twitstreetGame = null;
 
 	public void loadAnnouncers() {
@@ -40,6 +41,7 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 			while (rs.next()) {
 				Announcer announcer = new Announcer();
 				announcer.getDataFromResultSet(rs);
+				announcerDataList.add(announcer);
 				if (TWITSTREET_GAME.equals(announcer.getName())) {
 					twitstreetGame = new TwitterFactory().getInstance();
 					twitstreetGame.setOAuthConsumer(announcer.getConsumerKey(),
@@ -114,6 +116,16 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 		else{
 			logger.error("Twitstreet game is null");
 		}
+	}
+	
+	@Override
+	public ArrayList<Announcer> getAnnouncerDataList(){
+		return announcerDataList;
+	}
+
+	@Override
+	public Announcer randomAnnouncerData() {
+		return announcerDataList.get( (int)(Math.random() * announcerDataList.size()));
 	}
 
 }

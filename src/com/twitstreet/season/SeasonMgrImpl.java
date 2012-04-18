@@ -230,9 +230,11 @@ public class SeasonMgrImpl implements SeasonMgr {
 		setSeasonInfo(current);
 		
 		userMgr.rerank();
-		List<User> userList = userMgr.getTopNUsers(SEASON_RESULT_SIZE);
-		String seasonResultMessage = seasonResultMessage(userList);
-		announcer.announceFromTwitStreetGame(seasonResultMessage);
+		if(!configMgr.isDev()){
+			List<User> userList = userMgr.getTopNUsers(SEASON_RESULT_SIZE);
+			String seasonResultMessage = seasonResultMessage(userList);
+			announcer.announceFromTwitStreetGame(seasonResultMessage);
+		}
 		try {
 			connection = dbMgr.getConnection();
 			cs = connection.prepareCall("{call new_season(?)}");

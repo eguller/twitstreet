@@ -1,5 +1,9 @@
 package com.twitstreet.twitter;
 
+import java.util.ArrayList;
+
+import com.twitstreet.db.data.Announcer;
+
 import twitter4j.Twitter;
 
 
@@ -9,4 +13,6 @@ public interface AnnouncerMgr {
 	public void loadAnnouncers();
 	public void announceFromAnnouncer(String message);
 	public void announceFromTwitStreetGame(String message);
+	public ArrayList<Announcer> getAnnouncerDataList();
+	public Announcer randomAnnouncerData();
 }
