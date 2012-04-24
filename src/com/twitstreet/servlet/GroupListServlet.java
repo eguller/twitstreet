@@ -27,20 +27,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.twitstreet.db.data.Group;
 import com.twitstreet.db.data.Stock;
+import com.twitstreet.db.data.User;
 import com.twitstreet.market.StockMgr;
+import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 
 @SuppressWarnings("serial")
 @Singleton
-public class TrendyStocksServlet extends TwitStreetServlet {
-
-	public static String TOPRANKS_USER_LIST = "topranksuserlist";
-
+public class GroupListServlet extends TwitStreetServlet {
 	@Inject
 	UserMgr userMgr;
 	@Inject
 	StockMgr stockMgr;
+	@Inject
+	GroupMgr groupMgr;
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -52,23 +54,36 @@ public class TrendyStocksServlet extends TwitStreetServlet {
 												// server
 
 		loadUser(request);
+		User user =(User) request.getAttribute(User.USER);
+		
 		int page = getPage(request);
-		PaginationDO pdo = new PaginationDO(page,stockMgr.getSuggestedStockCount(),StockMgr.MAX_TRENDS_PER_PAGE,"suggested","loadSuggestedStocks",false);
-		request.setAttribute("pdo", pdo);
-		ArrayList<Stock> stocks = stockMgr.getSuggestedStocks(page-1,StockMgr.MAX_TRENDS_PER_PAGE);
-		request.setAttribute("stockList", stocks);
-		request.setAttribute("stockListName", "suggested");
+	
+		String type = "";
+		PaginationDO pdo = null;
+		ArrayList<Group> results = null;
+		type = request.getParameter("type");
+		if(type!=null&& type.equalsIgnoreCase("my")){
+			pdo = new PaginationDO(page,groupMgr.getGroupCountForUser(user.getId()),GroupMgr.GROUP_COUNT_PER_PAGE, type,"loadMyGroups",false);
+			results = groupMgr.getGroupsForUser(user.getId(),(page-1)*GroupMgr.GROUP_COUNT_PER_PAGE,GroupMgr.GROUP_COUNT_PER_PAGE);
+		}else{
+			type = "all";
+			pdo = new PaginationDO(page,groupMgr.getGroupCount(),GroupMgr.GROUP_COUNT_PER_PAGE, type,"loadGroupList",false);
+			results = groupMgr.getAllGroups((page-1)*GroupMgr.GROUP_COUNT_PER_PAGE,GroupMgr.GROUP_COUNT_PER_PAGE);
+		}
+	
+		
+		request.setAttribute("pdo", pdo);	
+		request.setAttribute("groupList", results);
+		request.setAttribute("groupListName", type);
 		//loadUserFromCookie(request);
 		try {
 			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/suggestedStocks.jsp").forward(request, response);
+					"/WEB-INF/jsp/groupList.jsp").forward(request, response);
 		} catch (ServletException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
-
-
 
 }

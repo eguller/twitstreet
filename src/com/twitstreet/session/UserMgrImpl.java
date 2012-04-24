@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 
@@ -38,7 +39,6 @@ import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.base.DBMgrImpl;
-import com.twitstreet.db.data.Group;
 import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
 import com.twitstreet.season.SeasonMgr;
@@ -71,6 +71,9 @@ public class UserMgrImpl implements UserMgr {
 
 	private static String SELECT_FROM_USERS_JOIN_RANKING = SELECT_FROM_USERS_RANKING
 			+ " where ranking.user_id = users.id ";
+
+	private static String SELECT_FROM_USERS_JOIN_RANKING_BY_GROUP_ID = SELECT_FROM_USERS_JOIN_RANKING+
+		" and users.id in  	(select user_id from user_group where group_id = ?) ";
 
 	
 
@@ -128,28 +131,25 @@ public class UserMgrImpl implements UserMgr {
 		return userDO;
 	}
 
-	public ArrayList<User> getUsersByGroup(Group group) {
-		ArrayList<User> users = new ArrayList<User>();
-		if (group.getId() < 1 && group.getName() != null
-				&& group.getName().length() > 0) {
-			group = groupMgr.getGroup(group.getName());
-		}
-
+	@Override
+	public int getUserCountForGroup(long id) {
+		
+		int count = 0;
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		User userDO = null;
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement(SELECT_FROM_USERS_RANKING
-							+ " , user_group where ranking.user_id = users.id and user_group.user_id = users.id and user_group.group_id = ? ");
-			ps.setLong(1, group.getId());
+					.prepareStatement(
+							" select count(*) from ( "+
+									SELECT_FROM_USERS_JOIN_RANKING +
+							" 		and users.id in ( select user_id from user_group where group_id = ? )" +
+							" )  as groupUsers ");
+			ps.setLong(1, id);
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				userDO = new User();
-				userDO.getDataFromResultSet(rs);
-				users.add(userDO);
+				return rs.getInt(1);
 			}
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -158,7 +158,39 @@ public class UserMgrImpl implements UserMgr {
 		} finally {
 			dbMgr.closeResources(connection, ps, rs);
 		}
-		return users;
+		
+		return count;
+	}
+	@Override
+	public int getUserCount() {
+		
+		int count = 0;
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement(
+							" select count(*) from users ");
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				return rs.getInt(1);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		
+		return count;
+	}
+	@Override
+	public ArrayList<User> getUsersForGroup(long id, int offset, int count) {
+		
+		return getTopRankForGroup(id, offset, count);
 	}
 
 	public void assignInitialRankToUser(User userDO) {
@@ -255,7 +287,6 @@ public class UserMgrImpl implements UserMgr {
 		}
 
 		assignInitialRankToUser(userDO);
-		groupMgr.addUserToDefaultGroup(userDO);
 	}
 
 	@Override
@@ -336,17 +367,25 @@ public class UserMgrImpl implements UserMgr {
 	@Override
 	public User random() {
 		Connection connection = null;
-		Statement stmt = null;
+		PreparedStatement ps = null;
 		User user = null;
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			stmt = connection.createStatement();
-			rs = stmt
-					.executeQuery(SELECT_FROM_USERS_JOIN_RANKING
-							+ " and users.id >= (select floor( max(id) * rand()) from users ) "
-							+ "   and users.id not in (select user_id from inactive_user) "
-							+ " order by users.id limit 1");
+			
+			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
+					+ "  limit ?,1");
+			
+			Random generator = new Random();
+			
+			int random = generator.nextInt();
+			int userCount = getUserCount();
+			
+			random = random%userCount;
+			random = Math.abs(random);
+			ps.setInt(1, random);
+			rs = ps.executeQuery();
+			
 			if (rs.next()) {
 				user = new User();
 				user.getDataFromResultSet(rs);
@@ -356,9 +395,9 @@ public class UserMgrImpl implements UserMgr {
 			}
 
 		} catch (SQLException e) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + stmt.toString(), e);
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), e);
 		} finally {
-			dbMgr.closeResources(connection, stmt, rs);
+			dbMgr.closeResources(connection, ps, rs);
 
 		}
 
@@ -460,6 +499,37 @@ public class UserMgrImpl implements UserMgr {
 		return userList;
 	}
 	@Override
+	public ArrayList<User> getTopRankForGroup(long id, int offset,int count) {
+
+ 
+		ArrayList<User> userList = new ArrayList<User>(100);
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING_BY_GROUP_ID
+					+ " order by rank asc limit ?,?");
+			
+			ps.setLong(1, id);
+			ps.setInt(2, offset);
+			ps.setInt(3, count);
+			rs = ps.executeQuery();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
+	@Override
 	public ArrayList<User> getTopRankAllTime(int pageNumber) {
 
 		// i.e limit : 17, 17
@@ -475,6 +545,37 @@ public class UserMgrImpl implements UserMgr {
 			connection = dbMgr.getConnection();
 			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
 					+ " order by rankCumulative asc limit " + limit);
+			rs = ps.executeQuery();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
+
+	@Override
+	public ArrayList<User> getTopRankAllTimeForGroup(long id, int offset,int count) {
+
+	
+		ArrayList<User> userList = new ArrayList<User>(100);
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING_BY_GROUP_ID
+					+ " order by rankCumulative asc limit ?,? " );
+			ps.setLong(1, id);
+			ps.setInt(2, offset);
+			ps.setInt(3, count);
 			rs = ps.executeQuery();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 			while (rs.next()) {

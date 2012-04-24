@@ -17,7 +17,7 @@
 	User sessionUser = (User)request.getAttribute(User.USER);
 	int pageCount = Integer.valueOf(request.getParameter("pageCount"));
 
-	int userCount = Integer.valueOf(request.getParameter("userCount"));
+	int userCount = Integer.valueOf(request.getParameter("itemCount"));
 	int currPage = Integer.valueOf(request.getParameter("currPage"));
 
 	LocalizationUtil lutil = LocalizationUtil.getInstance();

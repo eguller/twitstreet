@@ -321,7 +321,7 @@ public class PortfolioMgrImpl implements PortfolioMgr {
 								" stock.verified as verified,  " +
 								" stock.total as total, " +
 								" stock.changePerHour as totalChangePerHour " +
-								"from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ? order by changePerHour desc, stockName asc ");
+								"from portfolio, stock where portfolio.stock = stock.id and portfolio.user_id = ? order by changePerHour/total desc, stockName asc ");
 				ps.setLong(1, user.getId());
 				rs = ps.executeQuery();
 

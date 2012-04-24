@@ -104,7 +104,9 @@ function performOperation(command){
     	loadUserProfile(id);
     }
 	else if(itemType == 'suggestedstocks'){
-    	loadSuggestedStocks();
+    	var page = command.split('=')[1];
+    	loadSuggestedStocks(page);
+    	
     }
 	else if(itemType == 'topgrossingstocks'){
     	loadTopGrossingStocks();
@@ -117,6 +119,20 @@ function performOperation(command){
     else if(itemType == 'searchuser'){
     	var searchString = command.split('=')[1];
     	getUser(searchString);
+    }
+    else if(itemType == 'searchgroup'){
+    	var searchString = command.split('=')[1];
+    	getGroup(searchString);
+    }
+    else if(itemType == 'group'){
+    	var id = command.split('=')[1];
+    	loadGroup(id);
+    }
+    else if(itemType == 'grouplist'){
+    	loadGroupList(1);
+    }
+    else if(itemType == 'mygroups'){
+    	loadMyGroups(1);
     }
 }
 function loadLanguage(lang){

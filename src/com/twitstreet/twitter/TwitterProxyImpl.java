@@ -362,7 +362,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 		int i = 0;
 		for(String location : woiedMap.keySet()){
 			
-			if(i>3 && configMgr.isDev()){
+			if(i>0 && configMgr.isDev()){
 				
 				break;
 			}

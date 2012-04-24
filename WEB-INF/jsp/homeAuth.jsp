@@ -5,6 +5,7 @@
   <template:put name='oldseasons' content='oldSeasons.jsp' />
   <template:put name='stocks' content='stocks.jsp' />
   <template:put name='users' content='users.jsp'/>
+  <template:put name='groups' content='groups.jsp'/>
   <template:put name='mainmenu' content='mainMenu.jsp'/>  
   <template:put name='portfolio' content='portfolio.jsp' />
   <template:put name='balance' content='balance.jsp' />

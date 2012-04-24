@@ -103,10 +103,14 @@ if (userCount > maxRank) {
 		<div align="center" style="padding: 3px;margin-bottom:5px;">
 					<jsp:include page="toprankPagination.jsp">
 				
+						<jsp:param name="recordPerPage" value="<%=userMgr.getRecordPerPage()%>"></jsp:param>
+				
 						<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
 						<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-						<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-				
+						<jsp:param name="itemCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+						<jsp:param name="paginationName" value="toprank"></jsp:param>
+						<jsp:param name="onChangeFunction" value="toprank"></jsp:param>
+						
 					</jsp:include>				
 				</div>
 	
@@ -183,13 +187,17 @@ if (userCount > maxRank) {
 	
 				
 		<div align="center" style="padding: 3px;margin-bottom:5px;">
-					<jsp:include page="toprankPagination.jsp">
 				
+					<jsp:include page="toprankPagination.jsp">
+						<jsp:param name="recordPerPage" value="<%=userMgr.getRecordPerPage()%>"></jsp:param>
 						<jsp:param name="currPage" value="<%=String.valueOf(currPage) %>"></jsp:param>
 						<jsp:param name="pageCount" value="<%=String.valueOf(pageCount) %>"></jsp:param>
-						<jsp:param name="userCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
-				
-					</jsp:include>				
+						<jsp:param name="itemCount" value="<%=String.valueOf(userCount) %>"></jsp:param>
+						<jsp:param name="paginationName" value="topranks"></jsp:param>
+						<jsp:param name="onChangeFunction" value="toprank"></jsp:param>
+						
+					</jsp:include>	
+							
 				</div>
 	
 		

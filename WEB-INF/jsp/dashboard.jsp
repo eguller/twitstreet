@@ -1,4 +1,6 @@
 
+<%@page import="com.twitstreet.util.Util"%>
+<%@page import="com.twitstreet.servlet.PaginationDO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.twitstreet.servlet.HomePageServlet"%>
 <%@page import="com.twitstreet.db.data.Stock"%>
@@ -8,6 +10,7 @@
 <%
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
+	
 	User user = (User) request.getAttribute(User.USER);
 	
 	long id = -1;
@@ -18,6 +21,8 @@
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
 
 	String selectedTab = (String) request.getAttribute(HomePageServlet.SELECTED_TAB_STOCK_BAR);
+	  
+	PaginationDO pdo = new PaginationDO(1,stockMgr.getSuggestedStockCount(),StockMgr.MAX_TRENDS_PER_PAGE,"suggested","loadSuggestedStocks", false);
 	
 %>
 
@@ -38,13 +43,24 @@
 			<td>
 				<div id="stocks-screen">
 					<div id="suggested-stocks-content">
+					
+					
+					
 						<%if(selectedTab.equalsIgnoreCase("suggested-stocks-tab")){						
 
 							ArrayList<Stock> results = stockMgr.getSuggestedStocks();
 							request.setAttribute("stockList", results);		
 							request.setAttribute("stockListName", "suggested");					
 						%>
-							<jsp:include page="suggestedStocks.jsp" />							
+							
+								
+							<%request.setAttribute("pdo", pdo); %>					
+							<jsp:include page="suggestedStocks.jsp" />	
+							
+			
+						
+				
+										
 						<%}%>
 						
 					</div>

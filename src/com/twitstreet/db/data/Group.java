@@ -23,13 +23,21 @@ import java.sql.SQLException;
 
 
 public class Group implements DataObjectIF{
+
+	public static int STATUS_DEFAULT = 0;
+	public static int STATUS_NEW_USER_DISABLED = 1;
 	
 	public static String DEFAULT_NAME = "Overall";
 	public static int DEFAULT_ID = 1;
     long id;
     String name;
-   
+    private long adminId;
+    private String adminName;
+    private double total;
+    private double changePerHour;
+    private int status = 0;
     
+    private int userCount;
     
 	public long getId() {
         return id;
@@ -51,6 +59,70 @@ public class Group implements DataObjectIF{
 	public void getDataFromResultSet(ResultSet rs) throws SQLException {
 		this.id = rs.getLong("id");
 		this.name = rs.getString("name");
+		this.adminId = rs.getLong("adminId");
+		this.adminName = rs.getString("adminName");
+		this.userCount = rs.getInt("userCount");
+		this.changePerHour = rs.getDouble("changePerHour");
+		this.total = rs.getDouble("total");
+		this.status = rs.getInt("status");
+		
 	}
 
+	@Override
+	public boolean equals(Object obj){
+		if(obj==null)return false;
+		Group g = (Group) obj;
+		return this.getId() == g.getId();		
+		
+	}
+
+	public int getUserCount() {
+		return userCount;
+	}
+
+	public void setUserCount(int userCount) {
+		this.userCount = userCount;
+	}
+
+	public long getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(long adminId) {
+		this.adminId = adminId;
+	}
+
+	public String getAdminName() {
+		return adminName;
+	}
+
+	public void setAdminName(String adminName) {
+		this.adminName = adminName;
+	}
+
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
+
+	public double getChangePerHour() {
+		return changePerHour;
+	}
+
+	public void setChangePerHour(double changePerHour) {
+		this.changePerHour = changePerHour;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	
 }

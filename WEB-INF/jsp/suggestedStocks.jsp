@@ -1,4 +1,5 @@
 
+<%@page import="com.twitstreet.servlet.PaginationDO"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.sql.SQLException"%>
@@ -42,7 +43,7 @@
 	User user = (User) request.getAttribute(User.USER);
 
 	
-
+PaginationDO pdo = (PaginationDO)request.getAttribute("pdo");
 
 %>
 <div id="stock-list-<%=stockListName%>">
@@ -50,7 +51,8 @@
 	<%
 		if (stockList!=null && stockList.size() > 0) {
 	%>
-
+	<%request.setAttribute("pdo", pdo); %>
+<jsp:include page="pagination.jsp"/>
 <%-- 	<h3><%=lutil.get("suggestedstocks.header", lang)%></h3> --%>
 		<table class="datatbl" style="margin-top: 10px;">
 			<%
@@ -181,5 +183,7 @@
 	<%
 		}
 	%>
+		<%request.setAttribute("pdo", pdo); %>
+<jsp:include page="pagination.jsp"/>
 </div>
 

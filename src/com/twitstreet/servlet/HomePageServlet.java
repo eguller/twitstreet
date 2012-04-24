@@ -54,9 +54,11 @@ public class HomePageServlet extends TwitStreetServlet {
 	PortfolioMgr portfolioMgr = null;
 
 	public static final String STOCK = "stock";
+	public static final String GROUP = "group";
 
 	public static final String SELECTED_TAB_STOCK_BAR = "selectedTabStockBar";
 	public static final String SELECTED_TAB_USER_BAR = "selectedTabUserBar";
+	public static final String SELECTED_TAB_GROUP_BAR = "selectedTabGroupBar";
 	public static final String TOP_GROSSING_USERS = "topgrossingusers";
 	public static final String SUGGESTED_STOCKS = "suggestedstocks";
 	public static final String STOCK_ID = "stockId";
@@ -73,6 +75,7 @@ public class HomePageServlet extends TwitStreetServlet {
 	public static final String REASON = "reason";
 
 	public static final String USER_NOT_FOUND = "user-not-found";
+	public static String PAGE = "page";
 
 	private static Logger logger = Logger.getLogger(HomePageServlet.class);
 	
@@ -116,6 +119,11 @@ public class HomePageServlet extends TwitStreetServlet {
 			else if(command.startsWith("topgrossingusers")){
 
 				request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
+		
+			}
+			else if(command.startsWith("grouplist")){
+
+				request.setAttribute(SELECTED_TAB_GROUP_BAR, "group-list-tab");
 		
 			}
 			else if(command.startsWith("stock=")){
@@ -162,6 +170,8 @@ public class HomePageServlet extends TwitStreetServlet {
 		request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
 		//	default tab for users view
 		request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
+		//	default tab for groups view
+		request.setAttribute(SELECTED_TAB_GROUP_BAR, "group-list-tab");
 		
 		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
 			getServletContext().getRequestDispatcher(

@@ -231,8 +231,35 @@ CUSTOM CLASSES
 	width: 412px;
 	font-weight: bolder;
 }
+#getGroupTextboxId {
+	padding: 6px;
+	width: 412px;
+	font-weight: bolder;
+}
 
 #getUserButtonId {
+	width: 70px;
+	height: 34px;
+	font-weight: bolder;
+}
+#getGroupButtonId {
+	width: 70px;
+	height: 34px;
+	font-weight: bolder;
+}
+
+.textboxBig {
+	padding: 6px;
+	width: 410px;
+	font-weight: bolder;
+}
+
+.buttonMedium {
+	width: 48px;
+	height: 24px;
+	font-size: 11px;
+}
+.buttonBig {
 	width: 70px;
 	height: 34px;
 	font-weight: bolder;
@@ -242,7 +269,7 @@ CUSTOM CLASSES
 	border: 1px solid #CCCCCC;
 	border-radius: 3px 3px 3px 3px;
 	padding: 6px 6px 4px;
-	width: 200px;
+	
 }
 
 .rounded-corner {

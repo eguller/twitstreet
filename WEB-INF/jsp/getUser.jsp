@@ -63,9 +63,9 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					
 				</script>
 		</div>
-		<input type="hidden" id="getUserTextHiddenId" value="<%=getUserText%>" /> 
-		<input type="hidden" id="getUserIdHiddenId"
-			value="<%=user == null ? "" : user.getId()%>" />
+<%-- 		<input type="hidden" id="getUserTextHiddenId" value="<%=getUserText%>" />  
+ 		<input type="hidden" id="getUserIdHiddenId" 
+			value="<%=user == null ? "" : user.getId()%>" /> --%>
 	</div>
 
 	<script type="text/javascript">

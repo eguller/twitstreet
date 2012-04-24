@@ -77,4 +77,9 @@ public interface UserMgr {
 	RankingHistoryData getRankingHistoryForUser(long id, Timestamp start, Timestamp end);
 	public void resetInvitation();
 	RankingHistoryData getRankingHistoryForUser(long id, int seasonId);
+	int getUserCountForGroup(long id);
+	ArrayList<User> getUsersForGroup(long id, int offset, int count);
+	ArrayList<User> getTopRankForGroup(long id, int offset, int count);
+	ArrayList<User> getTopRankAllTimeForGroup(long id, int offset, int count);
+	int getUserCount();
 }

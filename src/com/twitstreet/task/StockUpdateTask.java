@@ -77,6 +77,13 @@ public class StockUpdateTask implements Runnable {
 				stockMgr.resetSpeedOfOldStocks();
 				logger.info("Reset speed of stocks - end.");
 
+				logger.info("Load suggested stocks - begin.");
+				stockMgr.loadSuggestedStocks();
+				logger.info("Load suggested stocks - end.");
+
+				
+				
+				
 				logger.info("Re-rank begin.");
 				userMgr.rerank();
 				logger.info("Re-rank end.");
@@ -115,7 +122,7 @@ public class StockUpdateTask implements Runnable {
 
 	private void mentionTopGrossingStocks() {
 		try{
-            if(stockMgr.getTopGrossedStocks(24).size() > 0 && !configMgr.isDev()){  
+            if(!configMgr.isDev() && stockMgr.getTopGrossedStocks(24).size() > 0 ){  
             	TrendyStock ts = stockMgr.getTopGrossedStocks(24).get(0);
             	twitstreetAnnouncer.mention(ts, ts.getAnnouncement(ts.getLanguage())+ "www.twitstreet.com/#!stock="+ts.getId());
             }

@@ -4,10 +4,12 @@
 	mainTabContentsArray = new Array();
 	mainTabsArray.push(".stocks-tab");
 	mainTabsArray.push(".users-tab");
+	mainTabsArray.push(".groups-tab");
 	mainTabsArray.push(".oldseasons-tab");
 
 	mainTabContentsArray.push("#stocks-container");
 	mainTabContentsArray.push("#users-container");
+	mainTabContentsArray.push("#groups-container");
 	mainTabContentsArray.push("#oldseasons-container");
 
 

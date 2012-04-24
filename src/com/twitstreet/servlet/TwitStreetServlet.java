@@ -57,7 +57,18 @@ public class TwitStreetServlet extends HttpServlet {
 	}
 
 	
-	
+	protected int getPage(HttpServletRequest request) {
+		int page =-1;
+		try{
+			page = Integer.valueOf((String) request.getParameter("page"));
+		}catch(Exception ex){
+			
+		}
+		if(page<1){
+			page = 1;
+		}
+		return page;
+	}
 	public String getLanguage(HttpServletRequest request) {
 		String langParam = request.getParameter(LocalizationUtil.LANGUAGE) ;
 	

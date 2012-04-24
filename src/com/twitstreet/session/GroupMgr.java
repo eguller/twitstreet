@@ -21,12 +21,14 @@ package com.twitstreet.session;
 import java.util.ArrayList;
 
 import com.twitstreet.db.data.Group;
-import com.twitstreet.db.data.User;
+import com.twitstreet.main.TwitstreetException;
 
 public interface GroupMgr{
 
-	public long createGroup(String name);
-	public long  createGroupForUser(String groupName, User userDO);
+	public static int GROUP_COUNT_PER_PAGE = 20; 
+	public static int MAX_GROUP_ALLOWED_PER_USER= 10; 
+	
+	public long  createGroupForUser(String groupName, long id) throws TwitstreetException;
 	
 	public void updateGroup(Group group);
 	
@@ -36,16 +38,33 @@ public interface GroupMgr{
 	public Group getGroup(long id);
 	public Group getGroup(String name);
 	
-	public ArrayList<Group> getGroupsForUser(User userDO);
+	public ArrayList<Group> getGroupsForUser(long id, int offset, int count);
 	
-	public void addUserToGroup(User userDO, long id);
-	public void addUserToGroupWithRole(User userDO, long id, int role);
+	public void addUserToGroup(long userId, long id) throws TwitstreetException;
+	public void addUserToGroupWithRole(long userId, long id, int role) throws TwitstreetException;
 
-	public void addUserToDefaultGroup(User userDO);
+	public void addUserToDefaultGroup(long userId) throws TwitstreetException;
 	
-	public void removeUserFromGroup(User userDO, long id);
+	public void removeUserFromGroup(long userId, long id);
 
 
+	public ArrayList<Group> getAllGroups(int offset, int count);
+	
+	public ArrayList<Group> searchGroup(String text);
+	//ArrayList<Group> getAllGroups();
+	int getGroupCount();
+
+	int getGroupCountForUser(long id);
+
+	void blockUserForGroup(long userId, long id) throws TwitstreetException;
+
+	void unblockUserForGroup(long userId, long groupId) throws TwitstreetException;
+
+	void disableEntrance(long groupId);
+
+	void enableEntrance(long groupId);
+
+	boolean userIsMemberOfGroup(long userId, long groupId) throws TwitstreetException;
 
 	
 	

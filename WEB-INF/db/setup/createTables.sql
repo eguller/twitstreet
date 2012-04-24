@@ -101,8 +101,11 @@ create table `stock_history` (
 create table `groups` (
    
     `id` bigint not null auto_increment,
+    `adminId` bigint not null,
 	`name` varchar(45),
+    `status` int not null default 0, index (`status`),
      primary key (`id`),
+     constraint `fk_group_admin` foreign key (`adminId`) references `users` (`id`),
      unique key `unique_group_name` (`name`)
 )  engine=innodb default charset=`utf8`;
 
@@ -124,6 +127,16 @@ create table `user_group` (
      constraint `fk_group_role` foreign key (`role_id`) references `group_role` (`id`),
      constraint `fk_group_user` foreign key (`user_id`) references `users` (`id`) on delete cascade,
      constraint `fk_user_group` foreign key (`group_id`) references `groups` (`id`) on delete cascade
+)  engine=innodb default charset=`utf8`;
+
+-- user group table block
+create table `user_group_block` (
+   
+    `group_id` bigint not null,
+	`user_id` bigint not null,
+     primary key (`user_id`,`group_id`),
+     constraint `fk_user_group_block_user` foreign key (`user_id`) references `users` (`id`) on delete cascade,
+     constraint `fk_user_group_block_group` foreign key (`group_id`) references `groups` (`id`) on delete cascade
 )  engine=innodb default charset=`utf8`;
 
 -- ranking table
@@ -180,6 +193,12 @@ create table `twitter_trends` (
      primary key (`stock_id`),
     `lastUpdate` timestamp not null default now(),
      constraint `fk_twitter_trends_stock` foreign key (`stock_id`) references `stock` (`id`)
+)  engine=innodb default charset=`utf8`;
+-- suggested stocks table
+create table `suggested_stocks` (  
+    `stock_id` bigint not null, 
+     primary key (`stock_id`),
+     constraint `fk_suggested_stocks_stock` foreign key (`stock_id`) references `stock` (`id`)
 )  engine=innodb default charset=`utf8`;
 
 -- announcement table

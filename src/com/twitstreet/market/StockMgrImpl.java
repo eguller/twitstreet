@@ -49,6 +49,8 @@ import com.twitstreet.twitter.TwitterProxyImpl;
 
 public class StockMgrImpl implements StockMgr {
 
+	private static int MAX_SUGGESTED_STOCKS = 180;
+	private static int MAX_TOP_GROSSING_STOCKS = 180;
 	private static int TOP_GROSSING_STOCK_TOTAL_THRESHOLD = 1000;
 
 	private static int TWITTER_TRENDS_CLEANUP_PERIOD = 24 * 60; // minutes
@@ -66,8 +68,27 @@ public class StockMgrImpl implements StockMgr {
 	private static String STOCK_IN_PORTFOLIO =" stock.id in (select distinct stock from portfolio) ";
 	private static String STOCK_IN_WATCHLIST =" stock.id in (select distinct stock_id from user_stock_watch ) ";
 	private static String STOCK_IN_TWITTER_TRENDS =" stock.id in (select stock_id from twitter_trends) ";
-	private static int MAX_TRENDS = 6;
 	
+
+private static String FIND_SUGGESTED_STOCKS = SELECT_FROM_STOCK + " where changePerHour is not null " +
+		" and stock_sold(id)< " + TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD + " " +
+		" and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +
+		" and total >= " + TRENDY_STOCK_TOTAL_THRESHOLD +
+		" and (TIMESTAMPDIFF(minute, lastUpdate, now())  < "+StockUpdateTask.LAST_UPDATE_DIFF_MINUTES+") "  +	
+		" and createdAt  < TIMESTAMPADD(DAY,-"+Stock.STOCK_OLDER_THAN_DAYS_AVAILABLE+", NOW())  "  +												
+		" and " +
+		" ("+STOCK_IN_PORTFOLIO+ " or "
+			+STOCK_IN_TWITTER_TRENDS+
+		  ")" +
+		" order by (changePerHour/total) desc ";
+
+private static String DROP_SUGGESTED_STOCKS = " drop table  if exists suggested_stocks ";
+private static String CREATE_SUGGESTED_STOCKS = " create table suggested_stocks like twitter_trends ";
+private static String FILL_SUGGESTED_STOCKS = " insert ignore into suggested_stocks(stock_id) select id from ("+FIND_SUGGESTED_STOCKS+ " limit "+MAX_SUGGESTED_STOCKS+" ) as suggestedstocks ";
+private static String GET_SUGGESTED_STOCKS =
+	SELECT_FROM_STOCK + " where id in (select stock_id from suggested_stocks) and stock_sold(id)< "+ 
+			TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD + "  order by changePerHour/total desc ";
+
 
 	@Inject
 	ConfigMgr configMgr;
@@ -648,38 +669,75 @@ public class StockMgrImpl implements StockMgr {
 
 	@Override
 	public ArrayList<Stock> getSuggestedStocks() {
-		return getSuggestedStocks(1);
+		return getSuggestedStocks(0,MAX_TRENDS_PER_PAGE);
 	}
-
 	@Override
-	public ArrayList<Stock> getSuggestedStocks(int page) {
+	public void loadSuggestedStocks() {
+		
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			
+			ps = connection.prepareStatement(DROP_SUGGESTED_STOCKS);
+			ps.execute();
+			ps = connection.prepareStatement(CREATE_SUGGESTED_STOCKS);
+			ps.execute();
+			ps = connection.prepareStatement(FILL_SUGGESTED_STOCKS);
+
+			ps.execute();
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+	}
+	@Override
+	public int getSuggestedStockCount(){
+	
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement("select count(*) from suggested_stocks ");
+
+
+			
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				return rs.getInt(1);
+			}
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return -1;
+	}
+	@Override
+	public ArrayList<Stock> getSuggestedStocks(int offset,int count) {
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_STOCK + " where changePerHour is not null " +
-												" and stock_sold(id)< " + TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD + " " +
-												" and total-(total*stock_sold(id))> " + TRENDY_STOCK_AVAILABLE_THRESHOLD +
-												" and total >= " + TRENDY_STOCK_TOTAL_THRESHOLD +
-												" and (TIMESTAMPDIFF(minute, lastUpdate, now())  < ?) "  +	
-												" and createdAt  < TIMESTAMPADD(DAY,?, NOW())  "  +												
-												" and " +
-												" ("+STOCK_IN_PORTFOLIO+ " or "
-													+STOCK_IN_TWITTER_TRENDS+
-												  ")" +
-												" order by (changePerHour/total) desc limit ?,?;");
+			ps = connection.prepareStatement(GET_SUGGESTED_STOCKS+" limit ?,? ");
 
-			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
-			ps.setInt(2, Stock.STOCK_OLDER_THAN_DAYS_AVAILABLE);
-			ps.setInt(3, (page-1)*MAX_TRENDS);
-			ps.setInt(4, MAX_TRENDS);
+			ps.setInt(1, offset);
+			ps.setInt(2, count);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				Stock stockDO = new Stock();
 				stockDO.getDataFromResultSet(rs);
+
 				stockList.add(stockDO);
+
 			}
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (SQLException ex) {
@@ -691,10 +749,10 @@ public class StockMgrImpl implements StockMgr {
 	}
 	@Override
 	public ArrayList<Stock> getTopGrossingStocks() {
-		return getTopGrossingStocks(1);
+		return getTopGrossingStocks(0,MAX_TRENDS_PER_PAGE);
 	}
 	@Override
-	public ArrayList<Stock> getTopGrossingStocks(int page) {
+	public ArrayList<Stock> getTopGrossingStocks(int offset,int count) {
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -711,8 +769,8 @@ public class StockMgrImpl implements StockMgr {
 												" order by (changePerHour/total) desc limit ?,?;");
 
 			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
-			ps.setInt(2, (page-1)*MAX_TRENDS);
-			ps.setInt(3, MAX_TRENDS);
+			ps.setInt(2, offset);
+			ps.setInt(3, count);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				Stock stockDO = new Stock();

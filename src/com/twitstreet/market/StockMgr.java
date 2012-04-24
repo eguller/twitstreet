@@ -34,7 +34,7 @@ import com.twitstreet.db.data.TrendyStock;
  *
  */
 public interface StockMgr {
-	
+	public static int MAX_TRENDS_PER_PAGE = 6;
 	/**
 	 * Updates the percent of sold stocks on cache.
 	 * @param stock
@@ -77,6 +77,7 @@ public interface StockMgr {
 	public StockHistoryData getStockHistory(long id, Date since);
 
 	ArrayList<Stock> getSuggestedStocks();
+	int getSuggestedStockCount();
 
 	void updateTwitterTrends();
 
@@ -99,7 +100,10 @@ public interface StockMgr {
 
 	ArrayList<Stock> getTopGrossingStocks();
 
-	ArrayList<Stock> getTopGrossingStocks(int page);
+	ArrayList<Stock> getTopGrossingStocks(int offset, int count);
 
-	ArrayList<Stock> getSuggestedStocks(int page);
+
+	ArrayList<Stock> getSuggestedStocks(int offset, int count);
+
+	void loadSuggestedStocks();
 }

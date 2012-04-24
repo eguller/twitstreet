@@ -11,6 +11,11 @@ function runScriptsInElement(responseData) {
 
 }
 
+function tabSelected(ele){
+	
+	return $(ele).hasClass('youarehere');
+}
+
 function daysAreSame(date1,date2){
 
 	var month1 = date1.getMonth();

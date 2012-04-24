@@ -498,4 +498,16 @@ public class Util {
 		 
 		
 	}
+	
+	public static int getPageCount(int itemCount, int itemPerPage){
+		int pageCount = 1;
+		if (itemCount > itemPerPage) {
+			// we should add 1 because of integer conversion
+			pageCount = (itemCount / itemPerPage);
+			if(itemCount%itemPerPage!=0){
+				pageCount++;
+			}
+		}
+		return pageCount;
+	}
 }

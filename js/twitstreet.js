@@ -16,8 +16,6 @@ $(document).ready(function() {
 
 	if ($("#portfolio").length > 0) {
 		setInterval(reloadPortfolio, reloadInterval);
-	}
-	if ($("#portfolio").length > 0) {
 		setInterval(reloadWatchList, reloadInterval);
 	}
 	
@@ -104,10 +102,13 @@ function loadStock(id, reload) {
 
 }
 
-function loadSuggestedStocks() {
+function loadSuggestedStocks(page) {
+	if(page==null){
+		page = 1;
+	}
 	showTabMain('.stocks-tab');
 	showSuggestedStocks();
-	ajaxLoad("/suggestedstocks", null, "#suggested-stocks-content", "#column_center");
+	ajaxLoad("/suggestedstocks", "page=" + page, "#suggested-stocks-content", "#column_center");
 	
 
 }
@@ -123,13 +124,143 @@ function loadTopGrossingUsers() {
 
 	showTabMain('.users-tab');
 	showTopGrossingUsersContent();
-	ajaxLoad("/trendyusers", null, "#users-screen","#column_center");
+	ajaxLoad("/trendyusers", null, "#top-grossing-users-content","#column_center");
 }
-function loadOldSeason() {
 
-	showTabMain('.oldseasons-tab');
-	showTopGrossingUsersContent();
-	ajaxLoad("/trendyusers", null, "#users-screen", "#column_center");
+function getGroup(group) {
+	if (group.length > 0) {
+		ajaxLoad("/getgroup", "getgroup=" + group, "#groups-container",
+				"#column_center");
+		showTabMain('.groups-tab');
+	}
+}
+
+var groupOnScreen = "#hiddenGroupDetailsGroupId";
+function reloadGroup() {
+	loadGroup($(groupOnScreen).val());
+}
+
+
+var createGroupName = "";
+function createGroup(name) {
+	if (name != null && name.length>0) {
+		createGroupName = name;
+		ajaxLoad("/creategroup", "name=" + name, null, "#column_center",false,createGroupCallback);
+	}
+}
+function createGroupCallback(createdGroupId) {
+	
+	showTabMain('.groups-tab');
+	showGroupDetailsContent();
+	loadGroup(createdGroupId);
+
+}
+function loadGroup(id, reload,page) {
+	showTabMain('.groups-tab');
+	if (id != null) {
+		ajaxLoad("/groupdetails", "group=" + id+"&page="+page, "#groups-container",
+				"#column_center", reload);
+	}
+}
+function loadGroupUsers(page) {
+	 loadGroup($(groupOnScreen).val(), false,page); 
+}
+
+function blockUserForGroup(userId, groupId) {
+	if (userId != null && groupId != null) {
+		
+		ajaxLoad("/group", "group=" + groupId+"&op=blockuser&user="+userId, "#groups-container",
+				"#column_center",false,groupOperationCallback);
+	}
+}
+function unblockUserForGroup(userId, groupId) {
+	if (userId != null && groupId != null) {
+		
+		ajaxLoad("/group", "group=" + groupId+"&op=unblockuser&user="+userId, "#groups-container",
+				"#column_center",false,groupOperationCallback);
+	}
+}
+function removeUserFromGroup(userId, groupId) {
+	if (userId != null && groupId != null) {
+		
+		ajaxLoad("/group", "group=" + groupId+"&op=removeuser&user="+userId, "#groups-container",
+				"#column_center",false,groupOperationCallback);
+	}
+}
+function deleteGroup(id,confirmMsg) {
+	
+	if(confirmMsg==null||confirmMsg.length<1|| id == null) return;
+	
+	if(confirm(confirmMsg)){
+
+		ajaxLoad("/group", "group=" + id+"&op=delete", "#groups-container",
+					"#column_center",false,groupOperationCallback);
+	}
+	
+}
+
+function joinGroup(id) {
+	if (id != null) {
+		ajaxLoad("/group", "group=" + id+"&op=join", "#groups-container",
+				"#column_center",false,groupOperationCallback);
+	}
+}
+function leaveGroup(id) {
+	if (id != null) {
+		
+		ajaxLoad("/group", "group=" + id+"&op=leave", "#groups-container",
+				"#column_center",false,groupOperationCallback);
+	}
+}
+function enableEntranceForGroup(id) {
+	if (id != null) {
+		ajaxLoad("/group", "group=" + id+"&op=enableentrance", "#groups-container",
+				"#column_center",false,groupOperationCallback);
+	}
+}
+
+function disableEntranceForGroup(id) {
+	if (id != null) {
+		ajaxLoad("/group", "group=" + id+"&op=disableentrance", "#groups-container",
+				"#column_center",false,groupOperationCallback);
+	}
+}
+
+function groupOperationCallback(){
+	if(tabSelected(".group-list-tab")){
+		reloadGroupList();
+	}else if(tabSelected(".my-groups-tab")){
+		reloadMyGroups();
+	}
+	if(tabSelected(".group-details-tab")){
+		reloadGroup();
+	}
+	
+	
+}
+var groupListPage = 1;
+function loadGroupList(page) {
+	if(page!=null){
+		groupListPage = page;
+	}
+	showTabMain('.groups-tab');
+	showGroupListContent();
+	ajaxLoad("/grouplist", "page="+ groupListPage, "#groups-screen","#column_center");
+}
+function reloadGroupList() {
+	loadGroupList(groupListPage);
+}
+var myGroupsPage = 1;
+function loadMyGroups(page) {
+	if(page!=null){
+		myGroupsPage = page;
+	}
+	showTabMain('.groups-tab');
+	showMyGroupsContent();
+	ajaxLoad("/grouplist", "page="+ myGroupsPage+"&type=my", "#groups-screen","#column_center");
+}
+function reloadMyGroups() {
+	loadMyGroups(myGroupsPage);
 }
 
 
@@ -238,12 +369,16 @@ function buySellCallback(stock) {
 	if (stock == $(stockOnScreen).val()) {
 		showBuySell();
 	}else{
-		reloadStock();
+		if(tabSelected(".stock-details-tab")){
+			reloadStock();
+		}
+	
 	}
 	loadPortfolio(false, true);
 	loadBalance(false, true);
 	loadUserTransactions(false, true);
 	loadCurrentTransactions(false);
+	reloadToprank();
 
 }
 
@@ -306,7 +441,7 @@ function toprank(page, type, reload) {
 	var pageParam = page;
 
 	if (pageParam == null) {
-		pageParam = $('.topRankSelect:first').val();
+		pageParam = $('.toprankSelect:first').val();
 
 	}
 	if (type == null) {

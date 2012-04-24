@@ -32,8 +32,13 @@ import com.google.inject.servlet.ServletModule;
 import com.twitstreet.servlet.BalanceServlet;
 import com.twitstreet.servlet.BuyServlet;
 import com.twitstreet.servlet.CallBackServlet;
+import com.twitstreet.servlet.CreateGroupServlet;
+import com.twitstreet.servlet.GetGroupServlet;
 import com.twitstreet.servlet.GetQuoteServlet;
 import com.twitstreet.servlet.GetUserServlet;
+import com.twitstreet.servlet.GroupDetailsServlet;
+import com.twitstreet.servlet.GroupListServlet;
+import com.twitstreet.servlet.GroupServlet;
 import com.twitstreet.servlet.HomePageServlet;
 import com.twitstreet.servlet.LanguageServlet;
 import com.twitstreet.servlet.PortfolioServlet;
@@ -106,6 +111,11 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/suggestedstocks").with(TrendyStocksServlet.class);
 				serve("/trendyusers").with(TrendyUsersServlet.class);
 				serve("/season").with(SeasonServlet.class);
+				serve("/getgroup").with(GetGroupServlet.class);
+				serve("/groupdetails").with(GroupDetailsServlet.class);
+				serve("/group").with(GroupServlet.class);
+				serve("/grouplist").with(GroupListServlet.class);
+				serve("/creategroup").with(CreateGroupServlet.class);
 
 
 				serve("/lang").with(LanguageServlet.class);
