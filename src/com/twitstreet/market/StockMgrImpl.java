@@ -84,7 +84,7 @@ private static String FIND_SUGGESTED_STOCKS = SELECT_FROM_STOCK + " where change
 
 private static String DROP_SUGGESTED_STOCKS = " drop table  if exists suggested_stocks ";
 private static String CREATE_SUGGESTED_STOCKS = " create table suggested_stocks like twitter_trends ";
-private static String FILL_SUGGESTED_STOCKS = " insert ignore into suggested_stocks(stock_id) select id from ("+FIND_SUGGESTED_STOCKS+ " limit "+MAX_SUGGESTED_STOCKS+" ) as suggestedstocks ";
+private static String FILL_SUGGESTED_STOCKS = " insert ignore into suggested_stocks(stock_id) select distinct id from ("+FIND_SUGGESTED_STOCKS+ " limit "+MAX_SUGGESTED_STOCKS+" ) as suggestedstocks ";
 private static String GET_SUGGESTED_STOCKS =
 	SELECT_FROM_STOCK + " where id in (select stock_id from suggested_stocks) and stock_sold(id)< "+ 
 			TRENDY_STOCK_AVAILABLE_PERCENTAGE_THRESHOLD + "  order by changePerHour/total desc ";
@@ -499,7 +499,7 @@ private static String GET_SUGGESTED_STOCKS =
 					" limit ?");
 			
 			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
-			ps.setInt(2, TwitterProxyImpl.USER_COUNT_FOR_UPDATE);
+			ps.setInt(2, TwitterProxyImpl.IDS_SIZE);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				Stock stockDO = new Stock();
@@ -850,4 +850,91 @@ private static String GET_SUGGESTED_STOCKS =
 			}
 		}
 	}
+	
+	@Override
+	public boolean addStockIntoAnnouncement(long stockid) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("insert into announcement(stock_id) VALUES  (?) ");
+			ps.setLong(1, stockid);
+			ps.executeUpdate();
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+
+			return true;
+		} catch (SQLException e) {
+
+			return false;
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+	}
+	
+	@Override
+	public void removeOldRecords(int olderThanMinutesOld) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement(" delete from announcement where timestampdiff(minute,timeSent,now()) > ? ");
+			ps.setInt(1, olderThanMinutesOld);
+			ps.executeUpdate();
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+
+		} catch (SQLException e) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), e);
+
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+	}
+
+	@Override
+	public void removeOldRecordsByServer(int removeOlderThanMinutes) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement(" delete from announcement where timestampdiff(minute,timeSent,now()) > ? and mod(stock_id, ?) = ?");
+			ps.setInt(1, removeOlderThanMinutes);
+			ps.setInt(2, configMgr.getServerCount());
+			ps.setInt(3, configMgr.getServerId());
+			ps.executeUpdate();
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+
+		} catch (SQLException e) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), e);
+
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+	}
+	
+	@Override
+	public void saveTrend(long stockId){
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement("insert into twitter_trends (stock_id)  values (?) on duplicate key update lastUpdate = now() ");
+			ps.setLong(1, stockId);
+			ps.executeUpdate();
+			
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
+
 }

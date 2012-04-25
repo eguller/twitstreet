@@ -14,7 +14,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+ **/
 
 package com.twitstreet.session;
 
@@ -33,6 +33,8 @@ import java.util.Random;
 
 import org.apache.log4j.Logger;
 
+import sun.security.action.GetLongAction;
+
 import com.google.inject.Inject;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.twitstreet.config.ConfigMgr;
@@ -46,7 +48,6 @@ import com.twitstreet.util.Util;
 
 public class UserMgrImpl implements UserMgr {
 
-
 	@Inject
 	DBMgr dbMgr;
 	@Inject
@@ -59,14 +60,15 @@ public class UserMgrImpl implements UserMgr {
 	private static int MAX_RECORD_PER_PAGE = 20;
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 
-
 	private static String SELECT_FROM_USERS_RANKING = "select " + "id, "
 			+ "userName, " + "longName, " + "lastLogin, " + "firstLogin, "
 			+ "users.cash as cash, " + "lastIp, " + "oauthToken, "
-			+ "oauthTokenSecret, " + "user_profit(users.id) as changePerHour,"+ "valueCumulative, rankCumulative,"
-			+ "rank, " + "oldRank, " + "direction, " + "pictureUrl, "
-			+ "portfolio_value(id) as portfolio, "+ " users.cash+portfolio as total, "
-			+ "description, "+ "location, " + "inviteActive "
+			+ "oauthTokenSecret, " + "user_profit(users.id) as changePerHour,"
+			+ "valueCumulative, rankCumulative," + "rank, " + "oldRank, "
+			+ "direction, " + "pictureUrl, "
+			+ "portfolio_value(id) as portfolio, "
+			+ " users.cash+portfolio as total, " + "description, "
+			+ "location, " + "inviteActive, " + "language "
 			+ "from users,ranking ";
 
 	private static String SELECT_FROM_USERS_JOIN_RANKING = SELECT_FROM_USERS_RANKING
@@ -75,9 +77,6 @@ public class UserMgrImpl implements UserMgr {
 	private static String SELECT_FROM_USERS_JOIN_RANKING_BY_GROUP_ID = SELECT_FROM_USERS_JOIN_RANKING+
 		" and users.id in  	(select user_id from user_group where group_id = ?) ";
 
-	
-
-	
 	public User getUserById(long id) {
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -232,13 +231,12 @@ public class UserMgrImpl implements UserMgr {
 			ps.setInt(6, 0);
 
 			ps.executeUpdate();
-			
+
 			CallableStatement cs = null;
-		
-				cs = connection.prepareCall("{call rerank()}");
-				cs.execute();
-		
-					
+
+			cs = connection.prepareCall("{call rerank()}");
+			cs.execute();
+
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			logger.warn("DB: User already exists in ranking - UserId:"
@@ -261,8 +259,8 @@ public class UserMgrImpl implements UserMgr {
 			ps = connection
 					.prepareStatement("insert into users(id, userName, "
 							+ "lastLogin, firstLogin, "
-							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl) "
-							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?) " + "   ");
+							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl, language) "
+							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setLong(1, userDO.getId());
 			ps.setString(2, userDO.getUserName());
 			ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));
@@ -272,7 +270,7 @@ public class UserMgrImpl implements UserMgr {
 			ps.setString(7, userDO.getOauthToken());
 			ps.setString(8, userDO.getOauthTokenSecret());
 			ps.setString(9, userDO.getPictureUrl());
-
+			ps.setString(10, userDO.getLanguage());
 			ps.executeUpdate();
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -304,9 +302,8 @@ public class UserMgrImpl implements UserMgr {
 			ps.setString(3, user.getLastIp());
 			ps.setString(4, user.getOauthToken());
 			ps.setString(5, user.getOauthTokenSecret());
-			ps.setLong(6, user.getId());
-			ps.setString(7, user.getPictureUrl());
-
+			ps.setString(6, user.getPictureUrl());
+			ps.setLong(7, user.getId());
 			ps.executeUpdate();
 
 			// just in case...
@@ -498,6 +495,7 @@ public class UserMgrImpl implements UserMgr {
 		}
 		return userList;
 	}
+
 	@Override
 	public ArrayList<User> getTopRankForGroup(long id, int offset,int count) {
 
@@ -730,59 +728,59 @@ public class UserMgrImpl implements UserMgr {
 		return rhd;
 	}
 
-//	@Override
-//	public int getUserTotalMoneyForPreviousSeasons(long userid) {
-//		Connection connection = null;
-//		PreparedStatement ps = null;
-//		ResultSet rs = null;
-//
-//		int count = 0;
-//		try {
-//			connection = dbMgr.getConnection();
-//			ps = connection.prepareStatement(SQL_GET_TOTAL_MONEY_FOR_PREV_SEASONS);
-//			rs = ps.executeQuery();
-//			if (rs.next()) {
-//				long userid = rs.getLong("user_id");
-//				
-//				count = rs.getInt(1);
-//			}
-//		} catch (SQLException exception) {
-//			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
-//					exception);
-//		} finally {
-//			dbMgr.closeResources(connection, ps, rs);
-//		}
-//		return count;
-//		
-//	}
-//	
-//	private void loadUserTotalMoneyForPreviousSeasons(){
-//		Connection connection = null;
-//		PreparedStatement ps = null;
-//		ResultSet rs = null;
-//
-//		int count = 0;
-//		try {
-//			connection = dbMgr.getConnection();
-//			ps = connection.prepareStatement(SQL_GET_TOTAL_MONEY_FOR_PREV_SEASONS);
-//			rs = ps.executeQuery();
-//			if (rs.next()) {
-//				long userid = rs.getLong("user_id");
-//				
-//				count = rs.getInt(1);
-//			}
-//		} catch (SQLException exception) {
-//			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
-//					exception);
-//		} finally {
-//			dbMgr.closeResources(connection, ps, rs);
-//		}
-//		return count;
-//		
-//		
-//	}
-//	
-//	
+	// @Override
+	// public int getUserTotalMoneyForPreviousSeasons(long userid) {
+	// Connection connection = null;
+	// PreparedStatement ps = null;
+	// ResultSet rs = null;
+	//
+	// int count = 0;
+	// try {
+	// connection = dbMgr.getConnection();
+	// ps = connection.prepareStatement(SQL_GET_TOTAL_MONEY_FOR_PREV_SEASONS);
+	// rs = ps.executeQuery();
+	// if (rs.next()) {
+	// long userid = rs.getLong("user_id");
+	//
+	// count = rs.getInt(1);
+	// }
+	// } catch (SQLException exception) {
+	// logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
+	// exception);
+	// } finally {
+	// dbMgr.closeResources(connection, ps, rs);
+	// }
+	// return count;
+	//
+	// }
+	//
+	// private void loadUserTotalMoneyForPreviousSeasons(){
+	// Connection connection = null;
+	// PreparedStatement ps = null;
+	// ResultSet rs = null;
+	//
+	// int count = 0;
+	// try {
+	// connection = dbMgr.getConnection();
+	// ps = connection.prepareStatement(SQL_GET_TOTAL_MONEY_FOR_PREV_SEASONS);
+	// rs = ps.executeQuery();
+	// if (rs.next()) {
+	// long userid = rs.getLong("user_id");
+	//
+	// count = rs.getInt(1);
+	// }
+	// } catch (SQLException exception) {
+	// logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
+	// exception);
+	// } finally {
+	// dbMgr.closeResources(connection, ps, rs);
+	// }
+	// return count;
+	//
+	//
+	// }
+	//
+	//
 	@Override
 	public int count() {
 		Connection connection = null;
@@ -884,7 +882,7 @@ public class UserMgrImpl implements UserMgr {
 		int rpp = getRecordPerPage();
 
 		int a = (rank + rpp) / rpp;
-		
+
 		if (rank % rpp == 0) {
 			a--;
 		}
@@ -952,13 +950,14 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("update users set userName = ?, pictureUrl = ?, location = ?, description = ?, longName = ? where id = ?");
+					.prepareStatement("update users set userName = ?, pictureUrl = ?, location = ?, description = ?, longName = ?, language = ? where id = ?");
 			ps.setString(1, user.getUserName());
 			ps.setString(2, user.getPictureUrl());
 			ps.setString(3, user.getLocation());
 			ps.setString(4, user.getDescription());
 			ps.setString(5, user.getLongName());
-			ps.setLong(6, user.getId());
+			ps.setString(6, user.getLanguage());
+			ps.setLong(7, user.getId());
 
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -1000,7 +999,6 @@ public class UserMgrImpl implements UserMgr {
 
 	@Override
 	public ArrayList<User> getTopGrossingUsers(int limit) {
-
 		ArrayList<User> userList = new ArrayList<User>();
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -1067,4 +1065,93 @@ public class UserMgrImpl implements UserMgr {
 		}
 	}
 
+	@Override
+	public List<User> getNewSeasonInfoNotSentUsers(int size) {
+		List<User> userList = new ArrayList<User>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("select id, userName from users where newSeasonInfoSent = 0 limit ? ");
+			ps.setInt(1, size);
+
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				User userDO = new User();
+				userDO.setId(rs.getLong("id"));
+				userDO.setUserName(rs.getString("userName"));
+				userList.add(userDO);
+			}
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
+
+	@Override
+	public void setNewSeasonInfoSent(List<User> userList) {
+		if (userList.size() > 0) {
+			Connection connection = null;
+			PreparedStatement ps = null;
+			try {
+				connection = dbMgr.getConnection();
+				ps = connection
+						.prepareStatement("update users set newSeasonInfoSent = 1 where id in "
+								+ getIdListAsCommaSeparatedString(userList));
+
+				ps.executeUpdate();
+				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			} catch (SQLException ex) {
+				logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
+						ex);
+			} finally {
+				dbMgr.closeResources(connection, ps, null);
+			}
+		}
+	}
+
+	private static String getIdListAsCommaSeparatedString(List<User> userList) {
+		String idListStr = "(";
+		for (int i = 0; i < userList.size(); i++) {
+			if (i != 0) {
+				idListStr = idListStr + ",";
+			}
+			idListStr = idListStr + userList.get(i).getId();
+		}
+		idListStr += ")";
+		return idListStr;
+	}
+
+	@Override
+	public List<User> getTopNUsers(int n) {
+		List<User> userList = new ArrayList<User>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
+					+ " order by rank asc limit ?");
+			ps.setInt(1, n);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
 }

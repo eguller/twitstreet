@@ -39,9 +39,13 @@ import com.twitstreet.season.SeasonMgr;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.DetectInvalidTokensTask;
+import com.twitstreet.task.NewSeasonInfoSentTask;
 import com.twitstreet.task.SeasonTask;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.task.UserInfoUpdateTask;
+import com.twitstreet.twitter.AdsListenerMgr;
+import com.twitstreet.twitter.AnnouncerMgr;
+import com.twitstreet.twitter.Welcome2ListenerMgr;
 
 @Singleton
 public class TwitstreetImpl implements Twitstreet {
@@ -63,6 +67,11 @@ public class TwitstreetImpl implements Twitstreet {
 
 	@Inject
 	StockMgr stockMgr;
+	
+	@Inject AnnouncerMgr announcerMgr;
+	
+	@Inject AdsListenerMgr adsListenerMgr;
+	@Inject Welcome2ListenerMgr welcome2ListenerMgr;
 
 	@Inject
 	public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr) {
@@ -76,18 +85,26 @@ public class TwitstreetImpl implements Twitstreet {
 		loadConfiguration();
 		
 		seasonMgr.loadSeasonInfo();
-
-	
-
+		announcerMgr.loadAnnouncers();
+		
 		if (configMgr.isDev() || !configMgr.isMaster()) {
-
 			startTasks();
-
 		}
 		if(configMgr.isMaster() || configMgr.isDev() ){
 			startSeasonTask();
 		}
+		if(!configMgr.isDev()){
+			startNewSeasonInfoSentTask();
+		}
 		initialized = true;
+	}
+
+
+	private void startNewSeasonInfoSentTask() {
+		NewSeasonInfoSentTask newSeasonInfoSentTask = injector.getInstance(NewSeasonInfoSentTask.class);
+		Thread newSeasonInfoSentThread = new Thread(newSeasonInfoSentTask);
+		newSeasonInfoSentThread.setName("New Season Info Sent Task");
+		newSeasonInfoSentThread.start();
 	}
 
 	private void startSeasonTask() {
@@ -105,7 +122,9 @@ public class TwitstreetImpl implements Twitstreet {
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
 		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);
 		DetectInvalidTokensTask detectInvalidTokensTask = injector.getInstance(DetectInvalidTokensTask.class);
-
+		
+		
+		
 		Thread detectInvalidTokensThread = new Thread(detectInvalidTokensTask);
 		detectInvalidTokensThread.setName("Detect Invalid Tokens Task");
 
@@ -114,13 +133,16 @@ public class TwitstreetImpl implements Twitstreet {
 
 		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
 		updateUserInfoThread.setName("User Info Update Task");
-
+		
 		updateFollowerCountThread.start();
-
+		
 		if (!configMgr.isDev()) {
 			detectInvalidTokensThread.start();
 			updateUserInfoThread.start();
+			adsListenerMgr.start();
+			welcome2ListenerMgr.start();
 		}
+		
 		
 	}
 

@@ -82,4 +82,7 @@ public interface UserMgr {
 	ArrayList<User> getTopRankForGroup(long id, int offset, int count);
 	ArrayList<User> getTopRankAllTimeForGroup(long id, int offset, int count);
 	int getUserCount();
+	public List<User> getNewSeasonInfoNotSentUsers(int size);
+	public void setNewSeasonInfoSent(List<User> userIdList);
+	public List<User> getTopNUsers(int n);
 }

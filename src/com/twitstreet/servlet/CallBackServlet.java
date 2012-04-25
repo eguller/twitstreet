@@ -96,6 +96,7 @@ public class CallBackServlet extends TwitStreetServlet {
 				user.setDescription(twUser.getDescription());
 				user.setLongName(twUser.getName());
 				user.setLocation(twUser.getLocation());
+				user.setLanguage(twUser.getLang());
 				
 				userMgr.saveUser(user);
 				String referenceId = (String) request.getSession().getAttribute(HomePageServlet.REFERENCE_ID);

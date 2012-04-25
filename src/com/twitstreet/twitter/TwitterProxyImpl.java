@@ -22,16 +22,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import twitter4j.Paging;
+import twitter4j.Query;
+import twitter4j.QueryResult;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Trend;
 import twitter4j.Trends;
+import twitter4j.Tweet;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -48,7 +52,7 @@ public class TwitterProxyImpl implements TwitterProxy {
 	
 	Map<String, Integer> woiedMap = new HashMap<String, Integer>();
 
-	public static int USER_COUNT_FOR_UPDATE = 100;
+	public static int IDS_SIZE = 100;
 	private static int INVALID_REQUEST = 400;
 	private static int UNAUTHORIZED = 401;
 	private static int NOT_FOUND = 404;
@@ -207,10 +211,6 @@ public class TwitterProxyImpl implements TwitterProxy {
 
 	@Override
 	public ArrayList<User> getTwUsers(ArrayList<Long> idList){
-		
-		
-		
-		
 		ResponseList<User> users  = null;
 		ArrayList<User> userList = new ArrayList<User>();
 		try {
@@ -397,25 +397,18 @@ public class TwitterProxyImpl implements TwitterProxy {
 			return -1;
 		}
 		long id = -1L;
-	
 		SimpleTwitterUser twUser = null;
 		ArrayList<SimpleTwitterUser> searchResultList = new ArrayList<SimpleTwitterUser>();
-
-
 		searchResultList = searchUsers(searchString);
 		if (searchResultList != null && searchResultList.size() > 0) {
 			twUser = searchResultList.get(0);
 			searchResultList.remove(0);
 		}
-
 		if (twUser != null) {
 			id = twUser.getId();
 		}
-
 		return id;
-
 	}
-
 	
 	@Override
 	public boolean verifyUser() {
@@ -425,14 +418,9 @@ public class TwitterProxyImpl implements TwitterProxy {
 			if(user==null) return false;
 		} catch (TwitterException e) {
 			if (e.getStatusCode() == UNAUTHORIZED) {
-
 				return false;
-
 			}
 		}
-
 		return true;
-
 	}
-
 }
