@@ -18,28 +18,11 @@
 
 package com.twitstreet.twitter;
 
+import com.twitstreet.db.data.Stock;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Set;
-
-import twitter4j.Twitter;
-import twitter4j.User;
-
-
-public interface TwitterProxy {
-	public int getFollowerCount(String name);
-	public int getFollowerCount(long id);
-	public User getTwUser(String name);
-	public void setTwitter(Twitter twitter);
-	public Twitter getTwitter();
-	User getTwUser(long userId);
-	public ArrayList<SimpleTwitterUser> searchUsers(String query);
+public interface TwitstreetAnnouncer {
+	public boolean mention(Stock user, String message);
+	public void removeOldRecords(int removeOlderThanMinutes);
+	public void removeOldRecordsByServer(int removeOlderThanMinutes);
 	
-
-	public Set<String> getTrends();
-	public long searchAndGetFirstResult(String searchString);
-	ArrayList<User> getTwUsers(ArrayList<Long> idList);
-	boolean verifyUser();
-	Date getFirstTweetDate(long stockId);
 }

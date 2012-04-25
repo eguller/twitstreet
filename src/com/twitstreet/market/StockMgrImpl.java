@@ -231,7 +231,7 @@ private static String GET_SUGGESTED_STOCKS =
 	
 	@Override
 	public boolean updateStockData(long id) {
-		
+
 		twitter4j.User twUser = getTwitterProxy().getTwUser(id);
 		if (twUser != null) {
 			updateTwitterData(twUser);
@@ -671,6 +671,7 @@ private static String GET_SUGGESTED_STOCKS =
 	public ArrayList<Stock> getSuggestedStocks() {
 		return getSuggestedStocks(0,MAX_TRENDS_PER_PAGE);
 	}
+	
 	@Override
 	public void loadSuggestedStocks() {
 		
@@ -935,6 +936,12 @@ private static String GET_SUGGESTED_STOCKS =
 		} finally {
 			dbMgr.closeResources(connection, ps, null);
 		}
+	}
+
+	@Override
+	public ArrayList<Stock> getSuggestedStocks(int page) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
