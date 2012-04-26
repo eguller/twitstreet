@@ -14,8 +14,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
-
+ **/
 
 package com.twitstreet.main;
 
@@ -52,7 +51,7 @@ public class TwitstreetImpl implements Twitstreet {
 
 	private boolean initialized = false;
 	private static Logger logger = Logger.getLogger(TwitstreetImpl.class);
-	
+
 	DBMgr dbMgr;
 	ConfigMgr configMgr;
 	ServletContext servletContext;
@@ -67,11 +66,14 @@ public class TwitstreetImpl implements Twitstreet {
 
 	@Inject
 	StockMgr stockMgr;
-	
-	@Inject AnnouncerMgr announcerMgr;
-	
-	@Inject AdsListenerMgr adsListenerMgr;
-	@Inject Welcome2ListenerMgr welcome2ListenerMgr;
+
+	@Inject
+	AnnouncerMgr announcerMgr;
+
+	@Inject
+	AdsListenerMgr adsListenerMgr;
+	@Inject
+	Welcome2ListenerMgr welcome2ListenerMgr;
 
 	@Inject
 	public TwitstreetImpl(DBMgr dbMgr, ConfigMgr configMgr) {
@@ -79,26 +81,25 @@ public class TwitstreetImpl implements Twitstreet {
 		this.configMgr = configMgr;
 	}
 
-
 	@Override
 	public void initialize() {
 		loadConfiguration();
-		
+
 		seasonMgr.loadSeasonInfo();
 		announcerMgr.loadAnnouncers();
-		
+		welcome2ListenerMgr.start();
+
 		if (configMgr.isDev() || !configMgr.isMaster()) {
 			startTasks();
 		}
-		if(configMgr.isMaster() || configMgr.isDev() ){
+		if (configMgr.isMaster() || configMgr.isDev()) {
 			startSeasonTask();
 		}
-		if(!configMgr.isDev()){
+		if (!configMgr.isDev()) {
 			startNewSeasonInfoSentTask();
 		}
 		initialized = true;
 	}
-
 
 	private void startNewSeasonInfoSentTask() {
 		NewSeasonInfoSentTask newSeasonInfoSentTask = injector.getInstance(NewSeasonInfoSentTask.class);
@@ -117,14 +118,11 @@ public class TwitstreetImpl implements Twitstreet {
 
 	}
 
-
 	private void startTasks() {
 		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
 		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);
 		DetectInvalidTokensTask detectInvalidTokensTask = injector.getInstance(DetectInvalidTokensTask.class);
-		
-		
-		
+
 		Thread detectInvalidTokensThread = new Thread(detectInvalidTokensTask);
 		detectInvalidTokensThread.setName("Detect Invalid Tokens Task");
 
@@ -133,20 +131,18 @@ public class TwitstreetImpl implements Twitstreet {
 
 		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
 		updateUserInfoThread.setName("User Info Update Task");
-		
+
 		updateFollowerCountThread.start();
-		
+
 		if (!configMgr.isDev()) {
 			detectInvalidTokensThread.start();
 			updateUserInfoThread.start();
 			adsListenerMgr.start();
-			welcome2ListenerMgr.start();
 		}
-		
-		
+
 	}
 
-	private void loadConfiguration(){
+	private void loadConfiguration() {
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileReader(new File(Twitstreet.TWITSTREET_PROPERTIES)));
@@ -174,9 +170,9 @@ public class TwitstreetImpl implements Twitstreet {
 		configMgr.load();
 		configMgr.setServerId(serverId);
 		configMgr.setDev(dev);
-		
+
 	}
-	
+
 	public boolean isInitialized() {
 		return initialized;
 	}

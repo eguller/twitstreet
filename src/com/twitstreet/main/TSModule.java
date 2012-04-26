@@ -45,11 +45,17 @@ import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.task.ReRankTask;
 import com.twitstreet.task.StockUpdateTask;
+import com.twitstreet.twitter.AdsListenerMgr;
+import com.twitstreet.twitter.AdsListenerMgrImpl;
+import com.twitstreet.twitter.AnnouncerMgr;
+import com.twitstreet.twitter.AnnouncerMgrImpl;
 import com.twitstreet.twitter.TwitstreetAnnouncer;
 import com.twitstreet.twitter.TwitstreetAnnouncerImpl;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 import com.twitstreet.twitter.TwitterProxyImpl;
+import com.twitstreet.twitter.Welcome2ListenerMgr;
+import com.twitstreet.twitter.Welcome2ListenerMgrImpl;
 
 public class TSModule extends AbstractModule {
 	@Inject Twitstreet twitStreet;
@@ -69,6 +75,9 @@ public class TSModule extends AbstractModule {
 		bind(ReRankTask.class).in(Scopes.SINGLETON);
 		bind(StockUpdateTask.class).in(Scopes.SINGLETON);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class).in(Scopes.SINGLETON);
+		bind(AdsListenerMgr.class).to(AdsListenerMgrImpl.class).in(Scopes.SINGLETON);
+		bind(AnnouncerMgr.class).to(AnnouncerMgrImpl.class).in(Scopes.SINGLETON);
+		bind(Welcome2ListenerMgr.class).to(Welcome2ListenerMgrImpl.class).in(Scopes.SINGLETON);
 		bind(SeasonMgr.class).to(SeasonMgrImpl.class).in(Scopes.SINGLETON);
 		install(new FactoryModuleBuilder()
 	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
