@@ -54,12 +54,6 @@ public class SeasonServlet extends TwitStreetServlet {
 
 		loadUser(request);
 		
-		
-		
-		ArrayList<Stock> stocks = stockMgr.getSuggestedStocks();
-		request.setAttribute("stockList", stocks);
-		request.setAttribute("stockListName", "suggested");
-		//loadUserFromCookie(request);
 		try {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/oldSeasonsContent.jsp").forward(request, response);

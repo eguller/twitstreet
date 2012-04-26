@@ -92,7 +92,6 @@ public interface StockMgr {
 
 	public List<Stock> getUpdateRequiredStocksByServer();
 	public void resetSpeedOfOldStocksByServer();
-	ArrayList<Long> getUpdateRequiredStockIds();
 
 	void updateStockListData(ArrayList<Long> id);
 

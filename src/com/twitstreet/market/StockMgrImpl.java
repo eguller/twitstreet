@@ -514,36 +514,7 @@ private static String GET_SUGGESTED_STOCKS =
 		}
 		return stockList;
 	}
-	@Override
-	public ArrayList<Long> getUpdateRequiredStockIds() {
-
-		ArrayList<Long> idList = new ArrayList<Long>();
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_DISTINCT_FROM_STOCK +  
-					" where (TIMESTAMPDIFF(minute, lastUpdate, now())  > ?  or lastUpdate is null) " 
-					+ " and (" + STOCK_IN_PORTFOLIO
-						+" or " +STOCK_IN_WATCHLIST 
-						+" or " + STOCK_IN_TWITTER_TRENDS 
-						+ " )");
-
-			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				Long id = rs.getLong("id");
-				idList.add(id);
-			}
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-		return idList;
-	}
+	
 	
 	@Override
 	public List<Stock> getUpdateRequiredStocksByServer() {

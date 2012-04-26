@@ -40,7 +40,7 @@
 		<echo message="Merging all jss files into: all.js" />
 		<concat destfile="${build.dir}/js/all.js" force="yes">
 			<filelist dir="js"
-			         files="jquery-corner.js,jquery.blockUI.js,hashchange.js,twitstreet.js,ajax.js,util.js,stockTabs.js,userTabs.js,stockDetailsTabs.js,mainTabs.js,userProfileTabs.js,portfolioTab.js,transactionTab.js,charts.js,jquery.countdown.min.js"/>
+			         files="jquery-corner.js,jquery.blockUI.js,hashchange.js,twitstreet.js,ajax.js,util.js,stockTabs.js,groupTabs.js,userTabs.js,stockDetailsTabs.js,mainTabs.js,userProfileTabs.js,portfolioTab.js,transactionTab.js,charts.js,jquery.countdown.min.js"/>
 		</concat>
 		<echo message="Merging all css files into: all.css" />
 		<concat destfile="${build.dir}/css/all.css" force="no">
