@@ -58,7 +58,7 @@ public class UserInfoUpdateTask implements Runnable {
 				User user = userMgr.random();
 				TwitterProxy twitterProxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
 				while (idList.size() > 0) {
-					List<Long> subList = idList.subList(0,Math.min(TwitterProxyImpl.USER_COUNT_FOR_UPDATE,idList.size()));
+					List<Long> subList = idList.subList(0,Math.min(TwitterProxyImpl.IDS_SIZE,idList.size()));
 					ArrayList<twitter4j.User> twitterUserList = twitterProxy.getTwUsers(new ArrayList<Long>(subList));
 					for (twitter4j.User twitterUser : twitterUserList) {
 						User updatedUser = new User();
@@ -68,6 +68,7 @@ public class UserInfoUpdateTask implements Runnable {
 						updatedUser.setLocation(twitterUser.getLocation());
 						updatedUser.setDescription(twitterUser.getDescription());
 						updatedUser.setLongName(twitterUser.getName());
+						updatedUser.setLanguage(twitterUser.getLang());
 						userMgr.updateTwitterData(updatedUser);
 					}
 					subList.clear();
