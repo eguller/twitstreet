@@ -22,7 +22,6 @@
 
 	String selectedTab = (String) request.getAttribute(HomePageServlet.SELECTED_TAB_STOCK_BAR);
 	  
-	PaginationDO pdo = new PaginationDO(1,stockMgr.getSuggestedStockCount(),StockMgr.MAX_TRENDS_PER_PAGE,"suggested","loadSuggestedStocks", false);
 	
 %>
 
@@ -46,9 +45,11 @@
 					
 					
 					
-						<%if(selectedTab.equalsIgnoreCase("suggested-stocks-tab")){						
-
-							ArrayList<Stock> results = stockMgr.getSuggestedStocks();
+						<%if(selectedTab.equalsIgnoreCase("suggested-stocks-tab")){			
+							PaginationDO pdo = new PaginationDO(1,stockMgr.getSuggestedStockCount(),StockMgr.MAX_TRENDS_PER_PAGE,"suggested","loadSuggestedStocks", false);
+							
+							ArrayList<Stock> results = stockMgr.getSuggestedStocks(pdo.getOffset(),pdo.getRecordPerPage());
+						
 							request.setAttribute("stockList", results);		
 							request.setAttribute("stockListName", "suggested");					
 						%>

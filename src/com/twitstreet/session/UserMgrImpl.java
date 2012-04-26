@@ -371,16 +371,10 @@ public class UserMgrImpl implements UserMgr {
 			connection = dbMgr.getConnection();
 			
 			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
-					+ "  limit ?,1");
+					+ " and users.id >= (select floor( max(id) * rand()) from users ) "
+					+ "   and users.id not in (select user_id from inactive_user) "
+					+ " order by users.id limit 1");
 			
-			Random generator = new Random();
-			
-			int random = generator.nextInt();
-			int userCount = getUserCount();
-			
-			random = random%userCount;
-			random = Math.abs(random);
-			ps.setInt(1, random);
 			rs = ps.executeQuery();
 			
 			if (rs.next()) {

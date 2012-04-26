@@ -55,7 +55,7 @@ public class TrendyStocksServlet extends TwitStreetServlet {
 		int page = getPage(request);
 		PaginationDO pdo = new PaginationDO(page,stockMgr.getSuggestedStockCount(),StockMgr.MAX_TRENDS_PER_PAGE,"suggested","loadSuggestedStocks",false);
 		request.setAttribute("pdo", pdo);
-		ArrayList<Stock> stocks = stockMgr.getSuggestedStocks(page-1,StockMgr.MAX_TRENDS_PER_PAGE);
+		ArrayList<Stock> stocks = stockMgr.getSuggestedStocks(pdo.getOffset(),pdo.getRecordPerPage());
 		request.setAttribute("stockList", stocks);
 		request.setAttribute("stockListName", "suggested");
 		//loadUserFromCookie(request);

@@ -97,7 +97,7 @@
 					<td>
 						
 					</td>
-					<td width="50px">
+					<td width="100px">
 						
 					</td>
 					<td align="center">

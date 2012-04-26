@@ -909,10 +909,5 @@ private static String GET_SUGGESTED_STOCKS =
 		}
 	}
 
-	@Override
-	public ArrayList<Stock> getSuggestedStocks(int page) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

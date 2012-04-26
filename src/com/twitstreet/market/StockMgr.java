@@ -105,7 +105,7 @@ public interface StockMgr {
 	ArrayList<Stock> getSuggestedStocks(int offset, int count);
 
 	void loadSuggestedStocks();
-	ArrayList<Stock> getSuggestedStocks(int page);
+	
 	public boolean addStockIntoAnnouncement(long stockid);
 	public void removeOldRecords(int removeOlderThanMinutes);
 	public void removeOldRecordsByServer(int removeOlderThanMinutes);
