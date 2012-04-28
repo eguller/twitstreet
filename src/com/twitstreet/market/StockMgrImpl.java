@@ -50,7 +50,6 @@ import com.twitstreet.twitter.TwitterProxyImpl;
 public class StockMgrImpl implements StockMgr {
 
 	private static int MAX_SUGGESTED_STOCKS = 180;
-	private static int MAX_TOP_GROSSING_STOCKS = 180;
 	private static int TOP_GROSSING_STOCK_TOTAL_THRESHOLD = 1000;
 
 	private static int TWITTER_TRENDS_CLEANUP_PERIOD = 24 * 60; // minutes
@@ -909,5 +908,18 @@ private static String GET_SUGGESTED_STOCKS =
 		}
 	}
 
-
+	@Override
+	public void truncateStockHistory() {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement("delete from stock_history where id not in (select max(id) from stock_history where date < DATE(now()) group by stock, date)");
+			ps.execute();
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
 }
