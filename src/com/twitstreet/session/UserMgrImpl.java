@@ -1040,7 +1040,6 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, null);
 			addInviteMoney(invitor);
 		}
-
 	}
 
 	@Override
@@ -1147,5 +1146,21 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 		return userList;
+	}
+
+	@Override
+	public void truncateRankingHistory() {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("delete from ranking_history where id not in (select max(id) from ranking_history where DATE(lastUpdate) < DATE(now()) group by user_id, DATE(lastUpdate))");
+			ps.execute();
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
 	}
 }
