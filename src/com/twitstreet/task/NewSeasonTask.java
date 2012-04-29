@@ -18,6 +18,7 @@
 
 package com.twitstreet.task;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -25,50 +26,64 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.data.User;
+import com.twitstreet.season.SeasonMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 
-public class DetectInvalidTokensTask implements Runnable {
-	private static final long ONE_HOUR =60 * 60 * 1000;
+public class NewSeasonTask implements Runnable {
+	
+	//operation starts 1 minute before the start date of next season
+	
 	
 	@Inject
 	TwitterProxyFactory twitterProxyFactory = null;
 	@Inject
 	ConfigMgr configMgr;
 	@Inject
+	SeasonMgr seasonMgr;
+	@Inject
 	UserMgr userMgr;
-	private static Logger logger = Logger.getLogger(DetectInvalidTokensTask.class);
+	private static Logger logger = Logger.getLogger(NewSeasonTask.class);
 
 	@Override
 	public void run() {
-
+		int i= 0;
+ 
 		while (true) {
+			i++;
 			long start = System.currentTimeMillis();
-
+			
+			seasonMgr.loadSeasonInfo();
+			
+			Date nowDate = new Date();
+			long now = nowDate.getTime();
+			long endTime = seasonMgr.getCurrentSeason().getEndTime().getTime();
+			long diff = endTime - now;
 			try {
-				List<User> userList = userMgr.getAllActive();
-				logger.info("*****************DetectInvalidTokensTask*****************" );
-				int i = 0;
-				for (User user : userList) {
-					TwitterProxy twitterProxy = twitterProxyFactory.create(user.getOauthToken(), user.getOauthTokenSecret());
-					
-					if(!twitterProxy.verifyUser()){
-						userMgr.deleteUser(user.getId());
-						i++;
-					}
-					
+				if(now> endTime){
+					logger.info("********************    PERFORMING START NEW SEASON OPERATION    ********************");
+					seasonMgr.newSeason();
+					logger.info("********************      END OF START NEW SEASON OPERATION      ********************");
+					continue;
 				}
-				logger.info("Inactivated "+i+" users.");
 			} catch (Throwable ex) {
-				logger.error("Someone tried to kill our precious DetectInvalidTokensTask. He says: ", ex);
+				logger.error("Someone tried to kill our precious SeasonTask. He says: ", ex);
 			}
 
+			long sleep = 10 * 1000;
+			
+			
 			long elapsed = System.currentTimeMillis() - start;
-			logger.info("DetectInvalidTokensTask completed in " + elapsed / 1000 + " seconds");
-			if (ONE_HOUR - elapsed > 0) {
+
+			if (i % 6 == 0) {
+				logger.info("Time remaining to end season: " + diff / 60000 + "mins " + (diff - (diff / 60000) * 60000) / 1000 + "secs");
+
+				logger.info("SeasonTask completed in " + elapsed / 1000 + " seconds");
+			}
+			if (sleep> 0) {
 				try {
-					Thread.sleep(ONE_HOUR  - elapsed);
+					Thread.sleep(sleep);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

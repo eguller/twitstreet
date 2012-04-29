@@ -18,6 +18,7 @@
 
 package com.twitstreet.market;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -945,22 +946,18 @@ public class StockMgrImpl implements StockMgr {
 
 	@Override
 	public void truncateStockHistory() {
-		ArrayList<Long> idList = new ArrayList<Long>();
 		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
+		 CallableStatement ps = null;
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("select max(id) as id from stock_history where date < DATE(now()) group by stock, date");
-			rs = ps.executeQuery();
-			while(rs.next()){
-				idList.add(rs.getLong("id"));
-			}
-			String idListStr = DBMgrImpl.getIdListAsCommaSeparatedString4In(idList);
-			rs.close();
-			ps.close();
-			ps = connection.prepareStatement("delete from stock_history where id not in (" + idListStr + ")" );
+					.prepareCall("{call refine_stock_history(?)}");
+			
+			Date twoDaysAgo = new Date((new java.util.Date()).getTime() - 2 * 24*60* 60* 1000);
+			
+			ps.setDate(1, twoDaysAgo);
+			ps.execute();
+		
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {

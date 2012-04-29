@@ -20,46 +20,53 @@ package com.twitstreet.task;
 
 import org.apache.log4j.Logger;
 
-import twitter4j.Twitter;
-
 import com.google.inject.Inject;
+import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.market.StockMgr;
+import com.twitstreet.season.SeasonMgr;
+import com.twitstreet.session.UserMgr;
+import com.twitstreet.twitter.TwitterProxyFactory;
 
-public class StockHistoryUpdateTask implements Runnable {
-	private static final long HOUR = 60 * 60 * 1000;
-	private static final long MIN = 60 * 1000;
-	private static final long INITIAL_DELAY = 2 * MIN;
-	private static final long PERIOD = 6 * HOUR;
+public class TruncateHistoryTask implements Runnable {
 	
+	private static long  ONE_HOUR =  60* 60 *1000;
+	@Inject
+	TwitterProxyFactory twitterProxyFactory = null;
+	@Inject
+	ConfigMgr configMgr;
+	@Inject
+	SeasonMgr seasonMgr;
+	@Inject
+	UserMgr userMgr;
 	@Inject
 	StockMgr stockMgr;
-
-	private static Logger logger = Logger.getLogger(StockUpdateTask.class);
-	Twitter twitter = null;
-
-	public void sleep(long millisecs){
-		try {
-			Thread.sleep(millisecs);
-		} catch (InterruptedException e) {
-			logger.error("Thread.sleep error in class: "+this.getClass(), e);
-		}
-	}
+	private static Logger logger = Logger.getLogger(TruncateHistoryTask.class);
 
 	@Override
 	public void run() {
-		sleep(INITIAL_DELAY);
+	
+ 
 		while (true) {
-			long startTime = System.currentTimeMillis();
 			try {
-				stockMgr.updateStockHistory();
-			} catch (Exception ex) {
-				logger.error("Error in stockMgr.updateStockHistory", ex);
+				logger.info("********************    PERFORMING TRUNCATE HISTORY OPERATION    ********************");
+			
+				userMgr.truncateRankingHistory();
+				stockMgr.truncateStockHistory();
+				logger.info("********************      END OF TRUNCATE HISTORY OPERATION      ********************");
+				
+			
+			} catch (Throwable ex) {
+				logger.error("Someone tried to kill our precious TruncateHistoryTask. He says: ", ex);
 			}
-			long endTime = System.currentTimeMillis();
-			long diff = endTime - startTime;
-			if (diff < PERIOD) {
-				sleep(PERIOD - diff);
+		
+			
+			try {
+				Thread.sleep(ONE_HOUR);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
+
 		}
 	}
+
 }

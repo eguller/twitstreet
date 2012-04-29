@@ -1,21 +1,3 @@
-/**
-	TwitStreet - Twitter Stock Market Game
-    Copyright (C) 2012  Engin Guller (bisanth@gmail.com), Cagdas Ozek (cagdasozek@gmail.com)
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- **/
-
 package com.twitstreet.main;
 
 import java.io.File;
@@ -39,8 +21,9 @@ import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.task.DetectInvalidTokensTask;
 import com.twitstreet.task.NewSeasonInfoSentTask;
-import com.twitstreet.task.SeasonTask;
+import com.twitstreet.task.NewSeasonTask;
 import com.twitstreet.task.StockUpdateTask;
+import com.twitstreet.task.TruncateHistoryTask;
 import com.twitstreet.task.UserInfoUpdateTask;
 import com.twitstreet.twitter.AdsListenerMgr;
 import com.twitstreet.twitter.AnnouncerMgr;
@@ -90,25 +73,54 @@ public class TwitstreetImpl implements Twitstreet {
 
 		seasonMgr.loadSeasonInfo();
 		announcerMgr.loadAnnouncers();
-		
 
 		welcome2ListenerMgr.start();
 		followBackMgr.start();
 		adsListenerMgr.start();
-		
+
 		if (configMgr.isDev() || !configMgr.isMaster()) {
-			startTasks();
+			startSecondaryServerTasks();
 		}
-		if (configMgr.isMaster() || configMgr.isDev()) {
-			startSeasonTask();
+		if ( configMgr.isDev() || configMgr.isMaster() ) {
+			startPrimaryServerTasks();
 		}
-		if (!configMgr.isDev()) {
-			startNewSeasonInfoSentTask();
-			
-		}
+
+		startCommonTasks();
 		initialized = true;
 	}
 
+
+	private void startPrimaryServerTasks() {
+		startNewSeasonTask();
+	}
+
+	private void startSecondaryServerTasks() {
+
+		startTruncateHistoryTask();
+		startStockUpdateTask();
+		
+		if (!configMgr.isDev()) {
+			startDetectInvalidTokensTask();
+			startUserInfoUpdateTask();
+			adsListenerMgr.start();
+		}
+
+	}
+	private void startCommonTasks() {
+		
+		if (!configMgr.isDev()) {
+			startNewSeasonInfoSentTask();
+		}
+
+	}
+	
+
+	private void startNewSeasonTask() {
+		NewSeasonTask newSeasonTask = injector.getInstance(NewSeasonTask.class);
+		Thread newSeasonTaskThread = new Thread(newSeasonTask);
+		newSeasonTaskThread.setName("Start New Season Task");
+		newSeasonTaskThread.start();
+	}
 	private void startNewSeasonInfoSentTask() {
 		NewSeasonInfoSentTask newSeasonInfoSentTask = injector.getInstance(NewSeasonInfoSentTask.class);
 		Thread newSeasonInfoSentThread = new Thread(newSeasonInfoSentTask);
@@ -116,40 +128,35 @@ public class TwitstreetImpl implements Twitstreet {
 		newSeasonInfoSentThread.start();
 	}
 
-	private void startSeasonTask() {
-		SeasonTask seasonTask = injector.getInstance(SeasonTask.class);
-
-		Thread seasonTaskThread = new Thread(seasonTask);
-		seasonTaskThread.setName("Season Task");
-
-		seasonTaskThread.start();
-
-	}
-
-	private void startTasks() {
-		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
-		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);
+	private void startDetectInvalidTokensTask() {
 		DetectInvalidTokensTask detectInvalidTokensTask = injector.getInstance(DetectInvalidTokensTask.class);
-
 		Thread detectInvalidTokensThread = new Thread(detectInvalidTokensTask);
 		detectInvalidTokensThread.setName("Detect Invalid Tokens Task");
-
-		Thread updateFollowerCountThread = new Thread(updateFollowerCountTask);
-		updateFollowerCountThread.setName("Stock Update Task");
-
-		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
-		updateUserInfoThread.setName("User Info Update Task");
-
-		updateFollowerCountThread.start();
-
-		if (!configMgr.isDev()) {
-			detectInvalidTokensThread.start();
-			updateUserInfoThread.start();
-			adsListenerMgr.start();
-		}
-
+		detectInvalidTokensThread.start();
 	}
 
+	private void startUserInfoUpdateTask() {
+		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);		
+		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
+		updateUserInfoThread.setName("User Info Update Task");		
+		updateUserInfoThread.start();
+	}
+
+	private void startTruncateHistoryTask() {
+		TruncateHistoryTask truncateHistoryTask = injector.getInstance(TruncateHistoryTask.class);
+		Thread truncateHistoryTaskThread = new Thread(truncateHistoryTask);
+		truncateHistoryTaskThread.setName("Truncate History Task");
+		truncateHistoryTaskThread.start();
+	
+	}
+
+	private void startStockUpdateTask() {
+		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
+		Thread updateFollowerCountThread = new Thread(updateFollowerCountTask);
+		updateFollowerCountThread.setName("Stock Update Task");		
+		updateFollowerCountThread.start();
+	}
+	
 	private void loadConfiguration() {
 		Properties properties = new Properties();
 		try {
@@ -199,5 +206,4 @@ public class TwitstreetImpl implements Twitstreet {
 	public void setInjector(Injector injector) {
 		this.injector = injector;
 	}
-
 }

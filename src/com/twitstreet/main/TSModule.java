@@ -43,8 +43,8 @@ import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.GroupMgrImpl;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
-import com.twitstreet.task.ReRankTask;
 import com.twitstreet.task.StockUpdateTask;
+import com.twitstreet.task.TruncateHistoryTask;
 import com.twitstreet.twitter.AdsListenerMgr;
 import com.twitstreet.twitter.AdsListenerMgrImpl;
 import com.twitstreet.twitter.AnnouncerMgr;
@@ -74,7 +74,6 @@ public class TSModule extends AbstractModule {
 		bind(DBScriptParser.class).to(DBScriptParserImpl.class);
 		bind(DBMgr.class).toProvider(DBMgrProvider.class).in(Scopes.SINGLETON);
 		bind(ConfigMgr.class).toProvider(ConfigMgrProvider.class).in(Scopes.SINGLETON);
-		bind(ReRankTask.class).in(Scopes.SINGLETON);
 		bind(StockUpdateTask.class).in(Scopes.SINGLETON);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class).in(Scopes.SINGLETON);
 		bind(AdsListenerMgr.class).to(AdsListenerMgrImpl.class).in(Scopes.SINGLETON);
@@ -82,9 +81,10 @@ public class TSModule extends AbstractModule {
 		bind(Welcome2ListenerMgr.class).to(Welcome2ListenerMgrImpl.class).in(Scopes.SINGLETON);
 		bind(SeasonMgr.class).to(SeasonMgrImpl.class).in(Scopes.SINGLETON);
 		bind(FollowBackMgr.class).to(FollowBackMgrImpl.class).in(Scopes.SINGLETON);
-		
+		bind(TruncateHistoryTask.class).in(Scopes.SINGLETON);
 		install(new FactoryModuleBuilder()
 	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
 	     .build(TwitterProxyFactory.class));
 	}
 }
+
