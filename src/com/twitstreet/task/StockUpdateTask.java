@@ -91,7 +91,6 @@ public class StockUpdateTask implements Runnable {
 
 				logger.info("Rank history update - begin.");
 				userMgr.updateRankingHistory(false);
-				userMgr.truncateRankingHistory();
 				logger.info("Rank history update - end. ");
 
 				logger.info("Mention trendy stock - begin.");

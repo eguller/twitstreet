@@ -31,7 +31,7 @@ import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.TwitterProxy;
 import com.twitstreet.twitter.TwitterProxyFactory;
 
-public class SeasonTask implements Runnable {
+public class NewSeasonTask implements Runnable {
 	
 	//operation starts 1 minute before the start date of next season
 	
@@ -44,7 +44,7 @@ public class SeasonTask implements Runnable {
 	SeasonMgr seasonMgr;
 	@Inject
 	UserMgr userMgr;
-	private static Logger logger = Logger.getLogger(SeasonTask.class);
+	private static Logger logger = Logger.getLogger(NewSeasonTask.class);
 
 	@Override
 	public void run() {
