@@ -128,4 +128,10 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 		return announcerDataList.get( (int)(Math.random() * announcerDataList.size()));
 	}
 
+	@Override
+	public void retweet() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
