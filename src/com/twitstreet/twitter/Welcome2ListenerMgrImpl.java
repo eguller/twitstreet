@@ -52,13 +52,6 @@ public class Welcome2ListenerMgrImpl implements Welcome2ListenerMgr {
 	public void start() {
 		Announcer announcer = announcerMgr.randomAnnouncerData();
 		twitterProxy = twitterProxyFactory.create(announcer.getAccessToken(), announcer.getAccessTokenSecret());
-		/*
-		
-		twitter = new TwitterFactory().getInstance();
-		twitter.setOAuthConsumer(configMgr.getConsumerKey(),
-				configMgr.getConsumerSecret());
-		twitter.setOAuthAccessToken(new AccessToken(announcer.getAccessToken(), announcer.getAccessTokenSecret()));
-		*/
 		
 		TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
 		twitterStream.setOAuthConsumer(announcer.getConsumerKey(), announcer.getConsumerSecret());
