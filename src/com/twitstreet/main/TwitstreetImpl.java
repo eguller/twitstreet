@@ -74,10 +74,6 @@ public class TwitstreetImpl implements Twitstreet {
 		seasonMgr.loadSeasonInfo();
 		announcerMgr.loadAnnouncers();
 
-		welcome2ListenerMgr.start();
-		followBackMgr.start();
-		adsListenerMgr.start();
-
 		if (configMgr.isDev() || !configMgr.isMaster()) {
 			startSecondaryServerTasks();
 		}
@@ -107,11 +103,12 @@ public class TwitstreetImpl implements Twitstreet {
 
 	}
 	private void startCommonTasks() {
-		
 		if (!configMgr.isDev()) {
 			startNewSeasonInfoSentTask();
+			welcome2ListenerMgr.start();
+			followBackMgr.start();
+			adsListenerMgr.start();
 		}
-
 	}
 	
 
