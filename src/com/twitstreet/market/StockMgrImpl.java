@@ -945,13 +945,22 @@ public class StockMgrImpl implements StockMgr {
 
 	@Override
 	public void truncateStockHistory() {
+		ArrayList<Long> idList = new ArrayList<Long>();
 		Connection connection = null;
 		PreparedStatement ps = null;
+		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("delete from stock_history where id not in (select max(id) from stock_history where date < DATE(now()) group by stock, date)");
-			ps.execute();
+					.prepareStatement("select max(id) as id from stock_history where date < DATE(now()) group by stock, date");
+			rs = ps.executeQuery();
+			while(rs.next()){
+				idList.add(rs.getLong("id"));
+			}
+			String idListStr = DBMgrImpl.getIdListAsCommaSeparatedString4In(idList);
+			rs.close();
+			ps.close();
+			ps = connection.prepareStatement("delete from stock_history where id not in (" + idListStr + ")" );
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
