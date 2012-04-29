@@ -1040,7 +1040,6 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, null);
 			addInviteMoney(invitor);
 		}
-
 	}
 
 	@Override
@@ -1147,5 +1146,44 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 		return userList;
+	}
+
+	@Override
+	public void truncateRankingHistory() {
+		ArrayList<Long> idList1 = new ArrayList<Long>();
+		ArrayList<Long> idList2 = new ArrayList<Long>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = dbMgr.getConnection();
+			
+			ps = connection
+					.prepareStatement("select max(id) as id from ranking_history where DATE(lastUpdate) < DATE(now()) group by user_id, DATE(lastUpdate)");
+			rs = ps.executeQuery();
+			while(rs.next()){
+				idList1.add(rs.getLong("id"));
+			}
+			String idListStr1 = DBMgrImpl.getIdListAsCommaSeparatedString4In(idList1);
+			rs.close();
+			ps.close();
+			
+			ps = connection.prepareStatement("select ranking_history_id from season_result");
+			rs = ps.executeQuery();
+			while(rs.next()){
+				idList2.add(rs.getLong("ranking_history_id"));
+			}
+			String idListStr2 = DBMgrImpl.getIdListAsCommaSeparatedString4In(idList2);
+			String idListStr = idListStr1 + "," + idListStr2;
+			rs.close();
+			ps.close();
+			
+			ps = connection.prepareStatement("delete from ranking_history where id not in (" + idListStr + ")");
+			ps.execute();
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
 	}
 }

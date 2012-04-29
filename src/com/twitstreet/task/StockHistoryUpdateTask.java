@@ -47,22 +47,17 @@ public class StockHistoryUpdateTask implements Runnable {
 
 	@Override
 	public void run() {
-
 		sleep(INITIAL_DELAY);
-		
 		while (true) {
-
 			long startTime = System.currentTimeMillis();
-
 			try {
 				stockMgr.updateStockHistory();
+				stockMgr.truncateStockHistory();
 			} catch (Exception ex) {
 				logger.error("Error in stockMgr.updateStockHistory", ex);
 			}
-
 			long endTime = System.currentTimeMillis();
 			long diff = endTime - startTime;
-
 			if (diff < PERIOD) {
 				sleep(PERIOD - diff);
 			}

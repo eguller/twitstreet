@@ -111,4 +111,6 @@ public interface StockMgr {
 	public void removeOldRecordsByServer(int removeOlderThanMinutes);
 
 	public void saveTrend(long id);
+	
+	public void truncateStockHistory();
 }
