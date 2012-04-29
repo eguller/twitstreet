@@ -92,7 +92,7 @@ create table `stock_history` (
   `total` int(11) not null,
   `date` varchar(10) not null,  
   `hour` int(11) not null default 0,
-  `lastUpdate` timestamp,
+  `lastUpdate` timestamp,index (`lastUpdate`),
   primary key (`id`),
   unique key `unique_hourly_stock` (`stock`,`date`,`hour`),
   constraint `fk_stock_history_stock` foreign key (`stock`) references `stock` (`id`)
