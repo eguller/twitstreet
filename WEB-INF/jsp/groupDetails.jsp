@@ -87,12 +87,12 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	%>
 	
 			<input id="hiddenGroupDetailsGroupId" type="hidden" value="<%=group.getId() %>"/>
-			
+			<div style="float:left;margin-right:10px"><%=GUIUtil.getInstance().getTwitterShareButton("#!joingroup="+group.getId(),"group.inviteText", lang, group.getName()) %></div>
 			<%
 			if (userIsAdmin) {
 			%>
 			
-				<div align="left">
+				<div style="float:left;margin-right:10px">
 				
 				<%if(group.getStatus() == Group.STATUS_NEW_USER_DISABLED){ %>
 					<%=lutil.get("group.entrancedisabled", lang) %>
@@ -109,7 +109,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			<%
 			}else if (userIsMember) {
 			%>
-				<div align="right">
+				<div style="float:left;margin-right:10px">
 				
 					<a class="red-light" href="javascript:void(0)" onclick="leaveGroup(<%=group.getId()%>)">
 						<%=lutil.get("group.leave", lang) %>
@@ -118,7 +118,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			<%
 			} else if (sessionUser!=null) {
 			%>
-				<div align="right">
+				<div style="float:left;margin-right:10px">
 				
 					<a class="green-light" href="javascript:void(0)" onclick="joinGroup(<%=group.getId()%>)">
 						<%=lutil.get("group.join", lang) %>
@@ -128,6 +128,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			}
 			%>
 			
+			<br>
 			
 			
 			<%

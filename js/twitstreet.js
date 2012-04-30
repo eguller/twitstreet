@@ -205,6 +205,12 @@ function joinGroup(id) {
 				"#column_center",false,groupOperationCallback);
 	}
 }
+function joinGroupByReference(id) {
+	if (id != null) {
+		ajaxLoad("/group", "group=" + id+"&op=joinByReference", "#groups-container",
+				"#column_center",false,groupOperationCallback);
+	}
+}
 function leaveGroup(id) {
 	if (id != null) {
 		

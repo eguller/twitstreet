@@ -42,6 +42,7 @@ import com.twitstreet.task.NewSeasonInfoSentTask;
 import com.twitstreet.task.NewSeasonTask;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.task.TruncateHistoryTask;
+import com.twitstreet.task.TruncateLogsTask;
 import com.twitstreet.task.UserInfoUpdateTask;
 import com.twitstreet.twitter.AdsListenerMgr;
 import com.twitstreet.twitter.AnnouncerMgr;
@@ -84,6 +85,9 @@ public class TwitstreetImpl implements Twitstreet {
 
 	@Override
 	public void initialize() {
+		
+		
+		
 		loadConfiguration();
 
 		seasonMgr.loadSeasonInfo();
@@ -122,8 +126,8 @@ public class TwitstreetImpl implements Twitstreet {
 		
 		if (!configMgr.isDev()) {
 			startNewSeasonInfoSentTask();
+			startTruncateLogsTask();
 		}
-
 	}
 	
 
@@ -132,6 +136,12 @@ public class TwitstreetImpl implements Twitstreet {
 		Thread newSeasonTaskThread = new Thread(newSeasonTask);
 		newSeasonTaskThread.setName("Start New Season Task");
 		newSeasonTaskThread.start();
+	}
+	private void startTruncateLogsTask() {
+		TruncateLogsTask truncateLogsTask = injector.getInstance(TruncateLogsTask.class);
+		Thread truncateLogsTaskThread = new Thread(truncateLogsTask);
+		truncateLogsTaskThread.setName("Truncate Logs Task");
+		truncateLogsTaskThread.start();
 	}
 	private void startNewSeasonInfoSentTask() {
 		NewSeasonInfoSentTask newSeasonInfoSentTask = injector.getInstance(NewSeasonInfoSentTask.class);
@@ -183,6 +193,9 @@ public class TwitstreetImpl implements Twitstreet {
 		String dbPassword = properties.getProperty(Twitstreet.DB_PASSWORD);
 		String dbName = properties.getProperty(Twitstreet.DATABASE);
 		String dbPortStr = properties.getProperty(Twitstreet.DB_PORT);
+		String mailDealer = properties.getProperty(Twitstreet.MAIL_DEALER);
+		String mailDealerPassword= properties.getProperty(Twitstreet.MAIL_DEALER_PWD);
+		String mailRecipients = properties.getProperty(Twitstreet.MAIL_RECIPIENTS);
 
 		int serverId = properties.getProperty(ConfigMgr.SERVER_ID) == null ? 0 : Integer.parseInt(properties.getProperty(ConfigMgr.SERVER_ID));
 		boolean dev = properties.getProperty(ConfigMgr.STAGE) == null ? true : properties.getProperty(ConfigMgr.STAGE).equalsIgnoreCase(ConfigMgr.DEV);
@@ -197,6 +210,9 @@ public class TwitstreetImpl implements Twitstreet {
 		configMgr.load();
 		configMgr.setServerId(serverId);
 		configMgr.setDev(dev);
+		configMgr.setMailDealer(mailDealer);		
+		configMgr.setMailDealerPassword(mailDealerPassword);
+		configMgr.setMailRecipients(mailRecipients.split(","));
 
 	}
 

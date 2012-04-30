@@ -29,6 +29,9 @@ public interface Twitstreet {
 	public static final String DB_ADMIN = "dbadmin";
 	public static final String DB_PASSWORD = "dbpassword";
 	public static final String DATABASE = "database";
+	public static final String MAIL_DEALER = "mailDealer";
+	public static final String MAIL_DEALER_PWD = "mailDealerPassword";
+	public static final String MAIL_RECIPIENTS = "mailRecipients";
 	public static final String TWITSTREET_PROPERTIES = System.getProperty("user.home") + "/.twitstreet/twitstreet.properties";
 	
 	 

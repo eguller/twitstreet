@@ -40,6 +40,10 @@ public class ConfigMgrImpl implements ConfigMgr{
 	int serverCount;
 	int serverId;
 	boolean dev = true;
+	String mailRecipients[];
+
+	String mailDealer;
+	String mailDealerPassword;
 
 	
 	@Inject public ConfigMgrImpl(DBMgr dbMgr) {
@@ -179,6 +183,36 @@ public class ConfigMgrImpl implements ConfigMgr{
 	@Override
 	public boolean isMaster() {
 		return ConfigMgr.masterIdSet.contains(getServerId());
+	}
+
+	@Override
+	public String getMailDealer() {
+		return mailDealer;
+	}
+
+	@Override
+	public String getMailDealerPassword() {
+		return mailDealerPassword;
+	}
+
+	@Override
+	public String[] getMailRecipients() {
+		return mailRecipients;
+		
+	}
+	@Override
+	public void setMailRecipients(String[] mailRecipients) {
+		this.mailRecipients = mailRecipients;
+	}
+
+	@Override
+	public void setMailDealer(String mailDealer) {
+		this.mailDealer = mailDealer;
+	}
+
+	@Override
+	public void setMailDealerPassword(String mailDealerPassword) {
+		this.mailDealerPassword = mailDealerPassword;
 	}
 
 	

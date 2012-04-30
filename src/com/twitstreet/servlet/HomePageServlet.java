@@ -97,13 +97,56 @@ public class HomePageServlet extends TwitStreetServlet {
 				"meta-desc",
 				"Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
 
+		
+		long start = 0;
+		long end = 0;
+		start = System.currentTimeMillis();
+		
+		if (!twitstreet.isInitialized()) {
+			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp")
+					.forward(request, response);
+			return;
+		}
 		//Keep this until google removes broken links from its index
 		String queryString = request.getQueryString();
 		if(queryString!= null && queryString.startsWith("stock")){
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
-		//Keep this until google removes broken links from its index
+		
+		end = System.currentTimeMillis();
+		
+		logger.info("Init time: " + (end - start));
+		
+		
+		handleGoogleCrawler(request);
+		
+
+		loadUser(request);
+
+		//	default tab for stocks view
+		request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
+		//	default tab for users view
+		request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
+		//	default tab for groups view
+		request.setAttribute(SELECTED_TAB_GROUP_BAR, "group-list-tab");
+		
+		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
+			getServletContext().getRequestDispatcher(
+					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
+		} else {
+			String referenceId = request.getParameter(REF);
+			if(referenceId != null){
+				request.getSession().setAttribute(REFERENCE_ID, referenceId);
+			}
+			getServletContext().getRequestDispatcher(
+					"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
+		}
+	}
+	
+	private void handleGoogleCrawler(HttpServletRequest request){
+		
+		
 		
 		String command = request.getParameter("_escaped_fragment_");
 		
@@ -149,40 +192,5 @@ public class HomePageServlet extends TwitStreetServlet {
 			
 		}
 		
-		long start = 0;
-		long end = 0;
-		start = System.currentTimeMillis();
-		
-		if (!twitstreet.isInitialized()) {
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp")
-					.forward(request, response);
-			return;
-		}
-		
-		end = System.currentTimeMillis();
-		
-		logger.info("Init time: " + (end - start));
-		
-
-		loadUser(request);
-
-		//	default tab for stocks view
-		request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
-		//	default tab for users view
-		request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
-		//	default tab for groups view
-		request.setAttribute(SELECTED_TAB_GROUP_BAR, "group-list-tab");
-		
-		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
-		} else {
-			String referenceId = request.getParameter(REF);
-			if(referenceId != null){
-				request.getSession().setAttribute(REFERENCE_ID, referenceId);
-			}
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
-		}
 	}
 }

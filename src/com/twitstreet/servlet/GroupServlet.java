@@ -27,9 +27,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.twitstreet.db.data.User;
+import com.twitstreet.localization.LocalizationUtil;
 import com.twitstreet.main.TwitstreetException;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
+import com.twitstreet.util.Util;
 
 @SuppressWarnings("serial")
 @Singleton
@@ -69,6 +71,11 @@ public class GroupServlet extends TwitStreetServlet {
 
 					groupMgr.addUserToGroup(user.getId(), groupId);
 
+				} else if (operation.equalsIgnoreCase("joinByReference")) {
+
+					groupMgr.addUserToGroup(user.getId(), groupId);
+					response.getWriter().print(Util.getConfirmationJS(LocalizationUtil.getInstance().get("group.join.confirm", getLanguage(request),groupMgr.getGroup(groupId).getName()), "", "leaveGroup("+groupId+")"));
+
 				} else if (operation.equalsIgnoreCase("delete")) {
 					if (groupMgr.getGroup(groupId).getAdminId() == user.getId()) {
 
@@ -107,11 +114,11 @@ public class GroupServlet extends TwitStreetServlet {
 			}
 			return;
 		}
-		
+
 		request.setAttribute(HomePageServlet.SELECTED_TAB_GROUP_BAR, "group-details-tab");
 		//loadUserFromCookie(request);
 		getServletContext().getRequestDispatcher("/WEB-INF/jsp/groupDetails.jsp").forward(request, response);
-
+		
 	}
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {

@@ -220,6 +220,7 @@ public class GroupMgrImpl implements GroupMgr {
 
 		return group;
 	}
+	
 
 	@Override
 	public Group getGroup(String name) {

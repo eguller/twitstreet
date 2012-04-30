@@ -53,6 +53,18 @@ public class Util {
 		return new java.sql.Date(date.getTime());
 	}
 
+	public static String getConfirmationJS(String localizedMessage, String okAction, String cancelAction){
+		
+		
+		return "<script> " +
+				" if(confirm(\""+localizedMessage+"\")){ " +
+						okAction+"; " +
+				" } else{"+
+						cancelAction +"; " +
+				" } " +
+			   "</script>";
+		
+	}
 	private static String convertToHex(byte[] data) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < data.length; i++) {
