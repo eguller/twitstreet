@@ -52,6 +52,8 @@ import com.twitstreet.twitter.AdsListenerMgr;
 import com.twitstreet.twitter.AdsListenerMgrImpl;
 import com.twitstreet.twitter.AnnouncerMgr;
 import com.twitstreet.twitter.AnnouncerMgrImpl;
+import com.twitstreet.twitter.FollowBackMgr;
+import com.twitstreet.twitter.FollowBackMgrImpl;
 import com.twitstreet.twitter.TwitstreetAnnouncer;
 import com.twitstreet.twitter.TwitstreetAnnouncerImpl;
 import com.twitstreet.twitter.TwitterProxy;
@@ -64,26 +66,29 @@ public class TSModule extends AbstractModule {
 	@Inject Twitstreet twitStreet;
 	@Override
 	protected void configure() {
+	
+		
 
+		bind(MailMgr.class).to(MailMgrImpl.class);
+		bind(TruncateLogsTask.class).in(Scopes.SINGLETON);
 		bind(TwitstreetAnnouncer.class).to(TwitstreetAnnouncerImpl.class).in(Scopes.SINGLETON);
 		bind(GroupMgr.class).to(GroupMgrImpl.class).in(Scopes.SINGLETON);
 		bind(Twitstreet.class).to(TwitstreetImpl.class).in(Scopes.SINGLETON);
 		bind(UserMgr.class).to(UserMgrImpl.class);
 		bind(StockMgr.class).to(StockMgrImpl.class);
-		bind(MailMgr.class).to(MailMgrImpl.class);
 		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class);
 		bind(DBSetup.class).to(DBSetupImpl.class);
 		bind(DBScriptParser.class).to(DBScriptParserImpl.class);
 		bind(DBMgr.class).toProvider(DBMgrProvider.class).in(Scopes.SINGLETON);
 		bind(ConfigMgr.class).toProvider(ConfigMgrProvider.class).in(Scopes.SINGLETON);
 		bind(StockUpdateTask.class).in(Scopes.SINGLETON);
-		bind(TruncateHistoryTask.class).in(Scopes.SINGLETON);
-		bind(TruncateLogsTask.class).in(Scopes.SINGLETON);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class).in(Scopes.SINGLETON);
 		bind(AdsListenerMgr.class).to(AdsListenerMgrImpl.class).in(Scopes.SINGLETON);
 		bind(AnnouncerMgr.class).to(AnnouncerMgrImpl.class).in(Scopes.SINGLETON);
 		bind(Welcome2ListenerMgr.class).to(Welcome2ListenerMgrImpl.class).in(Scopes.SINGLETON);
 		bind(SeasonMgr.class).to(SeasonMgrImpl.class).in(Scopes.SINGLETON);
+		bind(FollowBackMgr.class).to(FollowBackMgrImpl.class).in(Scopes.SINGLETON);
+		bind(TruncateHistoryTask.class).in(Scopes.SINGLETON);
 		install(new FactoryModuleBuilder()
 	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
 	     .build(TwitterProxyFactory.class));

@@ -27,8 +27,14 @@ public class AdsListenerMgrImpl implements AdsListenerMgr {
 		"\\u00e7ok s\u0131k\u0131ld\u0131m"
 	};
 	
-	private static final long TWENTY_MIN = 20 * 60 * 1000;
+	private static final long TEN_MIN = 20 * 60 * 1000;
 	private static long lastMessage = 0;
+	
+	
+	private static final int REGULAR_TWEET = 0;
+	private static final int RETWEEET = 1;
+	private static final int FAVOURITE = 2;
+	private static final int ACTION_TYPES = 5; // 3 and 4 reserved for default task
 	
 	@Inject AnnouncerMgr announcerMgr;
 	/* (non-Javadoc)
@@ -57,10 +63,30 @@ public class AdsListenerMgrImpl implements AdsListenerMgr {
 				HashtagEntity[] hashtagEntities = status.getHashtagEntities();
 				String screenName = status.getUser().getScreenName();
 				User user = status.getUser();
-				if(user != null && (System.currentTimeMillis() - lastMessage > TWENTY_MIN)){
+				if(user != null && (System.currentTimeMillis() - lastMessage > TEN_MIN)){
 					lastMessage = System.currentTimeMillis();
-					String message = constructAdsMessage(screenName, hashtagEntities, status.getUser().getLang());
-					announcerMgr.announceFromAnnouncer(message);
+					
+					int action = (int)(ACTION_TYPES * Math.random());
+					switch (action) {
+					case REGULAR_TWEET:
+						LocalizationUtil lutil = LocalizationUtil.getInstance();
+						int sentenceSize = Integer.parseInt(lutil.get("announcer.sentence.size", LocalizationUtil.DEFAULT_LANGUAGE));
+						int random = (int)(Math.random() * sentenceSize);
+						String rndMessage = lutil.get("announcer.sentence." + random, LocalizationUtil.DEFAULT_LANGUAGE);
+						announcerMgr.announceFromAnnouncer(rndMessage);
+						break;
+					case RETWEEET:
+						announcerMgr.retweet(status.getId());
+						break;
+					case FAVOURITE:
+						announcerMgr.favourite(status.getId());
+						break;
+					default:
+						String message = constructAdsMessage(screenName, hashtagEntities, status.getUser().getLang());
+						announcerMgr.announceFromAnnouncer(message);
+						break;
+					}
+					
 				}
 			}
 			

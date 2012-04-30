@@ -82,17 +82,13 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 	@Override
 	public void announceFromAnnouncer(String message) {
 		Twitter twitter = random();
+		String screenName = "";
 		if (twitter != null) {
 			try {
 				twitter.updateStatus(message);
+				screenName = twitter.getScreenName();
 			} catch (TwitterException e) {
-				try {
-					logger.error("Announcement failed: " + twitter.getScreenName(), e);
-				} catch (IllegalStateException e1) {
-					logger.error(e1);
-				} catch (TwitterException e1) {
-					logger.error(e1);
-				}
+					logger.error("Announcement failed: " + screenName, e);
 			}
 		}
 		else{
@@ -106,11 +102,13 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 
 	@Override
 	public void announceFromTwitStreetGame(String message) {
+		String screenName = "";
 		if (twitstreetGame != null) {
 			try {
 				twitstreetGame.updateStatus(message);
+				screenName = twitstreetGame.getScreenName();
 			} catch (TwitterException e) {
-				logger.error("Announcement failed", e);
+				logger.error("Announcement failed: " + screenName, e);
 			}
 		}
 		else{
@@ -126,6 +124,42 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 	@Override
 	public Announcer randomAnnouncerData() {
 		return announcerDataList.get( (int)(Math.random() * announcerDataList.size()));
+	}
+
+	@Override
+	public void retweet(long statusId) {
+		Twitter twitter = random();
+		String screenName = "";
+		try {
+			twitter.retweetStatus(statusId);
+			screenName = twitter.getScreenName();
+		} catch (TwitterException e) {
+			logger.error("Error while retweeting: " + statusId + " Announcer: " + screenName, e);
+		}
+	}
+
+	@Override
+	public void follow(long userId) {
+		Twitter twitter = random();
+		String screenName = "";
+		try {
+			twitter.createFriendship(userId);
+			screenName = twitter.getScreenName();
+		} catch (TwitterException e) {
+			logger.error("Error while following: " + userId + " Announcer: " + screenName, e);
+		}
+	}
+
+	@Override
+	public void favourite(long statusId) {
+		Twitter twitter = random();
+		String screenName = "";
+		try {
+			twitter.createFavorite(statusId);
+			screenName = twitter.getScreenName();
+		} catch (TwitterException e) {
+			logger.error("Error while creating favorite: " + statusId + " Announcer: " + screenName, e);
+		}
 	}
 
 }

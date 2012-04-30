@@ -15,4 +15,7 @@ public interface AnnouncerMgr {
 	public void announceFromTwitStreetGame(String message);
 	public ArrayList<Announcer> getAnnouncerDataList();
 	public Announcer randomAnnouncerData();
+	public void retweet(long statusId);
+	public void follow(long userId);
+	public void favourite(long statusId);
 }
