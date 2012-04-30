@@ -13,7 +13,7 @@ import com.twitstreet.util.Util;
 
 public class NewSeasonInfoSentTask implements Runnable {
 	private static Logger logger = Logger.getLogger(NewSeasonInfoSentTask.class);
-	private static final int SEASONINFO_SIZE = 1;
+	private static final int SEASONINFO_SIZE = 3;
 	private static final long FIFTEEN_MINUTE = 15 * 60 * 1000;
 	private static final int SIZE = 1;
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
