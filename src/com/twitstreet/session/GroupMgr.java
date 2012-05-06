@@ -39,6 +39,7 @@ public interface GroupMgr{
 	public Group getGroup(String name);
 	
 	public ArrayList<Group> getGroupsForUser(long id, int offset, int count);
+	public ArrayList<Group> getGroupsForUser(long id);
 	
 	public void addUserToGroup(long userId, long id) throws TwitstreetException;
 	public void addUserToGroupWithRole(long userId, long id, int role) throws TwitstreetException;
@@ -49,6 +50,8 @@ public interface GroupMgr{
 
 
 	public ArrayList<Group> getAllGroups(int offset, int count);
+	public ArrayList<Group> getTopGroups(int offset, int count);
+	public ArrayList<Group> getTopGroupsAllTime(int offset, int count);
 	
 	public ArrayList<Group> searchGroup(String text);
 	//ArrayList<Group> getAllGroups();
@@ -66,6 +69,9 @@ public interface GroupMgr{
 
 	boolean userIsMemberOfGroup(long userId, long groupId) throws TwitstreetException;
 
+	int getRankOfUserForGroup(long userId, long groupId);
+
+	int getAllTimeRankOfUserForGroup(long userId, long groupId);
 	
 	
 	

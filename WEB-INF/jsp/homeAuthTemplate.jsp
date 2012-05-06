@@ -34,9 +34,8 @@
 
 			</div>
 			<div id="column_right">
-				<div id="topranks-container">
-					<template:get name="topranks"></template:get>
-				</div>
+				<template:get name="topranks"></template:get>
+			
 			</div>
 			<!-- Don't remove spacer div. Solve an issue about container height -->
 			<div class="spacer"></div>

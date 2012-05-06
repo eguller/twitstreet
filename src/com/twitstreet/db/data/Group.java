@@ -34,7 +34,34 @@ public class Group implements DataObjectIF{
     private long adminId;
     private String adminName;
     private double total;
-    private double changePerHour;
+    private double totalAllTime;
+    private int rank;
+    private int rankAllTime;
+    public double getTotalAllTime() {
+		return totalAllTime;
+	}
+
+	public void setTotalAllTime(double totalAllTime) {
+		this.totalAllTime = totalAllTime;
+	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
+	public int getRankAllTime() {
+		return rankAllTime;
+	}
+
+	public void setRankAllTime(int rankAllTime) {
+		this.rankAllTime = rankAllTime;
+	}
+
+	private double changePerHour;
     private int status = 0;
     
     private int userCount;
@@ -64,6 +91,9 @@ public class Group implements DataObjectIF{
 		this.userCount = rs.getInt("userCount");
 		this.changePerHour = rs.getDouble("changePerHour");
 		this.total = rs.getDouble("total");
+		this.totalAllTime = rs.getDouble("totalAllTime");
+		this.rank = rs.getInt("rank");
+		this.rankAllTime = rs.getInt("rankAllTime");
 		this.status = rs.getInt("status");
 		
 	}

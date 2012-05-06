@@ -12,8 +12,19 @@ public class PaginationDO {
 		this.name=name;
 		this.onChangeFunction = onChangeFunction;
 		this.showInterval = showInterval;
+
+		int offset = (this.currPage-1) * this.recordPerPage;		
+		
+		if(offset>=this.itemCount){
+			this.currPage = (this.itemCount / this.recordPerPage)+1;
+			if(this.itemCount%this.recordPerPage == 0){
+				this.currPage--;
+			}
+		}
+		
 	}
 	public int getOffset(){
+		
 		return (this.currPage-1) * this.recordPerPage;
 	}
 	public int getPageCount(){

@@ -55,6 +55,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script type="text/javascript" src="/js/mainTabs.js"></script>
 <script type="text/javascript" src="/js/userProfileTabs.js"></script>
 <script type="text/javascript" src="/js/portfolioTab.js"></script>
+<script type="text/javascript" src="/js/toprankTabs.js"></script>
 <script type="text/javascript" src="/js/transactionTab.js"></script>
 <script type="text/javascript" src="/js/charts.js"></script>
 <script type="text/javascript" src="/js/jquery.countdown.min.js"></script>

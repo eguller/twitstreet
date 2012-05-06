@@ -89,6 +89,7 @@
 	%>
 		<jsp:include page="pagination.jsp" />	
 	<%
+
 		}
 	%>
 		<table class="datatbl" style="margin-top: 10px;">
@@ -128,7 +129,7 @@
 				<tr height="50px" onmouseover="$('.groupList-<%=groupListName%>-<%=group.getId()%>').show()"
 					onmouseout="$('.groupList-<%=groupListName%>-<%=group.getId()%>').hide()">
 					<td>
-						<%=pdo.getOffset()+i+1 %>.
+						<%=group.getRank() %>. 
 					</td>
 					<td>
 						<a href="#!group=<%=group.getId()%>" onclick="reloadIfHashIsMyHref(this)"><%=group.getName() %></a>
@@ -227,6 +228,9 @@
 	%>
 	<%
 		}
+	
+	
+	request.setAttribute("pdo", null);
 	%>
 </div>
 

@@ -129,8 +129,48 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			%>
 			
 			<br>
+			<br>
+			<div align="center" class="box">
+					
+				<table class="datatbl" style="text-align: center;width:280px">
+					
+					<tr>
+						<td width="50%">
+							<b><%=lutil.get("season.thisseason", lang) %></b>
+						</td>
+						<td width="50%">
+							<b><%=lutil.get("season.alltime", lang) %></b>
+						</td>
+					</tr>
+						
+					<tr>
+						<td width="50%">
+							<%=group.getRank()%>.
+						</td>
+						<td width="50%">
+							<%=group.getRankAllTime()%>.
+						</td>
+					</tr>
+						
+					<tr>
+						<td width="50%">
+							<%=Util.getRoundedMoneyString(group.getTotal())%>
+							 <%= (group.getChangePerHour()!=0)? "("+Util.getNumberFormatted(group.getChangePerHour(), true, true, true, true, false, true)+")":"" %>
+						</td>
+						<td width="50%">
+							<%=Util.getRoundedMoneyString(group.getTotalAllTime())%>
+							 
+						</td>
+					</tr>
 			
+						
+				
+				</table>		
 			
+		
+		
+			</div>
+		
 			<%
 			if (pdo.getItemCount()> pdo.getRecordPerPage()) {
 				request.setAttribute("pdo", pdo);

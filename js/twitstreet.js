@@ -443,7 +443,7 @@ function reloadToprank() {
 
 }
 
-function toprank(page, type, reload) {
+function toprank(page, type, reload,group) {
 	var pageParam = page;
 
 	if (pageParam == null) {
@@ -454,8 +454,39 @@ function toprank(page, type, reload) {
 		type = $('.topRankSelectSeason:first').val();
 
 	}
-	ajaxLoad("toprank", "page=" + pageParam+ "&type=" + type, "#topranks-container",
-			'#topranks-loading-div', reload);
+	if (group == null) {
+		group = $('.topRankSelectGroup:first').val();
+
+	}
+
+	
+	if(tabSelected(".user-ranking-tab")){
+
+		ajaxLoad("toprank", "page=" + pageParam+ "&type=" + type+ "&group=" + group,"#topranks-screen",
+				"#topranks-screen", reload);
+	}else{
+
+		ajaxLoad("toprankgroup", "page=" + pageParam+ "&type=" + type, "#topranks-screen",
+				"#topranks-screen", reload);
+	}
+	
+
+}
+function toprankGroup(page, type, reload) {
+	var pageParam = page;
+
+	if (pageParam == null) {
+		pageParam = $('.toprankSelect:first').val();
+
+	}
+	if (type == null) {
+		type = $('.topRankSelectSeason:first').val();
+
+	}
+
+		ajaxLoad("toprankgroup", "page=" + pageParam+ "&type=" + type, "#topranks-screen",
+				'#topranks-screen', reload);
+
 }
 
 function signout() {
