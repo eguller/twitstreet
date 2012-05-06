@@ -71,6 +71,12 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						<%	}%>
 							
 						</div>
+						<div id="new-users-content">
+						<%if(selectedTab.equalsIgnoreCase("new-users-tab")){	%>
+							<jsp:include page="newUsers.jsp" />
+						<%	}%>
+							
+						</div>
 				
 					</div>
 				</td>

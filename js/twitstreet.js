@@ -126,6 +126,13 @@ function loadTopGrossingUsers() {
 	showTopGrossingUsersContent();
 	ajaxLoad("/trendyusers", null, "#top-grossing-users-content","#column_center");
 }
+function loadNewUsers(){
+
+	showTabMain('.users-tab');
+
+	showNewUsersContent();
+	ajaxLoad("/newusers", null, "#new-users-content","#column_center");
+}
 
 function getGroup(group) {
 	if (group.length > 0) {

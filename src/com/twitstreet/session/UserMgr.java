@@ -85,4 +85,5 @@ public interface UserMgr {
 	public void setNewSeasonInfoSent(List<User> userIdList);
 	public List<User> getTopNUsers(int n);
 	public void truncateRankingHistory();
+	ArrayList<User> getNewUsers(int offset, int count);
 }

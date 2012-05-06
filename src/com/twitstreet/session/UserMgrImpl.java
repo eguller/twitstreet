@@ -1148,4 +1148,36 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, null);
 		}
 	}
+	
+
+	@Override
+	public ArrayList<User> getNewUsers(int offset,int count) {
+
+	
+		ArrayList<User> userList = new ArrayList<User>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
+					+ " order by firstLogin desc limit ?,?");
+			
+			ps.setInt(1, offset);
+			ps.setInt(2, count);
+			rs = ps.executeQuery();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
 }

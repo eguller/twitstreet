@@ -118,6 +118,8 @@ function performOperation(command){
     	loadTopGrossingStocks();
     }else if(itemType == 'topgrossingusers'){
     	loadTopGrossingUsers();
+    }else if(itemType == 'newusers'){
+    	loadNewUsers();
     }else if(itemType == 'searchstock'){
     	var searchString = command.split('=')[1];
     	getQuote(searchString);
