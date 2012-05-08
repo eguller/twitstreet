@@ -51,12 +51,16 @@ public class GroupMgrImpl implements GroupMgr {
 			" select id, name, adminId, (select userName from users where id=adminId) as adminName, "+
 			" (select count(*) from user_group ug2 where group_id = g.id) as userCount, " +
 			" g.status as status," +
-			" sum((select cash+portfolio from ranking_history rh where user_id = ug.user_id order by lastUpdate desc limit 1) ) as total, " +		
+			" get_group_total(g.id) as total, " +
+			" get_group_total_alltime(g.id) as totalAllTime, " +
+			" get_group_rank(g.id) as rank, " +
+			" get_group_rank_alltime(g.id) as rankAllTime, " +		
 			" sum(user_profit(ug.user_id)) as changePerHour " +		
 			" 	from groups g inner join "+
             " 	user_group ug on ug.group_id = g.id " +
             " 		where 1=1 and "+RESERVED_SYM+" " +
-    		" group by g.id order by total desc, id asc ";
+    		" group by g.id ";
+
 
 	private static String selectFromGroupsWhere(String whereCondition){
 		
@@ -220,6 +224,7 @@ public class GroupMgrImpl implements GroupMgr {
 
 		return group;
 	}
+	
 
 	@Override
 	public Group getGroup(String name) {
@@ -244,13 +249,18 @@ public class GroupMgrImpl implements GroupMgr {
 	}
 
 	@Override
-	public ArrayList<Group> getGroupsForUser(long id, int offset, int count){
+	public ArrayList<Group> getGroupsForUser(long id) {
+		return getGroupsForUser(id, 0, Integer.MAX_VALUE);
+	}
+
+	@Override
+	public ArrayList<Group> getGroupsForUser(long id, int offset, int count) {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ArrayList<Group> groups = new ArrayList<Group>();
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(selectFromGroupsWhere("ug.user_id = ?") + " limit ?,? " );
+			ps = connection.prepareStatement(selectFromGroupsWhere("ug.user_id = ?") + " limit ?,? ");
 			ps.setLong(1, id);
 			ps.setInt(2, offset);
 			ps.setInt(3, count);
@@ -489,6 +499,94 @@ public class GroupMgrImpl implements GroupMgr {
 		addUserToGroup(userId, Group.DEFAULT_ID);
 
 	}
+	@Override
+	public int getRankOfUserForGroup(long userId, long groupId) {
+		
+		if(groupId<0){
+			
+		}
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int rank = -1;
+		boolean isMember = false;
+		try {
+			connection = dbMgr.getConnection();
+			if(groupId<0){
+				ps = connection.prepareStatement(" select rank from  ranking  where ranking.id =?  ");						 
+				ps.setLong(1, userId);
+			}else{
+				ps = connection.prepareStatement(" select count(*)+1 rankInGroup from user_group ug, ranking r " +
+						" where r.user_id = ug.user_id and " +
+						" 		r.rank < (select rank from ranking where ranking.user_id =? )  and " +
+						"		ug.group_id = ?  ");
+
+				ps.setLong(1, userId);
+				ps.setLong(2, groupId);
+				
+			}
+
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				rank = rs.getInt(1);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
+					ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+
+		
+		return rank;
+	}	
+
+	@Override
+	public int getAllTimeRankOfUserForGroup(long userId, long groupId) {
+		
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int rank = -1; 
+		
+		try {
+			connection = dbMgr.getConnection();
+			
+
+			if(groupId<0){
+
+				ps = connection.prepareStatement(" select rankCumulative from  ranking  where ranking.id =?  ");
+						 
+				ps.setLong(1, userId);
+			}else{
+				ps = connection.prepareStatement(" select count(*)+1 rankInGroup from user_group ug, ranking r " +
+						" where r.user_id = ug.user_id and " +
+						" 		r.rankCumulative< (select rankCumulative from ranking where ranking.user_id =? )  and " +
+						"		ug.group_id = ?  ");
+
+				ps.setLong(1, userId);
+				ps.setLong(2, groupId);
+				
+			}
+
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				rank = rs.getInt(1);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
+					ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+
+		
+		return rank;
+	}	
 
 	@Override
 	public boolean userIsMemberOfGroup(long userId,long groupId) throws TwitstreetException {
@@ -569,7 +667,7 @@ public class GroupMgrImpl implements GroupMgr {
 	
 			try {
 				connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(selectAllFromGroups() + " limit ?,? ");
+			ps = connection.prepareStatement(selectAllFromGroups() + " order by total desc limit ?,? ");
 			ps.setInt(1, offset);
 			ps.setInt(2, count);
 
@@ -592,6 +690,76 @@ public class GroupMgrImpl implements GroupMgr {
 		
 		
 	}
+	
+	@Override
+	public ArrayList<Group> getTopGroups(int offset, int count) {
+	
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Group group = null;
+		ArrayList<Group> groupList = new ArrayList<Group>();
+	
+			try {
+				connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(selectAllFromGroups() + " order by total desc limit ?,? ");
+			ps.setInt(1, offset);
+			ps.setInt(2, count);
+
+			rs = ps.executeQuery();
+				while (rs.next()) {
+					group = new Group();
+					group.getDataFromResultSet(rs);
+					groupList.add(group);
+				}
+
+				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			} catch (SQLException ex) {
+				logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
+						ex);
+			} finally {
+				dbMgr.closeResources(connection, ps, rs);
+			}
+
+		return groupList;
+		
+		
+	}
+	@Override
+	public ArrayList<Group> getTopGroupsAllTime(int offset, int count) {
+	
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Group group = null;
+		ArrayList<Group> groupList = new ArrayList<Group>();
+	
+			try {
+				connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(selectAllFromGroups() + " order by totalAllTime desc limit ?,? ");
+			ps.setInt(1, offset);
+			ps.setInt(2, count);
+
+			rs = ps.executeQuery();
+				while (rs.next()) {
+					group = new Group();
+					group.getDataFromResultSet(rs);
+					groupList.add(group);
+				}
+
+				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			} catch (SQLException ex) {
+				logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
+						ex);
+			} finally {
+				dbMgr.closeResources(connection, ps, rs);
+			}
+
+		return groupList;
+		
+		
+	}
+	
 	@Override
 	public int getGroupCount() {
 	
@@ -645,4 +813,5 @@ public class GroupMgrImpl implements GroupMgr {
 		return -1;
 		
 	}
+
 }

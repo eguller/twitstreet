@@ -87,12 +87,12 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	%>
 	
 			<input id="hiddenGroupDetailsGroupId" type="hidden" value="<%=group.getId() %>"/>
-			
+			<div style="float:left;margin-right:10px"><%=GUIUtil.getInstance().getTwitterShareButton("#!joingroup="+group.getId(),"group.inviteText", lang, group.getName()) %></div>
 			<%
 			if (userIsAdmin) {
 			%>
 			
-				<div align="left">
+				<div style="float:left;margin-right:10px">
 				
 				<%if(group.getStatus() == Group.STATUS_NEW_USER_DISABLED){ %>
 					<%=lutil.get("group.entrancedisabled", lang) %>
@@ -109,7 +109,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			<%
 			}else if (userIsMember) {
 			%>
-				<div align="right">
+				<div style="float:left;margin-right:10px">
 				
 					<a class="red-light" href="javascript:void(0)" onclick="leaveGroup(<%=group.getId()%>)">
 						<%=lutil.get("group.leave", lang) %>
@@ -118,7 +118,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			<%
 			} else if (sessionUser!=null) {
 			%>
-				<div align="right">
+				<div style="float:left;margin-right:10px">
 				
 					<a class="green-light" href="javascript:void(0)" onclick="joinGroup(<%=group.getId()%>)">
 						<%=lutil.get("group.join", lang) %>
@@ -128,8 +128,49 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			}
 			%>
 			
+			<br>
+			<br>
+			<div align="center" class="box">
+					
+				<table class="datatbl" style="text-align: center;width:280px">
+					
+					<tr>
+						<td width="50%">
+							<b><%=lutil.get("season.thisseason", lang) %></b>
+						</td>
+						<td width="50%">
+							<b><%=lutil.get("season.alltime", lang) %></b>
+						</td>
+					</tr>
+						
+					<tr>
+						<td width="50%">
+							<%=group.getRank()%>.
+						</td>
+						<td width="50%">
+							<%=group.getRankAllTime()%>.
+						</td>
+					</tr>
+						
+					<tr>
+						<td width="50%">
+							<%=Util.getRoundedMoneyString(group.getTotal())%>
+							 <%= (group.getChangePerHour()!=0)? "("+Util.getNumberFormatted(group.getChangePerHour(), true, true, true, true, false, true)+")":"" %>
+						</td>
+						<td width="50%">
+							<%=Util.getRoundedMoneyString(group.getTotalAllTime())%>
+							 
+						</td>
+					</tr>
 			
+						
+				
+				</table>		
 			
+		
+		
+			</div>
+		
 			<%
 			if (pdo.getItemCount()> pdo.getRecordPerPage()) {
 				request.setAttribute("pdo", pdo);

@@ -89,11 +89,12 @@
 	%>
 		<jsp:include page="pagination.jsp" />	
 	<%
+
 		}
 	%>
 		<table class="datatbl" style="margin-top: 10px;">
 		
-				<tr height="35px">
+				<tr height="40px">
 					<td>
 						
 					</td>
@@ -101,13 +102,13 @@
 						
 					</td>
 					<td align="center">
-						<b><%=lutil.get("group.total", lang) %></b>
-					</td>
-					<td align="center">
-						<b><%=lutil.get("group.usercount", lang) %></b>
+					
 					</td>
 					<td align="center">
 					
+					</td>
+					<td align="center">
+						<b><%=lutil.get("group.usercount", lang) %></b>
 					</td>
 					<td align="center">
 						<b><%=lutil.get("group.admin", lang) %></b>	
@@ -116,42 +117,54 @@
 					<td>
 						
 					</td>
+					<td align="center">
+						<b><%=lutil.get("group.invite", lang) %></b>	
+					</td>
 				</tr>
 			<%
 				for (int i = 0; i < groupList.size();i++) {
 					
 					Group group = groupList.get(i);
 			%>
-				<tr height="25px">
+				<tr height="50px" onmouseover="$('.groupList-<%=groupListName%>-<%=group.getId()%>').show()"
+					onmouseout="$('.groupList-<%=groupListName%>-<%=group.getId()%>').hide()">
 					<td>
-						<%=pdo.getOffset()+i+1 %>.
+						<%=group.getRank() %>. 
 					</td>
 					<td>
 						<a href="#!group=<%=group.getId()%>" onclick="reloadIfHashIsMyHref(this)"><%=group.getName() %></a>
+						<div>
+							<div style="float:left">
+								<%=Util.getNumberFormatted(group.getTotal(), true, true, false, false, false, false)%>
+							</div>
+							<div style="float:right">
+								<%if(group.getChangePerHour()!=0){ %>
+								<%=Util.getNumberFormatted( group.getChangePerHour(), true, true, true, true, false, true)%>
+								<%}%>
+							</div>
+						</div>
 					</td>
 					<td align="center">
-						<%=Util.getNumberFormatted(group.getTotal(), true, true, false, false, false, false)%>
+						
+					</td>
+					<td align="center">
+						
+						
 					</td>
 					<td align="center">
 						<%=group.getUserCount()%>
-					</td>
-					<td align="center">
-						<%if(group.getChangePerHour()!=0){ %>
-							<%=Util.getNumberFormatted( group.getChangePerHour(), true, true, true, true, false, true)%>
-						<%}%>
-						
 					</td>
 					
 					<td align="center">
 					<a href="#!user=<%=group.getAdminId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("user.details.tip",lang,group.getAdminName())%>"> <%=group.getAdminName()%></a>
 					</td>
-			
+					<td align="center">
 				<% 
 				if(user!=null){
 				%>
 				
 				
-					<td align="center">
+				
 						<% 
 						if(group.getAdminId()==user.getId()){
 						%>
@@ -189,11 +202,15 @@
 						<% 
 						}
 						%>
-					</td>
+				
+				
 				<% 
 				}
 				%>		
-				
+						</td>		
+					<td align="center">
+						<%=GUIUtil.getInstance().getTwitterShareButton("#!joingroup="+group.getId(),"group.inviteText", lang, group.getName()) %>
+					</td>
 				</tr>
 			<%
 			}
@@ -211,6 +228,9 @@
 	%>
 	<%
 		}
+	
+	
+	request.setAttribute("pdo", null);
 	%>
 </div>
 

@@ -40,7 +40,7 @@
 		<% 		
 		for(int i = 0; i < pageCount;i++) {	
 			
-	       String intervalString = Util.getIntervalStringForPage(i+1, userMgr.getRecordPerPage(), userCount);
+	       String intervalString = Util.getIntervalStringForPage(i+1, UserMgr.MAX_TOPRANK_USER, userCount);
 		%>
 		<option style="text-align:center;" <%=(i+1==currPage)?"selected=\"selected\"":""%> value="<%=i+1%>"><%=intervalString%></option>
 		<%	

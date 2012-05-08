@@ -27,6 +27,10 @@
 			onclick="reloadIfHashIs('#!topgrossingusers');">
 			<%=lutil.get("topgrossingusers.header", lang)%> </a>
 			
+			<a class="new-users-tab <%=(!selectedTab.equalsIgnoreCase("new-users-tab"))?"": "youarehere"%>"
+			onclick="reloadIfHashIs('#!newusers');">
+			<%=lutil.get("newusers.header", lang)%> </a>
+			
 <%if(user!=null){ %>
 			<a class="user-details-tab <%=(!selectedTab.equalsIgnoreCase("user-details-tab"))?"": "youarehere"%>"
 			onclick="reloadIfHashIs('#!user=<%=user.getId()%>');">

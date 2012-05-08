@@ -66,4 +66,11 @@ public interface ConfigMgr {
 	public boolean isDev();
 	public void setDev(boolean dev);
 	public boolean isMaster();
+	
+	public String getMailDealer();
+	public String getMailDealerPassword();
+	public String[] getMailRecipients();
+	void setMailRecipients(String[] mailRecipients);
+	void setMailDealer(String mailDealer);
+	void setMailDealerPassword(String mailDealerPassword);
 }

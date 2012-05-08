@@ -24,8 +24,14 @@ function ajaxLoad(url, queryString, containerDiv, loadingDiv, isReload, callback
 			
 			
 			if(data.length>0){
-				$(containerDiv).empty();
-				$(containerDiv).append($(data));
+				
+				if($(data).size()==1 && $(data)[0].nodeName == "SCRIPT" ){
+					 eval($(data).text());
+				}else{
+					$(containerDiv).empty();
+					$(containerDiv).append($(data));	
+				}
+				
 			}
 			
 			
@@ -112,6 +118,8 @@ function performOperation(command){
     	loadTopGrossingStocks();
     }else if(itemType == 'topgrossingusers'){
     	loadTopGrossingUsers();
+    }else if(itemType == 'newusers'){
+    	loadNewUsers();
     }else if(itemType == 'searchstock'){
     	var searchString = command.split('=')[1];
     	getQuote(searchString);
@@ -127,6 +135,10 @@ function performOperation(command){
     else if(itemType == 'group'){
     	var id = command.split('=')[1];
     	loadGroup(id);
+    }
+    else if(itemType == 'joingroup'){
+    	var id = command.split('=')[1];
+    	joinGroupByReference(id);
     }
     else if(itemType == 'grouplist'){
     	loadGroupList(1);

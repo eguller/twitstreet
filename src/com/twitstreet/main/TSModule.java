@@ -31,6 +31,8 @@ import com.twitstreet.db.init.DBScriptParser;
 import com.twitstreet.db.init.DBScriptParserImpl;
 import com.twitstreet.db.init.DBSetup;
 import com.twitstreet.db.init.DBSetupImpl;
+import com.twitstreet.mail.MailMgr;
+import com.twitstreet.mail.MailMgrImpl;
 import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.PortfolioMgrImpl;
 import com.twitstreet.market.StockMgr;
@@ -45,6 +47,7 @@ import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.task.TruncateHistoryTask;
+import com.twitstreet.task.TruncateLogsTask;
 import com.twitstreet.twitter.AdsListenerMgr;
 import com.twitstreet.twitter.AdsListenerMgrImpl;
 import com.twitstreet.twitter.AnnouncerMgr;
@@ -63,7 +66,11 @@ public class TSModule extends AbstractModule {
 	@Inject Twitstreet twitStreet;
 	@Override
 	protected void configure() {
+	
+		
 
+		bind(MailMgr.class).to(MailMgrImpl.class);
+		bind(TruncateLogsTask.class).in(Scopes.SINGLETON);
 		bind(TwitstreetAnnouncer.class).to(TwitstreetAnnouncerImpl.class).in(Scopes.SINGLETON);
 		bind(GroupMgr.class).to(GroupMgrImpl.class).in(Scopes.SINGLETON);
 		bind(Twitstreet.class).to(TwitstreetImpl.class).in(Scopes.SINGLETON);
@@ -87,4 +94,3 @@ public class TSModule extends AbstractModule {
 	     .build(TwitterProxyFactory.class));
 	}
 }
-

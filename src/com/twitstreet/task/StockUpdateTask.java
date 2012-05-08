@@ -30,6 +30,7 @@ import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.TrendyStock;
 import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.StockMgr;
+import com.twitstreet.season.SeasonMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.AnnouncerMgr;
 import com.twitstreet.twitter.TwitterProxyFactory;
@@ -45,6 +46,8 @@ public class StockUpdateTask implements Runnable {
 	StockMgr stockMgr;
 	@Inject
 	ConfigMgr configMgr;
+	@Inject
+	SeasonMgr seasonMgr;
 	@Inject
 	UserMgr userMgr;
 	@Inject
@@ -63,7 +66,8 @@ public class StockUpdateTask implements Runnable {
 			long startTime = System.currentTimeMillis();
 
 			try {
-
+				seasonMgr.loadSeasonInfo();
+				
 				logger.info("\n\n************* Stock Update Task - Begin ****************\n\n");
 
 				logger.info("Twitter trends update - begin.");
@@ -92,10 +96,6 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Rank history update - begin.");
 				userMgr.updateRankingHistory(false);
 				logger.info("Rank history update - end. ");
-
-				logger.info("Mention trendy stock - begin.");
-				mentionTopGrossingStocks();
-				logger.info("Mention trendy stock - end. ");
 
 				logger.info("Mention trendy stock - begin.");
 				mentionTopGrossingStocks();

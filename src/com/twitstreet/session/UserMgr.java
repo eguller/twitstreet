@@ -27,6 +27,7 @@ import com.twitstreet.db.data.User;
 
 public interface UserMgr {
 	public static final double INVITE_MONEY_RATE = 8;
+	public static int MAX_TOPRANK_USER = 20;
 
     /**
      * Return user by given twitter id
@@ -35,7 +36,6 @@ public interface UserMgr {
      */
     public User getUserById(long userId);
     public ArrayList<User> getUsersByIdList(ArrayList<Long> idList);
-	public int getRecordPerPage();
 
 
 	public void saveUser(User user);
@@ -48,16 +48,15 @@ public interface UserMgr {
 	
 	public void updateCash(long userId, double amount);
 
-	public ArrayList<User> getTopRank(int pageNumber);
-	public ArrayList<User> getTopRankAllTime(int pageNumber);
+	public ArrayList<User> getTopRank(int offset, int count);
+	public ArrayList<User> getTopRankAllTime(int offset, int count);
 	
 	public int count();
 	public void updateRankingHistory();
 
 	public void rerank();
 	ArrayList<User> searchUser(String searchText);
-	
-	public int getPageOfRank(int rank);
+
 	
 	public List<User> getAll();
 	
@@ -86,4 +85,5 @@ public interface UserMgr {
 	public void setNewSeasonInfoSent(List<User> userIdList);
 	public List<User> getTopNUsers(int n);
 	public void truncateRankingHistory();
+	ArrayList<User> getNewUsers(int offset, int count);
 }

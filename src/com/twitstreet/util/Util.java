@@ -53,6 +53,18 @@ public class Util {
 		return new java.sql.Date(date.getTime());
 	}
 
+	public static String getConfirmationJS(String localizedMessage, String okAction, String cancelAction){
+		
+		
+		return "<script> " +
+				" if(confirm(\""+localizedMessage+"\")){ " +
+						okAction+"; " +
+				" } else{"+
+						cancelAction +"; " +
+				" } " +
+			   "</script>";
+		
+	}
 	private static String convertToHex(byte[] data) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < data.length; i++) {
@@ -519,13 +531,24 @@ public class Util {
 		}
 		return mentionMessage + message;
 	}
-	
+
 	public static int getPageCount(int itemCount, int itemPerPage){
 		int pageCount = 1;
 		if (itemCount > itemPerPage) {
 			// we should add 1 because of integer conversion
 			pageCount = (itemCount / itemPerPage);
 			if(itemCount%itemPerPage!=0){
+				pageCount++;
+			}
+		}
+		return pageCount;
+	}
+	public static int getPageOfRank(int rank, int itemPerPage){
+		int pageCount = 1;
+		if (rank > itemPerPage) {
+			// we should add 1 because of integer conversion
+			pageCount = (rank / itemPerPage);
+			if(rank%itemPerPage!=0){
 				pageCount++;
 			}
 		}
