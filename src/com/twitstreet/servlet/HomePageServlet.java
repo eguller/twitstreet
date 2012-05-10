@@ -103,8 +103,6 @@ public class HomePageServlet extends TwitStreetServlet {
 		start = System.currentTimeMillis();
 		
 		if (!twitstreet.isInitialized()) {
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp")
-					.forward(request, response);
 			return;
 		}
 		//Keep this until google removes broken links from its index

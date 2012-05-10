@@ -14,16 +14,16 @@ select id, endTime into @active_season,@active_season_end from season_info where
     set @next_season := @active_season+1;
 
 	call rerank();
-	insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank, season_id) 
-		select user_id, cash, portfolio,  lastUpdate, rank,@active_season from ranking;
+	insert ignore into ranking_history(user_id, cash, portfolio, loan, lastUpdate, rank, season_id) 
+		select user_id, cash, portfolio, loan, lastUpdate, rank,@active_season from ranking;
 		
 	call create_season_result(@active_season);	
 	
 	delete from user_cumulative_value;
-	insert into user_cumulative_value(value,user_id) select sum(cash+portfolio) as total, rh.user_id from season_result sr inner join ranking_history rh on rh.id = sr.ranking_history_id 
+	insert into user_cumulative_value(value,user_id) select sum(cash+portfolio-loan) as total, rh.user_id from season_result sr inner join ranking_history rh on rh.id = sr.ranking_history_id 
 		where sr.season_id >= 4 group by rh.user_id order by total desc;
 
- 	update users set cash = initial_cash;
+ 	update users set cash = initial_cash, loan = 0;
  	delete from portfolio;
  	
     
@@ -34,7 +34,7 @@ select id, endTime into @active_season,@active_season_end from season_info where
     
     
 	call rerank();
-	insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank, season_id) 
-		select user_id, cash, portfolio,  lastUpdate, rank,@next_season from ranking;
+	insert ignore into ranking_history(user_id, cash, portfolio, loan, lastUpdate, rank, season_id) 
+		select user_id, cash, portfolio, loan, lastUpdate, rank,@next_season from ranking;
 end $$
 delimiter ;

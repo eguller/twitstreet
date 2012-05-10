@@ -41,11 +41,11 @@ import com.twitstreet.servlet.GroupListServlet;
 import com.twitstreet.servlet.GroupServlet;
 import com.twitstreet.servlet.HomePageServlet;
 import com.twitstreet.servlet.LanguageServlet;
+import com.twitstreet.servlet.LoanServlet;
 import com.twitstreet.servlet.NewUsersServlet;
 import com.twitstreet.servlet.PortfolioServlet;
 import com.twitstreet.servlet.SeasonServlet;
 import com.twitstreet.servlet.SellServlet;
-import com.twitstreet.servlet.SetupServlet;
 import com.twitstreet.servlet.SigninServlet;
 import com.twitstreet.servlet.SignoutServlet;
 import com.twitstreet.servlet.StockDetailsServlet;
@@ -96,7 +96,6 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/signin").with(SigninServlet.class);
 				serve("/callback").with(CallBackServlet.class);
 				//serve("/getQuote").with(CallBackServlet.class);				
-				serve("/setup").with(SetupServlet.class);
 				serve("/a/buy").with(BuyServlet.class);
 				serve("/a/sell").with(SellServlet.class);
 				serve("/toprank").with(TopRankServlet.class);
@@ -120,7 +119,7 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/group").with(GroupServlet.class);
 				serve("/grouplist").with(GroupListServlet.class);
 				serve("/creategroup").with(CreateGroupServlet.class);
-
+				serve("/loan").with(LoanServlet.class);
 
 				serve("/lang").with(LanguageServlet.class);
 				

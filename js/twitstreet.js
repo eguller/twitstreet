@@ -24,7 +24,6 @@ $(document).ready(function() {
 });
 
 function reloadBalance() {
-
 	loadBalance(true);
 }
 
@@ -248,8 +247,6 @@ function groupOperationCallback(){
 	if(tabSelected(".group-details-tab")){
 		reloadGroup();
 	}
-	
-	
 }
 var groupListPage = 1;
 function loadGroupList(page) {
@@ -317,11 +314,9 @@ function reloadCurrentTransactions() {
 function loadCurrentTransactions(reload) {
 	ajaxLoad("transaction", null, "#transactions-content",
 			"#transactions-content", reload);
-
 }
 
 function reloadUserTransactions() {
-
 	loadUserTransactions(true);
 }
 
@@ -345,7 +340,6 @@ function showQuotePanel(panel) {
 }
 
 function buy(stock, amount) {
-
 	var responseNeeded = "";
 
 	var containerDiv = '#buy-sell-container';
@@ -353,25 +347,18 @@ function buy(stock, amount) {
 		responseNeeded = "&response=n";
 		containerDiv = '';
 	}
-
 	ajaxLoad("a/buy", "stock=" + stock + "&amount=" + amount + responseNeeded,
 			containerDiv, containerDiv, false, buySellCallback, stock);
 	showTabPortfolio('.portfolio-tab', '#portfolio-content');
 }
 
 function sellAll(stockId){
-	
-	
 	sell(stockId,"all");
 }
 
 function sell(stock, amount) {
-
 	var responseNeeded = "";
-
 	var containerDiv = '#buy-sell-container';
-
-
 	ajaxLoad("a/sell", "stock=" + stock + "&amount=" + amount + responseNeeded,
 			containerDiv, containerDiv, false, buySellCallback, stock);
 	showTabPortfolio('.portfolio-tab', '#portfolio-content');
@@ -395,105 +382,50 @@ function buySellCallback(stock) {
 
 }
 
-function setup() {
-	var dbHost = $("#dbHost").val();
-	var dbPort = $("#dbPort").val();
-	var dbAdmin = $("#dbAdmin").val();
-	var dbAdminPassword = $("#dbAdminPassword").val();
-	var dbName = $("#dbName").val();
-	var admin = $("#admin").val();
-	var adminPassword = $("#adminPassword").val();
-	var consumerKey = $("#consumerKey").val();
-	var consumerSecret = $("#consumerSecret").val();
-
-	$.post('/setup', {
-		dbHost : dbHost,
-		dbPort : dbPort,
-		dbAdmin : dbAdmin,
-		dbAdminPassword : dbAdminPassword,
-		dbName : dbName,
-		admin : admin,
-		adminPassword : adminPassword,
-		consumerKey : consumerKey,
-		consumerSecret : consumerSecret
-	}, function(data) {
-		if (data.result) {
-			window.location = '/';
-		} else {
-			$(".error").empty();
-			$(".error").append(document.createElement("ul"));
-			for ( var i = 0, len = data.reasons.length;
-					value = data.reasons[i], i < len; i++) {
-				var li = document.createElement("li");
-				$(li).text(value);
-				$(".error ul").append(li)
-			}
-		}
-	});
-}
-
 function toprankPrevPage() {
-
 	var page = parseInt($(".topRankSelect:first").val());
 	toprank(page - 1);
 
 }
 function toprankNextPage() {
-
 	var page = parseInt($(".topRankSelect:first").val());
 	toprank(page + 1);
-
 }
 
 function reloadToprank() {
 	toprank(null,null, true);
-
 }
 
 function toprank(page, type, reload,group) {
 	var pageParam = page;
-
 	if (pageParam == null) {
 		pageParam = $('.toprankSelect:first').val();
-
 	}
 	if (type == null) {
 		type = $('.topRankSelectSeason:first').val();
-
 	}
 	if (group == null) {
 		group = $('.topRankSelectGroup:first').val();
-
 	}
-
 	
 	if(tabSelected(".user-ranking-tab")){
-
 		ajaxLoad("toprank", "page=" + pageParam+ "&type=" + type+ "&group=" + group,"#topranks-screen",
 				"#topranks-screen", reload);
 	}else{
-
 		ajaxLoad("toprankgroup", "page=" + pageParam+ "&type=" + type, "#topranks-screen",
 				"#topranks-screen", reload);
 	}
-	
-
 }
 function toprankGroup(page, type, reload) {
 	var pageParam = page;
-
 	if (pageParam == null) {
 		pageParam = $('.toprankSelect:first').val();
-
 	}
 	if (type == null) {
 		type = $('.topRankSelectSeason:first').val();
-
 	}
-
 		ajaxLoad("toprankgroup", "page=" + pageParam+ "&type=" + type, "#topranks-screen",
 				'#topranks-screen', reload);
-
 }
 
 function signout() {
@@ -517,4 +449,23 @@ function getCookie(c_name) {
 		}
 	}
 	return "";
+}
+
+function receiveLoan(amount){
+	var containerDiv = '#balance-containerr';
+	var loadingDiv = '#loan-loading-div';
+	ajaxLoad("loan", "action=receive-loan&amount=" + amount,
+			containerDiv, loadingDiv, false, reloadBalance, null, true);
+}
+function payLoanBack(amount){
+	var containerDiv = '#balance-container';
+	var loadingDiv = '#loan-loading-div';
+	ajaxLoad("loan", "action=pay-back&amount=" + amount,
+			containerDiv, loadingDiv, false, null, null, true);
+}
+function payAllLoanBack(){
+	var containerDiv = '#balance-container';
+	var loadingDiv = '#loan-loading-div';
+	ajaxLoad("loan", "action=pay-back-all",
+			containerDiv, loadingDiv, false, null, null, true);
 }
