@@ -118,19 +118,6 @@ public class Util {
 	}
 
 	public static String commaSep(double amount) {
-
-		// if(Math.abs(amount)<0.1 && amount!=0 && (int)amount != amount){
-		//
-		// if(amount<0){
-		// amount = -0.1;
-		// }
-		// else{
-		// amount = 0.1;
-		// }
-		//
-		//
-		//
-		// }
 		DecimalFormat decimalFormatter = new DecimalFormat("#,###,###.00");
 		String formatted = decimalFormatter.format(amount);
 		if (formatted.startsWith(".")) {

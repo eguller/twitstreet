@@ -128,26 +128,26 @@
 		
 		<table class="datatbl" id="loan-loading-div">
 			<tr>
-				<td><%= lutil.get("balance.loan.receive", lang) %></td>
-				<td><%= lutil.get("balance.loan.paybackk", lang) %></td>
+				<td align="center"><%= lutil.get("balance.loan.receive", lang) %></td>
+				<td align="center"><%= lutil.get("balance.loan.payback", lang) %></td>
 			</tr>
 			<tr>
 				<td>
 				<% if (user.getLoan() < UserMgr.MAX_LOAN) { %>
 				<button class ="buy-button" onclick="receiveLoan(10000); return true;">
-				$10,000
+				$<%=Util.commaSep((int)(UserMgr.MAX_LOAN - user.getLoan())) %>
 				</button>
 				<% } %>
 				</td>
 				<td>
-				<% if(user.getLoan() > 0){ %>
-				<button class ="sell-button" onclick="payAllLoanBack(); return true;">$<%=user.getLoan() > user.getCash() ? user.getCash() : user.getLoan() %></button>
+				<% if(user.getLoan() > 0 && user.getCash() > 1){ %>
+				<button class ="sell-button" onclick="payAllLoanBack(); return true;">$<%=Util.commaSep((int)(user.getLoan() > user.getCash() ? user.getCash() : user.getLoan())) %></button>
 				<% } %>
 				</td>
 			</tr>
 			<tr>
 				<td>
-				<% if(user.getLoan()  < UserMgr.MAX_LOAN){ %>
+				<% if(user.getLoan()  < UserMgr.MAX_LOAN && UserMgr.MAX_LOAN - user.getLoan() > 1000){ %>
 					<button class ="buy-button" onclick="receiveLoan(1000);return true;">$1,000</button>
 				<% } %>
 				</td>
@@ -158,6 +158,10 @@
 				</td>
 			</tr>
 		</table>
+		<ul>
+			<li style="font-size: 10px; color: #777777;"><%= lutil.get("balance.loan.1",lang) %></li>
+			<li style="font-size: 10px; color: #777777;"><%=lutil.get("balance.loan.2",lang) %></li>
+		</ul>
 	</div>
 
 </div>

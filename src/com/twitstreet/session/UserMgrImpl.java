@@ -1239,7 +1239,7 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("update users set loan = (case when cash >= loan then 0 else loan - cash end), cash = (case loand >= cash then 0 else cash - loan end) where id = ?");
+					.prepareStatement("update users set loan = (case when cash >= loan then 0 else loan - cash end), cash = (case when loan >= cash then 0 else cash - loan end) where id = ?");
 			ps.setLong(1, userId);
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());

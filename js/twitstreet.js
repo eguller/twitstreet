@@ -95,7 +95,7 @@ function loadStock(id, reload) {
 	showTabMain('.stocks-tab');
 	showStockDetails();
 	if(id!=null){
-		ajaxLoad("stock", "stock=" + id, '#stocks-container', '#column_center');	
+		ajaxLoad("/stock", "stock=" + id, '#stocks-container', '#column_center');	
 	}
 	
 
@@ -312,7 +312,7 @@ function reloadCurrentTransactions() {
 }
 
 function loadCurrentTransactions(reload) {
-	ajaxLoad("transaction", null, "#transactions-content",
+	ajaxLoad("/transaction", null, "#transactions-content",
 			"#transactions-content", reload);
 }
 
@@ -322,7 +322,7 @@ function reloadUserTransactions() {
 
 function loadUserTransactions(reload, doNotBlock) {
 	if ($(".yourtransactions-tab").hasClass("youarehere")) {
-		ajaxLoad("transaction", "type=user", "#transactions-content",
+		ajaxLoad("/transaction", "type=user", "#transactions-content",
 				"#transactions-content", reload, null, null, doNotBlock);
 	}
 }
@@ -347,7 +347,7 @@ function buy(stock, amount) {
 		responseNeeded = "&response=n";
 		containerDiv = '';
 	}
-	ajaxLoad("a/buy", "stock=" + stock + "&amount=" + amount + responseNeeded,
+	ajaxLoad("/a/buy", "stock=" + stock + "&amount=" + amount + responseNeeded,
 			containerDiv, containerDiv, false, buySellCallback, stock);
 	showTabPortfolio('.portfolio-tab', '#portfolio-content');
 }
@@ -359,7 +359,7 @@ function sellAll(stockId){
 function sell(stock, amount) {
 	var responseNeeded = "";
 	var containerDiv = '#buy-sell-container';
-	ajaxLoad("a/sell", "stock=" + stock + "&amount=" + amount + responseNeeded,
+	ajaxLoad("/a/sell", "stock=" + stock + "&amount=" + amount + responseNeeded,
 			containerDiv, containerDiv, false, buySellCallback, stock);
 	showTabPortfolio('.portfolio-tab', '#portfolio-content');
 }
@@ -409,10 +409,10 @@ function toprank(page, type, reload,group) {
 	}
 	
 	if(tabSelected(".user-ranking-tab")){
-		ajaxLoad("toprank", "page=" + pageParam+ "&type=" + type+ "&group=" + group,"#topranks-screen",
+		ajaxLoad("/toprank", "page=" + pageParam+ "&type=" + type+ "&group=" + group,"#topranks-screen",
 				"#topranks-screen", reload);
 	}else{
-		ajaxLoad("toprankgroup", "page=" + pageParam+ "&type=" + type, "#topranks-screen",
+		ajaxLoad("/toprankgroup", "page=" + pageParam+ "&type=" + type, "#topranks-screen",
 				"#topranks-screen", reload);
 	}
 }
@@ -424,7 +424,7 @@ function toprankGroup(page, type, reload) {
 	if (type == null) {
 		type = $('.topRankSelectSeason:first').val();
 	}
-		ajaxLoad("toprankgroup", "page=" + pageParam+ "&type=" + type, "#topranks-screen",
+		ajaxLoad("/toprankgroup", "page=" + pageParam+ "&type=" + type, "#topranks-screen",
 				'#topranks-screen', reload);
 }
 
@@ -452,20 +452,20 @@ function getCookie(c_name) {
 }
 
 function receiveLoan(amount){
-	var containerDiv = '#balance-containerr';
+	var containerDiv = '#balance-container';
 	var loadingDiv = '#loan-loading-div';
-	ajaxLoad("loan", "action=receive-loan&amount=" + amount,
-			containerDiv, loadingDiv, false, reloadBalance, null, true);
+	ajaxLoad("/loan", "action=receive-loan&amount=" + amount,
+			containerDiv, loadingDiv, false, null, null, true);
 }
 function payLoanBack(amount){
 	var containerDiv = '#balance-container';
 	var loadingDiv = '#loan-loading-div';
-	ajaxLoad("loan", "action=pay-back&amount=" + amount,
+	ajaxLoad("/loan", "action=pay-back&amount=" + amount,
 			containerDiv, loadingDiv, false, null, null, true);
 }
 function payAllLoanBack(){
 	var containerDiv = '#balance-container';
 	var loadingDiv = '#loan-loading-div';
-	ajaxLoad("loan", "action=pay-back-all",
+	ajaxLoad("/loan", "action=pay-back-all",
 			containerDiv, loadingDiv, false, null, null, true);
 }
