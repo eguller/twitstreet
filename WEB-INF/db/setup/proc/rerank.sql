@@ -9,7 +9,7 @@ begin
     declare user_portfolio double;
     declare user_cash double;
     declare  new_rank  int default 1;
-    declare cur1 cursor for select id, cash,portfolio_value(id) from users order by (portfolio_value(id) + cash) desc, userName asc;
+    declare cur1 cursor for select id, cash,portfolio_value(id) from users order by (portfolio_value(id) + cash - loan) desc, userName asc;
     declare continue handler for not found set done = true;
     open cur1;
     set @new_rank := 1;
