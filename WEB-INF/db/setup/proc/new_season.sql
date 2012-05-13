@@ -13,10 +13,6 @@ select id, endTime into @active_season,@active_season_end from season_info where
  
     set @next_season := @active_season+1;
 
-	call rerank();
-	insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank, season_id) 
-		select user_id, cash, portfolio,  lastUpdate, rank,@active_season from ranking;
-		
 	call create_season_result(@active_season);	
 	
 	delete from user_cumulative_value;
@@ -24,6 +20,8 @@ select id, endTime into @active_season,@active_season_end from season_info where
 		where sr.season_id >= 4 group by rh.user_id order by total desc;
 
  	update users set cash = initial_cash;
+ 	
+ 	insert ignore into twitter_trends(stock_id) select distinct stock from portfolio;
  	delete from portfolio;
  	
     
