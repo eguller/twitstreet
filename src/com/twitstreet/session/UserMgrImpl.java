@@ -63,15 +63,15 @@ public class UserMgrImpl implements UserMgr {
 			+ "valueCumulative, rankCumulative," + "rank, " + "oldRank, "
 			+ "direction, " + "pictureUrl, "
 			+ "portfolio_value(id) as portfolio, "
-			+ " users.cash+portfolio as total, " + "description, "
-			+ "location, " + "inviteActive, " + "language "
+			+ " users.cash+portfolio-users.loan as total, " + "description, "
+			+ "location, " + "inviteActive, " + "language, " + " loan "
 			+ "from users,ranking ";
 
 	private static String SELECT_FROM_USERS_JOIN_RANKING = SELECT_FROM_USERS_RANKING
 			+ " where ranking.user_id = users.id ";
 
-	private static String SELECT_FROM_USERS_JOIN_RANKING_BY_GROUP_ID = SELECT_FROM_USERS_JOIN_RANKING+
-		" and users.id in  	(select user_id from user_group where group_id = ?) ";
+	private static String SELECT_FROM_USERS_JOIN_RANKING_BY_GROUP_ID = SELECT_FROM_USERS_JOIN_RANKING
+			+ " and users.id in  	(select user_id from user_group where group_id = ?) ";
 
 	public User getUserById(long id) {
 		Connection connection = null;
@@ -128,16 +128,16 @@ public class UserMgrImpl implements UserMgr {
 
 	@Override
 	public int getUserCountForGroup(long id) {
-		
+
 		int count = 0;
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			String query = " select count(*) from users u inner join user_group ug on ug.user_id = u.id where ug.group_id = ? ";				
+			String query = " select count(*) from users u inner join user_group ug on ug.user_id = u.id where ug.group_id = ? ";
 			ps = connection.prepareStatement(query);
-		
+
 			ps.setLong(1, id);
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -150,24 +150,24 @@ public class UserMgrImpl implements UserMgr {
 		} finally {
 			dbMgr.closeResources(connection, ps, rs);
 		}
-		
+
 		return count;
 	}
+
 	@Override
 	public int getUserCount() {
-		
+
 		int count = 0;
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			
+
 			connection = dbMgr.getConnection();
-		
+
 			String query = " select count(*) from users ";
 			ps = connection.prepareStatement(query);
-			
-		
+
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				return rs.getInt(1);
@@ -179,12 +179,13 @@ public class UserMgrImpl implements UserMgr {
 		} finally {
 			dbMgr.closeResources(connection, ps, rs);
 		}
-		
+
 		return count;
 	}
+
 	@Override
 	public ArrayList<User> getUsersForGroup(long id, int offset, int count) {
-		
+
 		return getTopRankForGroup(id, offset, count);
 	}
 
@@ -365,14 +366,15 @@ public class UserMgrImpl implements UserMgr {
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			
-			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
-					+ " and users.id >= (select floor( max(id) * rand()) from users ) "
-					+ "   and users.id not in (select user_id from inactive_user) "
-					+ " order by users.id limit 1");
-			
+
+			ps = connection
+					.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
+							+ " and users.id >= (select floor( max(id) * rand()) from users ) "
+							+ "   and users.id not in (select user_id from inactive_user) "
+							+ " order by users.id limit 1");
+
 			rs = ps.executeQuery();
-			
+
 			if (rs.next()) {
 				user = new User();
 				user.getDataFromResultSet(rs);
@@ -485,10 +487,10 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	@Override
-	public ArrayList<User> getTopRankForGroup(long id, int offset,int count) {
+	public ArrayList<User> getTopRankForGroup(long id, int offset, int count) {
 
-		if(id<0){
-			return getTopRank(offset,count);
+		if (id < 0) {
+			return getTopRank(offset, count);
 		}
 		ArrayList<User> userList = new ArrayList<User>(100);
 		Connection connection = null;
@@ -497,9 +499,10 @@ public class UserMgrImpl implements UserMgr {
 		User userDO = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING_BY_GROUP_ID
-					+ " order by rank asc limit ?,?");
-			
+			ps = connection
+					.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING_BY_GROUP_ID
+							+ " order by rank asc limit ?,?");
+
 			ps.setLong(1, id);
 			ps.setInt(2, offset);
 			ps.setInt(3, count);
@@ -517,9 +520,9 @@ public class UserMgrImpl implements UserMgr {
 		}
 		return userList;
 	}
-	@Override
-	public ArrayList<User> getTopRankAllTime(int offset,int count) {
 
+	@Override
+	public ArrayList<User> getTopRankAllTime(int offset, int count) {
 
 		ArrayList<User> userList = new ArrayList<User>(100);
 		Connection connection = null;
@@ -548,11 +551,12 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	@Override
-	public ArrayList<User> getTopRankAllTimeForGroup(long id, int offset,int count) {
+	public ArrayList<User> getTopRankAllTimeForGroup(long id, int offset,
+			int count) {
 
-	if(id<0){
-		return getTopRankAllTime(offset,count);
-	}
+		if (id < 0) {
+			return getTopRankAllTime(offset, count);
+		}
 		ArrayList<User> userList = new ArrayList<User>(100);
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -560,8 +564,9 @@ public class UserMgrImpl implements UserMgr {
 		User userDO = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING_BY_GROUP_ID
-					+ " order by rankCumulative asc limit ?,? " );
+			ps = connection
+					.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING_BY_GROUP_ID
+							+ " order by rankCumulative asc limit ?,? ");
 			ps.setLong(1, id);
 			ps.setInt(2, offset);
 			ps.setInt(3, count);
@@ -862,7 +867,6 @@ public class UserMgrImpl implements UserMgr {
 		return userList;
 	}
 
-
 	@Override
 	public List<User> getAll() {
 		List<User> userList = new ArrayList<User>();
@@ -1131,29 +1135,27 @@ public class UserMgrImpl implements UserMgr {
 	@Override
 	public void truncateRankingHistory() {
 		Connection connection = null;
-		 CallableStatement ps = null;
+		CallableStatement ps = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareCall("{call refine_ranking_history(?)}");
-			
-			Date twoDaysAgo = new Date((new java.util.Date()).getTime() - 2 * 24*60* 60* 1000);
-			
+			ps = connection.prepareCall("{call refine_ranking_history(?)}");
+
+			Date twoDaysAgo = new Date((new java.util.Date()).getTime() - 2
+					* 24 * 60 * 60 * 1000);
+
 			ps.setDate(1, twoDaysAgo);
 			ps.execute();
-		
+
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
 			dbMgr.closeResources(connection, ps, null);
 		}
 	}
-	
 
 	@Override
-	public ArrayList<User> getNewUsers(int offset,int count) {
+	public ArrayList<User> getNewUsers(int offset, int count) {
 
-	
 		ArrayList<User> userList = new ArrayList<User>();
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -1163,7 +1165,7 @@ public class UserMgrImpl implements UserMgr {
 			connection = dbMgr.getConnection();
 			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
 					+ " order by firstLogin desc limit ?,?");
-			
+
 			ps.setInt(1, offset);
 			ps.setInt(2, count);
 			rs = ps.executeQuery();
@@ -1179,5 +1181,90 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 		return userList;
+	}
+
+	@Override
+	public void receiveLoan(long userId, double amount) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		User user = null;
+		try {
+			user = getUserById(userId);
+			if (user != null && user.getLoan() < UserMgr.MAX_LOAN) {
+				if ( user.getLoan() + amount > UserMgr.MAX_LOAN ){
+					amount = UserMgr.MAX_LOAN - user.getLoan();
+				}
+				connection = dbMgr.getConnection();
+				ps = connection
+						.prepareStatement("update users set loan = loan + ?, cash = cash + ? where id = ?");
+				ps.setDouble(1, amount);
+				ps.setDouble(2, amount);
+				ps.setLong(3, userId);
+				ps.executeUpdate();
+				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			}
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
+
+	@Override
+	public void payLoanBack(long userId, double amount) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set loan = (case when cash < ? then loan - cash else loan - ? end), cash = (case when ? > cash then 0 else cash - ? end) where id = ?");
+			ps.setDouble(1, amount);
+			ps.setDouble(2, amount);
+			ps.setDouble(3, amount);
+			ps.setDouble(4, amount);
+			ps.setLong(5, userId);
+			ps.executeUpdate();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
+
+	@Override
+	public void payAllLoanBack(long userId) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set loan = (case when cash >= loan then 0 else loan - cash end), cash = (case when loan >= cash then 0 else cash - loan end) where id = ?");
+			ps.setLong(1, userId);
+			ps.executeUpdate();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
+
+	@Override
+	public void applyLoanInterest() {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set loan = loan + loan * ?");
+			ps.setDouble(1, UserMgr.LOAN_INTEREST_RATE);
+			ps.executeUpdate();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
 	}
 }

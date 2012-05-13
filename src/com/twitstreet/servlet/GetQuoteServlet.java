@@ -93,7 +93,6 @@ public class GetQuoteServlet extends TwitStreetServlet {
 		start = System.currentTimeMillis();
 
 		if (!twitstreet.isInitialized()) {
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/setup.jsp").forward(request, response);
 			return;
 		}
 

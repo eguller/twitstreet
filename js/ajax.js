@@ -16,24 +16,16 @@ function ajaxLoad(url, queryString, containerDiv, loadingDiv, isReload, callback
 		url : url,
 		data : queryString,
 		success : function(data) {
-			
-			
 			lastUpdateMap[containerDiv] = new Date();
 			unblockElement(loadingDiv);
-			
-			
-			
 			if(data.length>0){
-				
 				if($(data).size()==1 && $(data)[0].nodeName == "SCRIPT" ){
 					 eval($(data).text());
 				}else{
 					$(containerDiv).empty();
 					$(containerDiv).append($(data));	
 				}
-				
 			}
-			
 			
 			if(typeof callbackFunction == 'function'){
 				if(callbackParameters!=null){

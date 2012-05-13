@@ -47,9 +47,15 @@
 				
 			</tr>
 			<tr>
+				<td><b><%=lutil.get("balance.loan.debt", lang)%></b></td>
+				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
+				<td colspan="2" id="debt_value" style="text-align: left;">$<%=user == null ? "" : Util.commaSep(user.getLoan())%></td>
+				
+			</tr>
+			<tr>
 				<td><b><%=lutil.get("balance.total", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
-				<td colspan="2" id="total_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getCash() + user.getPortfolio())%></td>
+				<td colspan="2" id="total_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getCash() + user.getPortfolio() - user.getLoan())%></td>
 			</tr>
 			<tr>
 				<td></td>
@@ -115,5 +121,47 @@
 	<%
 		}
 	%>
+	
+	<div style="margin-top: 10px;">
+		<span><b><%= lutil.get("balance.loan", lang) %></b></span>
+		<hr>
+		
+		<table class="datatbl" id="loan-loading-div">
+			<tr>
+				<td align="center"><%= lutil.get("balance.loan.receive", lang) %></td>
+				<td align="center"><%= lutil.get("balance.loan.payback", lang) %></td>
+			</tr>
+			<tr>
+				<td>
+				<% if (user.getLoan() < UserMgr.MAX_LOAN) { %>
+				<button class ="buy-button" onclick="receiveLoan(10000); return true;">
+				$<%=Util.commaSep((int)(UserMgr.MAX_LOAN - user.getLoan())) %>
+				</button>
+				<% } %>
+				</td>
+				<td>
+				<% if(user.getLoan() > 0 && user.getCash() > 1){ %>
+				<button class ="sell-button" onclick="payAllLoanBack(); return true;">$<%=Util.commaSep((int)(user.getLoan() > user.getCash() ? user.getCash() : user.getLoan())) %></button>
+				<% } %>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<% if(user.getLoan()  < UserMgr.MAX_LOAN && UserMgr.MAX_LOAN - user.getLoan() > 1000){ %>
+					<button class ="buy-button" onclick="receiveLoan(1000);return true;">$1,000</button>
+				<% } %>
+				</td>
+				<td>
+				<% if(user.getLoan() > 1000 && user.getCash() > 1000){ %>
+				<button class ="sell-button" onclick="payLoanBack(1000);return true;">$1,000</button>
+				<% } %>
+				</td>
+			</tr>
+		</table>
+		<ul>
+			<li style="font-size: 10px; color: #777777;"><%= lutil.get("balance.loan.1",lang) %></li>
+			<li style="font-size: 10px; color: #777777;"><%=lutil.get("balance.loan.2",lang) %></li>
+		</ul>
+	</div>
 
 </div>

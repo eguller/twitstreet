@@ -77,6 +77,8 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Stock list update - begin.");
 				updateStocks();
 				logger.info("Stock list update - end. ");
+				
+				userMgr.applyLoanInterest();
 
 				logger.info("Reset speed of stocks - begin.");
 				stockMgr.resetSpeedOfOldStocks();

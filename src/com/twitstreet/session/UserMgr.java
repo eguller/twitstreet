@@ -26,7 +26,9 @@ import com.twitstreet.db.data.RankingHistoryData;
 import com.twitstreet.db.data.User;
 
 public interface UserMgr {
+	public static final int MAX_LOAN = 10000;
 	public static final double INVITE_MONEY_RATE = 8;
+	public static final double LOAN_INTEREST_RATE = 0.01; //%1
 	public static int MAX_TOPRANK_USER = 20;
 
     /**
@@ -86,4 +88,8 @@ public interface UserMgr {
 	public List<User> getTopNUsers(int n);
 	public void truncateRankingHistory();
 	ArrayList<User> getNewUsers(int offset, int count);
+	public void receiveLoan(long userId, double amount);
+	public void payLoanBack(long userId, double amount);
+	public void payAllLoanBack(long userId);
+	public void applyLoanInterest();
 }
