@@ -304,10 +304,5 @@ public class User implements DataObjectIF {
 	public void setLoan(double loan) {
 		this.loan = loan;
 	}
-
-
-
-	
-
 }
 

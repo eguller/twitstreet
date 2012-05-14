@@ -179,7 +179,7 @@ if(sessionUser!=null) {
 						profitDiff = user.getProfit() - prevUser.getProfit();
 	
 					}
-					double total = user.getCash() + user.getPortfolio();
+					double total = user.getCash() + user.getPortfolio() - user.getLoan();
 					
 					if(typeParam.equalsIgnoreCase("allTime")){
 						total = user.getValueCumulative();						
