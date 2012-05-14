@@ -1216,6 +1216,7 @@ public class UserMgrImpl implements UserMgr {
 		PreparedStatement ps = null;
 		try {
 			connection = dbMgr.getConnection();
+			
 			ps = connection
 					.prepareStatement("update users set loan = (case when cash < ? then loan - cash else loan - ? end), cash = (case when ? > cash then 0 else cash - ? end) where id = ?");
 			ps.setDouble(1, amount);
@@ -1236,13 +1237,21 @@ public class UserMgrImpl implements UserMgr {
 	public void payAllLoanBack(long userId) {
 		Connection connection = null;
 		PreparedStatement ps = null;
+		User user = getUserById(userId);
 		try {
+			if(user != null){
+			double loan = user.getCash() >= user.getLoan() ? 0 : user.getLoan() - user.getCash();
+			double cash = user.getLoan() >= user.getCash() ? 0 : user.getCash() - user.getLoan();
+			
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("update users set loan = (case when cash >= loan then 0 else loan - cash end), cash = (case when loan >= cash then 0 else cash - loan end) where id = ?");
-			ps.setLong(1, userId);
+					.prepareStatement("update users set loan = ? , cash = ? where id = ?");
+			ps.setDouble(1, loan);
+			ps.setDouble(2, cash);
+			ps.setLong(3, userId);
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			}
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {

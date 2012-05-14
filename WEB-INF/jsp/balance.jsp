@@ -112,8 +112,7 @@
 						lang,
 						new Object[] {
 								user.getId(),
-								(int) (Math.sqrt(user.getCash()
-										+ user.getPortfolio()) * UserMgr.INVITE_MONEY_RATE) })%>
+								(int) (Math.sqrt(user.getCash() + user.getPortfolio() - user.getLoan()) * UserMgr.INVITE_MONEY_RATE) })%>
 			<br>
 			<%=GUIUtil.getInstance().getTwitterShareButton(
 						"?ref=" + user.getId(), "twitter.share.main", lang)%></p>
