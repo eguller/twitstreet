@@ -28,7 +28,7 @@ import com.twitstreet.db.data.User;
 public interface UserMgr {
 	public static final int MAX_LOAN = 10000;
 	public static final double INVITE_MONEY_RATE = 8;
-	public static final double LOAN_INTEREST_RATE = 0.01; //%1
+	public static final double LOAN_INTEREST_RATE = 0.005; //%0.5
 	public static int MAX_TOPRANK_USER = 20;
 
     /**

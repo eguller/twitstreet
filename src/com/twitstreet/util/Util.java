@@ -347,7 +347,7 @@ public class Util {
 					amount = amount - 1;
 				}
 			}
-			int roundedVal = (int) Math.abs(amount);
+			int roundedVal = (int) amount;
 			moneyStr = moneyStr + Util.commaSep(roundedVal);
 		} else {
 			moneyStr = moneyStr + Util.commaSep(amount);
