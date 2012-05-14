@@ -18,6 +18,7 @@ create table `users`(
     `inviteActive` tinyint(1) DEFAULT '1',
     `newSeasonInfoSent` tinyint(1) NOT NULL DEFAULT '1',
      `language` varchar(45) NOT NULL DEFAULT 'en',
+     `loan` decimal(11,2) not null default 0,
      primary key (`id`),
      unique key `username_unique` (`username`)
 )  engine=innodb default charset=`utf8`;
