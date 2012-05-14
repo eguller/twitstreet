@@ -17,7 +17,7 @@ public class PaginationDO {
 		
 		if(offset>=this.itemCount){
 			this.currPage = (this.itemCount / this.recordPerPage)+1;
-			if(this.itemCount%this.recordPerPage == 0){
+			if(this.itemCount%this.recordPerPage == 0 && this.currPage>1){
 				this.currPage--;
 			}
 		}
