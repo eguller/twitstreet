@@ -630,8 +630,8 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("insert ignore into ranking_history(user_id, cash, portfolio, lastUpdate, rank, season_id) "
-							+ "select user_id, cash, portfolio,  lastUpdate, rank, (select id from season_info where active is true) from ranking "
+					.prepareStatement("insert ignore into ranking_history(user_id, cash, portfolio, loan, lastUpdate, rank, season_id) "
+							+ "select user_id, cash, portfolio, loan,  lastUpdate, rank, (select id from season_info where active is true) from ranking "
 							+ neededString);
 
 			ps.executeUpdate();
