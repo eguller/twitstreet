@@ -469,3 +469,20 @@ function payAllLoanBack(){
 	ajaxLoad("/loan", "action=pay-back-all",
 			containerDiv, loadingDiv, false, null, null, true);
 }
+function bankrupt(confirmMsg){
+	var containerDiv = '#balance-container';
+	var loadingDiv = '#loan-loading-div';
+	if(confirmMsg==null||confirmMsg.length<1) return;
+	
+	if(confirm(confirmMsg)){
+
+		ajaxLoad("/loan", "action=bankrupt",
+				containerDiv, loadingDiv, false, bankruptCallback, null, true);
+	}
+
+}
+
+function bankruptCallback(){
+	window.location.reload();
+	
+}

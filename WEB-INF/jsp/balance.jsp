@@ -161,6 +161,11 @@
 			<li style="font-size: 10px; color: #777777;"><%= lutil.get("balance.loan.1",lang) %></li>
 			<li style="font-size: 10px; color: #777777;"><%=lutil.get("balance.loan.2",lang) %></li>
 		</ul>
+		<div align="right">
+			<% if(user.getTotal()<0){ %>
+				<button class ="buy-button" onclick="bankrupt('<%= lutil.get("balance.bankrupt.confirm",lang) %>');return true;"><%= lutil.get("balance.bankrupt.declare",lang) %></button>
+			<% } %>
+		</div>
 	</div>
 
 </div>

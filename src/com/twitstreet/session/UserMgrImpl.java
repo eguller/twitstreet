@@ -1271,4 +1271,39 @@ public class UserMgrImpl implements UserMgr {
 			dbMgr.closeResources(connection, ps, null);
 		}
 	}
+
+	@Override
+	public void bankrupt(Long userId) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		CallableStatement cs = null;
+		User user = getUserById(userId);
+		try {
+			if(user != null){
+			
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set loan = 0 , cash = ? where id = ?");
+
+			ps.setDouble(1, configMgr.getInitialMoney() );
+			ps.setLong(2, userId);
+			ps.executeUpdate();
+			ps = connection
+					.prepareStatement("delete from portfolio where user_id = ?");
+
+			ps.setLong(1, userId);
+			ps.executeUpdate();
+
+			cs = connection.prepareCall("{call rerank()}");
+			cs.execute();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			}
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+		
+		
+	}
 }

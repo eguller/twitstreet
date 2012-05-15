@@ -92,4 +92,5 @@ public interface UserMgr {
 	public void payLoanBack(long userId, double amount);
 	public void payAllLoanBack(long userId);
 	public void applyLoanInterest();
+	public void bankrupt(Long userId);
 }

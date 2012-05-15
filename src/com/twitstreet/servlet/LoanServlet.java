@@ -38,6 +38,7 @@ public class LoanServlet extends TwitStreetServlet {
 	private static final String RECEIVE_LOAN = "receive-loan";
 	private static final String PAY_BACK = "pay-back";
 	private static final String PAY_BACK_ALL = "pay-back-all";
+	private static final String BANKRUPT = "bankrupt";
 	@Inject
 	UserMgr userMgr;
 
@@ -70,6 +71,8 @@ public class LoanServlet extends TwitStreetServlet {
 				}
 			} else if (PAY_BACK_ALL.equals(action)) {
 				userMgr.payAllLoanBack(userId);
+			} else if (BANKRUPT.equals(action)) {
+				userMgr.bankrupt(userId);
 			}
 		}
 
