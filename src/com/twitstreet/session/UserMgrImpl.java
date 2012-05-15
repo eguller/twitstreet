@@ -55,7 +55,12 @@ public class UserMgrImpl implements UserMgr {
 	SeasonMgr seasonMgr;
 	static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
-
+	private static String SELECT_FROM_RANKING_HISTORY = " select "
+	+ " rh.season_id as season_id, "
+	+ " rh.user_id as user_id, " + " rh.cash as cash, "
+	+ " rh.portfolio as portfolio, " + " rh.rank as rank, "+ " rh.loan as loan, "
+	+ " rh.lastUpdate as lastUpdate "
+	+ " from ranking_history rh ";
 	private static String SELECT_FROM_USERS_RANKING = "select " + "id, "
 			+ "userName, " + "longName, " + "lastLogin, " + "firstLogin, "
 			+ "users.cash as cash, " + "lastIp, " + "oauthToken, "
@@ -64,7 +69,7 @@ public class UserMgrImpl implements UserMgr {
 			+ "direction, " + "pictureUrl, "
 			+ "portfolio_value(id) as portfolio, "
 			+ " users.cash+portfolio-users.loan as total, " + "description, "
-			+ "location, " + "inviteActive, " + "language, " + " loan "
+			+ "location, " + "inviteActive, " + "language, " + " users.loan "
 			+ "from users,ranking ";
 
 	private static String SELECT_FROM_USERS_JOIN_RANKING = SELECT_FROM_USERS_RANKING
@@ -668,12 +673,7 @@ public class UserMgrImpl implements UserMgr {
 		}
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(" select "
-					+ " rh.season_id as season_id, "
-					+ " rh.user_id as user_id, " + " rh.cash as cash, "
-					+ " rh.portfolio as portfolio, " + " rh.rank as rank, "
-					+ " rh.lastUpdate as lastUpdate "
-					+ " from ranking_history rh " + "  where user_id = ? "
+			ps = connection.prepareStatement(SELECT_FROM_RANKING_HISTORY + "  where user_id = ? "
 					+ " and rh.lastUpdate >= " + fromStr
 					+ " and rh.lastUpdate <= " + toStr
 					+ " order by lastUpdate asc ");
@@ -701,12 +701,7 @@ public class UserMgrImpl implements UserMgr {
 
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(" select "
-					+ " rh.season_id as season_id, "
-					+ " rh.user_id as user_id, " + " rh.cash as cash, "
-					+ " rh.portfolio as portfolio, " + " rh.rank as rank, "
-					+ " rh.lastUpdate as lastUpdate "
-					+ " from ranking_history rh "
+			ps = connection.prepareStatement(SELECT_FROM_RANKING_HISTORY
 					+ "  where user_id = ? and season_id = ?"
 					+ " order by lastUpdate asc ");
 			ps.setLong(1, id);

@@ -130,7 +130,7 @@ public class StockUpdateTask implements Runnable {
 	}
 
 	private void mentionTopGrossingStocks() {
-		if (stockMgr.getTopGrossedStocks(24).size() > 0 && !configMgr.isDev()) {
+		if (!configMgr.isDev() && stockMgr.getTopGrossedStocks(24).size() > 0  ) {
 			TrendyStock ts = stockMgr.getTopGrossedStocks(24).get(0);
 			if (stockMgr.addStockIntoAnnouncement(ts.getId())) {
 				try {

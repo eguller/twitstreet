@@ -25,6 +25,7 @@ public class RankingData implements DataObjectIF{
 	
 	private double cash;
 	private double portfolio;
+	private double loan;
 	private Date lastUpdate;
 	private double total;
 	private int rank;
@@ -37,8 +38,9 @@ public class RankingData implements DataObjectIF{
 		this.setSeasonId(rs.getInt("season_id"));
 		this.setRank(rs.getInt("rank"));
 		this.setCash(rs.getDouble("cash"));
+		this.setLoan(rs.getDouble("loan"));
 		this.setPortfolio(rs.getDouble("portfolio"));
-		this.setTotal(portfolio+cash);
+		this.setTotal(portfolio+cash-loan);
 		long time = rs.getTimestamp("lastUpdate").getTime();
 		this.lastUpdate = new Date(time);
 	}
@@ -119,6 +121,18 @@ public class RankingData implements DataObjectIF{
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+
+
+	public double getLoan() {
+		return loan;
+	}
+
+
+
+	public void setLoan(double loan) {
+		this.loan = loan;
 	}
 
 

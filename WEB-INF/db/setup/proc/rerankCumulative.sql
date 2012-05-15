@@ -10,9 +10,9 @@ begin
     declare  new_rank_cumulative  int default 1;
   
   
-    declare cur cursor for select r.user_id, ucv.value + r.cash+r.portfolio as cumulativeValue  
+    declare cur cursor for select r.user_id, ucv.value + r.cash+r.portfolio-r.loan as cumulativeValue  
         from ranking r inner join user_cumulative_value ucv on r.user_id=ucv.user_id
-        order by ucv.value + r.cash+r.portfolio desc;
+        order by ucv.value + r.cash+r.portfolio-r.loan desc;
       declare continue handler for not found set done = true;
  
        

@@ -57,11 +57,12 @@
 		if(selectedSeason.getId() == currentSeason.getId()){
 			RankingData rd = new RankingData();
 	
-			double totalNow = user.getCash()+ user.getPortfolio();
+			double totalNow = user.getTotal();
 			Date date = new Date();
 			
 			rd.setCash(user.getCash());
 			rd.setPortfolio(user.getPortfolio());
+			rd.setLoan(user.getLoan());
 			rd.setLastUpdate(date);
 			rd.setRank(user.getRank());
 			rd.setTotal(totalNow);
