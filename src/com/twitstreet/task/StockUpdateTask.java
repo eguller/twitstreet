@@ -118,9 +118,9 @@ public class StockUpdateTask implements Runnable {
 			long endTime = System.currentTimeMillis();
 			long diff = endTime - startTime;
 
-			if (diff < LAST_UPDATE_DIFF_MILISECONDS / 2) {
+			if (diff < LAST_UPDATE_DIFF_MILISECONDS ) {
 				try {
-					Thread.sleep(LAST_UPDATE_DIFF_MILISECONDS / 2 - diff);
+					Thread.sleep(LAST_UPDATE_DIFF_MILISECONDS - diff);
 				} catch (InterruptedException e) {
 
 					e.printStackTrace();
