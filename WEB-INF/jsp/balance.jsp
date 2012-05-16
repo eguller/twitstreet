@@ -37,25 +37,25 @@
 			<tr>
 				<td><b><%=lutil.get("balance.cash", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
-				<td colspan="2" id="cash_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getCash())%></td>
+				<td colspan="2" id="cash_value" style="text-align: left"><%=user == null ? "" : Util.getNumberFormatted(user.getCash(), true, false, false, false, false, false)%></td>
 			
 			</tr>
 			<tr>
 				<td><b><%=lutil.get("balance.portfolio", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
-				<td colspan="2" id="portfolio_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getPortfolio())%></td>
+				<td colspan="2" id="portfolio_value" style="text-align: left"><%=user == null ? "" : Util.getNumberFormatted(user.getPortfolio(), true, false, false, false, false, false)%></td>
 				
 			</tr>
 			<tr>
 				<td><b><%=lutil.get("balance.loan.debt", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
-				<td colspan="2" id="debt_value" style="text-align: left;">$<%=user == null ? "" : Util.commaSep(user.getLoan())%></td>
+				<td colspan="2" id="debt_value" style="text-align: left;"><%=user == null ? "" : Util.getNumberFormatted(user.getLoan(), true, false, false, false, false, false)%></td>
 				
 			</tr>
 			<tr>
 				<td><b><%=lutil.get("balance.total", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
-				<td colspan="2" id="total_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getCash() + user.getPortfolio() - user.getLoan())%></td>
+				<td colspan="2" id="total_value" style="text-align: left"><%=user == null ? "" : Util.getNumberFormatted(user.getTotal(), true, false, false, false, false, false)%></td>
 			</tr>
 			<tr>
 				<td></td>
@@ -94,7 +94,7 @@
 			<tr>
 				<td><b><%=lutil.get("balance.total", lang)%></b></td>
 				<td style="padding-left: 2px; padding-right: 2px; text-align: center;">:</td>
-				<td colspan="2" id="total_value" style="text-align: left">$<%=user == null ? "" : Util.commaSep(user.getValueCumulative())%></td>
+				<td colspan="2" id="total_value" style="text-align: left"><%=user == null ? "" : Util.getNumberFormatted(user.getValueCumulative(), true, false, false, false, false, false)%></td>
 		
 			</tr>
 
@@ -112,7 +112,7 @@
 						lang,
 						new Object[] {
 								user.getId(),
-								(int) (Math.sqrt(user.getCash() + user.getPortfolio() - user.getLoan()) * UserMgr.INVITE_MONEY_RATE) })%>
+								(int) (Math.sqrt(user.getTotal()) * UserMgr.INVITE_MONEY_RATE) })%>
 			<br>
 			<%=GUIUtil.getInstance().getTwitterShareButton(
 						"?ref=" + user.getId(), "twitter.share.main", lang)%></p>

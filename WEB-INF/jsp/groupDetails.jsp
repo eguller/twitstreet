@@ -154,11 +154,11 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						
 					<tr>
 						<td width="50%">
-							<%=Util.getRoundedMoneyString(group.getTotal())%>
+							<%=Util.getNumberFormatted(group.getTotal(), true, false, false, false, false, false)%>
 							 <%= (group.getChangePerHour()!=0)? "("+Util.getNumberFormatted(group.getChangePerHour(), true, true, true, true, false, true)+")":"" %>
 						</td>
 						<td width="50%">
-							<%=Util.getRoundedMoneyString(group.getTotalAllTime())%>
+							<%=Util.getNumberFormatted(group.getTotalAllTime(), true, false, false, false, false, false)%>
 							 
 						</td>
 					</tr>

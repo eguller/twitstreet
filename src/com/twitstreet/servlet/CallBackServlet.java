@@ -85,9 +85,7 @@ public class CallBackServlet extends TwitStreetServlet {
 				user = new User();
 				user.setId(userId);
 				user.setUserName(screenName);
-				user.setFirstLogin(Calendar.getInstance().getTime());
 				user.setLastIp(request.getRemoteAddr());
-				user.setLastLogin(Calendar.getInstance().getTime());
 				user.setOauthToken(oauthToken);
 				user.setOauthTokenSecret(oauthTokenSecret);
 				user.setCash(configMgr.getInitialMoney());
@@ -116,7 +114,6 @@ public class CallBackServlet extends TwitStreetServlet {
 				//existing user logging in again
 				user = new User();
 				user.setId(userId);
-				user.setLastLogin(Calendar.getInstance().getTime());
 				user.setUserName(screenName);
 				user.setLastIp(request.getRemoteHost());
 				user.setOauthToken(oauthToken);

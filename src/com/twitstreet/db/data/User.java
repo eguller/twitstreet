@@ -185,8 +185,8 @@ public class User implements DataObjectIF {
 		this.setOldRank(rs.getInt("oldRank"));
 		this.setDirection(rs.getInt("direction"));
 		this.setUserName(rs.getString("userName"));
-		this.setLastLogin(rs.getDate("lastLogin"));
-		this.setFirstLogin(rs.getDate("firstLogin"));
+		this.setLastLogin(new Date(rs.getTimestamp("lastLogin").getTime()));
+		this.setFirstLogin(new Date(rs.getTimestamp("firstLogin").getTime()));
 		this.setCash(rs.getDouble("cash"));
 		this.setPortfolio(rs.getDouble("portfolio"));
 		this.setTotal(rs.getDouble("total"));

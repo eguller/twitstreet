@@ -260,19 +260,17 @@ public class UserMgrImpl implements UserMgr {
 
 			ps = connection
 					.prepareStatement("insert into users(id, userName, "
-							+ "lastLogin, firstLogin, "
+							+ "lastLogin,  "
 							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl, language) "
-							+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+							+ "values(?, ?, NOW() , ?, ?, ?, ?, ?, ?)");
 			ps.setLong(1, userDO.getId());
 			ps.setString(2, userDO.getUserName());
-			ps.setDate(3, Util.toSqlDate(userDO.getLastLogin()));
-			ps.setDate(4, Util.toSqlDate(userDO.getFirstLogin()));
-			ps.setDouble(5, userDO.getCash());
-			ps.setString(6, userDO.getLastIp());
-			ps.setString(7, userDO.getOauthToken());
-			ps.setString(8, userDO.getOauthTokenSecret());
-			ps.setString(9, userDO.getPictureUrl());
-			ps.setString(10, userDO.getLanguage());
+			ps.setDouble(3, userDO.getCash());
+			ps.setString(4, userDO.getLastIp());
+			ps.setString(5, userDO.getOauthToken());
+			ps.setString(6, userDO.getOauthTokenSecret());
+			ps.setString(7, userDO.getPictureUrl());
+			ps.setString(8, userDO.getLanguage());
 			ps.executeUpdate();
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -297,15 +295,14 @@ public class UserMgrImpl implements UserMgr {
 			connection = dbMgr.getConnection();
 			ps = connection
 					.prepareStatement("update users set userName = ?, "
-							+ "lastLogin = ?, "
+							+ "lastLogin = now(), "
 							+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ?, pictureUrl = ? where id = ?");
 			ps.setString(1, user.getUserName());
-			ps.setDate(2, Util.toSqlDate(user.getLastLogin()));
-			ps.setString(3, user.getLastIp());
-			ps.setString(4, user.getOauthToken());
-			ps.setString(5, user.getOauthTokenSecret());
-			ps.setString(6, user.getPictureUrl());
-			ps.setLong(7, user.getId());
+			ps.setString(2, user.getLastIp());
+			ps.setString(3, user.getOauthToken());
+			ps.setString(4, user.getOauthTokenSecret());
+			ps.setString(5, user.getPictureUrl());
+			ps.setLong(6, user.getId());
 			ps.executeUpdate();
 
 			// just in case...
