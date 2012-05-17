@@ -68,7 +68,7 @@ public class UserMgrImpl implements UserMgr {
 			+ "valueCumulative, rankCumulative," + "rank, " + "oldRank, "
 			+ "direction, " + "pictureUrl, "
 			+ "portfolio_value(id) as portfolio, "
-			+ " users.cash+portfolio-users.loan as total, " + "description, "
+			+ " users.cash+portfolio_value(id)-users.loan as total, " + "description, "
 			+ "location, " + "inviteActive, " + "language, " + " users.loan "
 			+ "from users,ranking ";
 
