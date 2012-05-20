@@ -123,11 +123,16 @@ public class HomePageServlet extends TwitStreetServlet {
 		loadUser(request);
 
 		//	default tab for stocks view
-		request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
+		//request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
+		request.setAttribute(SELECTED_TAB_STOCK_BAR, "");
+		
 		//	default tab for users view
-		request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
+		//request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
+		request.setAttribute(SELECTED_TAB_USER_BAR, "");
+		
 		//	default tab for groups view
-		request.setAttribute(SELECTED_TAB_GROUP_BAR, "group-list-tab");
+		//request.setAttribute(SELECTED_TAB_GROUP_BAR, "group-list-tab");
+		request.setAttribute(SELECTED_TAB_GROUP_BAR, "");
 		
 		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
 			getServletContext().getRequestDispatcher(

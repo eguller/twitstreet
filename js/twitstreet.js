@@ -18,8 +18,12 @@ $(document).ready(function() {
 		setInterval(reloadPortfolio, reloadInterval);
 		setInterval(reloadWatchList, reloadInterval);
 	}
-	
-	showTabMain(".stocks-tab");
+
+		
+	if (location.hash== "") {
+		location.hash = "!" + defaultStocksCommand;
+	}
+//	showTabMain(".stocks-tab");
 
 });
 
@@ -300,10 +304,13 @@ function loadUserHistory(userId, seasonId) {
 	}
 }
 function loadSeasonResults(seasonId) {
-	if (seasonId!=null) {
-		ajaxLoad("/season", "season=" + seasonId , "#oldseasons-container",
+
+	showTabMain(".oldseasons-tab");
+	
+	ajaxLoad("/season", "season=" + seasonId , "#oldseasons-container",
 				"#column_center");
-	}
+	
+	
 }
 function reloadCurrentTransactions() {
 	if ($(".currenttransactions-tab").hasClass("youarehere")) {

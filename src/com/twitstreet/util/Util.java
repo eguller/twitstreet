@@ -368,7 +368,7 @@ public class Util {
 		}
 
 		moneyStr = (dollar) ? "$" + moneyStr : moneyStr;
-		moneyStr = (appendPlusIfPositive) ? plusMinus + moneyStr : moneyStr;
+		moneyStr = (appendPlusIfPositive) ? plusMinus + moneyStr.replace("-", "") : moneyStr;
 
 		moneyStr = (perHour) ? moneyStr + "/h" : moneyStr;
 		moneyStr = (arrow) ? moneyStr + arrowStr : moneyStr;

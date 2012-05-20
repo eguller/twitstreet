@@ -20,6 +20,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <% if(configMgr.isDev()){ %>
 <!-- Start CSS -->
 <link rel="stylesheet" type="text/css" href="/css/jquery.countdown.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/css/jquery-ui-1.8.20.custom.css" /> -->
 <link rel="stylesheet" type="text/css" href="/css/twitstreet.css" />
 <!-- End CSS -->
 <% } else{ %>
@@ -59,6 +60,7 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script type="text/javascript" src="/js/transactionTab.js"></script>
 <script type="text/javascript" src="/js/charts.js"></script>
 <script type="text/javascript" src="/js/jquery.countdown.min.js"></script>
+<!-- <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.js"></script> -->
 <!-- End Tw-Static -->
 <% } else{ %>
 <script type="text/javascript" src="/js/all-min.js"></script>

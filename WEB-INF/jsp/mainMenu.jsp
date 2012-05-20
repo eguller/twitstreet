@@ -21,7 +21,7 @@
 <div id="main-menu">
 	<div class="title-bar">
 		<div class="main-tabs">
-			<a class="stocks-tab youarehere"
+			<a class="stocks-tab"
 				onclick="showTabMain('.stocks-tab');"> <%=lutil.get("stocks", lang)%>
 			</a> 
 			<a class="users-tab" onclick="showTabMain('.users-tab');"> <%=lutil.get("users", lang)%>

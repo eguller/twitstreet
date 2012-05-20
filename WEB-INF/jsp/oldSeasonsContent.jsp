@@ -49,7 +49,7 @@ SeasonResult sr = seasonMgr.getSeasonResult(seasonId);
 <div id="oldseasons" class="main-div" >
 	<div align="center">
 			<%=lutil.get("season", lang) %>
-			<select onchange="loadSeasonResults($(this).val())" style="font-size:11px;">
+			<select onchange="reloadIfHashIs('#!seasonresults='+$(this).val());" style="font-size:11px;">
 			<% 
 			for(SeasonInfo si: siList){
 				if(si.isActive() || si.getId()<2)continue;

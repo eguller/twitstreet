@@ -61,7 +61,51 @@ function timeToReload(lastUpdate){
 	
 }
 
-var defaultCommand = "suggestedstocks";
+var defaultStocksCommand = "suggestedstocks";
+var defaultUsersCommand = "topgrossingusers";
+var defaultGroupsCommand = "grouplist";
+var defaultOldSeasonsCommand = "seasonresults";
+var stocksCommand = "";
+var usersCommand = "";
+var groupsCommand = "";
+var oldSeasonsCommand = "";
+
+function checkTabCommand(tabId){
+	if(tabId=='.stocks-tab'){
+		if(stocksCommand==''){
+
+			location.hash="!"+defaultStocksCommand;
+		}
+		else{
+			location.hash="!"+stocksCommand;
+		}
+	}else if(tabId=='.users-tab'){
+		if(usersCommand==''){
+
+			location.hash="!"+defaultUsersCommand;
+		}
+		else{
+			location.hash="!"+usersCommand;
+		}
+	}else if(tabId=='.groups-tab'){
+		if(groupsCommand==''){
+
+			location.hash="!"+defaultGroupsCommand;
+		}
+		else{
+			location.hash="!"+groupsCommand;
+		}
+	}else if(tabId=='.oldseasons-tab'){
+		if(oldSeasonsCommand==''){
+			location.hash="!"+defaultOldSeasonsCommand;
+		}
+		else{
+			location.hash="!"+oldSeasonsCommand;
+		}
+	}
+	
+}
+
 var lastCommand = null;
 $(function(){
 	  // Bind an event to window.onhashchange that, when the hash changes, gets the
@@ -95,49 +139,68 @@ function performLastOperation(){
 function performOperation(command){
 	var itemType = command.split('=')[0];
     if(itemType == 'stock'){
+    	stocksCommand = command;
     	 var id = command.split('=')[1];
     	loadStock(id);
     }else if(itemType == 'user'){
+    	usersCommand = command;
     	 var id = command.split('=')[1];
     	loadUserProfile(id);
     }
 	else if(itemType == 'suggestedstocks'){
+    	stocksCommand = command;
     	var page = command.split('=')[1];
     	loadSuggestedStocks(page);
     	
     }
 	else if(itemType == 'topgrossingstocks'){
+    	stocksCommand = command;
     	loadTopGrossingStocks();
     }else if(itemType == 'topgrossingusers'){
+    	usersCommand = command;
     	loadTopGrossingUsers();
     }else if(itemType == 'newusers'){
+    	usersCommand = command;
     	loadNewUsers();
     }else if(itemType == 'searchstock'){
+    	stocksCommand = command;
     	var searchString = command.split('=')[1];
     	getQuote(searchString);
     }
     else if(itemType == 'searchuser'){
+    	usersCommand = command;
     	var searchString = command.split('=')[1];
     	getUser(searchString);
     }
     else if(itemType == 'searchgroup'){
+    	groupsCommand = command;
     	var searchString = command.split('=')[1];
     	getGroup(searchString);
     }
     else if(itemType == 'group'){
+    	groupsCommand = command;
     	var id = command.split('=')[1];
     	loadGroup(id);
     }
     else if(itemType == 'joingroup'){
+    	groupsCommand = command;
     	var id = command.split('=')[1];
     	joinGroupByReference(id);
     }
     else if(itemType == 'grouplist'){
+    	groupsCommand = command;
     	loadGroupList(1);
     }
     else if(itemType == 'mygroups'){
+    	groupsCommand = command;
     	loadMyGroups(1);
     }
+    else if(itemType == 'seasonresults'){
+    	oldSeasonsCommand = command;
+    	var id = command.split('=')[1];
+    	loadSeasonResults(id);
+    }
+    
 }
 function loadLanguage(lang){
 	ajaxLoad("/lang", 'lang='+lang, null, "body", false, reloadPage);
@@ -161,6 +224,7 @@ function reloadIfHashIs(hash){
 		window.location.hash=hash;
 	}
 }
+
 
 function isLocationEqualTo(url){
 	return window.location.hash==url;

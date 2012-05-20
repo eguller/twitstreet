@@ -15,6 +15,10 @@
 
 	function showTabMain(tabId){
 		
+		
+		
+		
+		
 		tabContentId = mainTabContentsArray[jQuery.inArray(tabId, mainTabsArray)];
 		
 		
@@ -45,5 +49,7 @@
 			}
 			
 		}	
+		
+		checkTabCommand(tabId);
 		
 	}
