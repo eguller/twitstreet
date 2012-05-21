@@ -143,7 +143,7 @@ public class Util {
 		return newStr;
 	}
 
-	public static double roundDouble(double pDouble, int decimalLength) {
+	private static double roundDouble(double pDouble, int decimalLength) {
 
 		BigDecimal bd = new BigDecimal(pDouble);
 		bd = bd.setScale(decimalLength, BigDecimal.ROUND_UP);
@@ -151,60 +151,6 @@ public class Util {
 		return (bd.doubleValue());
 	}
 
-	public static String getChangePerHourString(double cph) {
-
-		String cphStr = "$";
-		cphStr = cphStr + Util.commaSep(Util.roundDouble(Math.abs(cph), 2));
-		if (Math.abs(cph) < 0.01 && cph != 0) {
-
-			cphStr = "$0.01";
-
-		}
-
-		if (cph > 0) {
-
-			cphStr = cphStr + "/h &#9650;";
-
-		} else if (cph < 0) {
-			cphStr = cphStr + "/h &#9660;";
-		}
-
-		return cphStr;
-
-	}
-
-	public static String getPercentageChangePerHourString(double cph) {
-		cph = cph * 100;
-		String cphStr = String.valueOf(Util.roundDouble(Math.abs(cph), 2));
-		// if( Math.abs(cph) <0.01){
-		//
-		// cphStr = "<" + cphStr;
-		//
-		// }
-		cphStr += "%";
-
-		// cphStr = cphStr + Util.commaSep(Util.roundDouble(Math.abs(cph),2));
-
-		if (cph > 0) {
-
-			cphStr = cphStr + "/h &#9650;";
-
-		} else if (cph < 0) {
-			cphStr = cphStr + "/h &#9660;";
-		}
-
-		return cphStr;
-
-	}
-
-	public static String getPercentageChangeString(double cph) {
-		cph = cph * 100;
-		String cphStr = String.valueOf(Util.roundDouble(Math.abs(cph), 2));
-		cphStr += "% ";
-
-		return cphStr;
-
-	}
 
 	public static String getRoundedChangePerHourString(double cph) {
 
@@ -235,42 +181,7 @@ public class Util {
 
 	}
 
-	public static String getRoundedMoneyString(double cph) {
 
-		String cphStr = "$";
-
-		// if (Math.abs(cph) < 1) {
-		//
-		// cphStr = "<$";
-		//
-		// }
-		if (cph > 0) {
-			if (cph != (int) cph) {
-				cph += 1;
-			}
-
-			int roundedVal = (int) Math.abs(cph);
-			cphStr = cphStr + Util.commaSep(roundedVal);
-
-		} else if (cph < 0) {
-			if (cph != (int) cph) {
-				cph = cph - 1;
-			}
-			int roundedVal = (int) Math.abs(cph);
-			cphStr = cphStr + Util.commaSep(roundedVal);
-		}
-
-		return cphStr;
-
-	}
-
-	public static String getRoundedProfitPerHourString(double cph) {
-
-		String cphStr = "$" + getRoundedChangePerHourString(cph);
-
-		return cphStr;
-
-	}
 
 	public static String getShareString(double cph) {
 		cph = cph * 100;
