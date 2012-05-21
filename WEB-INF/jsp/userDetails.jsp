@@ -102,11 +102,11 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 									
 								<tr>
 									<td width="50%">
-										<%=Util.getRoundedMoneyString(user.getTotal())%>
+										<%=Util.getNumberFormatted(user.getTotal(), true, true, false, false, false, false)%> 
 										 <%= (user.getProfit()!=0)? "("+Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true)+")":"" %>
 									</td>
 									<td width="50%">
-										<%=Util.getRoundedMoneyString(user.getValueCumulative())%>
+										<%=Util.getNumberFormatted(user.getValueCumulative(), true, true, false, false, false, false)%> 
 										 
 									</td>
 								</tr>

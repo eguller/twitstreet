@@ -190,10 +190,15 @@ public class StockMgrImpl implements StockMgr {
 					if (updateStockData(id)) {
 						stockDO = getStockById(id);
 					} else {
+						
 						stockDO.setSuspended(true);
+						if(stockDO.getChangePerHour()!=0){
+							setStockChangePerHour(stockDO.getId(), 0);
+						}
 						return stockDO;
 					}
 				}
+				
 				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 			} else {
 
@@ -437,6 +442,26 @@ public class StockMgrImpl implements StockMgr {
 					.prepareStatement("insert ignore into stock_history(stock, total, date, hour, lastUpdate) "
 							+ " select id, total, DATE(NOW()), HOUR(NOW()), lastUpdate from stock where id = ?");
 			ps.setLong(1, twUser.getId());
+			ps.executeUpdate();
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
+	private void setStockChangePerHour(long stockId, int changePerHour) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update stock set changePerHour = ? where id = ?");
+
+			ps.setInt(1, changePerHour);
+			ps.setLong(2, stockId);
+			
 			ps.executeUpdate();
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
