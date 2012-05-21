@@ -45,6 +45,12 @@
 	
 PaginationDO pdo = (PaginationDO)request.getAttribute("pdo");
 
+
+ArrayList<Stock> watchList = null;
+if(user!=null){
+	watchList = portfolioMgr.getUserWatchList(user.getId());
+}
+
 %>
 <div id="stock-list-<%=stockListName%>">
 
@@ -92,8 +98,6 @@ PaginationDO pdo = (PaginationDO)request.getAttribute("pdo");
 												style="display: none; float: right;">
 
 												<%
-													ArrayList<Stock> watchList = portfolioMgr
-																				.getUserWatchList(user.getId());
 																		boolean beingWatched = watchList
 																				.contains(stock);
 												%>

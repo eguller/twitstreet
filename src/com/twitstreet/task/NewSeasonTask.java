@@ -63,6 +63,7 @@ public class NewSeasonTask implements Runnable {
 			try {
 				if(now> endTime){
 					logger.info("********************    PERFORMING START NEW SEASON OPERATION    ********************");
+					userMgr.rerank();
 					seasonMgr.newSeason();
 					logger.info("********************      END OF START NEW SEASON OPERATION      ********************");
 					continue;
