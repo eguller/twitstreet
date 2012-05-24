@@ -66,9 +66,6 @@ public class TSModule extends AbstractModule {
 	@Inject Twitstreet twitStreet;
 	@Override
 	protected void configure() {
-	
-		
-
 		bind(MailMgr.class).to(MailMgrImpl.class);
 		bind(TruncateLogsTask.class).in(Scopes.SINGLETON);
 		bind(TwitstreetAnnouncer.class).to(TwitstreetAnnouncerImpl.class).in(Scopes.SINGLETON);
