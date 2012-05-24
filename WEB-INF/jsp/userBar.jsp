@@ -24,11 +24,11 @@
 	<div class="title-bar">
 	
 			<a class="top-grossing-users-tab <%=(!selectedTab.equalsIgnoreCase("top-grossing-users-tab"))?"": "youarehere"%>"
-			onclick="reloadIfHashIs('#!topgrossingusers');">
+			onclick="reloadIfHashIs('#!topgrossingusers'); loadTitle('<%=lutil.get("topgrossingusers.title", lang)%>');">
 			<%=lutil.get("topgrossingusers.header", lang)%> </a>
 			
 			<a class="new-users-tab <%=(!selectedTab.equalsIgnoreCase("new-users-tab"))?"": "youarehere"%>"
-			onclick="reloadIfHashIs('#!newusers');">
+			onclick="reloadIfHashIs('#!newusers'); loadTitle('<%=lutil.get("newusers.title", lang)%>');">
 			<%=lutil.get("newusers.header", lang)%> </a>
 			
 <%if(user!=null){ %>

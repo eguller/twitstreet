@@ -16,6 +16,7 @@ function ajaxLoad(url, queryString, containerDiv, loadingDiv, isReload, callback
 		url : url,
 		data : queryString,
 		success : function(data) {
+			
 			lastUpdateMap[containerDiv] = new Date();
 			unblockElement(loadingDiv);
 			if(data.length>0){

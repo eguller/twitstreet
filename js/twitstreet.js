@@ -130,9 +130,7 @@ function loadTopGrossingUsers() {
 	ajaxLoad("/trendyusers", null, "#top-grossing-users-content","#column_center");
 }
 function loadNewUsers(){
-
 	showTabMain('.users-tab');
-
 	showNewUsersContent();
 	ajaxLoad("/newusers", null, "#new-users-content","#column_center");
 }
@@ -491,5 +489,9 @@ function bankrupt(confirmMsg){
 
 function bankruptCallback(){
 	window.location.reload();
-	
+}
+function loadTitle(documentTitle){
+	if(documentTitle != null && documentTitle.length > 0){
+		document.title = documentTitle;
+	}
 }

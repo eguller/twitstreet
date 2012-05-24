@@ -1,26 +1,12 @@
 
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.HashSet"%>
 <%@page import="com.twitstreet.twitter.SimpleTwitterUser"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="com.twitstreet.db.data.UserStock"%>
 <%@page import="java.sql.SQLException"%>
-<%@page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.google.inject.Injector"%>
-<%@ page import="com.google.inject.Guice"%>
-<%@ page import="com.twitstreet.db.data.User"%>
-<%@ page import="com.twitstreet.db.data.Stock"%>
-<%@ page import="com.twitstreet.util.Util"%>
-<%@page import="com.twitstreet.db.data.Portfolio"%>
-<%@page import="com.twitstreet.market.PortfolioMgr"%>
-<%@page import="com.twitstreet.config.ConfigMgr"%>
-<%@page import="com.twitstreet.session.UserMgr"%>
-<%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Date"%>
-<%@page import="java.util.LinkedHashMap"%>
 <%@page import="com.twitstreet.db.data.StockHistoryData"%>
 <%@page import="com.twitstreet.db.data.UserStock"%>
 <%@page import="java.sql.SQLException"%>

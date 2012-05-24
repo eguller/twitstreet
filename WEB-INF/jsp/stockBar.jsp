@@ -14,16 +14,15 @@
 <div class="main-tabs" style="width: 100%;">
 	<div class="title-bar">
 		<a class="suggested-stocks-tab <%=(!selectedTab.equalsIgnoreCase("suggested-stocks-tab"))?"": "youarehere"%> "
-			onclick="reloadIfHashIs('#!suggestedstocks')">
+			onclick="reloadIfHashIs('#!suggestedstocks'); loadTitle('<%=lutil.get("suggestedstocks.title", lang)%>');">
 			<%=lutil.get("suggestedstocks.header", lang)%> </a>
 		<a class="top-grossing-stocks-tab <%=(!selectedTab.equalsIgnoreCase("top-grossing-stocks-tab"))?"": "youarehere"%>"
-			onclick="reloadIfHashIs('#!topgrossingstocks')">
+			onclick="reloadIfHashIs('#!topgrossingstocks'); loadTitle('<%=lutil.get("topgrossingstocks.title", lang)%>');">
 			<%=lutil.get("topgrossingstocks.header", lang)%> </a>
 	<%if(stock!=null){ %>
 		<a class="stock-details-tab <%=(!selectedTab.equalsIgnoreCase("stock-details-tab"))?"": "youarehere"%>"
 			onclick="reloadIfHashIs('#!stock=<%=stock.getId()%>')">
 			 <%=stock.getName()%> 
-<%-- 			<%=lutil.get("stockdetails", lang)%>  --%>
 			</a>
 		<%} %>
 	</div>

@@ -15,3 +15,4 @@
 	
 <%-- 	<div><%=GUIUtil.getInstance().getTwitterMentionButton("twitstreet_game", lang) %></div>  --%>
 </div>
+<input type="hidden" id="page_title" value="<%=request.getAttribute("page.title")%>"/>

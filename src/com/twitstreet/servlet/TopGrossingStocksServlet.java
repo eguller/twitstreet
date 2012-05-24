@@ -34,6 +34,7 @@ import com.twitstreet.session.UserMgr;
 @SuppressWarnings("serial")
 @Singleton
 public class TopGrossingStocksServlet extends TwitStreetServlet {
+	public static final String TOP_GROSSING = "top-grossing";
 	@Inject
 	UserMgr userMgr;
 	@Inject
@@ -53,7 +54,7 @@ public class TopGrossingStocksServlet extends TwitStreetServlet {
 
 		ArrayList<Stock> results = stockMgr.getTopGrossingStocks();
 		request.setAttribute("stockList", results);
-		request.setAttribute("stockListName", "top-grossing");
+		request.setAttribute("stockListName", TOP_GROSSING);
 		//loadUserFromCookie(request);
 		try {
 			getServletContext().getRequestDispatcher(

@@ -34,7 +34,7 @@ import com.twitstreet.session.UserMgr;
 @SuppressWarnings("serial")
 @Singleton
 public class TrendyStocksServlet extends TwitStreetServlet {
-
+    public static final String SUGGESTED = "suggested";
 	public static String TOPRANKS_USER_LIST = "topranksuserlist";
 
 	@Inject
@@ -58,7 +58,7 @@ public class TrendyStocksServlet extends TwitStreetServlet {
 		ArrayList<Stock> stocks = stockMgr.getSuggestedStocks(pdo.getOffset(),pdo.getRecordPerPage());
 		request.setAttribute("stockList", stocks);
 		request.setAttribute("stockListName", "suggested");
-		//loadUserFromCookie(request);
+		request.setAttribute("stockListName", SUGGESTED);
 		try {
 			getServletContext().getRequestDispatcher(
 					"/WEB-INF/jsp/suggestedStocks.jsp").forward(request, response);

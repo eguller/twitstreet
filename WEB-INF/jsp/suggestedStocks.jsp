@@ -27,7 +27,10 @@
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil"%>
-<%@page import="com.twitstreet.util.GUIUtil"%>
+<%@ page import="com.twitstreet.util.GUIUtil"%>
+<%@ page import="com.twitstreet.servlet.TopGrossingStocksServlet" %>
+<%@ page import="com.twitstreet.servlet.TrendyStocksServlet" %>
+
 <%
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(
