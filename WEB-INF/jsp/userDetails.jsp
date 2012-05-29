@@ -69,8 +69,8 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						target="_blank"><%=user.getUserName()%></a>
 					
 						
-					<img class="twuser" width="48" height="48" 
-					src="<%=user == null ? "" : user.getPictureUrl()%>"
+					<img class="twuser" width="128" height="128" 
+					src="<%=user == null ? "" : user.getAvatarUrl()%>"
 					id="dashboard-picture">
 				</td>
 				

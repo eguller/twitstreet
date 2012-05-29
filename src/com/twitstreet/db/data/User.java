@@ -304,5 +304,13 @@ public class User implements DataObjectIF {
 	public void setLoan(double loan) {
 		this.loan = loan;
 	}
+	
+	public String getAvatarUrl(){
+		if(pictureUrl != null && pictureUrl.length() > 0){
+			int extIndex = pictureUrl.lastIndexOf('.');
+			return pictureUrl.substring(0, extIndex - "_normal".length()) + "_reasonably_small" +pictureUrl.substring(extIndex);
+		}
+		return "";
+	}
 }
 
