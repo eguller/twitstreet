@@ -57,6 +57,77 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	%>
 	<input id="hiddenUserDetailsUserId" type="hidden" value="<%=user.getId() %>"/>
 	
+	<div class="flex-module clearfix ">
+
+  <a target="_blank" class="profile-picture" href="https://si0.twimg.com/profile_images/1297462270/203076_731581199_1167659_n.jpg">
+    <img class="avatar size128" alt="Hüseyin Tüfekçilerli" src="https://si0.twimg.com/profile_images/1297462270/203076_731581199_1167659_n_reasonably_small.jpg">
+  </a>
+  <div data-user-id="5816772" data-screen-name="huseyint" class="profile-card-inner js-actionable-user">
+    <h1 class="fullname">
+      Hüseyin Tüfekçilerli
+      
+    </h1>
+    <h2 class="username">
+      <span class="js-username"><span class="screen-name"><s>@</s>huseyint</span></span>
+      
+    </h2>
+    <p class="bio ">All my twits are provided AS IS without warranty of any kind. Developing <a rel="nofollow" href="/#!/Netsparker" data-screen-name="Netsparker" class="  twitter-atreply pretty-link"><s>@</s><b>Netsparker</b></a> at Mavituna Security.</p>
+    <p class="location-and-url">
+      <span class="location">
+        Istanbul, Türkiye
+      </span>
+          <span class="divider">·</span>
+      <span class="url">
+        <a href="http://about.me/huseyin" rel="me nofollow" target="_blank">
+          http://about.me/huseyin
+        </a>
+      </span>
+    </p>
+  </div>
+  <div class="profile-card-actions js-profile-card-actions">
+    <div class="follow-btn-container">
+      
+        
+    
+    <div data-screen-name="huseyint" data-user-id="5816772" class="js-follow-combo follow-combo btn-group js-actionable-user not-following" data-dropdown="true">
+  <a class="follow-btn btn js-combo-btn js-recommended-item">
+    <div data-user-id="5816772" class="js-action-follow follow-text action-text">
+      <i class="follow"></i>
+      Follow
+    </div>
+    <div data-user-id="5816772" class="js-action-unfollow following-text action-text">
+      Following
+    </div>
+    <div data-user-id="5816772" class="js-action-unfollow unfollow-text action-text">
+      Unfollow
+    </div>
+    <div class="block-text action-text">
+      Blocked
+    </div>
+    <div data-user-id="5816772" class="js-action-unblock unblock-text action-text">
+      Unblock
+    </div>
+    <div data-user-id="5816772" class="js-action-unfollow pending-text action-text">
+      Pending
+    </div>
+    <div data-user-id="5816772" class="js-action-unfollow cancel-req-text action-text">
+      Cancel
+    </div>
+  </a>
+</div>    </div>
+    <ul class="stats js-mini-profile-stats">
+   <li><a data-nav="profile" data-element-term="tweet_stats" href="/#!/huseyint">
+      
+        
+            <strong>4,028</strong> Tweets
+          
+    </a></li>
+    <li><a data-nav="following" data-element-term="following_stats" href="/#!/huseyint/following"><strong>339</strong> Following</a></li>
+    <li><a data-nav="followers" data-element-term="follower_stats" href="/#!/huseyint/followers"><strong>332</strong> Followers</a></li>
+</ul>
+  </div>
+</div>
+	
 
 	<div id="user-profile-menu" class="subheader" >
 

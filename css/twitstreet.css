@@ -75,14 +75,14 @@ h3 {
 	color: graytext;
 }
 
-.box{
-	
+.box {
 	border: 1px solid #D9D9D9
 }
+
 img {
-	
 	border-style: none;
 }
+
 a {
 	color: #4183C4;
 	text-decoration: none;
@@ -235,6 +235,7 @@ CUSTOM CLASSES
 	width: 412px;
 	font-weight: bolder;
 }
+
 #getGroupTextboxId {
 	padding: 6px;
 	width: 412px;
@@ -246,6 +247,7 @@ CUSTOM CLASSES
 	height: 34px;
 	font-weight: bolder;
 }
+
 #getGroupButtonId {
 	width: 70px;
 	height: 34px;
@@ -263,6 +265,7 @@ CUSTOM CLASSES
 	height: 24px;
 	font-size: 11px;
 }
+
 .buttonBig {
 	width: 70px;
 	height: 34px;
@@ -273,7 +276,6 @@ CUSTOM CLASSES
 	border: 1px solid #CCCCCC;
 	border-radius: 3px 3px 3px 3px;
 	padding: 6px 6px 4px;
-	
 }
 
 .rounded-corner {
@@ -494,7 +496,7 @@ img.twuser {
 
 .buy-sell-table {
 	width: 100%;
-/* 	margin-top: 15px; */
+	/* 	margin-top: 15px; */
 }
 
 .buy-sell-table td {
@@ -558,7 +560,6 @@ img.twuser {
 /* .subheader a { */
 /* 	color: #000000; */
 /* } */
-
 .subheader h1,.subheader h2 {
 	float: left;
 }
@@ -618,7 +619,6 @@ img.twuser {
 	line-height: 18px;
 	margin-top: 4px;
 	margin-left: 5px;
-	
 }
 
 .main-tabs a {
@@ -687,12 +687,87 @@ img.twuser {
 
 .title-bar {
 	background-color: #F2F2F2;
-    border-bottom: 1px solid #D9D9D9;
-    border-top: 1px solid #E5E5E5;
-    font-size: 12px;
-    font-weight: bolder;
-    height: 26px;
-    margin-bottom: 10px;
-    width: 100%;
+	border-bottom: 1px solid #D9D9D9;
+	border-top: 1px solid #E5E5E5;
+	font-size: 12px;
+	font-weight: bolder;
+	height: 26px;
+	margin-bottom: 10px;
+	width: 100%;
 	display: block;
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+.clearfix:before {
+	content: "";
+	display: table;
+}
+
+flex-module:last-child {
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+flex-module:first-child {
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+.flex-module {
+	background-color: #F9F9F9;
+	line-height: 16px;
+	padding: 12px;
+}
+
+.profile-card-inner {
+	float: left;
+	margin: 0 0 0 12px;
+	width: 50%;
+}
+
+.profile-card .fullname {
+	font-size: 30px;
+	line-height: 1;
+	margin-bottom: 2px;
+}
+
+.fullname {
+	color: #333333;
+	font-weight: bold;
+}
+
+.profile-card .username {
+	color: #777777;
+	font-size: 18px;
+	font-weight: normal;
+	line-height: 24px;
+	margin-bottom: 1px;
+}
+
+.username,.time,.time a,.metadata,.metadata a {
+	font-size: 12px;
+	color: #999;
+}
+
+.bio {
+	font: italic 13px/18px Georgia, "Times New Roman", serif;
+	color: #777;
+	word-wrap: break-word;
+}
+
+.profile-card .location-and-url {
+	font-size: 12px;
+	line-height: 18px;
+	color: #777;
+}
+.profile-card-actions {
+position: relative;
+float: right;
+}
+.profile-card-actions .follow-btn-container {
+position: relative;
+height: 30px;
 }

@@ -42,7 +42,6 @@ import com.twitstreet.servlet.GroupServlet;
 import com.twitstreet.servlet.HomePageServlet;
 import com.twitstreet.servlet.LanguageServlet;
 import com.twitstreet.servlet.LoanServlet;
-import com.twitstreet.servlet.MainServlet;
 import com.twitstreet.servlet.NewUsersServlet;
 import com.twitstreet.servlet.PortfolioServlet;
 import com.twitstreet.servlet.SeasonServlet;
@@ -121,12 +120,9 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/grouplist").with(GroupListServlet.class);
 				serve("/creategroup").with(CreateGroupServlet.class);
 				serve("/loan").with(LoanServlet.class);
-
 				serve("/lang").with(LanguageServlet.class);
-				
 				serve("/watchlist").with(WatchListServlet.class);
 				serve("/signout").with(SignoutServlet.class);
-				serve("/newui").with(MainServlet.class);
 			}
 		});
 	}
