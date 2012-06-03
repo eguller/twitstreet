@@ -698,11 +698,12 @@ img.twuser {
 }
 
 .module {
-	display: block;
+	overflow: auto;
 	position: relative;
+	clear: both;
+	display: table;
 	text-shadow: 0 1px 0 white;
 	border: 1px solid #EEE;
-	border: 1px solid rgba(0, 0, 0, .1);
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
@@ -711,4 +712,87 @@ img.twuser {
 	background-clip: padding-box;
 	line-height: 16px;
 	padding: 3px;
+	text-shadow: 0 1px 0 white;
+	width: 100%;
+}
+
+.fullname {
+	font-size: 18px;
+	line-height: 1;
+	margin-bottom: 2px;
+	margin-top: 5px;
+	font-weight: bold;
+	color: #333;
+	width: 100%;
+	font-weight: bold
+}
+
+.username {
+	font-size: 14px;
+	font-weight: normal;
+	color: #777;
+	width: 100%;
+}
+
+.bio {
+	font: italic 13px/18px Georgia, "Times New Roman", serif;
+	color: #777;
+	word-wrap: break-word;
+	margin: 0;
+}
+
+s {
+	text-decoration: none;
+	color: #bbb;
+}
+
+.location-url {
+	color: #777777;
+	font-size: 12px;
+	line-height: 18px;
+	margin-top: 1px;
+}
+
+.stats {
+	border-bottom: 0 none;
+	border-top: 0 none;
+	margin: 2px 0 0;
+	overflow: hidden;
+}
+
+.statcs ul {
+	list-style: none outside none;
+}
+
+.stats ul,ol {
+	margin: 0;
+}
+
+.stats li {
+	display: inline;
+}
+
+.stats span {
+	float: none;
+	display: block;
+	padding: 6px 12px 6px 0;
+	border: 0;
+	border-top: 1px solid #E8E8E8;
+	color: #999;
+	font-size: 10px;
+	line-height: 16px;
+	text-transform: uppercase;
+}
+
+.stats strong {
+    display: inline;
+}
+.stats span strong {
+    color: #333333;
+    font-size: 14px;
+    margin-right: 6px;
+}
+
+.stats li:first-child a {
+    border-top: 0 none;
 }

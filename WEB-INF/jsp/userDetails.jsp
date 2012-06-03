@@ -50,82 +50,83 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 <div id="userdetails" class="main-div">
 	<%
 		if (user != null) {
-			
-			portfolio = portfolioMgr.getUserPortfolio(user);
+		
+		portfolio = portfolioMgr.getUserPortfolio(user);
 	%>
 	<input id="hiddenUserDetailsUserId" type="hidden"
 		value="<%=user.getId()%>" />
 
 	<div id="user-profile-menu" class="subheader">
 		<div class="module">
-			Hello world
-			<div style="float: left; clear: both;"> <img class="twuser"
-					width="64" height="64"
-					src="<%=user == null ? "" : user.getAvatarUrl()%>"
-					id="dashboard-picture"></div>
-			<div style="float: left;"> Hello World</div>
+			<div style="float: left; margin: 5px 0px 0px 5px;">
+				<div>
+					<img class="twuser" width="64" height="64"
+						src="<%=user == null ? "" : user.getAvatarUrl()%>"
+						id="dashboard-picture">
+				</div>
+				<div>
+					<div style="text-align: center;">
+						<%=GUIUtil.getInstance().getTwitterShareButton("#!user="+ user.getId(), "twitter.share.user", lang, user.getUserName())%>
+					</div>
+				</div>
+			</div>
+			<div style="float: left; width: 80%; margin: 0 0 0 12px;">
+				<h1 class="fullname"><%=user.getLongName()%></h1>
+				<span class="username"><s>@</s><%=user.getUserName()%></span>
+				<p class="bio">
+					<%=user.getDescription()%>
+				</p>
+				<p class="location-url">
+					<%
+						if (user.getLocation() != null) {
+					%>
+					<span class="location"><a
+						href="http://maps.google.com/maps?q=<%=user.getLocation()%>"><%=user.getLocation()%></a>
+					</span>
+					<%
+						}
+					%>
+					<%
+						if(user.getUrl() != null) {
+					%>
+					<span class="divider">·</span> <span class="url"> <a
+						href="<%=user.getUrl()%>" target="_blank"> <%=user.getUrl()%>
+					</a> </span>
+					<%
+						}
+					%>
+				</p>
+			</div>
+			<div style="clear: both; text-align: right; padding-right: 5px;">
+				<%=GUIUtil.getInstance().getTwitterFollowButton(user.getUserName(), lang)%>
+			</div>
+			<div style="clear: both;">
+				<div style="float: left; width: 50%;">
+					<h4 style="text-align: center;"><%=lutil.get("season.thisseason", lang)%></h4>
+					<ul class="stats">
+						<li><span><strong><%=user.getRank()%>.</strong><%=lutil.get("balance.rank",lang) %></span>
+						</li>
+						<li><span><strong><%=Util.getNumberFormatted(user.getCash(), true, true, false, false, false, false)%></strong><%=lutil.get("balance.cash",lang) %></span>
+						</li>
+						<li><span><strong><%=Util.getNumberFormatted(user.getPortfolio(), true, true, false, false, false, false)%></strong><%=lutil.get("balance.portfolio",lang) %></span>
+						</li>
+						<li><span><strong><%=Util.getNumberFormatted(user.getLoan(), true, true, false, false, false, false)%></strong><%=lutil.get("balance.loan",lang) %></span>
+						</li>
+						<li><span><strong><%=Util.getNumberFormatted(user.getTotal(), true, true, false, false, false, false)%></strong><%=lutil.get("balance.total",lang) %></span>
+						</li>
+					</ul>
+				</div>
+				<div style="float: right; width: 50%;">
+					<h4 style="text-align: center;"><%=lutil.get("season.alltime", lang)%></h4>
+					<ul class="stats" style="margin-right: 10px;">
+						<li><span><strong><%=user.getRankCumulative()%>.</strong><%=lutil.get("balance.rank",lang) %></span>
+						</li>
+						<li><span><strong><%=Util.getNumberFormatted(user.getValueCumulative(), true, true, false, false, false, false) %></strong><%=lutil.get("balance.total",lang) %></span>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
-		
-		
-		<table class="datatbl">
-			<tr>
-				<td align="center" style="vertical-align: top">
-					<div style="text-align: left; vertical-align: top">
-
-						<div style="float: left; overflow: hidden; width: 280px">
-
-							<table class="datatbl" style="text-align: center;">
-
-								<tr>
-									<td width="50%"><b><%=lutil.get("season.thisseason", lang)%></b>
-									</td>
-									<td width="50%"><b><%=lutil.get("season.alltime", lang)%></b>
-									</td>
-								</tr>
-
-								<tr>
-									<td width="50%"><%=user.getRank()%>.</td>
-									<td width="50%"><%=user.getRankCumulative()%>.</td>
-								</tr>
-
-								<tr>
-									<td width="50%"><%=Util.getNumberFormatted(user.getTotal(), true, true, false, false, false, false)%>
-										<%=(user.getProfit()!=0)? "("+Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, true)+")":""%>
-									</td>
-									<td width="50%"><%=Util.getNumberFormatted(user.getValueCumulative(), true, true, false, false, false, false)%>
-
-									</td>
-								</tr>
-
-
-
-							</table>
-
-
-
-						</div>
-						<div style="float: right">
-							<div style="float: right">
-								<%=GUIUtil.getInstance().getTwitterShareButton("#!user="+ user.getId(), "twitter.share.user", lang, user.getUserName())%>
-								<%=GUIUtil.getInstance().getTwitterFollowButton(user.getUserName(), lang)%>
-							</div>
-						</div>
-					</div> <br>
-					<div style="float: left" class="gray-small"><%=(user.getDescription()!=null)?user.getDescription():""%></div>
-					<br>
-					<div style="float: right">
-						<%
-							if(user.getLocation() != null){
-						%>
-						<a href="http://maps.google.com/maps?q=<%=user.getLocation()%>"
-							target="_blank"><%=user.getLocation()%></a>
-						<%
-							}
-						%>
-					</div></td>
-
-			</tr>
-		</table>
 		<table class="datatbl">
 			<tr>
 				<td style="font-size: 15px">
@@ -148,7 +149,8 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 							onClick="showUserProfileTab('#user-tweets-tab','#usertweets');">
 							<%=lutil.get("userdetails.tweets", lang)%> </a>
 
-					</div></td>
+					</div>
+				</td>
 			</tr>
 		</table>
 	</div>
@@ -165,13 +167,13 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			<table class="datatbl">
 				<%
 					if(portfolio.getStockInPortfolioList().size()>0){
-							for (int i = 0; i < portfolio.getStockInPortfolioList().size();) {
+																									for (int i = 0; i < portfolio.getStockInPortfolioList().size();) {
 				%>
 				<tr>
 					<%
 						for (int j = 0; j < 2; j++) {
-												if (i < portfolio.getStockInPortfolioList().size()) {
-													StockInPortfolio stock = portfolio.getStockInPortfolioList().get(i);
+																																							if (i < portfolio.getStockInPortfolioList().size()) {
+																																								StockInPortfolio stock = portfolio.getStockInPortfolioList().get(i);
 					%>
 
 					<td>
@@ -180,7 +182,8 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 								onmouseover="$('.user-portfolio-item-watch-div-<%=stock.getStockId()%>').show()"
 								onmouseout="$('.user-portfolio-item-watch-div-<%=stock.getStockId()%>').hide()">
 								<td width="58px"><img class="twuser" width="48" height="48"
-									src="<%=stock.getPictureUrl()%>" /></td>
+									src="<%=stock.getPictureUrl()%>" />
+								</td>
 								<td>
 									<div style="width: 170px">
 										<a href='#!stock=<%=stock.getStockId()%>'
@@ -199,7 +202,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 
 											<%
 												ArrayList<Stock> watchList = portfolioMgr.getUserWatchList(sessionUser.getId());
-																					boolean beingWatched = watchList.contains(stock);
+																																																																																																						boolean beingWatched = watchList.contains(stock);
 											%>
 											<a class="add-to-watch-list-link-<%=stock.getStockId()%>"
 												style="<%out.write((beingWatched)?"display:none":"");%>"
@@ -231,22 +234,24 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 												</td>
 											</tr>
 										</table>
-									</div></td>
+									</div>
+								</td>
 							</tr>
-						</table></td>
+						</table>
+					</td>
 					<%
 						} else {
 					%>
 					<td></td>
 					<%
 						}
-									i++;
-								}
+																																				i++;
+																																			}
 					%>
 				</tr>
 				<%
 					}
-						}else{
+																								}else{
 				%>
 				<tr>
 					<td align="center">
