@@ -261,8 +261,8 @@ public class UserMgrImpl implements UserMgr {
 			ps = connection
 					.prepareStatement("insert into users(id, userName, "
 							+ "lastLogin,  "
-							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl, language, url) "
-							+ "values(?, ?, NOW() , ?, ?, ?, ?, ?, ?, ?)");
+							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl, language, url, longName, location, description) "
+							+ "values(?, ?, NOW() , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setLong(1, userDO.getId());
 			ps.setString(2, userDO.getUserName());
 			ps.setDouble(3, userDO.getCash());
@@ -272,6 +272,9 @@ public class UserMgrImpl implements UserMgr {
 			ps.setString(7, userDO.getPictureUrl());
 			ps.setString(8, userDO.getLanguage());
 			ps.setString(9, userDO.getUrl());
+			ps.setString(10, userDO.getLongName());
+			ps.setString(11, userDO.getLocation());
+			ps.setString(12, userDO.getDescription());
 			ps.executeUpdate();
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
