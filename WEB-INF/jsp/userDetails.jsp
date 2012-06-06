@@ -102,7 +102,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			</div>
 			<div style="clear: both;">
 				<div style="float: left; width: 50%;">
-					<h4 style="text-align: center;"><%=lutil.get("season.thisseason", lang)%></h4>
+					<h4 style="text-align: left; margin-left: 40px;"><%=lutil.get("season.thisseason", lang)%></h4>
 					<ul class="stats">
 						<li><span><strong><%=user.getRank()%>.</strong><%=lutil.get("balance.rank",lang) %></span>
 						</li>
@@ -117,7 +117,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					</ul>
 				</div>
 				<div style="float: right; width: 50%;">
-					<h4 style="text-align: center;"><%=lutil.get("season.alltime", lang)%></h4>
+					<h4 style="text-align: left; margin-left: 40px;"><%=lutil.get("season.alltime", lang)%></h4>
 					<ul class="stats" style="margin-right: 10px;">
 						<li><span><strong><%=user.getRankCumulative()%>.</strong><%=lutil.get("balance.rank",lang) %></span>
 						</li>
