@@ -72,7 +72,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			</div>
 			<div style="float: left; width: 80%; margin: 0 0 0 12px;">
 				<h1 class="fullname"><%=user.getLongName()%></h1>
-				<span class="username"><s>@</s><%=user.getUserName()%></span>
+				<span class="username"> <a href="https://twitter.com/#!/<%=user.getUserName()%>" target="_blank"><s>@</s><%=user.getUserName()%></a></span>
 				<p class="bio">
 					<%=user.getDescription()%>
 				</p>
@@ -81,7 +81,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 						if (user.getLocation() != null) {
 					%>
 					<span class="location"><a
-						href="http://maps.google.com/maps?q=<%=user.getLocation()%>"><%=user.getLocation()%></a>
+						href="http://maps.google.com/maps?q=<%=user.getLocation()%>" target="_blank"><%=user.getLocation()%></a>
 					</span>
 					<%
 						}
