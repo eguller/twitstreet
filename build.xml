@@ -74,10 +74,12 @@
 			<fileset dir=".">
 				<include name="images/*" />
 				<exclude name="images/Thumbs.db" />
+				<include name="google787652ab63e1f2d2.html" />
 			</fileset>
 			<fileset dir="${build.dir}">
 				<include name="js/*" />
 				<include name="css/*" />
+				
 			</fileset>
 			<lib dir="WEB-INF/lib" />
 			<classes dir="build/bin" />
