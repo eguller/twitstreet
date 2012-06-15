@@ -1,48 +1,70 @@
 <%@page import="com.twitstreet.localization.LocalizationUtil"%>
-<%@ page import="com.google.inject.Injector" %>
-<%@ page import="com.google.inject.Guice" %>
+<%@ page import="com.google.inject.Injector"%>
+<%@ page import="com.google.inject.Guice"%>
 <%@page import="com.twitstreet.config.ConfigMgr"%>
 <%
-LocalizationUtil lutil = LocalizationUtil.getInstance();
-String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
-Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
+	String lang = (String) request.getSession().getAttribute(
+			LocalizationUtil.LANGUAGE);
+	Injector inj = (Injector) pageContext.getServletContext()
+			.getAttribute(Injector.class.getName());
 
-ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
+	ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 %>
-<link rel="shortcut icon" type="image/x-icon" href="/images/twitstreet_logo_50.png">
-<title>
-<%= request.getAttribute("title")%>
-</title>
+<link rel="shortcut icon" type="image/x-icon"
+	href="/images/twitstreet_logo_50.png">
+<title><%=request.getAttribute("title")%></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta name="description" content="<%=request.getAttribute("meta-desc") %>" >
-<meta property="og:image" content="http://twitstreet.com/images/TwitStreet_logo1.png"/> 
+<meta name="description"
+	content="<%=request.getAttribute("meta-desc")%>">
+<meta property="og:image"
+	content="http://twitstreet.com/images/TwitStreet_logo1.png" />
 
-<% if(configMgr.isDev()){ %>
+<%
+	if (configMgr.isDev()) {
+%>
 <!-- Start CSS -->
 <link rel="stylesheet" type="text/css" href="/css/jquery.countdown.css" />
 <!-- <link rel="stylesheet" type="text/css" href="/css/jquery-ui-1.8.20.custom.css" /> -->
 <link rel="stylesheet" type="text/css" href="/css/twitstreet.css" />
 <!-- End CSS -->
-<% } else{ %>
-	<link rel="stylesheet" type="text/css" href="/css/all-min.css" />
-<% } %>
+<%
+	} else {
+%>
+<link rel="stylesheet" type="text/css" href="/css/all-min.css" />
+<%
+	}
+%>
 
 <!-- Start GoogleAPI -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
+	
+<%if (!configMgr.isDev()) {%>
 	google.load("jquery", "1.7.1");
-	google.load('visualization', '1.0', {'packages':['corechart']});
-	google.load('visualization', '1', {packages: ['annotatedtimeline']});
+	google.load('visualization', '1.0', {
+		'packages' : [ 'corechart' ]
+	});
+	google.load('visualization', '1', {
+		packages : [ 'annotatedtimeline' ]
+	});
+<%}%>
+	
 </script>
 
 <!--  Start of Twitter Widget -->
-<script type="text/javascript" src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script type="text/javascript"
+	src="http://widgets.twimg.com/j/2/widget.js"></script>
 <!--  End of Twitter Widget -->
 
 <!-- End GoogleAPI -->
-<% if(configMgr.isDev()){ %>
+<%
+	if (configMgr.isDev()) {
+%>
 <!-- Start Tw-Static -->
 <!-- If you are updating here please update file list under merge-static task in buil.xml file -->
+
+<script type="text/javascript" src="/js/jquery-1.6.4.min.js"></script>
 <script type="text/javascript" src="/js/jquery-corner.js"></script>
 <script type="text/javascript" src="/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="/js/hashchange.js"></script>
@@ -62,11 +84,17 @@ ConfigMgr configMgr = inj.getInstance(ConfigMgr.class);
 <script type="text/javascript" src="/js/jquery.countdown.min.js"></script>
 <!-- <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.js"></script> -->
 <!-- End Tw-Static -->
-<% } else{ %>
+<%
+	} else {
+%>
 <script type="text/javascript" src="/js/all-min.js"></script>
-<% } %>
-<%if(!lang.equalsIgnoreCase(LocalizationUtil.DEFAULT_LANGUAGE)){
-%>	
+<%
+	}
+%>
+<%
+	if (!lang.equalsIgnoreCase(LocalizationUtil.DEFAULT_LANGUAGE)) {
+%>
 <script type="text/javascript" src="/js/jquery.countdown-<%=lang%>.js"></script>
-<%	
-}%>
+<%
+	}
+%>
