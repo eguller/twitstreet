@@ -33,7 +33,7 @@
 			
 <%if(user!=null){ %>
 			<a class="user-details-tab <%=(!selectedTab.equalsIgnoreCase("user-details-tab"))?"": "youarehere"%>"
-			onclick="reloadIfHashIs('#!user=<%=user.getId()%>'); loadTitle('TwitStreet - <%= user.getUserName()%> <%=lutil.get("user.bar.profile", lang)%>'')">
+			onclick="reloadIfHashIs('#!user=<%=user.getId()%>'); loadTitle('TwitStreet - <%= user.getUserName()%> <%=lutil.get("user.bar.profile", lang)%>');">
 			 <%=user.getUserName()%> 
 					<%-- <%=lutil.get("userdetails", lang)%> --%>
 		</a> 
