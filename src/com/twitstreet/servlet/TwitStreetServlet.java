@@ -20,6 +20,7 @@ package com.twitstreet.servlet;
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,7 @@ import com.twitstreet.db.data.User;
 import com.twitstreet.localization.LocalizationUtil;
 import com.twitstreet.main.TwitstreetException;
 import com.twitstreet.session.UserMgr;
+import com.twitstreet.util.Util;
 
 public class TwitStreetServlet extends HttpServlet {
 	/**
@@ -56,7 +58,21 @@ public class TwitStreetServlet extends HttpServlet {
 		}
 	}
 
-	
+	protected boolean isMobile(HttpServletRequest request){
+		
+		return Util.getDevice(request).equalsIgnoreCase(Util.DEVICE_MOBILE);
+	}
+
+	protected boolean dispatchIfMobile(HttpServletRequest request,HttpServletResponse response,String url) throws ServletException, IOException {
+		
+		
+		if(isMobile(request)){
+			getServletContext().getRequestDispatcher(url).forward(request, response);
+			return true;
+		}
+		return false;
+	}
+
 	protected int getPage(HttpServletRequest request) {
 		int page =-1;
 		try{

@@ -85,8 +85,11 @@ public class TopRankServlet extends TwitStreetServlet {
 		request.setAttribute("pdo", pdo);
 		request.setAttribute(TOPRANKS_USER_LIST, userList);
 		try {
-		
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/userRanking.jsp").forward(request, response);
+
+			if(!dispatchIfMobile(request,response, "/WEB-INF/jsp/mobile/ranking/ranking.jsp")){
+				getServletContext().getRequestDispatcher("/WEB-INF/jsp/userRanking.jsp").forward(request, response);
+			}
+			
 
 		} catch (ServletException e) {
 			e.printStackTrace();

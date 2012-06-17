@@ -100,7 +100,13 @@ public class BuyServlet extends TwitStreetServlet {
 					if (!("n".equalsIgnoreCase(responseNeededString))) {
 
 						request.setAttribute(HomePageServlet.STOCK, stockObj);
-						getServletContext().getRequestDispatcher("/WEB-INF/jsp/buySell.jsp").forward(request, response);
+						
+						
+						if(!dispatchIfMobile(request,response, "/WEB-INF/jsp/mobile/stockdetails/buySell.jsp")){
+							getServletContext().getRequestDispatcher("/WEB-INF/jsp/buySell.jsp").forward(request, response);
+							
+						}
+					
 					}
 				}
 			} catch (NumberFormatException e) {
