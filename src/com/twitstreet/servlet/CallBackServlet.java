@@ -90,11 +90,13 @@ public class CallBackServlet extends TwitStreetServlet {
 				user.setOauthTokenSecret(oauthTokenSecret);
 				user.setCash(configMgr.getInitialMoney());
 				user.setPictureUrl(twUser.getProfileImageURL().toExternalForm());
+
 				
 				user.setDescription(twUser.getDescription());
 				user.setLongName(twUser.getName());
 				user.setLocation(twUser.getLocation());
 				user.setLanguage(twUser.getLang());
+				user.setUrl(twUser.getURL() == null ? null : twUser.getURL().toExternalForm());
 				
 				userMgr.saveUser(user);
 				String referenceId = (String) request.getSession().getAttribute(HomePageServlet.REFERENCE_ID);

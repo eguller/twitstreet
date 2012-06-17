@@ -36,4 +36,5 @@ public interface AnnouncerMgr {
 	public void retweet(long statusId);
 	public void follow(long userId);
 	public void favourite(long statusId);
+	public void reply(String message, long statusId);
 }

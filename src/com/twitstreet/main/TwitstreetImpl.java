@@ -148,11 +148,12 @@ public class TwitstreetImpl implements Twitstreet {
 	private void startSecondaryServerTasks() {
 
 		startStockUpdateTask();
+		startUserInfoUpdateTask();
 		
 		if (!configMgr.isDev()) {
 			startTruncateHistoryTask();
 			startDetectInvalidTokensTask();
-			startUserInfoUpdateTask();
+			
 			adsListenerMgr.start();
 		}
 

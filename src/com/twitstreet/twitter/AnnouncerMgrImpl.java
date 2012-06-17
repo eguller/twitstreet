@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -124,7 +125,7 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 		if (twitstreetGame != null) {
 			try {
 				twitstreetGame.updateStatus(message);
-				screenName = twitstreetGame.getScreenName();
+				
 			} catch (TwitterException e) {
 				logger.error("Announcement failed: " + screenName, e);
 			}
@@ -177,6 +178,23 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 			screenName = twitter.getScreenName();
 		} catch (TwitterException e) {
 			logger.error("Error while creating favorite: " + statusId + " Announcer: " + screenName, e);
+		}
+	}
+
+	@Override
+	public void reply(String message, long statusId) {
+		Twitter twitter = random();
+		String screenName = "";
+		if (twitter != null) {
+			try {
+				twitter.updateStatus(new StatusUpdate(message).inReplyToStatusId(statusId));
+				screenName = twitter.getScreenName();
+			} catch (TwitterException e) {
+					logger.error("Announcement failed: " + screenName, e);
+			}
+		}
+		else{
+			logger.error("TwitStreet announcer is null");
 		}
 	}
 

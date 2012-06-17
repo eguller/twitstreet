@@ -69,7 +69,7 @@ public class UserMgrImpl implements UserMgr {
 			+ "direction, " + "pictureUrl, "
 			+ "portfolio_value(id) as portfolio, "
 			+ " users.cash+portfolio_value(id)-users.loan as total, " + "description, "
-			+ "location, " + "inviteActive, " + "language, " + " users.loan "
+			+ "location, " + "inviteActive, " + "language, " + " users.loan, " + "users.url "
 			+ "from users,ranking ";
 
 	private static String SELECT_FROM_USERS_JOIN_RANKING = SELECT_FROM_USERS_RANKING
@@ -261,8 +261,8 @@ public class UserMgrImpl implements UserMgr {
 			ps = connection
 					.prepareStatement("insert into users(id, userName, "
 							+ "lastLogin,  "
-							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl, language) "
-							+ "values(?, ?, NOW() , ?, ?, ?, ?, ?, ?)");
+							+ "cash, lastIp, oauthToken, oauthTokenSecret, pictureUrl, language, url, longName, location, description) "
+							+ "values(?, ?, NOW() , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setLong(1, userDO.getId());
 			ps.setString(2, userDO.getUserName());
 			ps.setDouble(3, userDO.getCash());
@@ -271,6 +271,10 @@ public class UserMgrImpl implements UserMgr {
 			ps.setString(6, userDO.getOauthTokenSecret());
 			ps.setString(7, userDO.getPictureUrl());
 			ps.setString(8, userDO.getLanguage());
+			ps.setString(9, userDO.getUrl());
+			ps.setString(10, userDO.getLongName());
+			ps.setString(11, userDO.getLocation());
+			ps.setString(12, userDO.getDescription());
 			ps.executeUpdate();
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -296,13 +300,14 @@ public class UserMgrImpl implements UserMgr {
 			ps = connection
 					.prepareStatement("update users set userName = ?, "
 							+ "lastLogin = now(), "
-							+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ?, pictureUrl = ? where id = ?");
+							+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ?, pictureUrl = ?, url = ? where id = ?");
 			ps.setString(1, user.getUserName());
 			ps.setString(2, user.getLastIp());
 			ps.setString(3, user.getOauthToken());
 			ps.setString(4, user.getOauthTokenSecret());
 			ps.setString(5, user.getPictureUrl());
-			ps.setLong(6, user.getId());
+			ps.setString(6, user.getUrl());
+			ps.setLong(7, user.getId());
 			ps.executeUpdate();
 
 			// just in case...
@@ -716,59 +721,6 @@ public class UserMgrImpl implements UserMgr {
 		return rhd;
 	}
 
-	// @Override
-	// public int getUserTotalMoneyForPreviousSeasons(long userid) {
-	// Connection connection = null;
-	// PreparedStatement ps = null;
-	// ResultSet rs = null;
-	//
-	// int count = 0;
-	// try {
-	// connection = dbMgr.getConnection();
-	// ps = connection.prepareStatement(SQL_GET_TOTAL_MONEY_FOR_PREV_SEASONS);
-	// rs = ps.executeQuery();
-	// if (rs.next()) {
-	// long userid = rs.getLong("user_id");
-	//
-	// count = rs.getInt(1);
-	// }
-	// } catch (SQLException exception) {
-	// logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
-	// exception);
-	// } finally {
-	// dbMgr.closeResources(connection, ps, rs);
-	// }
-	// return count;
-	//
-	// }
-	//
-	// private void loadUserTotalMoneyForPreviousSeasons(){
-	// Connection connection = null;
-	// PreparedStatement ps = null;
-	// ResultSet rs = null;
-	//
-	// int count = 0;
-	// try {
-	// connection = dbMgr.getConnection();
-	// ps = connection.prepareStatement(SQL_GET_TOTAL_MONEY_FOR_PREV_SEASONS);
-	// rs = ps.executeQuery();
-	// if (rs.next()) {
-	// long userid = rs.getLong("user_id");
-	//
-	// count = rs.getInt(1);
-	// }
-	// } catch (SQLException exception) {
-	// logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(),
-	// exception);
-	// } finally {
-	// dbMgr.closeResources(connection, ps, rs);
-	// }
-	// return count;
-	//
-	//
-	// }
-	//
-	//
 	@Override
 	public int count() {
 		Connection connection = null;
@@ -920,14 +872,15 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			connection = dbMgr.getConnection();
 			ps = connection
-					.prepareStatement("update users set userName = ?, pictureUrl = ?, location = ?, description = ?, longName = ?, language = ? where id = ?");
+					.prepareStatement("update users set userName = ?, pictureUrl = ?, location = ?, description = ?, longName = ?, language = ?, url = ? where id = ?");
 			ps.setString(1, user.getUserName());
 			ps.setString(2, user.getPictureUrl());
 			ps.setString(3, user.getLocation());
 			ps.setString(4, user.getDescription());
 			ps.setString(5, user.getLongName());
 			ps.setString(6, user.getLanguage());
-			ps.setLong(7, user.getId());
+			ps.setString(7, user.getUrl());
+			ps.setLong(8, user.getId());
 
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());

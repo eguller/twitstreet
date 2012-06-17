@@ -101,7 +101,7 @@ public class AdsListenerMgrImpl implements AdsListenerMgr {
 						break;
 					default:
 						String message = constructAdsMessage(screenName, hashtagEntities, status.getUser().getLang());
-						announcerMgr.announceFromAnnouncer(message);
+						announcerMgr.reply(message, status.getId());
 						break;
 					}
 					

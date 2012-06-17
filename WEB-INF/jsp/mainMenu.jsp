@@ -22,13 +22,13 @@
 	<div class="title-bar">
 		<div class="main-tabs">
 			<a class="stocks-tab"
-				onclick="showTabMain('.stocks-tab');"> <%=lutil.get("stocks", lang)%>
+				onclick="showTabMain('.stocks-tab'); loadTitle('TwitStreet - <%=lutil.get("stocks.title", lang)%>');"> <%=lutil.get("stocks", lang)%>
 			</a> 
-			<a class="users-tab" onclick="showTabMain('.users-tab');"> <%=lutil.get("users", lang)%>
+			<a class="users-tab" onclick="showTabMain('.users-tab'); loadTitle('TwitStreet - <%=lutil.get("users.title", lang)%>');"> <%=lutil.get("users", lang)%>
 			</a>	 
-			<a class="groups-tab" onclick="showTabMain('.groups-tab');"> <%=lutil.get("groups", lang)%>
+			<a class="groups-tab" onclick="showTabMain('.groups-tab'); loadTitle('TwitStreet - <%=lutil.get("groups.title",lang)%>');"> <%=lutil.get("groups", lang)%>
 			</a>	
-			<a class="oldseasons-tab" onclick="showTabMain('.oldseasons-tab');"> <%=lutil.get("season.oldseasons", lang)%>
+			<a class="oldseasons-tab" onclick="showTabMain('.oldseasons-tab'); loadTitle('TwitStreet - <%=lutil.get("oldseasons.title", lang)%>');"> <%=lutil.get("season.oldseasons", lang)%>
 			</a>
 		</div>
 		<div style="float: right; margin-top: 3px;">

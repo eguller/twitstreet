@@ -51,6 +51,7 @@ public class User implements DataObjectIF {
     private boolean inviteActive = true;
     String language;
     boolean newSeasonInfoSent = true;
+    String url;
 
     @Inject TwitterProxy twitterProxy = null;
 
@@ -211,6 +212,7 @@ public class User implements DataObjectIF {
 		this.setOauthTokenSecret(rs.getString("oauthTokenSecret"));
 		this.setPictureUrl(rs.getString("pictureUrl"));
 		this.setLanguage(rs.getString("language"));
+		this.setUrl(rs.getString("url"));
 	}
 
 	public boolean isProfitCalculated() {
@@ -303,6 +305,22 @@ public class User implements DataObjectIF {
 
 	public void setLoan(double loan) {
 		this.loan = loan;
+	}
+	
+	public String getAvatarUrl(){
+		if(pictureUrl != null && pictureUrl.length() > 0){
+			int extIndex = pictureUrl.lastIndexOf('.');
+			return pictureUrl.substring(0, extIndex - "_normal".length()) + "_reasonably_small" +pictureUrl.substring(extIndex);
+		}
+		return "";
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }
 

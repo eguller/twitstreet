@@ -123,12 +123,12 @@ public class TSServletConfig extends GuiceServletContextListener {
 				serve("/grouplist").with(GroupListServlet.class);
 				serve("/creategroup").with(CreateGroupServlet.class);
 				serve("/loan").with(LoanServlet.class);
-
 				serve("/lang").with(LanguageServlet.class);
-				
 				serve("/watchlist").with(WatchListServlet.class);
 				serve("/signout").with(SignoutServlet.class);
+
 //				serve("/newui").with(MainServlet.class);
+
 			}
 		});
 	}
