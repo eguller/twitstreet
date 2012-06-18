@@ -144,7 +144,7 @@ function performOperation(command){
     	 var id = command.split('=')[1];
     	loadUserProfile(id);
     }
-	else if(itemType == 'suggestedstocks' || itemType == ''){
+	else if(itemType == 'suggestedstocks'){
     	stocksCommand = command;
     	var page = command.split('=')[1];
     	loadSuggestedStocks(page);

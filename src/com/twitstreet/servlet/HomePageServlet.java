@@ -136,23 +136,16 @@ public class HomePageServlet extends TwitStreetServlet {
 		
 		logger.info("Init time: " + (end - start));
 		
-		
-		handleGoogleCrawler(request);
-		
 
+		
+		setDefaultTabs(request);
+		String command = request.getParameter("_escaped_fragment_");
+		if(command != null){
+			handleGoogleCrawler(request, command);
+
+		}
+		
 		loadUser(request);
-
-		//	default tab for stocks view
-		//request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
-		request.setAttribute(SELECTED_TAB_STOCK_BAR, "");
-		
-		//	default tab for users view
-		//request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
-		request.setAttribute(SELECTED_TAB_USER_BAR, "");
-		
-		//	default tab for groups view
-		//request.setAttribute(SELECTED_TAB_GROUP_BAR, "group-list-tab");
-		request.setAttribute(SELECTED_TAB_GROUP_BAR, "");
 		
 		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
 			getServletContext().getRequestDispatcher(
@@ -166,9 +159,14 @@ public class HomePageServlet extends TwitStreetServlet {
 					"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
 		}
 	}
+
+	private void setDefaultTabs(HttpServletRequest request) {
+		request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
+		request.setAttribute(SELECTED_TAB_GROUP_BAR, "group-list-tab");
+		request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
+	}
 	
-	private void handleGoogleCrawler(HttpServletRequest request){
-		String command = request.getParameter("_escaped_fragment_");
+	private void handleGoogleCrawler(HttpServletRequest request, String command){
 		try{
 			if(command.startsWith("suggestedstocks")){
 				request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");

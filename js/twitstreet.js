@@ -490,3 +490,6 @@ function loadTitle(documentTitle){
 		document.title = documentTitle;
 	}
 }
+function setPageUrl(a, href){
+	$(a).attr("href", href);
+}
