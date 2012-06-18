@@ -55,7 +55,7 @@
 			%> <span class="<%=spanClass%>"> <%=operation%></span> <%=Util.commaSep(transactionRecord.getAmount())%>
 			<a href="#!stock=<%=transactionRecord.getStockId()%>"
 			title="<%=lutil.get("stock.details.tip", lang,
-						transactionRecord.getStockName())%>">
+						transactionRecord.getStockName())%>" onclick="loadTitle('<%=lutil.get("stock.bar.profile", lang, transactionRecord.getStockName())%>');">
 				<%=transactionRecord.getStockName()%> </a>
 		</td>
 	</tr>

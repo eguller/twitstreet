@@ -73,11 +73,7 @@ var oldSeasonsCommand = "";
 
 function checkTabCommand(tabId){
 	if(tabId=='.stocks-tab'){
-		if(stocksCommand==''){
-
-			location.hash="!"+defaultStocksCommand;
-		}
-		else{
+		if(stocksCommand!=''){
 			location.hash="!"+stocksCommand;
 		}
 	}else if(tabId=='.users-tab'){
@@ -148,7 +144,7 @@ function performOperation(command){
     	 var id = command.split('=')[1];
     	loadUserProfile(id);
     }
-	else if(itemType == 'suggestedstocks'){
+	else if(itemType == 'suggestedstocks' || itemType == ''){
     	stocksCommand = command;
     	var page = command.split('=')[1];
     	loadSuggestedStocks(page);

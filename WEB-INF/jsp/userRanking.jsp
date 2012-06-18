@@ -149,7 +149,7 @@ if(sessionUser!=null) {
 								int pageOfUser = Util.getPageOfRank(rankOfUser, pdo.getRecordPerPage());
 								
 							%>
-								<a href="javascript:void(0)" onclick="toprank(<%=pageOfUser%>)"> <%=lutil.get("ranking.showme", lang) %></a>
+								<a href="javascript:void(0)" onclick="toprank(<%=pageOfUser%>); "> <%=lutil.get("ranking.showme", lang) %></a>
 							
 							<%
 							}
@@ -203,7 +203,7 @@ if(sessionUser!=null) {
 				
 				<td class="rank-number"><%=rankDisplay%>.</td>
 				<td><img class="twuser" width="48" height="48"  src="<%=user.getPictureUrl()%>" /></td>
-				<td><a href="#!user=<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("user.details.tip",lang, user.getUserName())%>"> <%=user.getUserName()%></a>
+				<td><a href="#!user=<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this); loadTitle('<%=lutil.get("user.bar.profile", lang, user.getUserName())%>');" title="<%=lutil.get("user.details.tip",lang, user.getUserName())%>"> <%=user.getUserName()%></a>
 					<br> <%=Util.getNumberFormatted(total, true, true, false, false, false, false)%> <%
 								String className = null; 
 								String profitPerHour = Util.getNumberFormatted(user.getProfit(), true, true, true, true, false, false);

@@ -104,7 +104,7 @@ if(typeParam.equalsIgnoreCase("allTime")){
 					
 					</td>
 					<td>
-						<a href="#!group=<%=group.getId()%>"  onclick="reloadIfHashIsMyHref(this)" > 
+						<a href="#!group=<%=group.getId()%>"  onclick="reloadIfHashIsMyHref(this); loadTitle('<%=lutil.get("groups.details.title", lang, group.getName())%>');" > 
 							<%=group.getName()%>
 						</a>
 						<br> 

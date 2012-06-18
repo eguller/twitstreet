@@ -120,7 +120,7 @@
 			<td><img class='twuser'
 				style="margin-top: 2px; margin-bottom: 2px;" width="48px" height="48px"
 				src="<%=stockDetail.getUserPictureUrl()%>" /></td>
-			<td><a href="#!user=<%=stockDetail.getUserId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%= lutil.get("user.details.tip", lang, stockDetail.getUserName())%>"><%=stockDetail.getUserName()%></a>
+			<td><a href="#!user=<%=stockDetail.getUserId()%>"  onclick="reloadIfHashIsMyHref(this);  loadTitle('<%=lutil.get("user.bar.profile", lang, stockDetail.getUserName())%>');" title="<%= lutil.get("user.details.tip", lang, stockDetail.getUserName())%>"><%=stockDetail.getUserName()%></a>
 			</td>
 			<td><%=Util.getShareString(stockDetail.getPercent()) %></td>
 			<td>$<%=Util.commaSep((int) (stockDetail.getPercent() * stockDetail.getStockTotal()))%></td>

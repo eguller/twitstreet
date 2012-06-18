@@ -29,11 +29,14 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Singleton;
 import com.twitstreet.config.ConfigMgr;
+import com.twitstreet.db.data.Group;
 import com.twitstreet.db.data.Stock;
 import com.twitstreet.db.data.User;
+import com.twitstreet.localization.LocalizationUtil;
 import com.twitstreet.main.Twitstreet;
 import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.StockMgr;
+import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.TwitterProxyFactory;
 
@@ -52,6 +55,8 @@ public class HomePageServlet extends TwitStreetServlet {
 	TwitterProxyFactory twitterProxyFactory = null;
 	@Inject
 	PortfolioMgr portfolioMgr = null;
+	@Inject
+	GroupMgr groupMgr = null;
 
 	public static final String STOCK = "stock";
 	public static final String GROUP = "group";
@@ -75,9 +80,15 @@ public class HomePageServlet extends TwitStreetServlet {
 	public static final String REASON = "reason";
 
 	public static final String USER_NOT_FOUND = "user-not-found";
+	
+	public static final String TITLE = "title";
+	
 	public static String PAGE = "page";
 
 	private static Logger logger = Logger.getLogger(HomePageServlet.class);
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
+	
+	String lang = "";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -87,16 +98,25 @@ public class HomePageServlet extends TwitStreetServlet {
 	@Override
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+		if(lang == null){
+			lang = LocalizationUtil.DEFAULT_LANGUAGE;
+		}
+		
 		response.setContentType("text/html;charset=utf-8");
 		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
-		request.setAttribute("title", "TwitStreet - Twitter Stock Market Game");
+		request.setAttribute("title", lutil.get("title", lang));
 		request.setAttribute(
 				"meta-desc",
 				"Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
 
+		
+		
 		
 		long start = 0;
 		long end = 0;
@@ -148,52 +168,56 @@ public class HomePageServlet extends TwitStreetServlet {
 	}
 	
 	private void handleGoogleCrawler(HttpServletRequest request){
-		
-		
-		
 		String command = request.getParameter("_escaped_fragment_");
-		
 		try{
 			if(command.startsWith("suggestedstocks")){
-
 				request.setAttribute(SELECTED_TAB_STOCK_BAR, "suggested-stocks-tab");
+				request.setAttribute(TITLE, lutil.get("suggestedstocks.title", lang));
 			}	
 			else if(command.startsWith("topgrossingstocks")){
-
 				request.setAttribute(SELECTED_TAB_STOCK_BAR, "top-grossing-stocks-tab");
-			}
-			else if(command.startsWith("topgrossingusers")){
-
-				request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
-		
-			}
-			else if(command.startsWith("grouplist")){
-
-				request.setAttribute(SELECTED_TAB_GROUP_BAR, "group-list-tab");
-		
+				request.setAttribute(TITLE, lutil.get("topgrossingstocks.title", lang));
 			}
 			else if(command.startsWith("stock=")){
 				long stockId =Long.valueOf(command.split("stock=")[1]);
 				Stock stock = stockMgr.getStockById(stockId);
 				request.setAttribute(STOCK, stock);
+				request.setAttribute(TITLE, lutil.get("stock.bar.profile", lang, stock.getName()));
+			}
+			else if(command.startsWith("topgrossingusers")){
+				request.setAttribute(SELECTED_TAB_USER_BAR, "top-grossing-users-tab");
+				request.setAttribute(TITLE, lutil.get("topgrossingusers.title", lang));
+			}
+			else if(command.startsWith("newusers")){
+				request.setAttribute(SELECTED_TAB_USER_BAR, "new-users-tab");
+				request.setAttribute(TITLE, lutil.get("newusers.title", lang));
 			}
 			else if(command.startsWith("user=")){
 				long stockId =Long.valueOf(command.split("user=")[1]);
 				User user = userMgr.getUserById(stockId);
 				request.setAttribute(GetUserServlet.GET_USER, user);
+				request.setAttribute(TITLE, lutil.get("user.bar.profile", lang, user.getUserName()));
 			}
-		
-			else {
-				
-				
+			else if(command.startsWith("grouplist")){
+				request.setAttribute(SELECTED_TAB_GROUP_BAR, "group-list-tab");
+				request.setAttribute(TITLE, lutil.get("groups.list.title", lang));
 			}
-			
-			
+			else if(command.startsWith("mygroups")){
+				request.setAttribute(SELECTED_TAB_GROUP_BAR, "my-groups-tab");
+				request.setAttribute(TITLE, lutil.get("groups.list.title", lang));
+			}
+			else if(command.startsWith("seasonresults")){
+				request.setAttribute(SELECTED_TAB_GROUP_BAR, "oldseasons-tab");
+				request.setAttribute(TITLE, lutil.get("groups.list.title", lang));
+			}
+			else if(command.startsWith("group=")){
+				long groupId =Long.valueOf(command.split("group=")[1]);
+				Group group = groupMgr.getGroup(groupId);
+				request.setAttribute(GroupServlet.GROUP, group);
+				request.setAttribute(TITLE, lutil.get("user.bar.profile", lang, group.getName()));
+			}
 		}catch(Exception ex){
-			
-			
-			
+			logger.debug("Error while handling google crawler", ex);
 		}
-		
 	}
 }

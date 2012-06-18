@@ -135,7 +135,7 @@
 					</td>
 					<td><span id="username"><a
 							href="#!user=<%=user.getId()%>"
-							onclick="reloadIfHashIsMyHref(this)"
+							onclick="reloadIfHashIsMyHref(this); loadTitle('<%=lutil.get("user.bar.profile", lang, user.getUserName())%>');"
 							title="<%=lutil.get("user.details.tip", lang,
 						user.getUserName())%>">
 								<%=user.getUserName()%></a>

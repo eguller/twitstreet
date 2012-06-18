@@ -132,7 +132,7 @@
 						<%=group.getRank() %>. 
 					</td>
 					<td>
-						<a href="#!group=<%=group.getId()%>" onclick="reloadIfHashIsMyHref(this)"><%=group.getName() %></a>
+						<a href="#!group=<%=group.getId()%>" onclick="reloadIfHashIsMyHref(this); loadTitle('<%=lutil.get("groups.details.title", lang, group.getName())%>');"><%=group.getName() %></a>
 						<div>
 							<div style="float:left">
 								<%=Util.getNumberFormatted(group.getTotal(), true, true, false, false, false, false)%>
@@ -156,7 +156,7 @@
 					</td>
 					
 					<td align="center">
-					<a href="#!user=<%=group.getAdminId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("user.details.tip",lang,group.getAdminName())%>"> <%=group.getAdminName()%></a>
+					<a href="#!user=<%=group.getAdminId()%>"  onclick="reloadIfHashIsMyHref(this); loadTitle('<%=lutil.get("user.bar.profile", lang, group.getAdminName())%>');" title="<%=lutil.get("user.details.tip",lang,group.getAdminName())%>"> <%=group.getAdminName()%></a>
 					</td>
 					<td align="center">
 				<% 

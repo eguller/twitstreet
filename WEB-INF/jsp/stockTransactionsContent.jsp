@@ -54,7 +54,7 @@
 						operation = "&#9654;";
 					}
 			%> <a href="#!user=<%=transactionRecord.getUserId()%>"
-			onclick="reloadIfHashIsMyHref(this)"
+			onclick="reloadIfHashIsMyHref(this); loadTitle('<%=lutil.get("user.bar.profile", lang, transactionRecord.getUserName())%>');"
 			title="<%=lutil.get("user.details.tip", lang,
 						transactionRecord.getUserName())%>">
 				<%=transactionRecord.getUserName()%> </a> <span class="<%=spanClass%>">

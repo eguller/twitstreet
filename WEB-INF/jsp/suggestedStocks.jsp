@@ -88,7 +88,7 @@ if(user!=null){
 									
 									<tr>
 										<td colspan="2"><a href="#!stock=<%=stock.getId()%>"
-											onclick="reloadIfHashIsMyHref(this)"
+											onclick="reloadIfHashIsMyHref(this); loadTitle('<%=lutil.get("stock.bar.profile", lang, stock.getName())%>');"
 											title="<%=lutil.get("stock.details.tip", lang, stock.getName())%>">
 												<%=stock.getName()%> </a> <%
 												 	if (stock.isVerified()) {
