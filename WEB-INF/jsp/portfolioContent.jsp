@@ -56,7 +56,7 @@
 							<div style="float: left">
 
 								<a href='#!stock=<%=stock.getStockId()%>'
-									onclick="reloadIfHashIsMyHref(this)"
+									onclick="reloadIfHashIsMyHref(this); loadTitle('<%=lutil.get("stock.bar.profile", lang, stock.getStockName())%>');"
 									title="<%=lutil.get("stock.details.tip", lang,
 							stock.getStockName())%>"><%=stock.getStockName()%>
 								</a>

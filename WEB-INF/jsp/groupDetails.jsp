@@ -210,7 +210,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 					<td>
 						<div style="padding:15px;">
 							<div align="center">
-								<a href="#!user=<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("user.details.tip",lang, user.getUserName())%>"> <%=user.getUserName()%></a>
+								<a href="#!user=<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this); loadTitle('<%=lutil.get("user.bar.profile", lang, user.getUserName())%>');" title="<%=lutil.get("user.details.tip",lang, user.getUserName())%>"> <%=user.getUserName()%></a>
 							</div>						
 							<br> 
 							<div align="center">

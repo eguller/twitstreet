@@ -23,7 +23,6 @@
 <%@ page import="java.util.List"%>
 <%@ page import="com.twitstreet.util.Util"%>
 <%@ page import="java.text.DecimalFormat"%>
-<%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
@@ -74,7 +73,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 								<table class="datatbl2">
 									<tr>									
 										<td colspan="2">	
-											<a href="#!user=<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("user.details.tip", lang, user.getUserName())%>">
+											<a href="#!user=<%=user.getId()%>"  onclick="reloadIfHashIsMyHref(this);loadTitle('<%=lutil.get("user.bar.profile", lang, user.getUserName())%>');"  title="<%=lutil.get("user.details.tip", lang, user.getUserName())%>">
 											<%=user.getUserName()%>
 											</a> 
 										</td>

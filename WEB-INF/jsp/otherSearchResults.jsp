@@ -75,7 +75,7 @@
 								<td><img class="twuser" width="48" height="48" 
 									src="<%=searchResults.get(i).getPictureUrl()%>" />
 								</td>
-								<td><a href="#!stock=<%=searchResults.get(i).getId()%>"  onclick="reloadIfHashIsMyHref(this)" title="<%=lutil.get("stock.details.tip", lang, searchResults.get(i).getScreenName()) %>">
+								<td><a href="#!stock=<%=searchResults.get(i).getId()%>"  onclick="reloadIfHashIsMyHref(this); loadTitle('<%=lutil.get("stock.bar.profile", lang, searchResults.get(i).getScreenName())%>');" title="<%=lutil.get("stock.details.tip", lang, searchResults.get(i).getScreenName()) %>">
 										<%
 											out.write(searchResults.get(i).getScreenName());
 										%> </a> 

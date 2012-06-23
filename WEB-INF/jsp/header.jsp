@@ -64,7 +64,7 @@
 <!-- Start Tw-Static -->
 <!-- If you are updating here please update file list under merge-static task in buil.xml file -->
 
-<script type="text/javascript" src="/js/jquery-1.6.4.min.js"></script>
+<script type="text/javascript" src="/js/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="/js/jquery-corner.js"></script>
 <script type="text/javascript" src="/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="/js/hashchange.js"></script>

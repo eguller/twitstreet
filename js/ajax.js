@@ -73,11 +73,7 @@ var oldSeasonsCommand = "";
 
 function checkTabCommand(tabId){
 	if(tabId=='.stocks-tab'){
-		if(stocksCommand==''){
-
-			location.hash="!"+defaultStocksCommand;
-		}
-		else{
+		if(stocksCommand!=''){
 			location.hash="!"+stocksCommand;
 		}
 	}else if(tabId=='.users-tab'){

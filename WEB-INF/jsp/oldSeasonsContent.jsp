@@ -84,7 +84,7 @@ SeasonResult sr = seasonMgr.getSeasonResult(seasonId);
 				</td>
 				<td>													
 					<div align="left">
-						<a href="#!user=<%=seasonUser.getId()%>"  onclick="reloadIfHashIsMyHref(this)"  title="<%=lutil.get("user.details.tip", lang, seasonUser.getUserName())%>">
+						<a href="#!user=<%=seasonUser.getId()%>"  onclick="reloadIfHashIsMyHref(this);  loadTitle('<%=lutil.get("user.bar.profile", lang, seasonUser.getUserName())%>');"  title="<%=lutil.get("user.details.tip", lang, seasonUser.getUserName())%>">
 							<%=seasonUser.getUserName()%>
 						</a>
 		 			</div>	

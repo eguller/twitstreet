@@ -38,7 +38,7 @@ import com.twitstreet.util.Util;
 public class GroupServlet extends TwitStreetServlet {
 	@Inject UserMgr userMgr;
 	@Inject GroupMgr groupMgr;
-
+	public static final String GROUP = "group";
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
 		response.setContentType("text/html;charset=utf-8");
@@ -114,9 +114,7 @@ public class GroupServlet extends TwitStreetServlet {
 			}
 			return;
 		}
-
 		request.setAttribute(HomePageServlet.SELECTED_TAB_GROUP_BAR, "group-details-tab");
-		//loadUserFromCookie(request);
 		getServletContext().getRequestDispatcher("/WEB-INF/jsp/groupDetails.jsp").forward(request, response);
 		
 	}

@@ -18,11 +18,6 @@ $(document).ready(function() {
 		setInterval(reloadPortfolio, reloadInterval);
 		setInterval(reloadWatchList, reloadInterval);
 	}
-
-		
-	if (location.hash== "") {
-		location.hash = "!" + defaultStocksCommand;
-	}
 //	showTabMain(".stocks-tab");
 
 });
@@ -494,4 +489,7 @@ function loadTitle(documentTitle){
 	if(documentTitle != null && documentTitle.length > 0){
 		document.title = documentTitle;
 	}
+}
+function setPageUrl(a, href){
+	$(a).attr("href", href);
 }
