@@ -40,7 +40,7 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
 	
-<%if (!configMgr.isDev()) {%>
+
 	google.load("jquery", "1.7.1");
 	google.load('visualization', '1.0', {
 		'packages' : [ 'corechart' ]
@@ -48,7 +48,7 @@
 	google.load('visualization', '1', {
 		packages : [ 'annotatedtimeline' ]
 	});
-<%}%>
+
 	
 </script>
 
