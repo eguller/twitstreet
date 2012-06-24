@@ -36,16 +36,15 @@ import twitter4j.User;
 import twitter4j.auth.AccessToken;
 
 @Singleton
-public class AdsListenerMgrImpl implements AdsListenerMgr {
-	private static Logger logger = Logger.getLogger(AdsListenerMgrImpl.class);
+public class AmazonBirdListenerMgrImpl implements AmazonBirdListenerMgr {
+	private static Logger logger = Logger.getLogger(AmazonBirdListenerMgrImpl.class);
 	
 	private static String[] FILTER_TERMS = new String[]{
-		"I am bored",
-		"I got bored",
-		"\\u00e7ok s\u0131k\u0131ld\u0131m"
+		"buy diablo",
+		"buy diablo3"
 	};
 	
-	private static final long TEN_MIN = 20 * 60 * 1000;
+	private static final long ONE_MIN =  60 * 1000;
 	private static long lastMessage = 0;
 	
 	
@@ -81,27 +80,23 @@ public class AdsListenerMgrImpl implements AdsListenerMgr {
 				HashtagEntity[] hashtagEntities = status.getHashtagEntities();
 				String screenName = status.getUser().getScreenName();
 				User user = status.getUser();
-				if(user != null && (System.currentTimeMillis() - lastMessage > TEN_MIN)){
+				if(user != null && (System.currentTimeMillis() - lastMessage > ONE_MIN)){
 					lastMessage = System.currentTimeMillis();
 					
+					String tweet = "Hey "+screenName+"! You can buy Diablo III from Amazon and play right now!. It's $59.99! http://www.amazon.com/gp/product/B00178630A/ref=as_li_tf_tl?ie=UTF8&tag=amazon-bird-cgds-20";
 					int action = (int)(ACTION_TYPES * Math.random());
 					switch (action) {
-					case REGULAR_TWEET:
-						LocalizationUtil lutil = LocalizationUtil.getInstance();
-						int sentenceSize = Integer.parseInt(lutil.get("announcer.sentence.size", LocalizationUtil.DEFAULT_LANGUAGE));
-						int random = (int)(Math.random() * sentenceSize);
-						String rndMessage = lutil.get("announcer.sentence." + random, LocalizationUtil.DEFAULT_LANGUAGE);
-						announcerMgr.announceFromRandomAnnouncer(rndMessage);
+					case REGULAR_TWEET:						
+						announcerMgr.announceForDiabloBird(tweet);
 						break;
 					case RETWEEET:
-						announcerMgr.retweet(status.getId());
+						announcerMgr.retweetForDiabloBird(status.getId());
 						break;
 					case FAVOURITE:
-						announcerMgr.favourite(status.getId());
+						announcerMgr.favouriteForDiabloBird(status.getId());
 						break;
-					default:
-						String message = constructAdsMessage(screenName, hashtagEntities, status.getUser().getLang());
-						announcerMgr.reply(message, status.getId());
+					default:						
+						announcerMgr.replyForDiabloBird(tweet, status.getId());
 						break;
 					}
 					
