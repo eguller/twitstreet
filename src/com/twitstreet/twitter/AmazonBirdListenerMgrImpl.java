@@ -86,11 +86,11 @@ public class AmazonBirdListenerMgrImpl implements AmazonBirdListenerMgr {
 					logger.info("diablobird onstatus:"+screenName+","+status.getText());
 					lastMessage = System.currentTimeMillis();
 					
-					String tweet = "Hey "+screenName+"! You can buy Diablo III from Amazon and play right now!. It's $59.99! http://www.amazon.com/gp/product/B00178630A/ref=as_li_tf_tl?ie=UTF8&tag=amazon-bird-cgds-20";
+					String tweet = "Hey @"+screenName+"! You can buy Diablo III from Amazon and play right now!. It's $59.99! http://www.amazon.com/gp/product/B00178630A/ref=as_li_tf_tl?ie=UTF8&tag=amazon-bird-cgds-20";
 					int action = (int)(ACTION_TYPES * Math.random());
 					switch (action) {
 					case REGULAR_TWEET:						
-						announcerMgr.announceForDiabloBird(tweet);
+						announcerMgr.announceForDiabloBird(status.getText());
 						break;
 					case RETWEEET:
 						announcerMgr.retweetForDiabloBird(status.getId());
