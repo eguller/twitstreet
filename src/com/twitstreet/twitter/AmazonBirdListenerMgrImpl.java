@@ -53,7 +53,7 @@ public class AmazonBirdListenerMgrImpl implements AmazonBirdListenerMgr {
 	private static final int REGULAR_TWEET = 0;
 	private static final int RETWEEET = 1;
 	private static final int FAVOURITE = 2;
-	private static final int ACTION_TYPES = 5; // 3 and 4 reserved for default task
+	private static final int ACTION_TYPES = 10; // 3 and 4 reserved for default task
 	
 	@Inject AnnouncerMgr announcerMgr;
 	/* (non-Javadoc)
