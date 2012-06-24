@@ -42,7 +42,7 @@ import com.twitstreet.session.UserMgr;
 
 @Singleton
 public class FollowBackMgrImpl implements FollowBackMgr {
-	private static final long FOLLOW_INTERVAL = 60 * 1000;
+	private static final long FOLLOW_INTERVAL = 60*60 * 1000;
 	
 	private static Logger logger = Logger.getLogger(FollowBackMgrImpl.class);
 	@Inject AnnouncerMgr announcerMgr;
