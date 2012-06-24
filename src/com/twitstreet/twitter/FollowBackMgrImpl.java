@@ -90,11 +90,11 @@ public class FollowBackMgrImpl implements FollowBackMgr {
 					announcerMgr.follow(user.getId());
 					lastFollow = System.currentTimeMillis();
 				}
-				if(System.currentTimeMillis() - lastFollowDiabloBird > FOLLOW_INTERVAL/6){
-					twitter4j.User user = status.getUser();
-					announcerMgr.followForDiabloBird(user.getId());
-					lastFollowDiabloBird = System.currentTimeMillis();
-				}
+//				if(System.currentTimeMillis() - lastFollowDiabloBird > FOLLOW_INTERVAL/6){
+//					twitter4j.User user = status.getUser();
+//					announcerMgr.followForDiabloBird(user.getId());
+//					lastFollowDiabloBird = System.currentTimeMillis();
+//				}
 				
 			}
 			
