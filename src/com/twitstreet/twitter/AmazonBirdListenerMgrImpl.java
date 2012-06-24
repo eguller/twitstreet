@@ -40,8 +40,10 @@ public class AmazonBirdListenerMgrImpl implements AmazonBirdListenerMgr {
 	private static Logger logger = Logger.getLogger(AmazonBirdListenerMgrImpl.class);
 	
 	private static String[] FILTER_TERMS = new String[]{
-		"buy diablo",
-		"buy diablo3"
+		"wanna buy diablo",
+		"want to buy diablo",
+		"need diablo",
+		"i love diablo","diablo3"	
 	};
 	
 	private static final long ONE_MIN =  60 * 1000;
@@ -81,6 +83,7 @@ public class AmazonBirdListenerMgrImpl implements AmazonBirdListenerMgr {
 				String screenName = status.getUser().getScreenName();
 				User user = status.getUser();
 				if(user != null && (System.currentTimeMillis() - lastMessage > ONE_MIN)){
+					logger.info("diablobird onstatus:"+screenName+","+status.getText());
 					lastMessage = System.currentTimeMillis();
 					
 					String tweet = "Hey "+screenName+"! You can buy Diablo III from Amazon and play right now!. It's $59.99! http://www.amazon.com/gp/product/B00178630A/ref=as_li_tf_tl?ie=UTF8&tag=amazon-bird-cgds-20";

@@ -243,7 +243,6 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 			try {
 				twitter.updateStatus(new StatusUpdate(message).inReplyToStatusId(statusId));
 				screenName = twitter.getScreenName();
-				logger.info("reply");
 			} catch (TwitterException e) {
 				logger.error("Announcement failed: " + screenName, e);
 			}
@@ -260,6 +259,7 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 			try {
 				twitter.updateStatus(new StatusUpdate(message).inReplyToStatusId(statusId));
 				screenName = twitter.getScreenName();
+				logger.info("replyForDiabloBird");
 			} catch (TwitterException e) {
 				logger.error("Announcement failed: " + screenName, e);
 			}
