@@ -40,10 +40,7 @@ public class AmazonBirdListenerMgrImpl implements AmazonBirdListenerMgr {
 	private static Logger logger = Logger.getLogger(AmazonBirdListenerMgrImpl.class);
 	
 	private static String[] FILTER_TERMS = new String[]{
-		"wanna buy diablo",
-		"want to buy diablo",
-		"need diablo",
-		"i love diablo","diablo3"	
+		"#diablo3"
 	};
 	
 	private static final long ONE_MIN =  60 * 1000;

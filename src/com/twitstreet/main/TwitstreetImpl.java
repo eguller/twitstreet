@@ -158,7 +158,7 @@ public class TwitstreetImpl implements Twitstreet {
 			startDetectInvalidTokensTask();
 			
 			adsListenerMgr.start();
-			amazonbirdListenerMgr.start();
+			//amazonbirdListenerMgr.start();
 		}
 
 	}
