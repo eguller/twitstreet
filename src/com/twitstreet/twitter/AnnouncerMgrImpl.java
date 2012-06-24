@@ -67,7 +67,7 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 					twitstreetGame.setOAuthConsumer(announcer.getConsumerKey(), announcer.getConsumerSecret());
 					twitstreetGame.setOAuthAccessToken(new AccessToken(announcer.getAccessToken(), announcer.getAccessTokenSecret()));
 				}
-				if (DIABLOBIRD.equals(announcer.getName())) {
+				else if (DIABLOBIRD.equals(announcer.getName())) {
 					diablobird = new TwitterFactory().getInstance();
 					diablobird.setOAuthConsumer(announcer.getConsumerKey(), announcer.getConsumerSecret());
 					diablobird.setOAuthAccessToken(new AccessToken(announcer.getAccessToken(), announcer.getAccessTokenSecret()));
