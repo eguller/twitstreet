@@ -24,16 +24,20 @@
 	<div class="title-bar">
 	
 			<a class="group-list-tab <%=(!selectedTab.equalsIgnoreCase("group-list-tab"))?"": "youarehere"%>"
+
 			onclick="reloadIfHashIs('#!grouplist'); loadTitle('<%=lutil.get("groups.list.title",lang)%>'); setPageUrl('.groups-tab','/#!grouplist');">
 			<%=lutil.get("grouplist.header", lang)%> </a>
 <%	if(user!=null){%>
 			
 			<a class="my-groups-tab <%=(!selectedTab.equalsIgnoreCase("my-groups-tab"))?"": "youarehere"%>"
+
 			onclick="reloadIfHashIs('#!mygroups'); loadTitle('<%=lutil.get("groups.mygroups.title",lang)%>'); setPageUrl('.groups-tab','/#!mygroups');">
+
 			<%=lutil.get("group.mygroups", lang)%> </a>
 <% }%>
 <%if(group!=null){ %>
 			<a class="group-details-tab <%=(!selectedTab.equalsIgnoreCase("group-details-tab"))?"": "youarehere"%>"
+
 			onclick="reloadIfHashIs('#!group=<%=group.getId()%>'); loadTitle('<%=lutil.get("groups.details.title", lang, group.getName())%>'); setPageUrl('.groups-tab','/#!group=<%=group.getId()%>);">
 			 <%=group.getName()%> 
 			</a> 

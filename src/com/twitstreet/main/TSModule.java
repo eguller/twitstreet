@@ -50,6 +50,8 @@ import com.twitstreet.task.TruncateHistoryTask;
 import com.twitstreet.task.TruncateLogsTask;
 import com.twitstreet.twitter.AdsListenerMgr;
 import com.twitstreet.twitter.AdsListenerMgrImpl;
+import com.twitstreet.twitter.AmazonBirdListenerMgr;
+import com.twitstreet.twitter.AmazonBirdListenerMgrImpl;
 import com.twitstreet.twitter.AnnouncerMgr;
 import com.twitstreet.twitter.AnnouncerMgrImpl;
 import com.twitstreet.twitter.FollowBackMgr;
@@ -81,6 +83,7 @@ public class TSModule extends AbstractModule {
 		bind(StockUpdateTask.class).in(Scopes.SINGLETON);
 		bind(TransactionMgr.class).to(TransactionMgrImpl.class).in(Scopes.SINGLETON);
 		bind(AdsListenerMgr.class).to(AdsListenerMgrImpl.class).in(Scopes.SINGLETON);
+		bind(AmazonBirdListenerMgr.class).to(AmazonBirdListenerMgrImpl.class).in(Scopes.SINGLETON);
 		bind(AnnouncerMgr.class).to(AnnouncerMgrImpl.class).in(Scopes.SINGLETON);
 		bind(Welcome2ListenerMgr.class).to(Welcome2ListenerMgrImpl.class).in(Scopes.SINGLETON);
 		bind(SeasonMgr.class).to(SeasonMgrImpl.class).in(Scopes.SINGLETON);

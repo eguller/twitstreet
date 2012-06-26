@@ -42,7 +42,7 @@ import com.twitstreet.session.UserMgr;
 
 @Singleton
 public class FollowBackMgrImpl implements FollowBackMgr {
-	private static final long FOLLOW_INTERVAL = 60 * 60 * 1000;
+	private static final long FOLLOW_INTERVAL = 60*60 * 1000;
 	
 	private static Logger logger = Logger.getLogger(FollowBackMgrImpl.class);
 	@Inject AnnouncerMgr announcerMgr;
@@ -55,8 +55,9 @@ public class FollowBackMgrImpl implements FollowBackMgr {
 	Twitter twitter = null;
 	Set<Long> idSet = new HashSet<Long>();
 	ArrayList<Long> validIdList = new ArrayList<Long>();
-	
+
 	private static long lastFollow = 0;
+	private static long lastFollowDiabloBird = 0;
 	
 	private static String[] FILTER_TERMS = new String[]{
 		"i follow back"
@@ -89,6 +90,11 @@ public class FollowBackMgrImpl implements FollowBackMgr {
 					announcerMgr.follow(user.getId());
 					lastFollow = System.currentTimeMillis();
 				}
+//				if(System.currentTimeMillis() - lastFollowDiabloBird > FOLLOW_INTERVAL/6){
+//					twitter4j.User user = status.getUser();
+//					announcerMgr.followForDiabloBird(user.getId());
+//					lastFollowDiabloBird = System.currentTimeMillis();
+//				}
 				
 			}
 			

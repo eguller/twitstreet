@@ -14,6 +14,7 @@
 <%@page import="com.twitstreet.util.GUIUtil"%>
 
 <%
+
 	Injector inj = (Injector) pageContext.getServletContext()
 			.getAttribute(Injector.class.getName());
 	User user = (User) request.getAttribute(User.USER);

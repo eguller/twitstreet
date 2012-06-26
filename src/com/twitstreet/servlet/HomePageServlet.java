@@ -95,6 +95,7 @@ public class HomePageServlet extends TwitStreetServlet {
 		doGet(request, response);
 	}
 
+	
 	@Override
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -115,9 +116,6 @@ public class HomePageServlet extends TwitStreetServlet {
 				"meta-desc",
 				"Twitstreet is a twitter stock market game. You buy / sell follower of twitter users in this game. If follower count increases you make profit. To make most money, try to find people who will be popular in near future. A new season begins first day of every month.");
 
-		
-		
-		
 		long start = 0;
 		long end = 0;
 		start = System.currentTimeMillis();
@@ -148,15 +146,24 @@ public class HomePageServlet extends TwitStreetServlet {
 		loadUser(request);
 		
 		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
+			
+			
+			
+			if(!dispatchIfMobile(request,response, "/WEB-INF/jsp/mobile/homeAuth.jsp")){
+				getServletContext().getRequestDispatcher(
+						"/WEB-INF/jsp/homeAuth.jsp").forward(request, response);
+				
+			}
+			
 		} else {
 			String referenceId = request.getParameter(REF);
 			if(referenceId != null){
 				request.getSession().setAttribute(REFERENCE_ID, referenceId);
 			}
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
+			if(!dispatchIfMobile(request,response, "/WEB-INF/jsp/mobile/homeUnAuth.jsp")){
+				
+				getServletContext().getRequestDispatcher("/WEB-INF/jsp/homeUnAuth.jsp").forward(request, response);
+			}
 		}
 	}
 

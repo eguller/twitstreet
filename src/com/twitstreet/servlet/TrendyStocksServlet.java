@@ -59,11 +59,12 @@ public class TrendyStocksServlet extends TwitStreetServlet {
 		request.setAttribute("stockList", stocks);
 		request.setAttribute("stockListName", "suggested");
 		request.setAttribute("stockListName", SUGGESTED);
-		try {
-			getServletContext().getRequestDispatcher(
-					"/WEB-INF/jsp/suggestedStocks.jsp").forward(request, response);
+		
+		try {			
+			if(!dispatchIfMobile(request, response, "/WEB-INF/jsp/mobile/market/suggestedStocks.jsp")){
+				getServletContext().getRequestDispatcher("/WEB-INF/jsp/suggestedStocks.jsp").forward(request, response);
+			}			
 		} catch (ServletException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

@@ -47,7 +47,7 @@ public class NewSeasonInfoSentTask implements Runnable {
 			for(User user : userList){
 				int seasonInfoMessageId = (int)( Math.random() * SEASONINFO_SIZE );
 				String message = lutil.get("seasoninfo." + seasonInfoMessageId, user.getLanguage());
-				announcerMgr.announceFromAnnouncer(Util.mentionMessage(user.getUserName(), message));
+				announcerMgr.announceFromRandomAnnouncer(Util.mentionMessage(user.getUserName(), message));
 			}
 			try {
 				Thread.sleep(FIFTEEN_MINUTE);

@@ -18,6 +18,11 @@ $(document).ready(function() {
 		setInterval(reloadPortfolio, reloadInterval);
 		setInterval(reloadWatchList, reloadInterval);
 	}
+
+		
+	if (location.hash== "") {
+		location.hash = "!" + defaultStocksCommand;
+	}
 //	showTabMain(".stocks-tab");
 
 });

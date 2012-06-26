@@ -74,8 +74,13 @@ public class StockDetailsServlet extends TwitStreetServlet {
 
 		
 		request.setAttribute(HomePageServlet.SELECTED_TAB_STOCK_BAR, "stock-details-tab");
-		getServletContext().getRequestDispatcher("/WEB-INF/jsp/dashboard.jsp")
-				.forward(request, response);
+		
+		if(!dispatchIfMobile(request,response, "/WEB-INF/jsp/mobile/stockdetails/stockDetails.jsp")){
+			getServletContext().getRequestDispatcher("/WEB-INF/jsp/dashboard.jsp")
+			.forward(request, response);
+			
+		}
+
 
 	}
 

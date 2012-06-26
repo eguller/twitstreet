@@ -21,12 +21,18 @@
 <div id="main-menu">
 	<div class="title-bar">
 		<div class="main-tabs">
+
 			<a class="stocks-tab" href="/#!suggestedstocks"
 				onclick="showTabMain('.stocks-tab'); loadTitle('<%=lutil.get("stocks.title", lang)%>');"> <%=lutil.get("stocks", lang)%>
+
 			</a> 
+
 			<a class="users-tab" href="/#!topgrossingusers" onclick="showTabMain('.users-tab'); loadTitle('<%=lutil.get("users.title", lang)%>');"> <%=lutil.get("users", lang)%>
+
 			</a>	 
+
 			<a class="groups-tab" href="/#!grouplist" onclick="showTabMain('.groups-tab'); loadTitle('<%=lutil.get("groups.title",lang)%>');"> <%=lutil.get("groups", lang)%>
+
 			</a>	
 			<a class="oldseasons-tab" href="/#!seasonresults" onclick="showTabMain('.oldseasons-tab'); loadTitle('<%=lutil.get("oldseasons.title", lang)%>');"> <%=lutil.get("season.oldseasons", lang)%>
 			</a>

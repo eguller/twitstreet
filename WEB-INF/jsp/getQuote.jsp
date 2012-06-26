@@ -62,7 +62,7 @@
 		<div>
 			<input type="text" class="textbox" id="getQuoteTextboxId" value="<%=quote%>"  onFocus="if(this.value == 'Enter Your Default Text Here') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter Your Default Text Here';}"
 				name="quote" /> <input type="button" id="getQuoteButton"
-				onclick="reloadIfHashIs('#!searchstock='+$('#getQuoteTextboxId').val());window.location = '#!searchstock='+$('#getQuoteTextboxId').val(); loadTitle('<%= lutil.get("stocks.search.title", lang, quote) %>)"  value="<%=lutil.get("shared.search", lang) %>">
+				onclick="reloadIfHashIs('#!searchstock='+$('#getQuoteTextboxId').val());window.location = '#!searchstock='+$('#getQuoteTextboxId').val(); loadTitle('<%= lutil.get("stocks.search.title", lang, quote) %>')"  value="<%=lutil.get("shared.search", lang) %>">
 			<script>
 				jQuery('#getQuoteTextboxId').click(function() {
 					selectAllText(jQuery(this))
