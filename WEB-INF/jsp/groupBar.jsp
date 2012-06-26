@@ -17,10 +17,7 @@
 	GroupMgr userMgr = inj.getInstance(GroupMgr.class);
 	Group group = null;
 	group = (group == null) ? (Group) request.getAttribute(GroupDetailsServlet.GROUP) : group;
-// 	group = (group == null) ? (Group) request.getAttribute(GetGroupServlet.GET_GROUP) : group;
 	User user = (User) request.getAttribute(User.USER);
-
-	
 	String selectedTab = (String) request.getAttribute(HomePageServlet.SELECTED_TAB_GROUP_BAR);
 %>
 <div class="main-tabs" style="width: 100%;">
@@ -39,8 +36,7 @@
 			<a class="group-details-tab <%=(!selectedTab.equalsIgnoreCase("group-details-tab"))?"": "youarehere"%>"
 			onclick="reloadIfHashIs('#!group=<%=group.getId()%>'); loadTitle('<%=lutil.get("groups.details.title", lang, group.getName())%>'); setPageUrl('.groups-tab','/#!group=<%=group.getId()%>);">
 			 <%=group.getName()%> 
-					<%-- <%=lutil.get("groupdetails", lang)%> --%>
-		</a> 
+			</a> 
 <%} %>
 	</div>
 </div>
