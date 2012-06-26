@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -36,6 +37,10 @@ import com.twitstreet.config.ConfigMgr;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.RankingData;
+import com.twitstreet.db.data.User;
+import com.twitstreet.localization.LocalizationUtil;
+import com.twitstreet.session.UserMgr;
+import com.twitstreet.twitter.AnnouncerMgr;
 
 @Singleton
 public class SeasonMgrImpl implements SeasonMgr {
@@ -49,12 +54,16 @@ public class SeasonMgrImpl implements SeasonMgr {
 
 	@Inject
 	DBMgr dbMgr;
+	@Inject UserMgr userMgr;
+	@Inject AnnouncerMgr announcerMgr;
 
 	private ArrayList<SeasonInfo> allSeasons = new ArrayList<SeasonInfo>();
 
 	@Inject
 	ConfigMgr configMgr;
 	private SeasonInfo currentSeason;
+	
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
 
 	@Override
 	public SeasonInfo getSeasonInfo(int id) {
@@ -216,8 +225,17 @@ public class SeasonMgrImpl implements SeasonMgr {
 		
 		Date nowDate = new Date();
 		
-		long now = nowDate.getTime();
-		long endTime = getCurrentSeason().getEndTime().getTime();
+		List<User> userList = userMgr.getTopNUsers(3);
+		if(userList.size() == 3){
+			announcerMgr.announceFromTwitStreetGame(lutil.get("season.result", LocalizationUtil.DEFAULT_LANGUAGE, 
+					new Object[]{
+						current.getId(), 
+						userList.get(0).getUserName(), userList.get(0).getTotal(),
+						userList.get(1).getUserName(), userList.get(1).getTotal(),
+						userList.get(2).getUserName(), userList.get(2).getTotal()
+					}
+			));
+		}
 		
 		try {
 			connection = dbMgr.getConnection();

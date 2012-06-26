@@ -1026,16 +1026,16 @@ public class UserMgrImpl implements UserMgr {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		User userDO = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
-					+ " order by rank asc limit ?");
+			ps = connection.prepareStatement("select id, userName, (cash + portfolio_value(id) - loan) as total from users order by total desc limit ?");
 			ps.setInt(1, n);
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				userDO = new User();
-				userDO.getDataFromResultSet(rs);
+				User userDO = new User();
+				userDO.setId(rs.getLong("id"));
+				userDO.setUserName(rs.getString("userName"));
+				userDO.setTotal(rs.getDouble("total"));
 				userList.add(userDO);
 			}
 
