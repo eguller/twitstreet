@@ -560,39 +560,6 @@ public class StockMgrImpl implements StockMgr {
 		return stockList;
 	}
 
-	@Override
-	public List<Stock> getUpdateRequiredStocksByServer() {
-		ArrayList<Stock> stockList = new ArrayList<Stock>();
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement(SELECT_DISTINCT_FROM_STOCK
-							+ " where (TIMESTAMPDIFF(minute, lastUpdate, now())  > ?  or lastUpdate is null) "
-							+ " and (" + STOCK_IN_PORTFOLIO + " or "
-							+ STOCK_IN_WATCHLIST + " or "
-							+ STOCK_IN_TWITTER_TRENDS + " )"
-							+ " and mod(id, ?) = ?");
-
-			ps.setLong(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES);
-			ps.setInt(2, configMgr.getServerCount());
-			ps.setInt(3, configMgr.getServerId());
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				Stock stockDO = new Stock();
-				stockDO.getDataFromResultSet(rs);
-				stockList.add(stockDO);
-			}
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-		return stockList;
-	}
 
 	@Override
 	public List<TrendyStock> getTopGrossedStocks(int forhours) {
@@ -650,29 +617,6 @@ public class StockMgrImpl implements StockMgr {
 					.prepareStatement("update stock set changePerHour = NULL"
 							+ " where TIMESTAMPDIFF(minute, lastUpdate,now()) > ?");
 			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES * 3);
-			ps.executeUpdate();
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, null);
-		}
-	}
-
-	@Override
-	public void resetSpeedOfOldStocksByServer() {
-		Connection connection = null;
-		PreparedStatement ps = null;
-
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("update stock set changePerHour = NULL"
-							+ " where TIMESTAMPDIFF(minute, lastUpdate,now()) > ? and mod(id, ?) = ?");
-			ps.setInt(1, StockUpdateTask.LAST_UPDATE_DIFF_MINUTES * 3);
-			ps.setInt(2, configMgr.getServerCount());
-			ps.setInt(3, configMgr.getServerId());
 			ps.executeUpdate();
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -915,30 +859,6 @@ public class StockMgrImpl implements StockMgr {
 			ps = connection
 					.prepareStatement(" delete from announcement where timestampdiff(minute,timeSent,now()) > ? ");
 			ps.setInt(1, olderThanMinutesOld);
-			ps.executeUpdate();
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-
-		} catch (SQLException e) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), e);
-
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-	}
-
-	@Override
-	public void removeOldRecordsByServer(int removeOlderThanMinutes) {
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement(" delete from announcement where timestampdiff(minute,timeSent,now()) > ? and mod(stock_id, ?) = ?");
-			ps.setInt(1, removeOlderThanMinutes);
-			ps.setInt(2, configMgr.getServerCount());
-			ps.setInt(3, configMgr.getServerId());
 			ps.executeUpdate();
 
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());

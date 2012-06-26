@@ -892,35 +892,6 @@ public class UserMgrImpl implements UserMgr {
 	}
 
 	@Override
-	public List<User> getUserListByServer() {
-		List<User> userList = new ArrayList<User>();
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		User userDO = null;
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
-					+ " and mod(id, ?) = ?");
-			ps.setInt(1, configMgr.getServerCount());
-			ps.setInt(2, configMgr.getServerId());
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				userDO = new User();
-				userDO.getDataFromResultSet(rs);
-				userList.add(userDO);
-			}
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-		return userList;
-	}
-
-	@Override
 	public ArrayList<User> getTopGrossingUsers(int limit) {
 		ArrayList<User> userList = new ArrayList<User>();
 		Connection connection = null;

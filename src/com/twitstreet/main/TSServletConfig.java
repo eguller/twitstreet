@@ -43,7 +43,6 @@ import com.twitstreet.servlet.HomePageServlet;
 
 import com.twitstreet.servlet.LanguageServlet;
 import com.twitstreet.servlet.LoanServlet;
-import com.twitstreet.servlet.MarketServlet;
 import com.twitstreet.servlet.NewUsersServlet;
 import com.twitstreet.servlet.PortfolioServlet;
 import com.twitstreet.servlet.SeasonServlet;
@@ -95,8 +94,6 @@ public class TSServletConfig extends GuiceServletContextListener {
 			@Override
 			protected void configureServlets() {
 				serve("/").with(HomePageServlet.class);
-				serve("/market").with(MarketServlet.class);
-				serve("/market/").with(MarketServlet.class);
 				serve("/signin").with(SigninServlet.class);
 				serve("/callback").with(CallBackServlet.class);
 				//serve("/getQuote").with(CallBackServlet.class);				

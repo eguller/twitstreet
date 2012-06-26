@@ -69,7 +69,7 @@ public class TruncateLogsTask implements Runnable {
 				for (File file : fileList) {
 					String logStr = readFile(file);
 					try {
-						mailMgr.sendMail("Server "+configMgr.getServerId()+" : "+ file.getName(), logStr);
+						mailMgr.sendMail(file.getName(), logStr);
 						logger.info("Sent log file: " + file.getName());
 						filesToBeDeleted.add(file);
 						

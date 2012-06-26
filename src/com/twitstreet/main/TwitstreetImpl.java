@@ -97,11 +97,9 @@ public class TwitstreetImpl implements Twitstreet {
 		seasonMgr.loadSeasonInfo();
 		announcerMgr.loadAnnouncers();
 
-		if (configMgr.isDev() || !configMgr.isMaster()) {
-			startSecondaryServerTasks();
-		}
-		if ( configMgr.isDev() || configMgr.isMaster() ) {
-			startPrimaryServerTasks();
+
+		if ( configMgr.isDev()) {
+			startTasks();
 		}
 
 		startCommonTasks();
@@ -125,7 +123,6 @@ public class TwitstreetImpl implements Twitstreet {
 		String mailDealerPassword= properties.getProperty(Twitstreet.MAIL_DEALER_PWD);
 		String mailRecipients = properties.getProperty(Twitstreet.MAIL_RECIPIENTS);
 
-		int serverId = properties.getProperty(ConfigMgr.SERVER_ID) == null ? 0 : Integer.parseInt(properties.getProperty(ConfigMgr.SERVER_ID));
 		boolean dev = properties.getProperty(ConfigMgr.STAGE) == null ? true : properties.getProperty(ConfigMgr.STAGE).equalsIgnoreCase(ConfigMgr.DEV);
 		int dbPort = Integer.parseInt(dbPortStr);
 
@@ -136,7 +133,6 @@ public class TwitstreetImpl implements Twitstreet {
 		dbMgr.setDbPort(dbPort);
 		dbMgr.init();
 		configMgr.load();
-		configMgr.setServerId(serverId);
 		configMgr.setDev(dev);
 		configMgr.setMailDealer(mailDealer);		
 		configMgr.setMailDealerPassword(mailDealerPassword);
@@ -144,12 +140,8 @@ public class TwitstreetImpl implements Twitstreet {
 
 	}
 
-	private void startPrimaryServerTasks() {
+	private void startTasks() {
 		startNewSeasonTask();
-	}
-
-	private void startSecondaryServerTasks() {
-
 		startStockUpdateTask();
 		startUserInfoUpdateTask();
 		
@@ -160,8 +152,8 @@ public class TwitstreetImpl implements Twitstreet {
 			adsListenerMgr.start();
 			//amazonbirdListenerMgr.start();
 		}
-
 	}
+
 	private void startCommonTasks() {
 		if (!configMgr.isDev()) {
 			startNewSeasonInfoSentTask();

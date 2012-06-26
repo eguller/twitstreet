@@ -141,16 +141,6 @@ public class ConfigMgrImpl implements ConfigMgr{
 	}
 
 	@Override
-	public int getServerId() {
-		return serverId;
-	}
-
-	@Override
-	public void setServerId(int serverId) {
-		this.serverId = serverId;
-	}
-
-	@Override
 	public String getAnnouncerConsumerKey() {
 		return get(ConfigMgr.ANNOUNCER_CONSUMER_KEY);
 	}
@@ -178,11 +168,6 @@ public class ConfigMgrImpl implements ConfigMgr{
 	@Override
 	public void setDev(boolean dev) {
 		this.dev = dev;
-	}
-
-	@Override
-	public boolean isMaster() {
-		return ConfigMgr.masterIdSet.contains(getServerId());
 	}
 
 	@Override

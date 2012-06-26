@@ -90,9 +90,6 @@ public interface StockMgr {
 
 	List<TrendyStock> getTopGrossedStocks(int forhours);
 
-	public List<Stock> getUpdateRequiredStocksByServer();
-	public void resetSpeedOfOldStocksByServer();
-
 	void updateStockListData(ArrayList<Long> id);
 
 	List<Stock> getUpdateRequiredStocks(int limit);
@@ -108,7 +105,6 @@ public interface StockMgr {
 	
 	public boolean addStockIntoAnnouncement(long stockid);
 	public void removeOldRecords(int removeOlderThanMinutes);
-	public void removeOldRecordsByServer(int removeOlderThanMinutes);
 
 	public void saveTrend(long id);
 	

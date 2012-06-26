@@ -64,7 +64,6 @@ public interface UserMgr {
 	
 	public void updateTwitterData(User user);
 	
-	public List<User> getUserListByServer();
 	public ArrayList<User> getTopGrossingUsers(int limit);
 	
 	public void invite(long invitor, long invited);

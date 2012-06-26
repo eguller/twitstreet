@@ -18,7 +18,5 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/twitter4j-stream-2.2.5.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mailapi.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/smtp.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/wurfl-1.4.0.1-javadoc.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/wurfl-1.4.0.1.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

@@ -61,11 +61,8 @@ public interface ConfigMgr {
 	public int getComissionTreshold();
 	public int getServerCount();
 	public void setServerCount(int serverCount);
-	public int getServerId();
-	public void setServerId(int serverId);
 	public boolean isDev();
 	public void setDev(boolean dev);
-	public boolean isMaster();
 	
 	public String getMailDealer();
 	public String getMailDealerPassword();

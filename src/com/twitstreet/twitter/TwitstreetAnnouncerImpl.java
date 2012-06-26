@@ -121,28 +121,4 @@ public class TwitstreetAnnouncerImpl implements TwitstreetAnnouncer {
 			dbMgr.closeResources(connection, ps, rs);
 		}
 	}
-
-	@Override
-	public void removeOldRecordsByServer(int removeOlderThanMinutes) {
-		Connection connection = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement(" delete from announcement where timestampdiff(minute,timeSent,now()) > ? and mod(stock_id, ?) = ?");
-			ps.setInt(1, removeOlderThanMinutes);
-			ps.setInt(2, configMgr.getServerCount());
-			ps.setInt(3, configMgr.getServerId());
-			ps.executeUpdate();
-
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-
-		} catch (SQLException e) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), e);
-
-		} finally {
-			dbMgr.closeResources(connection, ps, rs);
-		}
-	}
 }
