@@ -19,6 +19,7 @@
 package com.twitstreet.servlet;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -149,6 +150,8 @@ public class TwitStreetServlet extends HttpServlet {
 					if (user != null && oAuth.equals(user.getOauthToken())) {
 						request.setAttribute(User.USER, user);
 						request.getSession().setAttribute(User.USER_ID, user.getId());
+						userMgr.updateUserLastLoginDate(user.getId(), Calendar.getInstance().getTime());
+						userMgr.updateAutoPlayerStatus(user.getId(), false);
 						break;
 					}
 				} catch (NumberFormatException nfe) {

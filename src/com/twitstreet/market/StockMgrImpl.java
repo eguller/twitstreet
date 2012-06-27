@@ -750,11 +750,6 @@ public class StockMgrImpl implements StockMgr {
 		return stockList;
 	}
 
-	private java.util.Date getFirstTweetDate(long stockId) {
-		return getTwitterProxy().getFirstTweetDate(stockId);
-
-	}
-
 	private ArrayList<Long> getTwitterTrendsAndSaveAsStock() {
 
 		ArrayList<Long> idList = new ArrayList<Long>();

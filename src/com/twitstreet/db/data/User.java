@@ -52,6 +52,7 @@ public class User implements DataObjectIF {
     String language;
     boolean newSeasonInfoSent = true;
     String url;
+    boolean autoPlayer = false;
 
     @Inject TwitterProxy twitterProxy = null;
 
@@ -321,6 +322,14 @@ public class User implements DataObjectIF {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public boolean isAutoPlayer() {
+		return autoPlayer;
+	}
+
+	public void setAutoPlayer(boolean autoPlayer) {
+		this.autoPlayer = autoPlayer;
 	}
 }
 

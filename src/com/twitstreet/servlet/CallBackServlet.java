@@ -120,6 +120,7 @@ public class CallBackServlet extends TwitStreetServlet {
 				user.setLastIp(request.getRemoteHost());
 				user.setOauthToken(oauthToken);
 				user.setOauthTokenSecret(oauthTokenSecret);
+				user.setAutoPlayer(false);
 				userMgr.updateUser(user);
 			}
 			request.getSession().setAttribute(User.USER_ID, user.getId());

@@ -20,6 +20,7 @@ package com.twitstreet.session;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.twitstreet.db.data.RankingHistoryData;
@@ -92,4 +93,8 @@ public interface UserMgr {
 	public void payAllLoanBack(long userId);
 	public void applyLoanInterest();
 	public void bankrupt(Long userId);
+	public List<User> getAllAutoPlayers();
+	public void updateUserLastLoginDate(long userId, Date date);
+	public void detectAutoPlayers();
+	public void updateAutoPlayerStatus(long userId, boolean autoPlayer);
 }

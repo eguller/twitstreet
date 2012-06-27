@@ -45,6 +45,7 @@ import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.GroupMgrImpl;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.session.UserMgrImpl;
+import com.twitstreet.task.AutoPlayerTask;
 import com.twitstreet.task.StockUpdateTask;
 import com.twitstreet.task.TruncateHistoryTask;
 import com.twitstreet.task.TruncateLogsTask;
@@ -89,6 +90,7 @@ public class TSModule extends AbstractModule {
 		bind(SeasonMgr.class).to(SeasonMgrImpl.class).in(Scopes.SINGLETON);
 		bind(FollowBackMgr.class).to(FollowBackMgrImpl.class).in(Scopes.SINGLETON);
 		bind(TruncateHistoryTask.class).in(Scopes.SINGLETON);
+		bind(AutoPlayerTask.class).in(Scopes.SINGLETON);
 		install(new FactoryModuleBuilder()
 	     .implement(TwitterProxy.class, TwitterProxyImpl.class)
 	     .build(TwitterProxyFactory.class));

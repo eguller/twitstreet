@@ -53,14 +53,16 @@ public class UserMgrImpl implements UserMgr {
 	GroupMgr groupMgr;
 	@Inject
 	SeasonMgr seasonMgr;
+
+	private static final int AUTOPLAYER_DAY_LIMIT = 30;
+
 	static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static Logger logger = Logger.getLogger(UserMgrImpl.class);
 	private static String SELECT_FROM_RANKING_HISTORY = " select "
-	+ " rh.season_id as season_id, "
-	+ " rh.user_id as user_id, " + " rh.cash as cash, "
-	+ " rh.portfolio as portfolio, " + " rh.rank as rank, "+ " rh.loan as loan, "
-	+ " rh.lastUpdate as lastUpdate "
-	+ " from ranking_history rh ";
+			+ " rh.season_id as season_id, " + " rh.user_id as user_id, "
+			+ " rh.cash as cash, " + " rh.portfolio as portfolio, "
+			+ " rh.rank as rank, " + " rh.loan as loan, "
+			+ " rh.lastUpdate as lastUpdate " + " from ranking_history rh ";
 	private static String SELECT_FROM_USERS_RANKING = "select " + "id, "
 			+ "userName, " + "longName, " + "lastLogin, " + "firstLogin, "
 			+ "users.cash as cash, " + "lastIp, " + "oauthToken, "
@@ -68,8 +70,9 @@ public class UserMgrImpl implements UserMgr {
 			+ "valueCumulative, rankCumulative," + "rank, " + "oldRank, "
 			+ "direction, " + "pictureUrl, "
 			+ "portfolio_value(id) as portfolio, "
-			+ " users.cash+portfolio_value(id)-users.loan as total, " + "description, "
-			+ "location, " + "inviteActive, " + "language, " + " users.loan, " + "users.url "
+			+ " users.cash+portfolio_value(id)-users.loan as total, "
+			+ "description, " + "location, " + "inviteActive, " + "language, "
+			+ " users.loan, " + "users.url, " + "users.autoplayer "
 			+ "from users,ranking ";
 
 	private static String SELECT_FROM_USERS_JOIN_RANKING = SELECT_FROM_USERS_RANKING
@@ -300,14 +303,15 @@ public class UserMgrImpl implements UserMgr {
 			ps = connection
 					.prepareStatement("update users set userName = ?, "
 							+ "lastLogin = now(), "
-							+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ?, pictureUrl = ?, url = ? where id = ?");
+							+ "lastIp = ?, oauthToken = ?, oauthTokenSecret = ?, pictureUrl = ?, url = ?, autoplayer = ?  where id = ?");
 			ps.setString(1, user.getUserName());
 			ps.setString(2, user.getLastIp());
 			ps.setString(3, user.getOauthToken());
 			ps.setString(4, user.getOauthTokenSecret());
 			ps.setString(5, user.getPictureUrl());
 			ps.setString(6, user.getUrl());
-			ps.setLong(7, user.getId());
+			ps.setBoolean(7, user.isAutoPlayer());
+			ps.setLong(8, user.getId());
 			ps.executeUpdate();
 
 			// just in case...
@@ -675,9 +679,9 @@ public class UserMgrImpl implements UserMgr {
 		}
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SELECT_FROM_RANKING_HISTORY + "  where user_id = ? "
-					+ " and rh.lastUpdate >= " + fromStr
-					+ " and rh.lastUpdate <= " + toStr
+			ps = connection.prepareStatement(SELECT_FROM_RANKING_HISTORY
+					+ "  where user_id = ? " + " and rh.lastUpdate >= "
+					+ fromStr + " and rh.lastUpdate <= " + toStr
 					+ " order by lastUpdate asc ");
 			ps.setLong(1, id);
 			rs = ps.executeQuery();
@@ -1028,7 +1032,8 @@ public class UserMgrImpl implements UserMgr {
 		ResultSet rs = null;
 		try {
 			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement("select id, userName, (cash + portfolio_value(id) - loan) as total from users order by total desc limit ?");
+			ps = connection
+					.prepareStatement("select id, userName, (cash + portfolio_value(id) - loan) as total from users order by total desc limit ?");
 			ps.setInt(1, n);
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -1107,7 +1112,7 @@ public class UserMgrImpl implements UserMgr {
 		try {
 			user = getUserById(userId);
 			if (user != null && user.getLoan() < UserMgr.MAX_LOAN) {
-				if ( user.getLoan() + amount > UserMgr.MAX_LOAN ){
+				if (user.getLoan() + amount > UserMgr.MAX_LOAN) {
 					amount = UserMgr.MAX_LOAN - user.getLoan();
 				}
 				connection = dbMgr.getConnection();
@@ -1132,7 +1137,7 @@ public class UserMgrImpl implements UserMgr {
 		PreparedStatement ps = null;
 		try {
 			connection = dbMgr.getConnection();
-			
+
 			ps = connection
 					.prepareStatement("update users set loan = (case when cash < ? then loan - cash else loan - ? end), cash = (case when ? > cash then 0 else cash - ? end) where id = ?");
 			ps.setDouble(1, amount);
@@ -1155,18 +1160,20 @@ public class UserMgrImpl implements UserMgr {
 		PreparedStatement ps = null;
 		User user = getUserById(userId);
 		try {
-			if(user != null){
-			double loan = user.getCash() >= user.getLoan() ? 0 : user.getLoan() - user.getCash();
-			double cash = user.getLoan() >= user.getCash() ? 0 : user.getCash() - user.getLoan();
-			
-			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("update users set loan = ? , cash = ? where id = ?");
-			ps.setDouble(1, loan);
-			ps.setDouble(2, cash);
-			ps.setLong(3, userId);
-			ps.executeUpdate();
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+			if (user != null) {
+				double loan = user.getCash() >= user.getLoan() ? 0 : user
+						.getLoan() - user.getCash();
+				double cash = user.getLoan() >= user.getCash() ? 0 : user
+						.getCash() - user.getLoan();
+
+				connection = dbMgr.getConnection();
+				ps = connection
+						.prepareStatement("update users set loan = ? , cash = ? where id = ?");
+				ps.setDouble(1, loan);
+				ps.setDouble(2, cash);
+				ps.setLong(3, userId);
+				ps.executeUpdate();
+				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 			}
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
@@ -1200,31 +1207,120 @@ public class UserMgrImpl implements UserMgr {
 		CallableStatement cs = null;
 		User user = getUserById(userId);
 		try {
-			if(user != null){
-			
-			connection = dbMgr.getConnection();
-			ps = connection
-					.prepareStatement("update users set loan = 0 , cash = ? where id = ?");
+			if (user != null) {
 
-			ps.setDouble(1, configMgr.getInitialMoney() );
-			ps.setLong(2, userId);
-			ps.executeUpdate();
-			ps = connection
-					.prepareStatement("delete from portfolio where user_id = ?");
+				connection = dbMgr.getConnection();
+				ps = connection
+						.prepareStatement("update users set loan = 0 , cash = ? where id = ?");
 
-			ps.setLong(1, userId);
-			ps.executeUpdate();
+				ps.setDouble(1, configMgr.getInitialMoney());
+				ps.setLong(2, userId);
+				ps.executeUpdate();
+				ps = connection
+						.prepareStatement("delete from portfolio where user_id = ?");
 
-			cs = connection.prepareCall("{call rerank()}");
-			cs.execute();
-			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+				ps.setLong(1, userId);
+				ps.executeUpdate();
+
+				cs = connection.prepareCall("{call rerank()}");
+				cs.execute();
+				logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
 			}
 		} catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
 			dbMgr.closeResources(connection, ps, null);
 		}
-		
-		
+	}
+
+	@Override
+	public List<User> getAllAutoPlayers() {
+		List<User> userList = new ArrayList<User>();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User userDO = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection.prepareStatement(SELECT_FROM_USERS_JOIN_RANKING
+					+ " and autoplayer=true");
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				userDO = new User();
+				userDO.getDataFromResultSet(rs);
+				userList.add(userDO);
+			}
+
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, rs);
+		}
+		return userList;
+	}
+
+	@Override
+	public void updateUserLastLoginDate(long userId, java.util.Date date) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set lastLogin = ?  where id = ?");
+			ps.setDate(1, new Date(date.getTime()));
+			ps.setLong(2, userId);
+			ps.executeUpdate();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
+
+	@Override
+	public void detectAutoPlayers() {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set autoplayer = true  where datediff(now(),lastLogin) > ?");
+			ps.setInt(1, AUTOPLAYER_DAY_LIMIT);
+			ps.executeUpdate();
+			
+			ps.close();
+			
+			ps = connection
+			.prepareStatement("update users set autoplayer = false  where datediff(now(),lastLogin) < ?");
+			ps.setInt(1, AUTOPLAYER_DAY_LIMIT);
+			ps.executeUpdate();
+			
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
+	}
+
+	@Override
+	public void updateAutoPlayerStatus(long userId, boolean autoplayer) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = dbMgr.getConnection();
+			ps = connection
+					.prepareStatement("update users set autoplayer = ?  where id = ?");
+			ps.setBoolean(1, autoplayer);
+			ps.setLong(2, userId);
+			ps.executeUpdate();
+			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
+		} catch (SQLException ex) {
+			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
+		} finally {
+			dbMgr.closeResources(connection, ps, null);
+		}
 	}
 }

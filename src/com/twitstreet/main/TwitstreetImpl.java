@@ -37,6 +37,7 @@ import com.twitstreet.market.StockMgr;
 import com.twitstreet.season.SeasonMgr;
 import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
+import com.twitstreet.task.AutoPlayerTask;
 import com.twitstreet.task.DetectInvalidTokensTask;
 import com.twitstreet.task.NewSeasonInfoSentTask;
 import com.twitstreet.task.NewSeasonTask;
@@ -144,13 +145,11 @@ public class TwitstreetImpl implements Twitstreet {
 		startNewSeasonTask();
 		startStockUpdateTask();
 		startUserInfoUpdateTask();
-		
+		startAutoPlayerTask();
 		if (!configMgr.isDev()) {
 			startTruncateHistoryTask();
 			startDetectInvalidTokensTask();
-			
 			adsListenerMgr.start();
-			//amazonbirdListenerMgr.start();
 		}
 	}
 
@@ -163,6 +162,12 @@ public class TwitstreetImpl implements Twitstreet {
 		}
 	}
 	
+	private void startAutoPlayerTask(){
+		AutoPlayerTask autoPlayerTask = injector.getInstance(AutoPlayerTask.class);
+		Thread autoPlayerTaskThread = new Thread(autoPlayerTask);
+		autoPlayerTaskThread.setName("Auto Player Task Thread");
+		autoPlayerTaskThread.start();
+	}
 
 	private void startNewSeasonTask() {
 		NewSeasonTask newSeasonTask = injector.getInstance(NewSeasonTask.class);
