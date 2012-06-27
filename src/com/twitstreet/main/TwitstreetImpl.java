@@ -98,18 +98,16 @@ public class TwitstreetImpl implements Twitstreet {
 		seasonMgr.loadSeasonInfo();
 		announcerMgr.loadAnnouncers();
 
+		startTasks();
 
-		if ( configMgr.isDev()) {
-			startTasks();
-		}
-
-		startCommonTasks();
 		initialized = true;
 	}
+
 	private void loadConfiguration() {
 		Properties properties = new Properties();
 		try {
-			properties.load(new FileReader(new File(Twitstreet.TWITSTREET_PROPERTIES)));
+			properties.load(new FileReader(new File(
+					Twitstreet.TWITSTREET_PROPERTIES)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -121,10 +119,14 @@ public class TwitstreetImpl implements Twitstreet {
 		String dbName = properties.getProperty(Twitstreet.DATABASE);
 		String dbPortStr = properties.getProperty(Twitstreet.DB_PORT);
 		String mailDealer = properties.getProperty(Twitstreet.MAIL_DEALER);
-		String mailDealerPassword= properties.getProperty(Twitstreet.MAIL_DEALER_PWD);
-		String mailRecipients = properties.getProperty(Twitstreet.MAIL_RECIPIENTS);
+		String mailDealerPassword = properties
+				.getProperty(Twitstreet.MAIL_DEALER_PWD);
+		String mailRecipients = properties
+				.getProperty(Twitstreet.MAIL_RECIPIENTS);
 
-		boolean dev = properties.getProperty(ConfigMgr.STAGE) == null ? true : properties.getProperty(ConfigMgr.STAGE).equalsIgnoreCase(ConfigMgr.DEV);
+		boolean dev = properties.getProperty(ConfigMgr.STAGE) == null ? true
+				: properties.getProperty(ConfigMgr.STAGE).equalsIgnoreCase(
+						ConfigMgr.DEV);
 		int dbPort = Integer.parseInt(dbPortStr);
 
 		dbMgr.setDbHost(dbHost);
@@ -135,7 +137,7 @@ public class TwitstreetImpl implements Twitstreet {
 		dbMgr.init();
 		configMgr.load();
 		configMgr.setDev(dev);
-		configMgr.setMailDealer(mailDealer);		
+		configMgr.setMailDealer(mailDealer);
 		configMgr.setMailDealerPassword(mailDealerPassword);
 		configMgr.setMailRecipients(mailRecipients.split(","));
 
@@ -150,20 +152,16 @@ public class TwitstreetImpl implements Twitstreet {
 			startTruncateHistoryTask();
 			startDetectInvalidTokensTask();
 			adsListenerMgr.start();
-		}
-	}
-
-	private void startCommonTasks() {
-		if (!configMgr.isDev()) {
 			startNewSeasonInfoSentTask();
 			welcome2ListenerMgr.start();
 			followBackMgr.start();
 			startTruncateLogsTask();
 		}
 	}
-	
-	private void startAutoPlayerTask(){
-		AutoPlayerTask autoPlayerTask = injector.getInstance(AutoPlayerTask.class);
+
+	private void startAutoPlayerTask() {
+		AutoPlayerTask autoPlayerTask = injector
+				.getInstance(AutoPlayerTask.class);
 		Thread autoPlayerTaskThread = new Thread(autoPlayerTask);
 		autoPlayerTaskThread.setName("Auto Player Task Thread");
 		autoPlayerTaskThread.start();
@@ -175,54 +173,55 @@ public class TwitstreetImpl implements Twitstreet {
 		newSeasonTaskThread.setName("Start New Season Task");
 		newSeasonTaskThread.start();
 	}
+
 	private void startNewSeasonInfoSentTask() {
-		NewSeasonInfoSentTask newSeasonInfoSentTask = injector.getInstance(NewSeasonInfoSentTask.class);
+		NewSeasonInfoSentTask newSeasonInfoSentTask = injector
+				.getInstance(NewSeasonInfoSentTask.class);
 		Thread newSeasonInfoSentThread = new Thread(newSeasonInfoSentTask);
 		newSeasonInfoSentThread.setName("New Season Info Sent Task");
 		newSeasonInfoSentThread.start();
 	}
 
 	private void startDetectInvalidTokensTask() {
-		DetectInvalidTokensTask detectInvalidTokensTask = injector.getInstance(DetectInvalidTokensTask.class);
+		DetectInvalidTokensTask detectInvalidTokensTask = injector
+				.getInstance(DetectInvalidTokensTask.class);
 		Thread detectInvalidTokensThread = new Thread(detectInvalidTokensTask);
 		detectInvalidTokensThread.setName("Detect Invalid Tokens Task");
 		detectInvalidTokensThread.start();
 	}
 
 	private void startUserInfoUpdateTask() {
-		UserInfoUpdateTask userInfoUpdateTask = injector.getInstance(UserInfoUpdateTask.class);		
+		UserInfoUpdateTask userInfoUpdateTask = injector
+				.getInstance(UserInfoUpdateTask.class);
 		Thread updateUserInfoThread = new Thread(userInfoUpdateTask);
-		updateUserInfoThread.setName("User Info Update Task");		
+		updateUserInfoThread.setName("User Info Update Task");
 		updateUserInfoThread.start();
 	}
 
 	private void startTruncateHistoryTask() {
-		TruncateHistoryTask truncateHistoryTask = injector.getInstance(TruncateHistoryTask.class);
+		TruncateHistoryTask truncateHistoryTask = injector
+				.getInstance(TruncateHistoryTask.class);
 		Thread truncateHistoryTaskThread = new Thread(truncateHistoryTask);
 		truncateHistoryTaskThread.setName("Truncate History Task");
 		truncateHistoryTaskThread.start();
-	
+
 	}
 
-
-
 	private void startTruncateLogsTask() {
-		TruncateLogsTask truncateLogsTask = injector.getInstance(TruncateLogsTask.class);
+		TruncateLogsTask truncateLogsTask = injector
+				.getInstance(TruncateLogsTask.class);
 		Thread truncateLogsTaskThread = new Thread(truncateLogsTask);
 		truncateLogsTaskThread.setName("Truncate Logs Task");
 		truncateLogsTaskThread.start();
 	}
 
-	
-
 	private void startStockUpdateTask() {
-		StockUpdateTask updateFollowerCountTask = injector.getInstance(StockUpdateTask.class);
+		StockUpdateTask updateFollowerCountTask = injector
+				.getInstance(StockUpdateTask.class);
 		Thread updateFollowerCountThread = new Thread(updateFollowerCountTask);
-		updateFollowerCountThread.setName("Stock Update Task");		
+		updateFollowerCountThread.setName("Stock Update Task");
 		updateFollowerCountThread.start();
 	}
-	
-
 
 	public boolean isInitialized() {
 		return initialized;
