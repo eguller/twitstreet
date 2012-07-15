@@ -24,6 +24,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -227,12 +228,13 @@ public class SeasonMgrImpl implements SeasonMgr {
 		
 		List<User> userList = userMgr.getTopNUsers(3);
 		if(userList.size() == 3){
+			DecimalFormat df = new DecimalFormat("#.##");
 			announcerMgr.announceFromTwitStreetGame(lutil.get("season.result", LocalizationUtil.DEFAULT_LANGUAGE, 
 					new Object[]{
 						current.getId(), 
-						userList.get(0).getUserName(), userList.get(0).getTotal(),
-						userList.get(1).getUserName(), userList.get(1).getTotal(),
-						userList.get(2).getUserName(), userList.get(2).getTotal()
+						"@"+userList.get(0).getUserName(), df.format(userList.get(0).getTotal()),
+						"@"+userList.get(1).getUserName(), df.format(userList.get(1).getTotal()),
+						"@"+userList.get(2).getUserName(), df.format(userList.get(2).getTotal())
 					}
 			));
 		}
