@@ -228,7 +228,7 @@ public class SeasonMgrImpl implements SeasonMgr {
 		
 		List<User> userList = userMgr.getTopNUsers(3);
 		if(userList.size() == 3){
-			DecimalFormat df = new DecimalFormat("#.##");
+			DecimalFormat df = new DecimalFormat("###,###.##");
 			announcerMgr.announceFromTwitStreetGame(lutil.get("season.result", LocalizationUtil.DEFAULT_LANGUAGE, 
 					new Object[]{
 						current.getId(), 
