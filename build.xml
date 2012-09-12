@@ -2,13 +2,14 @@
 	<property name="build.dir" value="build" />
 	<property name="tomcat.home" value="" />
 	<property name="lib.dir" value="WEB-INF/lib"></property>
+	<property name="dest-file" value="${user.home}/Desktop/ROOT.war"></property>
 	<path id="lib.path.ref">
 		<fileset dir="WEB-INF/lib" includes="*.jar" />
 		<fileset dir="${tomcat.home}/lib" includes="*.jar" />
 	</path>
 	
 	<target name="clean">
-		<delete file="${user.home}/Desktop/ROOT.war">
+		<delete file="${dest-file}">
 		</delete>
 		<delete dir="${build.dir}" />
 	</target>
@@ -70,7 +71,7 @@
 	
 
 	<target name="build" depends="clean,copy-rsrc,compile,prod-config">
-		<war destfile="${user.home}/Desktop/ROOT.war" webxml="WEB-INF/web.xml">
+		<war destfile="${dest-file}" webxml="WEB-INF/web.xml">
 			<fileset dir=".">
 				<include name="images/*" />
 				<exclude name="images/Thumbs.db" />
