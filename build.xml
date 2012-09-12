@@ -82,7 +82,11 @@
 				<include name="css/*" />
 				
 			</fileset>
-			<lib dir="WEB-INF/lib" />
+			<lib dir="WEB-INF/lib">
+				<exclude name="servlet-api.jar"/>
+				<exclude name="tomcat-jdbc.jar"/>
+				<exclude name="jsp-api.jar"/>
+			</lib>
 			<classes dir="build/bin" />
 			<webinf dir="WEB-INF">
 				<include name="db/**" />
