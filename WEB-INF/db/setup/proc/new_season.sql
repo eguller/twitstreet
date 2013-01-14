@@ -42,7 +42,7 @@ select id, endTime into @active_season,@active_season_end from season_info where
 	delete from stock_history where stock not in (select stock from portfolio) and stock not in (select stock_id from suggested_stocks) and stock not in (select stock_id from twitter_trends);
 	delete from transactions where datediff(now(), t_date) > 8;
 	delete from stock where id not in (select stock from portfolio) and id not in (select stock from stock_history) and id not in (select stock_id from suggested_stocks) and id not in (select stock_id from twitter_trends) and id not in (select stock_id from announcement);
-	
+	delete from stock_history where stock not in (select stock from portfolio) and stock not in (select stock_id from suggested_stocks) and stock not in (select stock_id from twitter_trends);
 	
 end $$
 delimiter ;

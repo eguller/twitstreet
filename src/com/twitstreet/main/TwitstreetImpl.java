@@ -155,7 +155,6 @@ public class TwitstreetImpl implements Twitstreet {
 			startNewSeasonInfoSentTask();
 			welcome2ListenerMgr.start();
 			followBackMgr.start();
-			startTruncateLogsTask();
 		}
 	}
 
