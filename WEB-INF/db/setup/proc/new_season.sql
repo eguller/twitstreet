@@ -36,5 +36,13 @@ select id, endTime into @active_season,@active_season_end from season_info where
 	call rerank();
 	insert ignore into ranking_history(user_id, cash, portfolio, loan, lastUpdate, rank, season_id) 
 		select user_id, cash, portfolio, loan, lastUpdate, rank,@next_season from ranking;
+		
+	delete from user_stock_watch;
+	delete from ranking_history where id not in (select ranking_history_id from season_result);
+	delete from stock_history where stock not in (select stock from portfolio) and stock not in (select stock_id from suggested_stocks) and stock not in (select stock_id from twitter_trends);
+	delete from transactions where datediff(now(), t_date) > 8;
+	delete from stock where id not in (select stock from portfolio) and id not in (select stock from stock_history) and id not in (select stock_id from suggested_stocks) and id not in (select stock_id from twitter_trends) and id not in (select stock_id from announcement);
+	
+	
 end $$
 delimiter ;
