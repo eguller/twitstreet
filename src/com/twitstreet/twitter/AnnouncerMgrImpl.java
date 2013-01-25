@@ -135,7 +135,7 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 
 	@Override
 	public Announcer randomAnnouncerData() {
-		return announcerDataList.get((int) (Math.random() * announcerDataList.size()));
+		return announcerDataList == null || announcerDataList.size() == 0 ? null : announcerDataList.get((int) (Math.random() * announcerDataList.size()));
 	}
 
 	@Override
