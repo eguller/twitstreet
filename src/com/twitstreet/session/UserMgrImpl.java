@@ -888,7 +888,11 @@ public class UserMgrImpl implements UserMgr {
 
 			ps.executeUpdate();
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
-		} catch (SQLException ex) {
+		}
+		catch (MySQLIntegrityConstraintViolationException e) {
+			//omit it happends
+		}
+		catch (SQLException ex) {
 			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
 		} finally {
 			dbMgr.closeResources(connection, ps, null);
