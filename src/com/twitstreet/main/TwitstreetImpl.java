@@ -151,7 +151,8 @@ public class TwitstreetImpl implements Twitstreet {
 		if (!configMgr.isDev()) {
 			startTruncateHistoryTask();
 			startDetectInvalidTokensTask();
-			adsListenerMgr.start();
+			//Do not send advertisements any more.
+			//adsListenerMgr.start();
 			startNewSeasonInfoSentTask();
 			welcome2ListenerMgr.start();
 			followBackMgr.start();
