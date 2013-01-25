@@ -91,10 +91,6 @@ public class TwitstreetImpl implements Twitstreet {
 	@Override
 	public void initialize() {
 		loadConfiguration();
-
-		seasonMgr.loadSeasonInfo();
-		announcerMgr.loadAnnouncers();
-
 		startTasks();
 
 		initialized = true;

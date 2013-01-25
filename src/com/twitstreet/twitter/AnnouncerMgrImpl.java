@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -35,16 +36,16 @@ import com.google.inject.Inject;
 import com.twitstreet.db.base.DBConstants;
 import com.twitstreet.db.base.DBMgr;
 import com.twitstreet.db.data.Announcer;
+import com.twitstreet.localization.LocalizationUtil;
 
 public class AnnouncerMgrImpl implements AnnouncerMgr {
 
 	private static Logger logger = Logger.getLogger(AnnouncerMgrImpl.class);
 	@Inject
 	private DBMgr dbMgr;
-	private static final String LOAD_ANNOUNCER = "select * from announcer where suspended = 0";
-	private static final String SUSPEND_ANNOUNCER = "update announcer set suspended = 1 where id = ?";
+	private static final String LOAD_ANNOUNCER = "select * from announcer";
 
-	ArrayList<Announcer> announcerList = new ArrayList<Announcer>();
+	ArrayList<Twitter> announcerList = new ArrayList<Twitter>();
 	ArrayList<Announcer> announcerDataList = new ArrayList<Announcer>();
 	Twitter twitstreetGame = null;
 	Twitter diablobird = null;
@@ -65,8 +66,17 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 					twitstreetGame = new TwitterFactory().getInstance();
 					twitstreetGame.setOAuthConsumer(announcer.getConsumerKey(), announcer.getConsumerSecret());
 					twitstreetGame.setOAuthAccessToken(new AccessToken(announcer.getAccessToken(), announcer.getAccessTokenSecret()));
+				}
+				else if (DIABLOBIRD.equals(announcer.getName())) {
+					diablobird = new TwitterFactory().getInstance();
+					diablobird.setOAuthConsumer(announcer.getConsumerKey(), announcer.getConsumerSecret());
+					diablobird.setOAuthAccessToken(new AccessToken(announcer.getAccessToken(), announcer.getAccessTokenSecret()));
 				} else {
-					announcerList.add(announcer);
+
+					Twitter twitter = new TwitterFactory().getInstance();
+					twitter.setOAuthConsumer(announcer.getConsumerKey(), announcer.getConsumerSecret());
+					twitter.setOAuthAccessToken(new AccessToken(announcer.getAccessToken(), announcer.getAccessTokenSecret()));
+					announcerList.add(twitter);
 				}
 			}
 			logger.debug(DBConstants.QUERY_EXECUTION_SUCC + ps.toString());
@@ -80,7 +90,7 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 	}
 
 	@Override
-	public Announcer random() {
+	public Twitter random() {
 		if (announcerList.size() > 0) {
 			return announcerList.get((int) (Math.random() * announcerList.size()));
 		} else {
@@ -90,8 +100,35 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 
 	@Override
 	public void announceFromRandomAnnouncer(String message) {
-		TwitterClient twitter = new TwitterClient(random(), this);
-				twitter.tweet(message);
+		Twitter twitter = random();
+		String screenName = "";
+		if (twitter != null) {
+			try {
+				twitter.updateStatus(message);
+				screenName = twitter.getScreenName();
+			} catch (TwitterException e) {
+				logger.error("Announcement failed: " + screenName, e);
+			}
+		} else {
+			logger.error("TwitStreet announcer is null");
+		}
+	}
+
+	@Override
+	public void announceForDiabloBird(String message) {
+		Twitter twitter = diablobird;
+		String screenName = "";
+		if (twitter != null) {
+			try {
+				twitter.updateStatus(message);
+				screenName = twitter.getScreenName();
+				logger.info("announceForDiabloBird");
+			} catch (TwitterException e) {
+				logger.error("Announcement failed: " + screenName, e);
+			}
+		} else {
+			logger.error("TwitStreet announcer is null");
+		}
 	}
 
 	public Twitter getTwitstreetGame() {
@@ -125,55 +162,110 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 
 	@Override
 	public void retweet(long statusId) {
-		TwitterClient twitter = new TwitterClient(random(), this);
+		Twitter twitter = random();
+		String screenName = "";
 		try {
-			twitter.retweet(statusId);
-		} catch (Exception e) {
-			logger.error("Error while retweeting: " + statusId + " Announcer: " + twitter.getAnnouncer().getName(), e);
+			twitter.retweetStatus(statusId);
+			screenName = twitter.getScreenName();
+		} catch (TwitterException e) {
+			logger.error("Error while retweeting: " + statusId + " Announcer: " + screenName, e);
+		}
+	}
+
+	@Override
+	public void retweetForDiabloBird(long statusId) {
+		Twitter twitter = diablobird;
+		String screenName = "";
+		try {
+			twitter.retweetStatus(statusId);
+			screenName = twitter.getScreenName();
+			logger.info("retweetForDiabloBird");
+		} catch (TwitterException e) {
+			logger.error("Error while retweeting: " + statusId + " Announcer: " + screenName, e);
 		}
 	}
 
 	@Override
 	public void follow(long userId) {
-		TwitterClient twitter = new TwitterClient(random(), this);
+		Twitter twitter = random();
+		String screenName = "";
 		try {
-			twitter.follow(userId);
-		} catch (Exception e) {
-			logger.error("Error while following: " + userId + " Announcer: " + twitter.getAnnouncer().getName(), e);
+			twitter.createFriendship(userId);
+			screenName = twitter.getScreenName();
+		} catch (TwitterException e) {
+			logger.error("Error while following: " + userId + " Announcer: " + screenName, e);
 		}
 	}
 
+	@Override
+	public void followForDiabloBird(long userId) {
+		Twitter twitter = diablobird;
+		String screenName = "";
+		try {
+			twitter.createFriendship(userId);
+			screenName = twitter.getScreenName();
+			logger.info("followForDiabloBird");
+		} catch (TwitterException e) {
+			logger.error("Error while following: " + userId + " Announcer: " + screenName, e);
+		}
+	}
 
 	@Override
 	public void favourite(long statusId) {
-		TwitterClient twitter = new TwitterClient(random(), this);
+		Twitter twitter = random();
+		String screenName = "";
 		try {
-			twitter.favorite(statusId);
-		} catch (Exception e) {
-			logger.error("Error while creating favorite: " + statusId + " Announcer: " + twitter.getAnnouncer().getName(), e);
+			twitter.createFavorite(statusId);
+			screenName = twitter.getScreenName();
+		} catch (TwitterException e) {
+			logger.error("Error while creating favorite: " + statusId + " Announcer: " + screenName, e);
+		}
+	}
+
+	@Override
+	public void favouriteForDiabloBird(long statusId) {
+		Twitter twitter = diablobird;
+		String screenName = "";
+		try {
+			twitter.createFavorite(statusId);
+			screenName = twitter.getScreenName();
+			logger.info("favouriteForDiabloBird");
+		} catch (TwitterException e) {
+			logger.error("Error while creating favorite: " + statusId + " Announcer: " + screenName, e);
 		}
 	}
 
 	@Override
 	public void reply(String message, long statusId) {
-		TwitterClient twitter = new TwitterClient(random(), this);
-		twitter.reply(message,statusId);
+		Twitter twitter = random();
+		String screenName = "";
+		if (twitter != null) {
+			try {
+				twitter.updateStatus(new StatusUpdate(message).inReplyToStatusId(statusId));
+				screenName = twitter.getScreenName();
+			} catch (TwitterException e) {
+				logger.error("Announcement failed: " + screenName, e);
+			}
+		} else {
+			logger.error("TwitStreet announcer is null");
+		}
 	}
 
 	@Override
-	public void setAnnouncerSuspended(long id) {
-		Connection connection = null;
-		PreparedStatement ps = null;
-		try {
-			connection = dbMgr.getConnection();
-			ps = connection.prepareStatement(SUSPEND_ANNOUNCER);
-			ps.setLong(1, id);
-			ps.executeUpdate();
-		}
-		catch (SQLException ex) {
-			logger.error(DBConstants.QUERY_EXECUTION_FAIL + ps.toString(), ex);
-		} finally {
-			dbMgr.closeResources(connection, ps, null);
+	public void replyForDiabloBird(String message, long statusId) {
+		Twitter twitter = diablobird;
+		String screenName = "";
+		if (twitter != null) {
+			try {
+				twitter.updateStatus(new StatusUpdate(message).inReplyToStatusId(statusId));
+				screenName = twitter.getScreenName();
+				logger.info("replyForDiabloBird");
+			} catch (TwitterException e) {
+				logger.error("Announcement failed: " + screenName, e);
+			}
+		} else {
+			logger.error("TwitStreet announcer is null");
 		}
 	}
+
 }

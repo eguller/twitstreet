@@ -66,7 +66,10 @@ public class StockUpdateTask implements Runnable {
 			long startTime = System.currentTimeMillis();
 
 			try {
+				announcerMgr.loadAnnouncers();
 				seasonMgr.loadSeasonInfo();
+				
+				announcerMgr.announceFromRandomAnnouncer("@eguller hello world 99");
 				
 				logger.info("\n\n************* Stock Update Task - Begin ****************\n\n");
 

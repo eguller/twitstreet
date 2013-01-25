@@ -29,9 +29,7 @@ public class Announcer implements DataObjectIF {
 	String consumerSecret;
 	String accessToken;
 	String accessTokenSecret;
-	String sessionId;
-	String password;
-	boolean suspended;
+
 	@Override
 	public void getDataFromResultSet(ResultSet rs) throws SQLException {
 		this.setId(rs.getLong("id"));
@@ -40,8 +38,6 @@ public class Announcer implements DataObjectIF {
 		this.setConsumerSecret(rs.getString("consumerSecret"));
 		this.setAccessToken(rs.getString("accessToken"));
 		this.setAccessTokenSecret(rs.getString("accessTokenSecret"));
-		this.setPassword(rs.getString("password"));
-		this.setSuspended(rs.getBoolean("suspended"));
 	}
 
 	public long getId() {
@@ -90,30 +86,6 @@ public class Announcer implements DataObjectIF {
 
 	public void setAccessTokenSecret(String accessTokenSecret) {
 		this.accessTokenSecret = accessTokenSecret;
-	}
-
-	public String getSessionId() {
-		return sessionId;
-	}
-
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public boolean isSuspended() {
-		return suspended;
-	}
-
-	public void setSuspended(boolean suspended) {
-		this.suspended = suspended;
 	}
 
 }
