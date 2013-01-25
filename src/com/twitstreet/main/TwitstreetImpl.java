@@ -149,7 +149,7 @@ public class TwitstreetImpl implements Twitstreet {
 			
 			//Do not announce new seasons.
 			//startNewSeasonInfoSentTask();
-			welcome2ListenerMgr.start();
+			//welcome2ListenerMgr.start();
 			followBackMgr.start();
 		}
 	}
