@@ -27,8 +27,7 @@ import twitter4j.Twitter;
 
 public interface AnnouncerMgr {
 	public static final String TWITSTREET_GAME = "twitstreet_game";
-	public static final String DIABLOBIRD = "diablobird";
-	public Twitter random();
+	public Announcer random();
 	public void loadAnnouncers();
 	public void announceFromRandomAnnouncer(String message);
 	public void announceFromTwitStreetGame(String message);
@@ -38,9 +37,5 @@ public interface AnnouncerMgr {
 	public void follow(long userId);
 	public void favourite(long statusId);
 	public void reply(String message, long statusId);
-	void announceForDiabloBird(String message);
-	public void retweetForDiabloBird(long id);
-	public void followForDiabloBird(long id);
-	void favouriteForDiabloBird(long statusId);
-	void replyForDiabloBird(String message, long statusId);
+	public void setAnnouncerSuspended(long id);
 }

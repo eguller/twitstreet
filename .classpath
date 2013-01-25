@@ -18,5 +18,7 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/mailapi.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/smtp.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/httpclient-4.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/httpcore-4.1.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

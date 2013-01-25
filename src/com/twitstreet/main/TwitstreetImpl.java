@@ -46,7 +46,6 @@ import com.twitstreet.task.TruncateHistoryTask;
 import com.twitstreet.task.TruncateLogsTask;
 import com.twitstreet.task.UserInfoUpdateTask;
 import com.twitstreet.twitter.AdsListenerMgr;
-import com.twitstreet.twitter.AmazonBirdListenerMgr;
 import com.twitstreet.twitter.AnnouncerMgr;
 import com.twitstreet.twitter.FollowBackMgr;
 import com.twitstreet.twitter.Welcome2ListenerMgr;
@@ -77,8 +76,6 @@ public class TwitstreetImpl implements Twitstreet {
 
 	@Inject
 	AdsListenerMgr adsListenerMgr;
-	@Inject
-	AmazonBirdListenerMgr amazonbirdListenerMgr;
 	@Inject
 	Welcome2ListenerMgr welcome2ListenerMgr;
 
@@ -153,7 +150,9 @@ public class TwitstreetImpl implements Twitstreet {
 			startDetectInvalidTokensTask();
 			//Do not send advertisements any more.
 			//adsListenerMgr.start();
-			startNewSeasonInfoSentTask();
+			
+			//Do not announce new seasons.
+			//startNewSeasonInfoSentTask();
 			welcome2ListenerMgr.start();
 			followBackMgr.start();
 		}
