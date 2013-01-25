@@ -69,8 +69,6 @@ public class StockUpdateTask implements Runnable {
 				announcerMgr.loadAnnouncers();
 				seasonMgr.loadSeasonInfo();
 				
-				announcerMgr.announceFromRandomAnnouncer("@eguller hello world 99");
-				
 				logger.info("\n\n************* Stock Update Task - Begin ****************\n\n");
 
 				logger.info("Twitter trends update - begin.");
