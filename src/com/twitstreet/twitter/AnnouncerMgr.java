@@ -38,7 +38,6 @@ public interface AnnouncerMgr {
 	public void follow(long userId);
 	public void favourite(long statusId);
 	public void reply(String message, long statusId);
-	void announceForDiabloBird(String message);
 	public void retweetForDiabloBird(long id);
 	public void followForDiabloBird(long id);
 	void favouriteForDiabloBird(long statusId);

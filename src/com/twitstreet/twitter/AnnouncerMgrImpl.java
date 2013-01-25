@@ -67,12 +67,7 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 					twitstreetGame.setOAuthConsumer(announcer.getConsumerKey(), announcer.getConsumerSecret());
 					twitstreetGame.setOAuthAccessToken(new AccessToken(announcer.getAccessToken(), announcer.getAccessTokenSecret()));
 				}
-				else if (DIABLOBIRD.equals(announcer.getName())) {
-					diablobird = new TwitterFactory().getInstance();
-					diablobird.setOAuthConsumer(announcer.getConsumerKey(), announcer.getConsumerSecret());
-					diablobird.setOAuthAccessToken(new AccessToken(announcer.getAccessToken(), announcer.getAccessTokenSecret()));
-				} else {
-
+				else {
 					Twitter twitter = new TwitterFactory().getInstance();
 					twitter.setOAuthConsumer(announcer.getConsumerKey(), announcer.getConsumerSecret());
 					twitter.setOAuthAccessToken(new AccessToken(announcer.getAccessToken(), announcer.getAccessTokenSecret()));
@@ -106,23 +101,6 @@ public class AnnouncerMgrImpl implements AnnouncerMgr {
 			try {
 				twitter.updateStatus(message);
 				screenName = twitter.getScreenName();
-			} catch (TwitterException e) {
-				logger.error("Announcement failed: " + screenName, e);
-			}
-		} else {
-			logger.error("TwitStreet announcer is null");
-		}
-	}
-
-	@Override
-	public void announceForDiabloBird(String message) {
-		Twitter twitter = diablobird;
-		String screenName = "";
-		if (twitter != null) {
-			try {
-				twitter.updateStatus(message);
-				screenName = twitter.getScreenName();
-				logger.info("announceForDiabloBird");
 			} catch (TwitterException e) {
 				logger.error("Announcement failed: " + screenName, e);
 			}
