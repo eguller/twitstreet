@@ -13,8 +13,13 @@
 <%@ page import="com.twitstreet.market.PortfolioMgr"%>
 <%@ page import="com.twitstreet.db.data.Portfolio"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil"%>
-
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
@@ -97,3 +102,7 @@
 	</table>
 
 </div>
+<%
+end = System.currentTimeMillis();
+logger.debug("userProfile.jsp execution time: " + (end - start));
+%>

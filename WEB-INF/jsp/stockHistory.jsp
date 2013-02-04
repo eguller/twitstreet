@@ -22,7 +22,13 @@
 <%@ page import="com.twitstreet.market.StockMgr"%>
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
-	
+<%@page import="org.apache.log4j.Logger" %>
+<%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+%>
 	<div id="stock-trend-section" style="display: none;">
 	
 	<%
@@ -83,4 +89,7 @@
 	%>
 		
 		</div>
-	
+<%
+end = System.currentTimeMillis();
+logger.debug("stockHistory.jsp execution time: " + (end - start));
+%>	

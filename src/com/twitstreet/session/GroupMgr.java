@@ -72,7 +72,9 @@ public interface GroupMgr{
 	int getRankOfUserForGroup(long userId, long groupId);
 
 	int getAllTimeRankOfUserForGroup(long userId, long groupId);
-	
+	ArrayList<Group> getAllGroupsFromDb(int offset, int count);
+	ArrayList<Group> getAllGroupsWithoutLimit();
+	void updateGroupCacheTable();
 	
 	
 	

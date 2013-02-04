@@ -15,9 +15,13 @@
 <%@ page import="com.twitstreet.servlet.TwitStreetServlet"%>
 <%@ page import="java.util.*"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
-
-
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	User user = (User) request.getAttribute(User.USER);
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
@@ -126,4 +130,8 @@
 </table>
 <%
 	}
+%>
+<%
+end = System.currentTimeMillis();
+logger.debug("watchListContent.jsp execution time: " + (end - start));
 %>

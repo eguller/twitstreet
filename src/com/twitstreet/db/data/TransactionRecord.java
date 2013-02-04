@@ -98,4 +98,36 @@ public class TransactionRecord  implements DataObjectIF{
 		this.amount = rs.getInt("transactionAmount");
 		this.date = new Date(rs.getTimestamp("transactionDate").getTime());
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + operation;
+		result = prime * result + (int) (stockId ^ (stockId >>> 32));
+		result = prime * result + (int) (userId ^ (userId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TransactionRecord other = (TransactionRecord) obj;
+		if (operation != other.operation)
+			return false;
+		if (stockId != other.stockId)
+			return false;
+		if (userId != other.userId)
+			return false;
+		return true;
+	}
+	
+
+	
+	
 }

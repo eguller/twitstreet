@@ -7,7 +7,13 @@
 <%@page import="com.twitstreet.db.data.User"%>
 <%@page import="com.twitstreet.market.StockMgr"%>
 <%@page import="com.google.inject.Injector"%>
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	
@@ -87,6 +93,8 @@
 			</td>
 		</tr>
 	</table>
-
-
 </div>
+<%
+end = System.currentTimeMillis();
+logger.debug("dashboard.jsp execution time: " + (end - start));
+%>

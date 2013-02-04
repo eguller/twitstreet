@@ -6,8 +6,13 @@
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="com.twitstreet.util.Util"%>
-
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	int pageSelectorPerRow = 4;
 
 	Injector inj = (Injector) pageContext.getServletContext()
@@ -51,4 +56,7 @@
 	<%}else{%><span class="paginationDisabledLink" style="font-size: 10px">&gt;&gt;</span><%}%>
 	
 </div>
-
+<%
+end = System.currentTimeMillis();
+logger.debug("toprankPagination.jsp execution time: " + (end - start));
+%>

@@ -137,11 +137,12 @@ public class TwitstreetImpl implements Twitstreet {
 	}
 
 	private void startTasks() {
-		startNewSeasonTask();
+		
 		startStockUpdateTask();
 		startUserInfoUpdateTask();
 		startAutoPlayerTask();
 		if (!configMgr.isDev()) {
+			startNewSeasonTask();
 			startTruncateHistoryTask();
 			startDetectInvalidTokensTask();
 			//Do not send advertisements any more.

@@ -31,6 +31,7 @@ import com.twitstreet.db.data.TrendyStock;
 import com.twitstreet.market.PortfolioMgr;
 import com.twitstreet.market.StockMgr;
 import com.twitstreet.season.SeasonMgr;
+import com.twitstreet.session.GroupMgr;
 import com.twitstreet.session.UserMgr;
 import com.twitstreet.twitter.AnnouncerMgr;
 import com.twitstreet.twitter.TwitterProxyFactory;
@@ -54,6 +55,8 @@ public class StockUpdateTask implements Runnable {
 	TwitterProxyFactory twitterProxyFactory = null;
 	@Inject
 	AnnouncerMgr announcerMgr;
+	@Inject
+	GroupMgr groupMgr;
 	private static Logger logger = Logger.getLogger(StockUpdateTask.class);
 	public static int LAST_UPDATE_DIFF_MINUTES = 10;// minutes
 	public static int LAST_UPDATE_DIFF_MILISECONDS = LAST_UPDATE_DIFF_MINUTES * 60 * 1000;
@@ -88,9 +91,6 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Load suggested stocks - begin.");
 				stockMgr.loadSuggestedStocks();
 				logger.info("Load suggested stocks - end.");
-
-				
-				
 				
 				logger.info("Re-rank begin.");
 				userMgr.rerank();
@@ -107,7 +107,11 @@ public class StockUpdateTask implements Runnable {
 				logger.info("Remove old records - begin.");
 				stockMgr.removeOldRecords(60 * 24);
 				logger.info("Remove old records - end.");
-
+				
+				logger.info("Update group cache - begin");
+				groupMgr.updateGroupCacheTable();
+				logger.info("Update group cache - end");
+				
 				counter++;
 				logger.info("\n\n******************** Stock Update Task - End ****************************\n\n");
 			} catch (Throwable ex) {

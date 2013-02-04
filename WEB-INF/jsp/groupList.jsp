@@ -30,13 +30,19 @@
 <%@ page import="java.text.DecimalFormat"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(
 	LocalizationUtil.LANGUAGE);
 
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-	ArrayList<Group> groupList = (ArrayList<Group>) request.getAttribute("groupList");
+	List<Group> groupList = (List<Group>) request.getAttribute("groupList");
 	String groupListName = (String) request.getAttribute("groupListName");
 
 	PortfolioMgr portfolioMgr = inj.getInstance(PortfolioMgr.class);
@@ -233,4 +239,7 @@
 	request.setAttribute("pdo", null);
 	%>
 </div>
-
+<%
+end = System.currentTimeMillis();
+logger.debug("groupList.jsp execution time: " + (end - start));
+%>

@@ -33,5 +33,6 @@ public interface TransactionMgr {
 	public List<TransactionRecord> getCurrentTransactions();
 	public List<TransactionRecord> queryTransactionRecord(long userId);
 	public List<TransactionRecord> queryTransactionRecordByStock(long stockId);
+	public List<TransactionRecord> getCurrentTransactionsFromDb();
 	
 }

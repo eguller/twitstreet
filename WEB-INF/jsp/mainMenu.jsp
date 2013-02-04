@@ -3,7 +3,13 @@
 <%@page import="com.twitstreet.db.data.User"%>
 <%@page import="com.twitstreet.servlet.GetUserServlet"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil"%>
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
@@ -46,3 +52,7 @@
 	<jsp:include page="groups.jsp"></jsp:include>
 	<jsp:include page="oldSeasons.jsp"></jsp:include>
 </div>
+<%
+end = System.currentTimeMillis();
+logger.debug("mainMenu.jsp execution time: " + (end - start));
+%>

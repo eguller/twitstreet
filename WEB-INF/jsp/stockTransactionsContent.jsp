@@ -9,8 +9,14 @@
 <%@ page import="java.util.List"%>
 <%@ page import="com.twitstreet.util.Util"%>
 <%@ page import="com.twitstreet.servlet.TwitStreetServlet"%>
+<%@page import="org.apache.log4j.Logger" %>
 
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	Injector inj = (Injector) pageContext.getServletContext()
 			.getAttribute(Injector.class.getName());
 	String  stock = (String)request.getParameter(Stock.STOCK_ID);
@@ -83,3 +89,7 @@
 		%>
 	
 </table>
+<%
+end = System.currentTimeMillis();
+logger.debug("stockTransactionsContent.jsp execution time: " + (end - start));
+%>

@@ -41,7 +41,13 @@
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="java.text.DecimalFormat"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
-	<%
+<%@page import="org.apache.log4j.Logger" %>
+<%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 	String quote = request.getAttribute(HomePageServlet.QUOTE) == null ? "" : (String) request.getAttribute(HomePageServlet.QUOTE);
@@ -113,3 +119,7 @@
 			<%
 				}
 			%>
+<%
+end = System.currentTimeMillis();
+logger.debug("otherSearchResults.jsp execution time: " + (end - start));
+%>	

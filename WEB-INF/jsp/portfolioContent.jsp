@@ -12,8 +12,12 @@
 <%@ page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@ page import="com.twitstreet.servlet.TwitStreetServlet"%>
 <%@page import="com.twitstreet.util.GUIUtil"%>
-
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
 
 	Injector inj = (Injector) pageContext.getServletContext()
 			.getAttribute(Injector.class.getName());
@@ -154,3 +158,7 @@
 		%>
 	</tbody>
 </table>
+<%
+end = System.currentTimeMillis();
+logger.debug("portfolioContents.jsp execution time: " + (end - start));
+%>

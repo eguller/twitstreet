@@ -18,8 +18,13 @@
 <%@ page import="com.twitstreet.market.PortfolioMgr"%>
 <%@ page import="com.twitstreet.db.data.Portfolio"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
-
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 
 LocalizationUtil lutil = LocalizationUtil.getInstance();
@@ -122,11 +127,10 @@ SeasonResult sr = seasonMgr.getSeasonResult(seasonId);
 		<%	
 		}
 		%>
-		
-		
 		</tbody>
-	
-	
 	</table>
-	
 </div>
+<%
+end = System.currentTimeMillis();
+logger.debug("oldSeasonsContent.jsp execution time: " + (end - start));
+%>	

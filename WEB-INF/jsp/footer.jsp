@@ -1,7 +1,12 @@
 <%@page import="com.twitstreet.util.GUIUtil"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil"%>
-
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
@@ -16,3 +21,7 @@
 <%-- 	<div><%=GUIUtil.getInstance().getTwitterMentionButton("twitstreet_game", lang) %></div>  --%>
 </div>
 <input type="hidden" id="page_title" value="<%=request.getAttribute("page.title")%>"/>
+<%
+end = System.currentTimeMillis();
+logger.debug("footer.jsp execution time: " + (end - start));
+%>

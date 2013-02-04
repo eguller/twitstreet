@@ -1,3 +1,10 @@
+<%@page import="org.apache.log4j.Logger" %>
+<%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+%>
 <div id="transactions" class="main-div">
 	<table class="datatbl">
 		<tr>
@@ -14,3 +21,7 @@
 		</tr>
 	</table>
 </div>
+<%
+end = System.currentTimeMillis();
+logger.debug("transactions.jsp execution time: " + (end - start));
+%>

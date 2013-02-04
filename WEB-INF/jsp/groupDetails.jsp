@@ -27,7 +27,12 @@
 <%@ page import="com.twitstreet.db.data.Stock"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 <%@page import="com.twitstreet.util.GUIUtil"%>
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
 
 LocalizationUtil lutil = LocalizationUtil.getInstance();
 String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
@@ -277,5 +282,8 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	%>
 
 </div>
-
+<%
+end = System.currentTimeMillis();
+logger.debug("groupDetails.jsp execution time: " + (end - start));
+%>
 

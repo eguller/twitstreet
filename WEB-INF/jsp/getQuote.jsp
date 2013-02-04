@@ -16,10 +16,14 @@
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
-	
-
 <%@page import="com.twitstreet.session.UserMgr"%>
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
 
@@ -83,8 +87,9 @@
 			}
 		});
 	</script>
-
-
 </div>
-
+<%
+end = System.currentTimeMillis();
+logger.debug("getQuote.jsp execution time: " + (end - start));
+%>
 

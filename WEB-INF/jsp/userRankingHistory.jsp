@@ -14,9 +14,13 @@
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="java.util.List"%>
 <%@ page import="com.twitstreet.season.SeasonMgr" %>
+<%@page import="org.apache.log4j.Logger" %>
+<%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
 	
-
-	<%
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 
@@ -102,5 +106,8 @@
 	<%			
 	}
 	%>
-
+<%
+end = System.currentTimeMillis();
+logger.debug("userRankingHistory.jsp execution time: " + (end - start));
+%>
 

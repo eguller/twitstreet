@@ -10,8 +10,13 @@
 <%@ page import="com.twitstreet.localization.LocalizationUtil"%>
 <%@ page import="com.twitstreet.util.Util"%>
 <%@ page import="com.twitstreet.servlet.TwitStreetServlet"%>
-
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
@@ -37,3 +42,7 @@
 	<h3><%=lutil.get("season", lang)%> <%=si.getId() %> (<%=si.localizedSeasonTime(lang)%>)</h3>
 
 </div>
+<%
+end = System.currentTimeMillis();
+logger.debug("seasonInfo.jsp execution time: " + (end - start));
+%>

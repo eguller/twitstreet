@@ -28,7 +28,13 @@
 <%@ page import="java.text.DecimalFormat"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 <%@page import="com.twitstreet.util.GUIUtil"%>
-	<%
+<%@page import="org.apache.log4j.Logger" %>
+<%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	User user = (User) request.getAttribute(User.USER);
@@ -83,7 +89,10 @@
 		drawStockHistory('<%=divId%>', dateArrayStock<%=stock.getId()%>, valueArrayStock<%=stock.getId()%>,
 				stockNameStock<%=stock.getId()%>,'<%=format%>');
 	</script>
-
+<%
+end = System.currentTimeMillis();
+logger.debug("stocksTimeLineChart.jsp execution time: " + (end - start));
+%>
 		
 
 		

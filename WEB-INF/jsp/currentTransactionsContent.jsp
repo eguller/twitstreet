@@ -8,14 +8,19 @@
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="java.util.List"%>
 <%@ page import="com.twitstreet.util.Util"%>
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	Injector inj = (Injector) pageContext.getServletContext()
 			.getAttribute(Injector.class.getName());
 	TransactionMgr transactionMgr = inj
 			.getInstance(TransactionMgr.class);
 	List<TransactionRecord> transactionRecordList = transactionMgr
 			.getCurrentTransactions();
-	User user = (User) request.getAttribute(User.USER);
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
@@ -86,3 +91,7 @@
 		%>
 	
 </table>
+<%
+end = System.currentTimeMillis();
+logger.debug("currentTransactions.jsp execution time: " + (end - start));
+%>

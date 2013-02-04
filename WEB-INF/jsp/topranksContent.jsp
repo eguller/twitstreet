@@ -9,8 +9,13 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="com.twitstreet.util.Util"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
-	
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 LocalizationUtil lutil = LocalizationUtil.getInstance();
 String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 
@@ -20,7 +25,6 @@ User sessionUser = (User)request.getAttribute(User.USER);
 
 
 %>
-
 
 <div id="topranks" class="main-div">
 
@@ -32,3 +36,8 @@ User sessionUser = (User)request.getAttribute(User.USER);
 
 
 </div>
+
+<%
+end = System.currentTimeMillis();
+logger.debug("toprankContent.jsp execution time: " + (end - start));
+%>

@@ -1,7 +1,12 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
-
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 LocalizationUtil lutil = LocalizationUtil.getInstance();
 String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 %>
@@ -37,3 +42,7 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 		</div>
 	</div>
 </div>
+<%
+end = System.currentTimeMillis();
+logger.debug("howtoplay.jsp execution time: " + (end - start));
+%>

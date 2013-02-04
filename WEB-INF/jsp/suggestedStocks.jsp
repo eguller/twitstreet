@@ -30,8 +30,14 @@
 <%@ page import="com.twitstreet.util.GUIUtil"%>
 <%@ page import="com.twitstreet.servlet.TopGrossingStocksServlet" %>
 <%@ page import="com.twitstreet.servlet.TrendyStocksServlet" %>
+<%@page import="org.apache.log4j.Logger" %>
 
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
@@ -193,4 +199,7 @@ if(user!=null){
 		<%request.setAttribute("pdo", pdo); %>
 <jsp:include page="pagination.jsp"/>
 </div>
-
+<%
+end = System.currentTimeMillis();
+logger.debug("suggestedStocks.jsp execution time: " + (end - start));
+%>

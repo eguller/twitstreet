@@ -7,7 +7,13 @@
 <%@page import="java.util.ArrayList"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
 <%@page import="com.twitstreet.util.GUIUtil"%>
-	<%
+<%@page import="org.apache.log4j.Logger" %>
+<%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	StockMgr stockMgr = inj.getInstance(StockMgr.class);
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
@@ -66,5 +72,8 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 	}
 	%>
 </div>
-		
+<%
+end = System.currentTimeMillis();
+logger.debug("newUsers.jsp execution time: " + (end - start));
+%>		
 			

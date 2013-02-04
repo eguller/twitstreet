@@ -16,10 +16,15 @@
 <%@page import="com.twitstreet.session.UserMgr"%>
 <%@ page import="com.twitstreet.servlet.HomePageServlet"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
+<%@page import="org.apache.log4j.Logger" %>
+<%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());	
 
-
-<%	LocalizationUtil lutil = LocalizationUtil.getInstance();
-String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
+	LocalizationUtil lutil = LocalizationUtil.getInstance();
+	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	UserMgr userMgr = inj.getInstance(UserMgr.class);
@@ -61,8 +66,10 @@ String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAG
 			}
 		});
 	</script>
-
-
 </div>
+<%
+end = System.currentTimeMillis();
+logger.debug("getGroup.jsp execution time: " + (end - start));
+%>
 
 

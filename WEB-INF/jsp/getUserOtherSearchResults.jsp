@@ -5,14 +5,20 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="com.twitstreet.localization.LocalizationUtil" %>
-	<%
+<%@page import="org.apache.log4j.Logger" %>
+<%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String)request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 		String getUserText = request.getParameter(GetUserServlet.GET_USER_PARAM) == null ? "" : (String) request.getParameter(GetUserServlet.GET_USER_PARAM);
 		String getUserTextDisplay = request.getAttribute(GetUserServlet.GET_USER_DISPLAY) == null ? "" : (String) request.getParameter(GetUserServlet.GET_USER_DISPLAY);
 		
 		if(getUserText.length()>0){
-	%>
+%>
 <div id="other-search-result">
 			
 			<%
@@ -90,4 +96,8 @@
 	<%
 		}
 	%> --%>
+<%
+end = System.currentTimeMillis();
+logger.debug("getUser.jsp execution time: " + (end - start));
+%>
 	

@@ -72,10 +72,10 @@ public class TSModule extends AbstractModule {
 		bind(TwitstreetAnnouncer.class).to(TwitstreetAnnouncerImpl.class).in(Scopes.SINGLETON);
 		bind(GroupMgr.class).to(GroupMgrImpl.class).in(Scopes.SINGLETON);
 		bind(Twitstreet.class).to(TwitstreetImpl.class).in(Scopes.SINGLETON);
-		bind(UserMgr.class).to(UserMgrImpl.class);
-		bind(StockMgr.class).to(StockMgrImpl.class);
-		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class);
-		bind(DBSetup.class).to(DBSetupImpl.class);
+		bind(UserMgr.class).to(UserMgrImpl.class).in(Scopes.SINGLETON);
+		bind(StockMgr.class).to(StockMgrImpl.class).in(Scopes.SINGLETON);
+		bind(PortfolioMgr.class).to(PortfolioMgrImpl.class).in(Scopes.SINGLETON);
+		bind(DBSetup.class).to(DBSetupImpl.class).in(Scopes.SINGLETON);
 		bind(DBScriptParser.class).to(DBScriptParserImpl.class);
 		bind(DBMgr.class).toProvider(DBMgrProvider.class).in(Scopes.SINGLETON);
 		bind(ConfigMgr.class).toProvider(ConfigMgrProvider.class).in(Scopes.SINGLETON);

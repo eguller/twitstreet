@@ -7,8 +7,13 @@
 <%@ page import="com.twitstreet.db.data.User"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="com.twitstreet.util.Util"%>
-
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(LocalizationUtil.LANGUAGE);
 	Injector inj = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
@@ -84,4 +89,7 @@
 	%>
 	
 </div>
-
+<%
+end = System.currentTimeMillis();
+logger.debug("pagination.jsp execution time: " + (end - start));
+%>	

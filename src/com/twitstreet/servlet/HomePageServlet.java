@@ -130,9 +130,7 @@ public class HomePageServlet extends TwitStreetServlet {
 			return;
 		}
 		
-		end = System.currentTimeMillis();
 		
-		logger.info("Init time: " + (end - start));
 		
 
 		
@@ -144,6 +142,9 @@ public class HomePageServlet extends TwitStreetServlet {
 		}
 		
 		loadUser(request);
+		
+		end = System.currentTimeMillis();
+		logger.debug("Servlet Init Time: " + (end - start));
 		
 		if ( request.getSession().getAttribute(User.USER_ID) != null ) {
 			

@@ -2,7 +2,13 @@
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
 <%@page import="com.twitstreet.config.ConfigMgr"%>
+<%@page import="org.apache.log4j.Logger" %>
 <%
+	long start = 0;
+	long end = 0;
+	start = System.currentTimeMillis();
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	LocalizationUtil lutil = LocalizationUtil.getInstance();
 	String lang = (String) request.getSession().getAttribute(
 			LocalizationUtil.LANGUAGE);
@@ -97,4 +103,9 @@
 <script type="text/javascript" src="/js/jquery.countdown-<%=lang%>.js"></script>
 <%
 	}
+
+%>
+<%
+end = System.currentTimeMillis();
+logger.debug("header.jsp execution time: " + (end - start));
 %>
